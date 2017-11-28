@@ -72,21 +72,10 @@
                         </select>
                     </dd>
                     <dt>
-                        <label>Limite</label>
-                    </dt>
-                    <dd>
-                        <select name="limite" id="limite" class="size2">
-                            <option value=0 >NAO</option>
-                            <option value=1 >SIM</option>
-                        </select>
-                    </dd>
-                    <dt>
                         <label>Vers&atilde;o XML</label>
                     </dt>
                     <dd>
                         <select name="xml" id="xml" class="size2">
-                            <option value='3.03.02' >3.03.02</option>
-                            <option value='3.03.01' >3.03.01</option>
                             <option value='3.02.00' >3.02.00</option>
                             <option value='3.02.01' >3.02.01</option>
                         </select>
@@ -100,7 +89,6 @@
                             <option value='cnpj'>cnpj</option>
                         </select>
                     </dd>
-                    
                     <dt>
                         <label>Autorização</label>
                     </dt>
@@ -148,7 +136,7 @@
                                     $this->load->helper('directory');
                                     foreach ($convenios as $value) :
 
-                                        $arquivo_pasta = directory_map("./upload/cr/$value->nome/");
+                                        $arquivo_pasta = directory_map("/home/sisprod/projetos/clinica/upload/cr/$value->nome/");
                                         if ($arquivo_pasta != false) {
                                             ?>
                                             <td width="10px" class="tabela_header"><? echo $value->nome; ?></td></tr>
@@ -158,7 +146,7 @@
 
                                             foreach ($arquivo_pasta as $value) {
                                                 ?>
-                                                <td width="10px"> <img  width="50px" height="50px" onclick="javascript:window.open('<?= base_url() . "upload/cr/" . $covenionome . "/" . $value ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');" src="<?= base_url(); ?>img/archive-zip-icon.png"><br><? echo $value ?></td>
+                                                <td width="10px"> <img  width="50px" height="50px" onclick="javascript:window.open('<?= base_url() . "upload/cr/" . $covenionome . "/" . $value ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');" src="<?= base_url() . "upload/cr/" . $covenionome . "/" . $value ?>"><br><? echo $value ?></td>
                                                 <td>&nbsp;</td>        
                                             <br><?
                                         }

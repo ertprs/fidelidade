@@ -21,31 +21,31 @@
                         <label>Data*</label>
                     </dt>
                     <dd>
-                        <input type="text" name="inicio" id="inicio" class="texto04" value="<?= substr(@$obj->_data, 8, 2) . '/' . substr(@$obj->_data, 5, 2) . '/' . substr(@$obj->_data, 0, 4);  ?>" alt="date" required=""/>
+                        <input type="text" name="inicio" id="inicio" class="texto04"/>
                     </dd>
                     <dt>
                         <label>Receber de:</label>
                     </dt>
                     <dd>
                         <input type="hidden" id="devedor" class="texto_id" name="devedor" value="<?= @$obj->_devedor; ?>" />
-                        <input type="text" id="devedorlabel" class="texto09" name="devedorlabel" value="<?= @$obj->_razao_social; ?>" required=""/>
+                        <input type="text" id="devedorlabel" class="texto09" name="devedorlabel" value="<?= @$obj->_razao_social; ?>" />
                     </dd>
-                    <dt>
+<!--                    <dt>
                         <label>Tipo *</label>
                     </dt>
                     <dd>
                         <select name="tipo" id="tipo" class="size4">
                             <option value="">Selecione</option>
                             <? foreach ($tipo as $value) : ?>
-                                <option value="<?= $value->tipo_entradas_saida_id; ?>"><?php echo $value->descricao; ?></option>
+                                <option value="<?= $value->descricao; ?>"><?php echo $value->descricao; ?></option>
                             <? endforeach; ?>
                         </select>
-                    </dd>
+                    </dd>-->
                     <dt>
                         <label>Classe *</label>
                     </dt>
                     <dd>
-                        <select name="classe" id="classe" class="size4" required="">
+                        <select name="classe" id="classe" class="size4">
                             <option value="">Selecione</option> 
                             <? foreach ($classe as $value) : ?>
                                 <option value="<?= $value->descricao; ?>"><?php echo $value->descricao; ?></option>
@@ -56,7 +56,7 @@
                         <label>Conta *</label>
                     </dt>
                     <dd>
-                        <select name="conta" id="conta" class="size4" required="">
+                        <select name="conta" id="conta" class="size4">
                             <option value="">Selecione</option>
                             <? foreach ($conta as $value) : ?>
                                 <option value="<?= $value->forma_entradas_saida_id; ?>"><?php echo $value->descricao; ?></option>
@@ -80,39 +80,24 @@
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
-    
-    $(function () {
-        $("#inicio").datepicker({
-            autosize: true,
-            changeYear: true,
-            changeMonth: true,
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            buttonImage: '<?= base_url() ?>img/form/date.png',
-            dateFormat: 'dd/mm/yy'
-        });
-    });
-
-    $(function () {
-        $('#tipo').change(function () {
-            if ($(this).val()) {
-                $('.carregando').show();
-                $.getJSON('<?= base_url() ?>autocomplete/classeportiposaidalista', {nome: $(this).val(), ajax: true}, function (j) {
-                    options = '<option value=""></option>';
-                    for (var c = 0; c < j.length; c++) {
-                        options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
-                    }
-                    $('#classe').html(options).show();
-                    $('.carregando').hide();
-                });
-            } else {
-                $('#classe').html('<option value="">TODOS</option>');
-            }
-        });
-    });
+//    $(function () {
+//        $('#tipo').change(function () {
+//            if ($(this).val()) {
+//                $('.carregando').show();
+//                $.getJSON('<?= base_url() ?>autocomplete/classeportiposaida', {tipo: $(this).val(), ajax: true}, function (j) {
+//                    options = '<option value=""></option>';
+//                    for (var c = 0; c < j.length; c++) {
+//                        options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
+//                    }
+//                    $('#classe').html(options).show();
+//                    $('.carregando').hide();
+//                });
+//            } else {
+//                $('#classe').html('<option value="">Selecione</option>');
+//            }
+//        });
+//    });
 
     $(function () {
         $("#devedorlabel").autocomplete({
@@ -135,7 +120,17 @@
         $("#accordion").accordion();
     });
 
-
+    $(function () {
+        $("#inicio").datepicker({
+            autosize: true,
+            changeYear: true,
+            changeMonth: true,
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            buttonImage: '<?= base_url() ?>img/form/date.png',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
 
     $(document).ready(function () {
         jQuery('#form_entrada').validate({

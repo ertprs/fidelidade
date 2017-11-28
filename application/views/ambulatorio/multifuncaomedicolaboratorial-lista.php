@@ -6,8 +6,6 @@
             <?
             $salas = $this->exame->listartodassalas();
             $medicos = $this->operador_m->listarmedicos();
-            $especialidade = $this->exame->listarespecialidade();
-            $perfil_id = $this->session->userdata('perfil_id');
             ?>
             <table>
                 <thead>
@@ -15,10 +13,7 @@
 
                     <tr>
                         <th class="tabela_title">Salas</th>
-                        <?if ($perfil_id != 4){?>
-                        <th class="tabela_title">Especialidade</th>
                         <th class="tabela_title">Medico</th>
-                        <? } ?>
                         <th class="tabela_title">Data</th>
                         <th colspan="2" class="tabela_title">Nome</th>
                     </tr>
@@ -34,43 +29,17 @@
                                         <? endforeach; ?>
                             </select>
                         </th>
-                        <?if ($perfil_id != 4){?>
-                         <th class="tabela_title">
-                                <select name="especialidade" id="especialidade" class="size1">
-                                    <option value=""></option>
-                                    <? foreach ($especialidade as $value) : ?>
-                                        <option value="<?= $value->cbo_ocupacao_id; ?>" <?
-                                        if (@$_GET['especialidade'] == $value->cbo_ocupacao_id):echo 'selected';
-                                        endif;
-                                        ?>>
-                                                    <?
-//                                                if (@$_GET['especialidade'] == $value->cbo_ocupacao_id):
-//                                                    echo '<script>carregaMedicoEspecialidade();</script>';
-//                                                endif;
-                                                    ?>
-                                                    <?php echo $value->descricao; ?>
-                                        </option>
-                                    <? endforeach; ?>
-                                </select>
-                            </th>
-
-
-                            <th class="tabela_title">
-                                <select name="medico" id="medico" class="size2">
-                                    <option value=""> </option>
-                                    <? foreach ($medicos as $value) : ?>
-                                        <option value="<?= $value->operador_id; ?>"<?
-                                        if (@$_GET['medico'] == $value->operador_id):echo 'selected';
-                                        endif;
-                                        ?>>
-                                                    <?php echo $value->nome; ?>
-
-                                        </option>
-                                    <? endforeach; ?>
-
-                                </select>
-                            </th>
-                        <? } ?>
+                        <th class="tabela_title">
+                            <select name="medico" id="medico" class="size2">
+                                <option value=""></option>
+                                <? foreach ($medicos as $value) : ?>
+                                    <option value="<?= $value->operador_id; ?>" <?
+                                if (@$_GET['medico'] == $value->operador_id):echo 'selected';
+                                endif;
+                                    ?>><?php echo $value->nome; ?></option>
+                                        <? endforeach; ?>
+                            </select>
+                        </th>
                         <th class="tabela_title">
                             <input type="text"  id="data" alt="date" name="data" class="size1"  value="<?php echo @$_GET['data']; ?>" />
                         </th>
@@ -210,115 +179,22 @@
         </div>
 
     </div> <!-- Final da DIV content -->
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.8.5.custom.min.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-meiomask.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-<!--<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>-->
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>    
-<script type="text/javascript">
-$(document).ready(function () {
-//alert('teste_parada');
- if ($('#especialidade').val() != '') {
-            $.getJSON('<?= base_url() ?>autocomplete/medicoespecialidade', {txtcbo: $('#especialidade').val(), ajax: true}, function (j) {
-                var options = '<option value=""></option>';
-                var slt = '';
-                for (var c = 0; c < j.length; c++) {
-                    if (j[0].operador_id != undefined) {
-                        if (j[c].operador_id == '<?= @$_GET['medico'] ?>') {
-                            slt = 'selected';
-                        }
-                        options += '<option value="' + j[c].operador_id + '" ' + slt + '>' + j[c].nome + '</option>';
-                        slt = '';
-                    }
-                }
-                $('#medico').html(options).show();
-                $('.carregando').hide();
+    <script type="text/javascript">
 
+        $(function() {
+            $( "#data" ).datepicker({
+                autosize: true,
+                changeYear: true,
+                changeMonth: true,
+                monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+                dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                buttonImage: '<?= base_url() ?>img/form/date.png',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
 
-
-            });
-        }
-                                        $(function () {
-                                            $('#especialidade').change(function () {
-
-                                                if ($(this).val()) {
-
-//                                                  alert('teste_parada');
-                                                    $('.carregando').show();
-//                                                        alert('teste_parada');
-                                                    $.getJSON('<?= base_url() ?>autocomplete/medicoespecialidade', {txtcbo: $(this).val(), ajax: true}, function (j) {
-                                                        options = '<option value=""></option>';
-                                                        console.log(j);
-
-                                                        for (var c = 0; c < j.length; c++) {
-
-
-                                                            if (j[0].operador_id != undefined) {
-                                                                options += '<option value="' + j[c].operador_id + '">' + j[c].nome + '</option>';
-
-                                                            }
-                                                        }
-                                                        $('#medico').html(options).show();
-                                                        $('.carregando').hide();
-
-
-
-                                                    });
-                                                } else {
-                                                    $('.carregando').show();
-//                                                        alert('teste_parada');
-                                                    $.getJSON('<?= base_url() ?>autocomplete/medicoespecialidadetodos', {txtcbo: $(this).val(), ajax: true}, function (j) {
-                                                        options = '<option value=""></option>';
-                                                        console.log(j);
-
-                                                        for (var c = 0; c < j.length; c++) {
-
-
-                                                            if (j[0].operador_id != undefined) {
-                                                                options += '<option value="' + j[c].operador_id + '">' + j[c].nome + '</option>';
-
-                                                            }
-                                                        }
-                                                        $('#medico').html(options).show();
-                                                        $('.carregando').hide();
-
-
-
-                                                    });
-                                                    
-                                                }
-                                            });
-                                        });
-
-
-
-                                        $(function () {
-                                            $("#data").datepicker({
-                                                autosize: true,
-                                                changeYear: true,
-                                                changeMonth: true,
-                                                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                                                dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-                                                buttonImage: '<?= base_url() ?>img/form/date.png',
-                                                dateFormat: 'dd/mm/yy'
-                                            });
-                                        });
-
-                                        $(function () {
-                                            $("#accordion").accordion();
-                                        });
-
-                                        setTimeout('delayReload()', 20000);
-                                        function delayReload()
-                                        {
-                                            if (navigator.userAgent.indexOf("MSIE") != -1) {
-                                                history.go(0);
-                                            } else {
-                                                window.location.reload();
-                                            }
-                                        }
-
-                                    });
+    $(function() {
+        $( "#accordion" ).accordion();
+    });
 
 </script>

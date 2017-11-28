@@ -1,7 +1,7 @@
 
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3 class="singular"><a href="#">Atendimentos pendentes</a></h3>
+        <h3 class="singular"><a href="#">Exames pendentes</a></h3>
         <div>
             <?
             $salas = $this->exame->listartodassalas();
@@ -28,8 +28,6 @@
                         </th>
                         <th colspan="3" class="tabela_title">
                     <input type="text" name="nome" class="texto10 bestupper" value="<?php echo @$_GET['nome']; ?>" />
-                    </th>
-                    <th class="tabela_title">
                     <button type="submit" id="enviar">Pesquisar</button>
                     </th>
                 </form>
@@ -38,7 +36,6 @@
                 <tr>
                     <th class="tabela_header">Nome</th>
                     <th class="tabela_header">Agenda</th>
-                    <th class="tabela_header">Data Pendência</th>
                     <th class="tabela_header">Sala</th>
                     <th class="tabela_header">Procedimento</th>
                     <th class="tabela_header" colspan="4"><center>A&ccedil;&otilde;es</center></th>
@@ -63,7 +60,6 @@
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->inicio; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data_pendente)); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->sala; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->procedimento; ?></td>
 
@@ -71,11 +67,6 @@
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/exame/voltarexamependente/<?= $item->exames_id ?>/<?= $item->sala_id ?>/<?= $item->agenda_exames_id ?> ">
                                             Voltar
-                                        </a></div>
-                                </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>ambulatorio/exame/finalizarexamependente/<?= $item->exames_id ?>/<?= $item->sala_id ?>/<?= $item->agenda_exames_id ?> ">
-                                            Finalizar
                                         </a></div>
                                 </td>
                             </tr>

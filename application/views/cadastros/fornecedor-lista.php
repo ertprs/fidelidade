@@ -22,7 +22,6 @@
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">CNPJ</th>
                         <th class="tabela_header">CPF</th>
-                        <th class="tabela_header">Telefone</th>
                         <th class="tabela_header" width="70px;" colspan="2"><center>Detalhes</center></th>
                     </tr>
                 </thead>
@@ -38,7 +37,7 @@
                 <tbody>
                     <?php
                         if ($limit != "todos") {
-                            $lista = $this->fornecedor->listar($_GET)->orderby('razao_social')->limit($limit, $pagina)->get()->result();
+                            $lista = $this->fornecedor->listar($_GET)->limit($limit, $pagina)->get()->result();
                         } else {
                             $lista = $this->fornecedor->listar($_GET)->get()->result();
                         }
@@ -50,7 +49,6 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cnpj; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cpf; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>"><?= $item->telefone; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
                                     <a href="<?= base_url() ?>cadastros/fornecedor/carregarfornecedor/<?= $item->financeiro_credor_devedor_id ?>" target="_blank">Editar</a>
                             </td>
@@ -66,7 +64,7 @@
                         ?>
                         <tfoot>
                             <tr>
-                                <th class="tabela_footer" colspan="6">
+                                <th class="tabela_footer" colspan="5">
                                    <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                                    Total de registros: <?php echo $total; ?>
                                     <div style="display: inline">

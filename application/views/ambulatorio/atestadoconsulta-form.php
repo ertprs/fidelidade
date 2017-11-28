@@ -1,6 +1,3 @@
-<head>
-    <title>Atestado</title>
-</head>
 <div >
     <?
     $dataFuturo = date("Y-m-d");
@@ -35,7 +32,6 @@
                             <td>Nascimento:<?= substr(@$obj->_nascimento, 8, 2) . "/" . substr(@$obj->_nascimento, 5, 2) . "/" . substr(@$obj->_nascimento, 0, 4); ?></td>
                             <td>Sala:<?= @$obj->_sala ?></td>
                         </tr>
-
                     </table>
                 </fieldset>
                 <div>
@@ -43,41 +39,14 @@
                     <fieldset>
                         <legend>Atestado</legend>
                         <div>
-                            <label>CID Primario</label>
-                            <input type="hidden" id="txtcid1ID" class="texto_id" name="cid1ID"  />
-                            <input type="text" id="txtcid1" class="texto10" name="txtcid1"  />
-                        </div>
-                        <div>
-                            <label>CID Secundario</label>
-                            <input type="hidden" id="txtcid2ID" class="texto_id" name="cid2ID"  />
-                            <input type="text" id="txtcid2" class="texto10" name="txtcid2"  />
-                        </div>
-                        <div><div class="bt_link_new"><a href="<?php echo base_url() ?>ambulatorio/modeloatestado/carregarmodeloatestado/0" target="_blank">
-                                    Novo Modelo Atestado
-                                </a></div>
-                        </div>
-                        <div>
                             <label>Modelos</label>
-                            
                             <select name="exame" id="exame" class="size2" >
-                                <option value='' ></option>
-                                <option value=''  selected="">Selecione</option>
+                                <option value='' >selecione</option>
                                 <?php foreach ($lista as $item) { ?>
                                     <option value="<?php echo $item->ambulatorio_modelo_atestado_id; ?>" ><?php echo $item->nome; ?></option>
                                 <?php } ?>
                             </select>
-                            <label>Data</label>
-                            <input type="text" id="data" name="data" class="texto02" required/>
 
-                            <label for="carimbo">Carimbo</label>
-                            <input type="checkbox" id="carimbo"  name="carimbo" id="carimbo"/>
-
-                            <label for="assinatura">Assinatura</label>
-                            <input type="checkbox" id="assinatura" name="assinatura" id="assinatura"/>
-
-
-                            <label for="imprimircid">Imprimir CID</label>
-                            <input type="checkbox"  name="imprimircid" id="imprimircid" />
                         </div>
                         <div>
                             <input type="hidden" id="receituario_id" name="receituario_id" value="<?= $receituario_id ?>"/>
@@ -116,7 +85,6 @@
                 <table id="table_agente_toxico" border="0">
                     <thead>
                         <tr>
-                            <th class="tabela_header">Data</th>
                             <th class="tabela_header">Descri&ccedil;&atilde;o</th>
                             <th colspan="2" class="tabela_header">&nbsp;</th>
                         </tr>
@@ -128,7 +96,6 @@
                         ?>
                         <tbody>
                             <tr>
-                                <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data_cadastro)); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->texto; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                         <a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/laudo/impressaoatestado/<?= $item->ambulatorio_atestado_id; ?>');">Imprimir
@@ -164,55 +131,11 @@
 <link href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
 <link href="<?= base_url() ?>css/jquery-treeview.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-
-                                            $(function () {
-                                                $("#data").datepicker({
-                                                    autosize: true,
-                                                    changeYear: true,
-                                                    changeMonth: true,
-                                                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                                                    dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-                                                    buttonImage: '<?= base_url() ?>img/form/date.png',
-                                                    dateFormat: 'dd/mm/yy'
-                                                });
-                                            });
-
-                                            $(function () {
-                                                $("#txtcid1").autocomplete({
-                                                    source: "<?= base_url() ?>index.php?c=autocomplete&m=cid1",
-                                                    minLength: 2,
-                                                    focus: function (event, ui) {
-                                                        $("#txtcid1").val(ui.item.label);
-                                                        return false;
-                                                    },
-                                                    select: function (event, ui) {
-                                                        $("#txtcid1").val(ui.item.value);
-                                                        $("#txtcid1ID").val(ui.item.id);
-                                                        return false;
-                                                    }
-                                                });
-                                            });
-
-                                            $(function () {
-                                                $("#txtcid2").autocomplete({
-                                                    source: "<?= base_url() ?>index.php?c=autocomplete&m=cid1",
-                                                    minLength: 2,
-                                                    focus: function (event, ui) {
-                                                        $("#txtcid2").val(ui.item.label);
-                                                        return false;
-                                                    },
-                                                    select: function (event, ui) {
-                                                        $("#txtcid2").val(ui.item.value);
-                                                        $("#txtcid2ID").val(ui.item.id);
-                                                        return false;
-                                                    }
-                                                });
-                                            });
 
 
                                             $(document).ready(function () {

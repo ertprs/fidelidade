@@ -37,7 +37,6 @@ class Cliente extends BaseController {
         $obj_cliente = new cliente_model($estoque_cliente_id);
         $data['obj'] = $obj_cliente;
         $data['menu'] = $this->cliente->listarmenu();
-        $data['sala'] = $this->cliente->listarsalamenu();
         //$this->carregarView($data, 'giah/servidor-form');
         $this->loadView('estoque/cliente-form', $data);
     }
@@ -65,19 +64,9 @@ class Cliente extends BaseController {
     }
 
     function gravarclientes() {
-        $operador_id = $_POST['txtoperador_id'];        
-        $clientes_id = $_POST['clientes_id'];
-        $data['cliente'] = $this->cliente->testaclienterepetidos($clientes_id,$operador_id);
-//        var_dump($data['cliente']); die;
-        if ( count($data['cliente']) == 0 ){
-            $this->cliente->gravarclientes();
-            $data['mensagem'] = 'Sucesso ao associar setor e cliente.';
-        }else {
-            $data['mensagem'] = 'Erro ao associar setor e cliente. Já existe uma associação';
-        }
-         $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "estoque/cliente/clientesetor/$operador_id");
-//        $this->clientesetor($operador_id);
+        $operador_id = $_POST['txtoperador_id'];
+        $this->cliente->gravarclientes();
+        $this->clientesetor($operador_id);
     }
 
     function excluirclientes($operado_cliente, $operador_id) {

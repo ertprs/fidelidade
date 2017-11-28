@@ -1,5 +1,3 @@
-
-	<? $empresa_logada = $this->session->userdata('empresa_id'); ?>
 <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
     <div class="clear"></div>
     <form name="form_exametemp" id="form_exametemp" action="<?= base_url() ?>ambulatorio/exametemp/gravarpacienteexameencaixe" method="post">
@@ -9,12 +7,12 @@
             <legend>Manter Exames</legend>
             <div>
                 <label>Data</label>
-                <input type="text"  id="data_ficha" name="data_ficha" class="size1" required/>
+                <input type="text"  id="data_ficha" name="data_ficha" class="size1"  />
                 <input type="hidden" name="txtpaciente_id"  value="<?= @$obj->_ambulatorio_pacientetemp_id; ?>" />
             </div>
             <div>
                 <label>Sala</label>
-                <select name="sala" id="sala" class="size4" required>
+                <select name="sala" id="sala" class="size4">
                     <option value="" >Selecione</option>
                     <? foreach ($salas as $item) : ?>
                         <option value="<?= $item->exame_sala_id; ?>"><?= $item->nome; ?></option>
@@ -23,7 +21,7 @@
             </div>
             <div>
                 <label>Medico</label>
-                <select name="medico" id="medico" class="size2" required>
+                <select name="medico" id="medico" class="size2">
                     <option value="" >Selecione</option>
                     <? foreach ($medico as $item) : ?>
                         <option value="<?= $item->operador_id; ?>"><?= $item->nome; ?></option>
@@ -31,27 +29,13 @@
                 </select>
             </div>
             <div>
-                <label>Empresa</label>
-                <select name="empresa" id="empresa" class="size1">
-                    <?
-                    foreach ($empresas as $value) :
-                        ?>
-                        <option value="<?= $value->empresa_id; ?>" <?
-                        if ($empresa_logada == $value->empresa_id) {
-                            echo 'selected';
-                        }
-                        ?>><?php echo $value->nome; ?></option>
-                            <? endforeach; ?>
-                </select>
-
-            </div>
-            <div>
                 <label>Horarios</label>
-                <input type="text" id="horarios" name="horarios"  class="size1" required/>
+                <input type="time" id="horarios" name="horarios"  class="size1"  maxlength="8"  onkeypress="mascara(this)" onclick="if (this.value !== '')
+                            this.value = ''" />
             </div>
             <div>
                 <label>Convenio *</label>
-                <select name="convenio1" id="convenio1" class="size4"  required>
+                <select name="convenio1" id="convenio1" class="size4">
                     <option  value="-1">Selecione</option>
                     <? foreach ($convenio as $value) : ?>
                         <option value="<?= $value->convenio_id; ?>"><?php echo $value->nome; ?></option>
@@ -60,7 +44,7 @@
             </div>
             <div>
                 <label>Procedimento</label>
-                <select  name="procedimento1" id="procedimento1" class="size1" required>
+                <select  name="procedimento1" id="procedimento1" class="size1" >
                     <option value="">Selecione</option>
                 </select>
             </div>
@@ -75,12 +59,12 @@
             <legend>Paciente</legend>
             <div>
                 <label>Nome</label>
-                <input type="hidden" id="txtNomeid" class="texto_id" name="txtNomeid" readonly="true" />
-                <input type="text" id="txtNome" name="txtNome" class="texto10" required/>
+                <input type="text" id="txtNomeid" class="texto_id" name="txtNomeid" readonly="true" />
+                <input type="text" id="txtNome" name="txtNome" class="texto10"/>
             </div>
             <div>
                 <label>Dt de nascimento</label>
-                <input type="text" name="nascimento" id="nascimento" class="texto02"/>
+                <input type="text" name="nascimento" id="nascimento" class="texto02" alt="date"/>
             </div>
             <div>
 
@@ -88,11 +72,11 @@
             </div>
             <div>
                 <label>Telefone</label>
-                <input type="text" id="telefone" class="texto02" name="telefone"/>
+                <input type="text" id="telefone" class="texto02" name="telefone" alt="phone"/>
             </div>
             <div>
                 <label>Celular</label>
-                <input type="text" id="txtCelular" class="texto02" name="txtCelular"/>
+                <input type="text" id="txtCelular" class="texto02" name="celular" alt="phone"/>
             </div>
 
             <div>
@@ -104,61 +88,15 @@
 
 
 </div> <!-- Final da DIV content -->
-
-<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
-<script>
-    function mascaraTelefone(campo) {
-
-        function trata(valor, isOnBlur) {
-
-            valor = valor.replace(/\D/g, "");
-            valor = valor.replace(/^(\d{2})(\d)/g, "($1)$2");
-
-            if (isOnBlur) {
-
-                valor = valor.replace(/(\d)(\d{4})$/, "$1-$2");
-            } else {
-
-                valor = valor.replace(/(\d)(\d{3})$/, "$1-$2");
-            }
-            return valor;
-        }
-
-        campo.onkeypress = function (evt) {
-
-            var code = (window.event) ? window.event.keyCode : evt.which;
-            var valor = this.value
-
-            if (code > 57 || (code < 48 && code != 0 && code != 8 && code != 9)) {
-                return false;
-            } else {
-                this.value = trata(valor, false);
-            }
-        }
-
-        campo.onblur = function () {
-
-            var valor = this.value;
-            if (valor.length < 13) {
-                this.value = ""
-            } else {
-                this.value = trata(this.value, true);
-            }
-        }
-
-        campo.maxLength = 14;
-    }
-
-
-</script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-    mascaraTelefone(form_exametemp.telefone);
-    mascaraTelefone(form_exametemp.txtCelular);
 
+<?php if ($this->session->flashdata('message') != ''): ?>
+                        alert("<? echo $this->session->flashdata('message')?>");
+<? endif; ?>
 
                     $(function () {
                         $("#data_ficha").datepicker({
@@ -202,7 +140,6 @@
                                 $("#txtNome").val(ui.item.value);
                                 $("#txtNomeid").val(ui.item.id);
                                 $("#telefone").val(ui.item.itens);
-                                $("#txtCelular").val(ui.item.celular);
                                 $("#nascimento").val(ui.item.valor);
                                 return false;
                             }
@@ -256,8 +193,13 @@
                         });
                     });
 
+                    /* Máscaras ER */
+                    function mascara(horarios) {
+                        if (horarios.value.length == 2)
+                            horarios.value = horarios.value + ':'; //quando o campo já tiver 2 caracteres (2 números) o script irá inserir um ':'.
 
-                    jQuery("#nascimento").mask("99/99/9999");
-                    jQuery("#horarios").mask("99:99");
+                        if (horarios.value.length == 5)
+                            horarios.value = horarios.value + ':'; //quando o campo já tiver 5 caracteres (2 números + ':' + 2 números), o script irá inserir um ':'.      
+                    }
 
 </script>

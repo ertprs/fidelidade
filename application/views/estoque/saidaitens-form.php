@@ -57,27 +57,20 @@
             <div>
                 <label>Produtos</label>
                 <select name="produto_id" id="produto_id" class="size4">
-                    <option value=''>SELECIONE</option>
                     <?
                     foreach ($produtos as $value) :
                         if ($value->total != 0) {
                             ?>
-                            <option onclick="verificacao(<?= $value->total ?>)" value="<?= $value->estoque_entrada_id; ?>"><?php echo $value->descricao; ?> - QTDE: <?php echo $value->total; ?> - Armazem: <?php echo $value->armazem; ?> - VALIDADE: <?php echo substr($value->validade, 8, 2) . "/" . substr($value->validade, 5, 2) . "/" . substr($value->validade, 0, 4); ?></option>
-                        <?
-                        }
+                            <option value="<?= $value->estoque_entrada_id; ?>"><?php echo $value->descricao; ?> - QTDE: <?php echo $value->total; ?> - Armazem: <?php echo $value->armazem; ?> - VALIDADE: <?php echo substr($value->validade, 8, 2) . "/" . substr($value->validade, 5, 2) . "/" . substr($value->validade, 0, 4); ?></option>
+                        <? }
                     endforeach;
                     ?>
                 </select>
             </div>
             <div>
                 <label>Quantidade</label>
-                <input type="text" name="txtqtde" id="txtqtde" class="size1" alt="integer"/>
+                <input type="text" name="txtqtde" class="size1" alt="integer"/>
             </div>
-
-            <div style="display: none">
-                <input type="hidden" name="qtdedisponivel" id="qtdedisponivel" class="size1" alt="integer" value=''>
-            </div>
-
             <div>
                 <label>&nbsp;</label>
                 <button type="submit" name="btnEnviar">Adicionar</button>
@@ -98,28 +91,27 @@
                     <th class="tabela_header">&nbsp;</th>
                 </tr>
             </thead>
-
-            <tbody>
-                <?
-                $estilo_linha = "tabela_content01";
-                foreach ($produtossaida as $item) {
-                    ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                    ?>
+            <?
+            $estilo_linha = "tabela_content01";
+            foreach ($produtossaida as $item) {
+                ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                ?>
+                <tbody>
                     <tr>
                         <td class="<?php echo $estilo_linha; ?>"><?= $item->descricao; ?></td>
                         <td class="<?php echo $estilo_linha; ?>"><?= $item->quantidade; ?></td>
                         <td class="<?php echo $estilo_linha; ?>" width="100px;">
-                            <a href="<?= base_url() ?>estoque/solicitacao/excluirsaida/<?= $item->estoque_saida_id; ?>/<?= $estoque_solicitacao_id ?>/<?= $estoque_solicitacao_itens_id; ?>" class="delete">
+                            <a href="<?= base_url() ?>estoque/solicitacao/excluirsaida/<?= $item->estoque_saida_id; ?>/<?=$estoque_solicitacao_id?>/<?= $estoque_solicitacao_itens_id; ?>" class="delete">
                             </a>
+
                         </td>
                     </tr>
 
-
-                    <?
-                }
+                </tbody>
+                <?
             }
-            ?>
-        </tbody>
+        }
+        ?>
         <tfoot>
             <tr>
                 <th class="tabela_footer" colspan="4">
@@ -137,9 +129,7 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 
-            function verificacao(valor) {
-                document.getElementById("qtdedisponivel").value = valor;
-            }
+
 
 
 
@@ -166,12 +156,12 @@
 
 
 
-            $(function () {
+            $(function() {
                 $("#accordion").accordion();
             });
 
 
-            $(document).ready(function () {
+            $(document).ready(function() {
                 jQuery('#form_exametemp').validate({
                     rules: {
                         txtNome: {
@@ -182,12 +172,6 @@
                             required: true
                         },
                         idade: {
-                            required: true
-                        },
-                        produto_id: {
-                            required: true
-                        },
-                        txtqtde: {
                             required: true
                         }
                     },
@@ -200,12 +184,6 @@
                             required: "*"
                         },
                         idade: {
-                            required: "*"
-                        },
-                        produto_id: {
-                            required: "*"
-                        },
-                        txtqtde: {
                             required: "*"
                         }
                     }

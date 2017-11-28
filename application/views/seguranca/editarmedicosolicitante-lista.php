@@ -1,5 +1,4 @@
 <div class="content"> <!-- Inicio da DIV content -->
-    <? $perfil_id = $this->session->userdata('perfil_id'); ?>
     <div class="bt_link_new">
         <a onclick="javascript:window.open('<?= base_url() ?>seguranca/operador/novorecepcao');">
             Novo Medico
@@ -22,21 +21,21 @@
                     <tr>
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">CRM</th>
-                        <th class="tabela_header" colspan="2">&nbsp;</th>
+                        <th class="tabela_header">&nbsp;</th>
                     </tr>
                 </thead>
                 <?php
                     $url      = $this->utilitario->build_query_params(current_url(), $_GET);
                     $consulta = $this->operador_m->listarmedicosolicitante($_GET);
                     $total    = $consulta->count_all_results();
-                    $limit    = 50;
+                    $limit    = 10;
                     isset ($_GET['per_page']) ? $pagina = $_GET['per_page'] : $pagina = 0;
 
                     if ($total > 0) {
                 ?>
                 <tbody>
                     <?php
-                        $lista = $this->operador_m->listarmedicosolicitante($_GET)->limit($limit, $pagina)->orderby("nome")->get()->result();
+                        $lista = $this->operador_m->listarmedicosolicitante($_GET)->limit($limit, $pagina)->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
@@ -45,19 +44,9 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->conselho; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="140px;">
-                                    <a href="<?= base_url() ?>seguranca/operador/alterarrecepcao/<?= $item->operador_id ?>">Editar</a>
-                                </td>
-                                
-                                <? if ($perfil_id == 1) { 
-                                    if($item->operador_id != 1 ){?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="140px;">
-                                        <a  style="cursor: pointer;" onclick="javascript: return confirm('Deseja realmente excluir o solicitante: <?= $item->nome; ?>');"
-                                            href="<?= base_url() ?>seguranca/operador/excluirmedicosolicitante/<?= $item->operador_id ?>">Excluir</a>
-                                    </td>
-                                    <?} else{ ?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="140px;"></td>
-                                <? } 
-                                }?>
+
+                                    <a href="<?= base_url() ?>seguranca/operador/alterarrecepcao/<?= $item->operador_id ?>">Editar                                    </a>
+                            </td>
                         </tr>
 
                         </tbody>

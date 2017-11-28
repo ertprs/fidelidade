@@ -7,7 +7,7 @@
     <h3 class="h3_title">Cadastro de Paciente</h3>
     <form name="form_paciente" id="form_paciente" action="<?= base_url() ?>cadastros/pacientes/gravar" method="post">
         <fieldset>
-            <legend>Dados do paciente</legend>
+            <legend>Dados do Pacienete</legend>
             <div>
                 <label>Nome</label>                      
                 <input type ="hidden" name ="paciente_id" value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">

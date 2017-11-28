@@ -13,7 +13,7 @@
     if ($i < 2){
 $i++;
 
-$imagem = $nomeimagem[$y];
+$imagem = $nomeimagem[$y]->nome;
             ?>
     
                 <td><img  width="240px" height="190px" src="<?= base_url() . "upload/" . $exame_id . "/" . $value; ?>"><br><br><?=$imagem; ?></td>
@@ -32,7 +32,7 @@ $y++;
     ?>
 </tr>
 </table>
-<h5 style="text-align: center;">Fortaleza: <?= substr($laudo['0']->data_cadastro, 8, 2); ?>/<?= substr($laudo['0']->data_cadastro, 5, 2); ?>/<?= substr($laudo['0']->data_cadastro, 0, 4); ?></h5>
+<h5>Fortaleza: <?= substr($laudo['0']->data_cadastro, 8, 2); ?>/<?= substr($laudo['0']->data_cadastro, 5, 2); ?>/<?= substr($laudo['0']->data_cadastro, 0, 4); ?></h5>
 
 
 

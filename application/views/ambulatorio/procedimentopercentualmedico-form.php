@@ -10,13 +10,10 @@
                         <label>Covênio</label>
                     </dt>
                     <dd>
-                        <input type="hidden" name="covenio" id="covenio" value="<?= $convenio_id ?>"/>
-                        <select name="__covenio" id="__covenio" class="size4" required disabled="">
-                            <option value="">SELECIONE</option>
+                        <select name="covenio" id="covenio" class="size4">
+                            <option>SELECIONE</option>
                             <? foreach ($convenio as $value) : ?>
-                                <option  value="<?= $value->convenio_id; ?>" <?if($value->convenio_id == $convenio_id) echo 'selected'?>>
-                                    <?php echo $value->nome; ?>
-                                </option>                            
+                                <option  value="<?= $value->convenio_id; ?>"><?php echo $value->nome; ?></option>                            
                             <? endforeach; ?>                                                                                             
                         </select>               
 
@@ -25,8 +22,8 @@
                         <label>Grupo</label>
                     </dt>                    
                     <dd>                       
-                        <select name="grupo" id="grupo" class="size4" required>
-                            <option value="">SELECIONE</option>
+                        <select name="grupo" id="grupo" class="size4">
+                            <option>SELECIONE</option>
                             <option>TODOS</option>                           
                             <? foreach ($grupo as $value) : ?>
                                 <option value="<?= $value->nome; ?>"><?php echo $value->nome; ?></option>
@@ -70,18 +67,6 @@
                             <option value="0"> NÃO</option>                                   
                         </select>
                     </dd>
-                    <dt>
-                        <label>Dia Faturamento</label>
-                    </dt>
-                    <dd>
-                        <input type="text" id="entrega" class="texto02" name="dia_recebimento" alt="99"/>
-                    </dd>
-                    <dt>
-                        <label>Tempo para Recebimento</label>
-                    </dt>
-                    <dd>
-                        <input type="text" id="pagamento" class="texto02" name="tempo_recebimento" alt="99"/>
-                    </dd>
                 </dl>    
                 <hr/>
                 <button type="submit" name="btnEnviar">Enviar</button>
@@ -107,66 +92,17 @@
     $(function () {
         $('#covenio').change(function () {
             if ($(this).val()) {
-                if ( $('#grupo').val() == "TODOS") {
-                    $('.carregando').show();
-                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoporconvenio', {covenio: $(this).val(), ajax: true}, function (j) {
-                        options = '<option value="">TODOS</option>';
-                        for (var c = 0; c < j.length; c++) {
-                            options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
-                        }
-                        $('#procedimento').html(options).show();
-                        $('.carregando').hide();
-                    });
-                }
-                else{
-                    if ( $('#grupo').val() != "SELECIONE") {
-                        $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniogrupo', {grupo1: $('#grupo').val(), convenio1: $(this).val()}, function (j) {
-                            options = '<option value=""></option>';
-                            for (var c = 0; c < j.length; c++) {
-                                options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
-                            }
-                            $('#procedimento').html(options).show();
-                            $('.carregando').hide();
-                        });
-                    }
-                }
-            } else {
-                $('#procedimento').html('<option value="">SELECIONE</option>');
-            }
-        });
-    });
-    
-    
-    
-    
-    $(function () {
-        $('#grupo').change(function () {
-            if ($('#covenio').val() != 'SELECIONE' && $('#grupo').val() != 'TODOS') {
                 $('.carregando').show();
-                $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniogrupo', {grupo1: $(this).val(), convenio1: $('#covenio').val()}, function (j) {
-                    options = '<option value=""></option>';
+                $.getJSON('<?= base_url() ?>autocomplete/procedimentoporconvenio', {covenio: $(this).val(), ajax: true}, function (j) {
+                    options = '<option value="">TODOS</option>';
                     for (var c = 0; c < j.length; c++) {
                         options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
                     }
                     $('#procedimento').html(options).show();
                     $('.carregando').hide();
                 });
-            }
-            
-            else {
-                
-                if ( $('#grupo').val() == 'TODOS' ) {
-                    $('.carregando').show();
-                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoporconvenio', {covenio: $('#covenio').val(), ajax: true}, function (j) {
-                        options = '<option value="">TODOS</option>';
-                        for (var c = 0; c < j.length; c++) {
-                            options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
-                        }
-                        $('#procedimento').html(options).show();
-                        $('.carregando').hide();
-                    });
-                }
-                
+            } else {
+                $('#procedimento').html('<option value="">SELECIONE</option>');
             }
         });
     });

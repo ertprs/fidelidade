@@ -34,17 +34,7 @@ $formapagamento ='';
     <td ><font size = -1>Idade: <?= $idade; ?></font></td>
 </tr>
 <tr>
-    <td >
-        <?
-            foreach ($exames as $value) :
-                $convenios[] = utf8_decode($value->convenio);
-            endforeach; 
-            $convenios = array_unique($convenios);
-            $convenios = implode(' / ', $convenios);
-        ?>
-        <font size = -1>Convenio: <?= $convenios; ?>
-        </font>
-    </td>
+    <td ><font size = -1>Convenio: <?= utf8_decode($exame[0]->convenio); ?></font></td>
 </tr>
 <tr>
     <td ><font size = -1>-------------------------------------------------------------</font></td>
@@ -71,7 +61,7 @@ $formapagamento ='';
     <td ><font size = -1>-------------------------------------------------------------</font></td>
 </tr>
 <tr>
-    <td ><font size = -1><b>TOTAL R$ <?= number_format($guia[0]->valor_guia, 2, ',', '.')?> <?= $formapagamento; ?></b></font></td>
+    <td ><font size = -1><b>TOTAL R$ <?= number_format($totalpagar, 2, ',', '.')?> <?= $formapagamento; ?></b></font></td>
 </tr>
 <tr>
     <td ><font size = -1>-------------------------------------------------------------</font></td>

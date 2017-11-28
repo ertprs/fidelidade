@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar Relatório Indicação Cadastro</a></h3>
+        <h3><a href="#">Gerar relatorio Tecnico convenio</a></h3>
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatorioindicacao">
                 <dl>
@@ -25,15 +25,6 @@
                             <? foreach ($indicacao as $value) : ?>
                                 <option value="<?= $value->paciente_indicacao_id; ?>" ><?php echo $value->nome; ?></option>
                             <? endforeach; ?>
-                        </select>
-                    </dd>
-                    <dt>
-                    <label>Gráfico</label>
-                    </dt>
-                    <dd>
-                        <select name="grafico" id="indicacao" class="size2">
-                            <option value="0">NÃO</option>
-                            <option value="1">SIM</option>
                         </select>
                     </dd>
                     <dt>

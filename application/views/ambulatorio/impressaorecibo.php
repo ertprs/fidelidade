@@ -17,16 +17,7 @@ $agenda = $exame[0]->agenda;
 $data = $exame[0]->data;
 $MES = substr($exame[0]->data, 5, 2);
 ?>
-<?
-//if(count()){
-//    
-//}
-if(@$empresa[0]->cabecalho_config == 't'){
-    echo @$cabecalho[0]->cabecalho;
-}else{?>
-<p><center><img align = 'center'  width='1000px' height='300px' src="<?= base_url() . "img/cabecalho.jpg" ?>"></center></p>   
-<?}
-?>
+<p><center><img align = 'center'  width='1000px' height='300px' src="<?= base_url() . "img/cabecalho.jpg" ?>"></center></p>
 <p><center><u><?= $exame[0]->razao_social; ?></u></center></p>
 <p><center><?= $exame[0]->logradouro; ?> - <?= $exame[0]->numero; ?> - <?= $exame[0]->bairro; ?></center></p>
 <p><center>Fone: (85) <?= $exame[0]->telefoneempresa; ?> - (85) <?= $exame[0]->celularempresa; ?></center></p>
@@ -35,7 +26,7 @@ if(@$empresa[0]->cabecalho_config == 't'){
 <p>
 <p><center>N&SmallCircle; PEDIDO:<?= $exame[0]->agenda_exames_id; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VALOR:# <?= $valor; ?> &nbsp;#</center></p>
 <p>
-<p>Recebi de <?= utf8_decode($paciente['0']->nome); ?>, a importancia de <?= $guia[0]->valor_guia; ?> (<?= $extenso; ?>)  referente
+<p>Recebi de <?= utf8_decode($paciente['0']->nome); ?>, a importancia de <?= $valor; ?> (<?= $extenso; ?>)  referente
     a   <?
     $formapagamento = "";
     $teste = "";
@@ -69,18 +60,7 @@ if(@$empresa[0]->cabecalho_config == 't'){
 <h4><center>___________________________________________</center></h4>
 <h4><center>Raz&atilde;o Social: <?= $exame[0]->razao_social; ?></center></h4>
 <h4><center>CNPJ: <?= $exame[0]->cnpj; ?></center></h4>
-<?
-@$cabecalho = @$cabecalho[0]->rodape;
-@$cabecalho = str_replace("_assinatura_", '', @$cabecalho);
-if(@$empresa[0]->rodape_config == 't'){
-    
-    echo @$cabecalho;
-    
-}else{?>
 <p><center><img align = 'center'  width='1000px' height='300px' src="<?= base_url() . "img/rodape.jpg" ?>"></center></p>
-<?}
-?>
-
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>

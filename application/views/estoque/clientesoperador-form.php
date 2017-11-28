@@ -2,7 +2,7 @@
     <div class="clear"></div>
     <form name="form_menuitens" id="form_menuitens" action="<?= base_url() ?>estoque/cliente/gravarclientes" method="post">
         <fieldset>
-            <legend>Operador</legend>
+            <legend>Menu produtos</legend>
             <div>
                 <label>Nome</label>
                 <input type="hidden" name="txtoperador_id" value="<?= $operadores[0]->operador_id; ?>" />
@@ -10,9 +10,9 @@
             </div>
         </fieldset>
         <fieldset>
-            <legend>Cadastro de Setores</legend>
+            <legend>Cadastro de Produtos</legend>
             <div>
-                <label>Setores</label>
+                <label>Produtos</label>
                 <select name="clientes_id" id="clientes_id" class="size4">
                     <? foreach ($clientes as $value) : ?>
                         <option value="<?= $value->estoque_cliente_id; ?>"><?php echo $value->nome; ?></option>

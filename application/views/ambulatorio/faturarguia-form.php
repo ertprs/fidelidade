@@ -1,249 +1,114 @@
-<meta charset="utf-8">
 <body bgcolor="#C0C0C0">
     <div class="content"> <!-- Inicio da DIV content -->
         <h3 class="singular">Faturar</h3>
         <div>
             <form name="form_faturar" id="form_faturar" action="<?= base_url() ?>ambulatorio/guia/gravarfaturadoguia" method="post">
                 <fieldset>
-                    <table>
-                        <tr>
-                            <td style="text-align: left">
-                               Valor total a faturar 
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                                <input type="text" name="valorafaturar" id="valorafaturar" size="7" class="texto01" value="<?= $exame[0]->total; ?>" readonly />
-                                <input type="hidden" name="guia_id" id="guia_id" class="texto01" value="<?= $guia_id; ?>"/>
-                                <input type="hidden" name="financeiro_grupo_id" id="financeiro_grupo_id" class="texto01" value="<?= $financeiro_grupo_id; ?>"/>
-                                
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                               Desconto 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" name="desconto" id="desconto" size="7" value="<?= $valor; ?>" class="texto01"/>
-                                <input type="hidden" name="dinheiro" id="dinheiro" value="0"class="texto01"/>
-                                <input type="hidden" name="juroscartao" id="juroscartao" value="0"class="texto01"/>
-                                
-<!--                                <input type="checkbox" name="credito" id="credito"/>
-                                <label for="credito">Usar credito?</label>-->
-                            </td>
-                        </tr>
-                        </table>
-                    <table>
-                        
-                        
-                        <tr>
-                            <td style="text-align: left;">
-                               Valor1 
-                            </td>
-                            <td style="text-align: left">
-                               Forma de pagamento1 /
-                            </td>
-                            
-                            <td style="text-align: left">
-                               Ajuste1(%) /
-                            </td>
-                            <td style="text-align: left">
-                               Valor Ajustado /
-                            </td>
-                            <td style="text-align: left">
-                               Parcelas
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                                <input type="text" name="valor1" id="valor1" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                                <input type="hidden" name="valorMinimo1" id="valorMinimo1"/>
-                            </td>
-                            <td style="text-align: left" >
-                                <select  name="formapamento1" id="formapamento1" class="size1" >
-                                    <option value="">Selecione</option>
-                                    <? foreach ($forma_pagamento as $item) : ?>
-                                        <option value="<?= $item->forma_pagamento_id; ?>" onclick="mudaValor('1', '<?=$item->parcela_minima;?>')">
-                                            <?= $item->nome; ?>
-                                        </option>
-                                    <? endforeach; ?>
-                                </select>
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="ajuste1" id="ajuste1" size="3" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left" >
-                            <input type="text" name="valorajuste1" id="valorajuste1" size="4" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left">
-                            <input style="width: 60px;" type="number" name="parcela1" id="parcela1" value="1" size="2" min="1" />
-                            </td>
-                            
-                            <input type="hidden" name="totalpagar" id="totalpagar"  class="texto01" onblur="history.go(0)"/>
-                        </tr>
 
-                        <tr>
-                            <td style="text-align: left">
-                               Valor2
-                            </td>
-                            <td style="text-align: left">
-                               Forma de pagamento2 /
-                            </td>
-                            
-                            <td style="text-align: left">
-                               Ajuste2(%) /
-                            </td>
-                            <td style="text-align: left">
-                               Valor Ajustado /
-                            </td>
-                            <td style="text-align: left">
-                               Parcelas
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                                <input type="text" name="valor2" id="valor2" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                                <input type="hidden" name="valorMinimo2" id="valorMinimo2"/>
-                            </td>
-                            <td style="text-align: left">
-                                <select  name="formapamento2" id="formapamento2" >
+                    <dl class="dl_desconto_lista">
+                        <dt>
+                            <label>Valor total a faturar</label>
+                        </dt>
+                        <dd>
+                            <input type="text" name="valorafaturar" id="valorafaturar" class="texto01" value="<?= $exame[0]->total; ?>" readonly />
+                            <input type="hidden" name="guia_id" id="guia_id" class="texto01" value="<?= $guia_id; ?>"/>
+                            <input type="hidden" name="financeiro_grupo_id" id="financeiro_grupo_id" class="texto01" value="<?= $financeiro_grupo_id; ?>"/>
+                        </dd>
+                        <dt>
+                            <label>Desconto</label>
+                        </dt>
+                        <dd>
+                            <input type="text" name="desconto" id="desconto" value="<?= $valor; ?>" class="texto01"/>
+                        </dd>
+                        <!--                        <dt>
+                                                <label>Dinheiro</label>
+                                                </dt>
+                                                <dd>-->
+                        <input type="hidden" name="dinheiro" id="dinheiro" value="0"class="texto01"/>
+                        <input type="hidden" name="juroscartao" id="juroscartao" value="0"class="texto01"/>
+<!--                            <select  name="juroscartao" id="juroscartao" class="size1">
+                            <option value="0">NAO</option>
+                            <option value="1">SIM</option>
+                            </select>
+                    </dd>
+                    <dt>
+                    <label>Total a com cartao</label>
+                    </dt>-->
+                        <dd>
+                            <input type="hidden" name="totalpagar" id="totalpagar"  class="texto01" onblur="history.go(0)"/>
+                        </dd>
+                        </br>
+                        <dt>
+                            <label >Valor1 / Forma de pagamento1 /  Ajuste1(%) /  Valor Ajustado</label>
+                        </dt>
+                        <dd>
+                            <input type="text" name="valor1" id="valor1" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <select  name="formapamento1" id="formapamento1" class="size1" >
                                 <option value="">Selecione</option>
                                 <? foreach ($forma_pagamento as $item) : ?>
-                                    <option value="<?= $item->forma_pagamento_id; ?>"  onclick="mudaValor('2', '<?=$item->parcela_minima;?>')">
-                                        <?= $item->nome; ?></option>
+                                    <option value="<?= $item->forma_pagamento_id; ?>"><?= $item->nome; ?></option>
                                 <? endforeach; ?>
                             </select>
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="ajuste2" id="ajuste2" size="3" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="valorajuste2" id="valorajuste2" size="4" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left">
-                            <input style="width: 60px;" type="number" name="parcela2" id="parcela2" size="2" value="1" min="1" />
-                            </td>
-                            
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                               Valor3 
-                            </td>
-                            <td style="text-align: left">
-                               Forma de pagamento3 /
-                            </td>
-                            
-                            <td style="text-align: left">
-                               Ajuste3(%) /
-                            </td>
-                            <td style="text-align: left">
-                               Valor Ajustado /
-                            </td>
-                            <td style="text-align: left">
-                               Parcelas
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                                <input type="text" name="valor3" id="valor3" size="2"  value="<?= $valor; ?>" onblur="history.go(0)"/>
-                                <input type="hidden" name="valorMinimo3" id="valorMinimo3"/>
-                            </td>
-                            <td style="text-align: left">
+                            <input type="text" name="ajuste1" id="ajuste1" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>                                                                           
+                            <input type="text" name="valorajuste1" id="valorajuste1" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <input style="width: 60px;" type="number" name="parcela1" id="parcela1"  value="1" min="1" />
+                        </dd>
+                        </br>
+                        <dt>
+                            <label>Valor2/ Forma de pagamento2 / Ajuste2(%) / Valor Ajustado</label>
+                        </dt>
+                        <dd>
+                            <input type="text" name="valor2" id="valor2" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <select  name="formapamento2" id="formapamento2" class="size1" >
+                                <option value="">Selecione</option>
+                                <? foreach ($forma_pagamento as $item) : ?>
+                                    <option value="<?= $item->forma_pagamento_id; ?>"><?= $item->nome; ?></option>
+                                <? endforeach; ?>
+                            </select>
+                            <input type="text" name="ajuste2" id="ajuste2" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <input type="text" name="valorajuste2" id="valorajuste2" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <input style="width: 60px;" type="number" name="parcela2" id="parcela2"  value="1" min="1" />
+
+                        </dd>
+                        </br>
+                        <dt>
+                            <label>Valor3/ Forma de pagamento3 / Ajuste3(%) / Valor Ajustado</label>
+                        </dt>
+                        <dd>
+                            <input type="text" name="valor3" id="valor3" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
                             <select  name="formapamento3" id="formapamento3" class="size1" >
                                 <option value="">Selecione</option>
                                 <? foreach ($forma_pagamento as $item) : ?>
-                                    <option value="<?= $item->forma_pagamento_id; ?>" onclick="mudaValor('3', '<?=$item->parcela_minima;?>')">
-                                        <?= $item->nome; ?></option>
+                                    <option value="<?= $item->forma_pagamento_id; ?>"><?= $item->nome; ?></option>
                                 <? endforeach; ?>
-                            </select>   
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="ajuste3" id="ajuste3" size="3" value="<?= $valor; ?>" onblur="history.go(0)"/>  
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="valorajuste3" id="valorajuste3" size="4" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left">
-                            <input style="width: 60px;" type="number" name="parcela3" id="parcela3" size="2" value="1" min="1" />
-                            </td>
-                            
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                               Valor4
-                            </td>
-                            <td style="text-align: left">
-                               Forma de pagamento4 /
-                            </td>
-                            
-                            <td style="text-align: left">
-                               Ajuste4(%) /
-                            </td>
-                            <td style="text-align: left">
-                               Valor Ajustado /
-                            </td>
-                            <td style="text-align: left">
-                               Parcelas
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: left">
-                                <input type="text" name="valor4" id="valor4" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                                <input type="hidden" name="valorMinimo4" id="valorMinimo4"/>
-                            </td>
-                            <td style="text-align: left">
+                            </select>                                   
+                            <input type="text" name="ajuste3" id="ajuste3" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>  
+                            <input type="text" name="valorajuste3" id="valorajuste3" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <input style="width: 60px;" type="number" name="parcela3" id="parcela3"  value="1" min="1" />
+                        </dd>
+                        </br>
+                        <dt>
+                            <label>Valor4/ Forma de pagamento4 / Ajuste4(%) / Valor Ajustado</label>
+                        </dt>
+                        <dd>
+                            <input type="text" name="valor4" id="valor4" size="2" value="<?= $valor; ?>" onblur="history.go(0)"/>
                             <select  name="formapamento4" id="formapamento4" class="size1" >
                                 <option value="">Selecione</option>
                                 <? foreach ($forma_pagamento as $item) : ?>
-                                    <option value="<?= $item->forma_pagamento_id; ?>" onclick="mudaValor('4', '<?=$item->parcela_minima;?>')">
-                                        <?= $item->nome; ?></option>
+                                    <option value="<?= $item->forma_pagamento_id; ?>"><?= $item->nome; ?></option>
                                 <? endforeach; ?>
-                            </select>  
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="ajuste4" id="ajuste4" size="3" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left">
-                            <input type="text" name="valorajuste4" id="valorajuste4" size="4" value="<?= $valor; ?>" onblur="history.go(0)"/>
-                            </td>
-                            <td style="text-align: left">
-                            <input style="width: 60px;" type="number" name="parcela4" id="parcela4" size="2" value="1" min="1" />
-                            </td>
-                            
-                        </tr>
-              </table>
-                    <table>
-                       <tr>
-                            <td>
-                               Diferença 
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td>
-                                <input type="text" name="valortotal" id="valortotal"  onkeyup="multiplica()"  class="texto01" readonly/>
-                                <input type="hidden" name="valorcadastrado" id="valorcadastrado" value="<?= $exame[0]->total; ?>"/>
-                                <input type="hidden" name="juros" id="juros" value="0">
-                                <input type="hidden" name="valorcredito" id="valorcredito" value="0">
-                                <input type="hidden" name="paciente_id" id="paciente_id">
-                            </td>
-                        </tr>
-                        
-                    </table>
-                    
-                    <dl class="dl_desconto_lista">                        
+                            </select>              
+                            <input type="text" name="ajuste4" id="ajuste4" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <input type="text" name="valorajuste4" id="valorajuste4" size="1" value="<?= $valor; ?>" onblur="history.go(0)"/>
+                            <input style="width: 60px;" type="number" name="parcela4" id="parcela4"  value="1" min="1" />
+                        </dd>
+                        <dt>
+                            <label>Diferen&ccedil;a</label>
+                        </dt>
                         <dd>
-                            
+                            <input type="text" name="valortotal" id="valortotal"  onkeyup="multiplica()"  class="texto01" readonly/>
+                            <input type="hidden" name="valorcadastrado" id="valorcadastrado" value="<?= $exame[0]->total; ?>"/>
+                            <input type="hidden" name="juros" id="juros" value="0">
                         </dd>
                     </dl>    
 
@@ -254,62 +119,23 @@
         </div>
     </div> <!-- Final da DIV content -->
 </body>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.8.5.custom.min.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-meiomask.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.8.5.custom.min.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-meiomask.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
-                                function mudaValor(id, valor){
-                                    $("#valorMinimo"+id).val(valor);
-                                }
+
+                                //    (function($){
+                                //        $(function(){
+                                //            $('input:text').setMask();
+                                //        });
+                                //    })(jQuery);
+
 
                                 $(document).ready(function () {
-                                     <? for ($i = 1; $i < 5; $i++) { // Caso selecione credito especial?>
-                                            $('#formapamento<?= $i ?>').change(function() {
-                                                if(this.value == 1000){
-                                                    
-                                                    var selecionado = false;
 
-                                                    for (var i = 1; i < 5; i++) {
-                                                        if (i == <?= $i ?>) {
-                                                            continue;
-                                                        }
-                                                        if($('#formapamento'+i).val() == 1000){
-                                                            selecionado = true;
-                                                        }
-                                                    }
-
-                                                    var valorDiferenca = $('#valortotal').val();
-                                                    $.getJSON('<?= base_url() ?>autocomplete/buscarsaldopaciente', {guia_id: <?= $guia_id; ?>, ajax: true}, function (j) {
-                                                        if(!selecionado){
-                                                            if(parseFloat(j.saldo) >=  parseFloat(valorDiferenca)){
-                                                                $('#valor<?= $i ?>').val(valorDiferenca);
-                                                            }
-                                                            else{
-                                                                $('#valor<?= $i ?>').val(j.saldo);
-                                                            }
-                                                            
-                                                            $('#valorcredito').val($('#valor<?= $i ?>').val());
-                                                        }
-                                                        
-                                                            
-                                                        $('#paciente_id').val(j.paciente_id);
-                                                        $('#valor<?= $i ?>').attr("readonly", 'true');
-                                                        
-                                                        multiplica();
-                                                    });
-                                                }
-                                                else{
-                                                    $('#valor<?= $i ?>').removeAttr("readonly");
-                                                    multiplica();
-                                                }
-                                                
-                                            });
-                                                  
-                                     <?}?>
-                                    
                                     function multiplica()
                                     {
                                         total = 0;
@@ -351,7 +177,6 @@
                                         //        document.form_faturar.valortotal.value = 10;
                                     }
                                     multiplica();
-                                    
                                     $(function () {
                                         $('#formapamento1').change(function () {
                                             if ($(this).val()) {
@@ -363,7 +188,7 @@
                                                     options = j[0].ajuste;
                                                     parcelas = j[0].parcelas;
                                                     numer_1 = parseFloat(document.form_faturar.valor1.value.replace(",", "."));
-                                                    if (j[0].parcelas != null && j[0].parcelas != '0') {
+                                                    if (j[0].parcelas != null) {
                                                         document.getElementById("parcela1").max = parcelas;
                                                     } else {
                                                         document.getElementById("parcela1").max = '1';
@@ -399,7 +224,7 @@
                                                     options = j[0].ajuste;
                                                     parcelas = j[0].parcelas;
                                                     numer_2 = parseFloat(document.form_faturar.valor2.value.replace(",", "."));
-                                                    if (j[0].parcelas != null && j[0].parcelas != '0') {
+                                                    if (j[0].parcelas != null) {
                                                         document.getElementById("parcela2").max = parcelas;
                                                     } else {
                                                         document.getElementById("parcela2").max = '1';
@@ -437,7 +262,7 @@
                                                     options = j[0].ajuste;
                                                     parcelas = j[0].parcelas;
                                                     numer_3 = parseFloat(document.form_faturar.valor3.value.replace(",", "."));
-                                                    if (j[0].parcelas != null && j[0].parcelas != '0') {
+                                                    if (j[0].parcelas != null) {
                                                         document.getElementById("parcela3").max = parcelas;
                                                     } else {
                                                         document.getElementById("parcela3").max = '1';
@@ -472,7 +297,7 @@
                                                     options = j[0].ajuste;
                                                     parcelas = j[0].parcelas;
                                                     numer_4 = parseFloat(document.form_faturar.valor4.value.replace(",", "."));
-                                                    if (j[0].parcelas != null && j[0].parcelas != '0') {
+                                                    if (j[0].parcelas != null) {
                                                         document.getElementById("parcela4").max = parcelas;
                                                     } else {
                                                         document.getElementById("parcela4").max = '1';

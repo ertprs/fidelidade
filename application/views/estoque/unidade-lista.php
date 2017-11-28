@@ -2,7 +2,7 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>estoque/unidade/carregarunidade/0">
-            Nova Unidade
+            Novo Unidade
         </a>
     </div>
     <div id="accordion">

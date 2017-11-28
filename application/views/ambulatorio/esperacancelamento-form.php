@@ -12,8 +12,7 @@
                         <input type="hidden" name="txtagenda_exames_id" value="<?= $agenda_exames_id; ?>" />
                         <input type="hidden" name="txtprocedimento_tuss_id" value="<?= $procedimento_tuss_id; ?>" />
                         <input type="hidden" name="txtpaciente_id" value="<?= $paciente_id; ?>" />
-                        <select name="txtmotivo" id="txtmotivo" class="size4" required="true">
-                            <option value="">SELECIONE</option>
+                        <select name="txtmotivo" id="txtmotivo" class="size4">
                             <? foreach ($motivos as $item) : ?>
                                 <option value="<?= $item->ambulatorio_cancelamento_id; ?>"><?= $item->descricao; ?></option>
                             <? endforeach; ?>

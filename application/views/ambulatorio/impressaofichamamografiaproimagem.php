@@ -19,28 +19,16 @@
     <table>
         <tbody>
         <td rowspan="3" width="70%;"><img align = 'left'  width='330px' height='100px' src=<?= base_url() . "img/logoclinicadez.png" ?>></td>
-        <tr>
-        <td>( &nbsp; ) RAIOS X 
-            <br>( &nbsp; ) DENS. 
-            <br>( &nbsp; ) MMG
-            <br>( &nbsp; ) RNM
-            <br>( &nbsp; ) USG SALA
-            <br>( &nbsp; ) TOMOGRAFIA
-        
-        </td>
-        <!--<td>( &nbsp; ) DENS.</td>-->
+        <td>( &nbsp; ) RAIOS X</td>
+        <td>( &nbsp; ) DENS.</td>
         </tr>
         <tr>
-        <!--<td>( &nbsp; ) RAIOS X</td>-->
-        <!--<td>( &nbsp; ) DENS.</td>-->
+            <td>( &nbsp; ) MMG</td>
+            <td>( &nbsp; ) RNM</td>
         </tr>
         <tr>
-            <!--<td>( &nbsp; ) MMG</td>-->
-            <!--<td>( &nbsp; ) RNM</td>-->
-        </tr>
-        <tr>
-            <!--<td>( &nbsp; ) USG</td>-->
-            <!--<td>( &nbsp; ) TOMOGRAFIA</td>-->
+            <td>( &nbsp; ) USG</td>
+            <td>( &nbsp; ) TOMOGRAFIA</td>
         </tr>
         <tr>
             <td ><font size = -1><?= substr($exame[0]->sala, 0, 10); ?></td>
@@ -114,7 +102,7 @@
                 ?>
                 <tr>
                     <td ><font size = -1><?= $item->quantidade ?></td>
-                    <td ><font size = -1><? utf8_decode($item->codigo) ?></td>
+                    <td ><font size = -1><?= utf8_decode($item->codigo) ?></td>
                     <td width="40%;"><font size = -1><?= utf8_decode($item->procedimento) ?></td>
                     <td ><font size = -1><?= $item->convenio ?></td>
                     <td width="25%;"><font size = -1>Dr(a). <?= utf8_decode($item->medicosolicitante) ?></td>

@@ -6,8 +6,6 @@
             <?
             $salas = $this->exame->listartodassalas();
             $medicos = $this->operador_m->listarmedicos();
-            $especialidade = $this->exame->listarespecialidade();
-            $perfil_id = $this->session->userdata('perfil_id');
             ?>
             <table>
                 <thead>
@@ -15,10 +13,7 @@
 
                     <tr>
                         <th class="tabela_title">Salas</th>
-                        <?if ($perfil_id != 4){?>
-                        <th class="tabela_title">Especialidade</th>
                         <th class="tabela_title">Medico</th>
-                        <? } ?>
                         <th class="tabela_title">Data</th>
                         <th colspan="2" class="tabela_title">Nome</th>
                     </tr>
@@ -34,18 +29,6 @@
                                         <? endforeach; ?>
                             </select>
                         </th>
-                        <?if ($perfil_id != 4){?>
-                        <th class="tabela_title">
-                            <select name="especialidade" id="especialidade" class="size1">
-                                <option value=""></option>
-                                <? foreach ($especialidade as $value) : ?>
-                                    <option value="<?= $value->descricao; ?>" <?
-                                    if (@$_GET['especialidade'] == $value->descricao):echo 'selected';
-                                    endif;
-                                    ?>><?php echo $value->descricao; ?></option>
-                                        <? endforeach; ?>
-                            </select>
-                        </th>
                         <th class="tabela_title">
                             <select name="medico" id="medico" class="size2">
                                 <option value=""></option>
@@ -57,7 +40,6 @@
                                         <? endforeach; ?>
                             </select>
                         </th>
-                        <? } ?>
                         <th class="tabela_title">
                             <input type="text"  id="data" alt="date" name="data" class="size1"  value="<?php echo @$_GET['data']; ?>" />
                         </th>
@@ -199,64 +181,31 @@
 
 </div> <!-- Final da DIV content -->
 <script type="text/javascript">
-    setTimeout('delayReload()', 20000);
-    function delayReload()
-    {
-        if (navigator.userAgent.indexOf("MSIE") != -1) {
-            history.go(0);
-        } else {
-            window.location.reload();
-        }
-    }
+                                                    setTimeout('delayReload()', 20000);
+                                                    function delayReload()
+                                                    {
+                                                        if (navigator.userAgent.indexOf("MSIE") != -1) {
+                                                            history.go(0);
+                                                        } else {
+                                                            window.location.reload();
+                                                        }
+                                                    }
 
 
-    $(function () {
-        $("#data").datepicker({
-            autosize: true,
-            changeYear: true,
-            changeMonth: true,
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            buttonImage: '<?= base_url() ?>img/form/date.png',
-            dateFormat: 'dd/mm/yy'
-        });
-    });
+                                                    $(function() {
+                                                        $("#data").datepicker({
+                                                            autosize: true,
+                                                            changeYear: true,
+                                                            changeMonth: true,
+                                                            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                                                            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                                                            buttonImage: '<?= base_url() ?>img/form/date.png',
+                                                            dateFormat: 'dd/mm/yy'
+                                                        });
+                                                    });
 
-    $(function () {
-        $('#especialidade').change(function () {
-
-            if ($(this).val()) {
-
-                especialidade_medico = txtcbo.val();
-//                     alert(teste_parada);
-                $('.carregando').show();
-//                     alert(teste_parada);
-                $.getJSON('<?= base_url() ?>autocomplete/medicoespecialidade', {txtcbo: $(this).val(), ajax: true}, function (j) {
-                    options = '<option value=""></option>';
-                    console.log(j);
-
-                    for (var c = 0; c < j.length; c++) {
-
-
-                        if (j[0].operador_id != undefined) {
-                            options += '<option value="' + j[c].operador_id + '">' + j[c].nome + '</option>';
-
-                        }
-                    }
-                    $('#medico').html(options).show();
-                    $('.carregando').hide();
-
-
-
-                });
-            } else {
-                $('#medico').html('<option value="">Selecione</option>');
-            }
-        });
-    });
-
-    $(function () {
-        $("#accordion").accordion();
-    });
+                                                    $(function() {
+                                                        $("#accordion").accordion();
+                                                    });
 
 </script>

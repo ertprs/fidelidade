@@ -1,5 +1,4 @@
 <body bgcolor="#C0C0C0">
-<meta charset="UTF-8">
 <div class="content"> <!-- Inicio da DIV content -->
         <h3 class="singular">Alterar Observacao</h3>
         <div>

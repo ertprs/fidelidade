@@ -5,7 +5,7 @@
         <h4>TODAS AS CLINICAS</h4>
     <? } ?>
     <h4>Agenda Consultas</h4>
-    <h4>PERIODO: <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_inicio) ) ); ?> ate <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_fim) ) ); ?></h4>
+    <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
     <? if (count($medico) > 0) { ?>
         <h4>Medico: <?= $medico[0]->operador; ?></h4>
     <? } ?>
@@ -134,7 +134,7 @@
         ?>
 
     </table>
-     <h4>Total de exames marcados <?= $contador; ?></h4>
+     <h4>Toatl de exames marcados <?= $contador; ?></h4>
 
 </div> <!-- Final da DIV content -->
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />

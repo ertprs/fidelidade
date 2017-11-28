@@ -21,19 +21,19 @@
         <h4>TODAS OS DEVEDORES</h4>
     <? } ?>
     <h4>RELATORIO DE ENTRADA</h4>
-    <h4>PERIODO: <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_inicio) ) ); ?> ate <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_fim) ) ); ?></h4>
+    <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
     <hr>
     <?
     if ($relatorioentrada > 0) {
         ?>
-        <table border="1">
+        <table >
             <thead>
                 <tr>
                     <th width="100px;" class="tabela_header">Conta</th>
                     <th class="tabela_header">Nome</th>
+                    <th class="tabela_header">Dt entrada</th>
                     <th class="tabela_header">Tipo</th>
                     <th class="tabela_header">Classe</th>
-                    <th class="tabela_header">Dt entrada</th>
                     <th class="tabela_header">Valor</th>
                     <th class="tabela_header">Observacao</th>
                 </tr>
@@ -47,9 +47,9 @@
                     <tr>
                         <td ><?= utf8_decode($item->conta); ?></td>
                         <td ><?= utf8_decode($item->razao_social); ?>&nbsp;</td>
+                        <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                         <td ><?= utf8_decode($item->tipo); ?>&nbsp;</td>
                         <td ><?= utf8_decode($item->classe); ?>&nbsp;</td>
-                        <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                         <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
                         <td ><?= utf8_decode($item->observacao); ?>&nbsp;</td>
                     </tr>

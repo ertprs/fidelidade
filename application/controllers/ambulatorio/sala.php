@@ -16,7 +16,6 @@ class Sala extends BaseController {
     function Sala() {
         parent::Controller();
         $this->load->model('ambulatorio/sala_model', 'sala');
-        $this->load->model('ambulatorio/procedimento_model', 'procedimento');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -37,8 +36,6 @@ class Sala extends BaseController {
     function carregarsala($exame_sala_id) {
         $obj_sala = new sala_model($exame_sala_id);
         $data['obj'] = $obj_sala;
-        $data['armazem'] = $this->sala->listararmazem();
-        $data['grupos'] = $this->procedimento->listargrupos();
         //$this->carregarView($data, 'giah/servidor-form');
         $this->loadView('ambulatorio/sala-form', $data);
     }
@@ -63,36 +60,6 @@ class Sala extends BaseController {
 
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/sala");
-    }
-
-    function carregarsalagrupo($exame_sala_id) {
-        $data['exame_sala_id'] = $exame_sala_id;
-        $data['grupos'] = $this->procedimento->listargrupos();
-        $data['gruposAssociados'] = $this->sala->carregarsalagrupo($exame_sala_id);
-        $this->loadView('ambulatorio/salagrupo-form', $data);
-    }
-
-    function gravarsalagrupo() {
-        $exame_sala_id = $_POST['exame_sala_id'];
-        $retorno = $this->sala->gravarsalagrupo();
-        if ($retorno == "-1") {
-            $data['mensagem'] = 'Erro ao associar o Grupo. Opera&ccedil;&atilde;o cancelada.';
-        } else {
-            $data['mensagem'] = 'Sucesso ao associar o Grupo.';
-        }
-        $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "ambulatorio/sala/carregarsalagrupo/" . $exame_sala_id);
-    }
-    
-    function excluirsalagrupo($sala_grupo_id, $sala_id) {
-        if ($this->sala->excluirsalagrupo($sala_grupo_id)) {
-            $mensagem = 'Sucesso ao excluir o Grupo.';
-        } else {
-            $mensagem = 'Erro ao excluir o Grupo. Opera&ccedil;&atilde;o cancelada.';
-        }
-
-        $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "ambulatorio/sala/carregarsalagrupo/" . $sala_id);
     }
 
     function gravar() {

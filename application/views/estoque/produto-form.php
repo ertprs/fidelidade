@@ -25,13 +25,11 @@
                                     <? endforeach; ?>
                         </select>
                     </dd>
-                    
                     <dt>
                     <label>Unidade</label>
                     </dt>
                     <dd>
-                        <select name="unidade" id="unidade" class="size4" required="">
-                            <option value=""></option>
+                        <select name="unidade" id="unidade" class="size4">
                             <? foreach ($unidade as $value) : ?>
                                 <option value="<?= $value->estoque_unidade_id; ?>"<?
                             if(@$obj->_unidade_id == $value->estoque_unidade_id):echo'selected';
@@ -39,15 +37,6 @@
                                     <? endforeach; ?>
                         </select>
                     </dd>
-                    
-                    <dt>
-                    <label>Procedimento</label>
-                    </dt>
-                    <dd>
-                        <input type="hidden" name="procedimentoID" id="procedimentoID" class="texto2" value="" />
-                        <input type="text" name="procedimento" id="procedimento" class="texto10" value="<?=@$obj->_procedimento?>" />
-                    </dd>
-                    
                     <dt>
                     <label>Valor de compra</label>
                     </dt>
@@ -60,7 +49,6 @@
                     <dd>
                         <input type="text" id="venda" alt="decimal" class="texto02" name="venda" value="<?= @$obj->_valor_venda; ?>" />
                     </dd>
-                    
                     <dt>
                     <label>Estoque minimo</label>
                     </dt>
@@ -93,22 +81,6 @@
             select: function( event, ui ) {
                 $( "#txtCidade" ).val( ui.item.value );
                 $( "#txtCidadeID" ).val( ui.item.id );
-                return false;
-            }
-        });
-    });
-    
-    $(function() {
-        $( "#procedimento" ).autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=procedimentoproduto",
-            minLength: 3,
-            focus: function( event, ui ) {
-                $( "#procedimento" ).val( ui.item.label );
-                return false;
-            },
-            select: function( event, ui ) {
-                $( "#procedimento" ).val( ui.item.value );
-                $( "#procedimentoID" ).val( ui.item.id );
                 return false;
             }
         });

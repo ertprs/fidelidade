@@ -15,7 +15,7 @@
         <div>
             <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravarprocedimentosfaturamento" method="post">
                 <fieldset>
-                    <legend>Dados do Paciente</legend>
+                    <legend>Dados do Pacienete</legend>
                     <div>
                         <label>Nome</label>                      
                         <input type="text" id="txtNome" name="nome"  class="texto09" value="<?= $paciente['0']->nome; ?>" readonly/>
@@ -53,12 +53,13 @@
 
                     <div>
                         <label>Nome da M&atilde;e</label>
+
+
                         <input type="text" name="nome_mae" id="txtNomeMae" class="texto08" value="<?= $paciente['0']->nome_mae; ?>" readonly/>
                     </div>
                 </fieldset>
 
                 <fieldset>
-
                     <table id="table_justa">
                         <thead>
 
@@ -67,7 +68,7 @@
                                 <th class="tabela_header">Convenio</th>
                                 <th class="tabela_header">Procedimento</th>
                                 <th class="tabela_header">Medico</th>
-                                <!--<th class="tabela_header">Tipo</th>-->
+                                <th class="tabela_header">Tipo</th>
                                 <th class="tabela_header">autorizacao</th>
                                 <th class="tabela_header">V. Unit</th>
                                 <th class="tabela_header">Empresa</th>
@@ -77,9 +78,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td  width="10px;"><input type="text" name="qtde1" id="qtde1" value="1" onchange="alteraQuantidade()" class="texto00"/></td>
+                                <td  width="10px;"><input type="text" name="qtde1" id="qtde1" value="1" class="texto00"/></td>
                                 <td  width="50px;">
-                                    <select  name="convenio1" id="convenio1" class="size1" required="">
+                                    <select  name="convenio1" id="convenio1" class="size1" >
                                         <option value="-1">Selecione</option>
                                         <? foreach ($convenios as $item) : ?>
                                             <option value="<?= $item->convenio_id; ?>"><?= $item->nome; ?></option>
@@ -87,12 +88,12 @@
                                     </select>
                                 </td>
                                 <td  width="50px;">
-                                    <select  name="procedimento1" id="procedimento1" class="size1" required="">
+                                    <select  name="procedimento1" id="procedimento1" class="size1" >
                                         <option value="">Selecione</option>
                                     </select>
                                 </td>
                                 <td > 
-                                    <select  name="medicoagenda" id="medicoagenda" class="size6" required="">
+                                    <select  name="medicoagenda" id="medicoagenda" class="size7" >
                                         <option value="">Selecione</option>
                                         <? foreach ($medicos as $item) : ?>
                                             <option value="<?= $item->operador_id; ?>"<?
@@ -101,27 +102,23 @@
                                             ?>><?= $item->nome; ?></option>
                                                 <? endforeach; ?>
                                     </select></td>
-<!--                                <td  width="50px;">
+                                <td  width="50px;">
                                     <select  name="tipo" id="tipo" class="size1" >
                                         <option value="EXAME">EXAME</option>
                                         <option value="CONSULTA">CONSULTA</option>
                                     </select>
-                                </td>-->
+                                </td>
 
                                 <td  width="50px;"><input type="text" name="autorizacao1" id="autorizacao" class="size1"/></td>
-                                <td  width="20px;">
-                                    <input type="text" name="valor1" id="valor1" class="texto01" readonly=""/>
-                                    <input type="hidden" name="valortot" id="valortot" class="texto01" readonly=""/>
-                                </td>
+                                <td  width="20px;"><input type="text" name="valor1" id="valor1" class="texto01" readonly=""/></td>
                                 <td>
                                     <select  name="txtempresa" id="empresa" class="size06" >
                                         <? foreach ($empresa as $item) : ?>
-                                            <option value="<?= $item->empresa_id; ?>" <?
-                                            if ($empresa_id == $item->empresa_id):echo 'selected';
-                                            endif;
+                                            <option value="<?= $item->empresa_id; ?>" <? if ($empresa_id == $item->empresa_id):echo 'selected';
+                                        endif;
                                             ?>>
-                                                <?= $item->nome; ?></option>
-                                        <? endforeach; ?>
+                                            <?= $item->nome; ?></option>
+<? endforeach; ?>
                                     </select>
                                 </td>
                                 <td  width="10px;"><input type="checkbox" name="laudo" /></td>
@@ -150,14 +147,11 @@
                     <thead>
 
                         <tr>
-                            <th width="130px;" class="tabela_header">Data de Atendimento</th>
-                            <th width="130px;" class="tabela_header">Data de Faturamento</th>
+                            <th class="tabela_header">Data</th>
                             <th class="tabela_header">Hora</th>
                             <th class="tabela_header">Valor</th>
                             <th class="tabela_header">convenio</th>
-                            <th class="tabela_header">Autorização</th>
                             <th class="tabela_header">Exame</th>
-
                             <th colspan="3" class="tabela_header">&nbsp;</th>
                         </tr>
                     </thead>
@@ -171,47 +165,23 @@
                         <tbody>
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= substr($item->data, 8, 2) . '/' . substr($item->data, 5, 2) . '/' . substr($item->data, 0, 4); ?></td>
-                                <td class="<?php echo $estilo_linha; ?>"><?= substr($item->data_faturar, 8, 2) . '/' . substr($item->data_faturar, 5, 2) . '/' . substr($item->data_faturar, 0, 4); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= substr($item->data_autorizacao, 11, 8); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor_total, 2, ',', '.'); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->convenio; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>">
-                                    <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarautorizacao/" . $item->agenda_exames_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=450');">
-                                        =><?= $item->autorizacao; ?>
-                                    </a>
-                                </td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->procedimento; ?></td>
-
-                                <? if ($item->faturado != "t") { ?>
+    <? if ($item->faturado != "t") { ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/faturarconvenio/" . $item->agenda_exames_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=250');">Faturar
                                             </a></div>
                                     </td>
-
-                            <input type="hidden" id="txtpaciente_id" name="txtpaciente_id"  value="<?= $paciente_id; ?>"/>
-                            <input type="hidden" id="txtguia_id" name="txtguia_id"  value="<?= $guia_id; ?>"/>
-                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                <div class="bt_link">
-                                    <a href="<?= base_url() . "ambulatorio/guia/valorexamefaturamento/{$paciente_id}/{$guia_id}/{$item->agenda_exames_id}"; ?>">
-                                        Editar
-                                    </a>
-                                </div>
-                            </td>
-                        <? } else { ?>
-                            <td class="<?php echo $estilo_linha; ?>" width="60px;">&nbsp;</td>                          
-                        <? } ?>
-                        <td class="<?php echo $estilo_linha; ?>">
-                            <div class="bt_link_new" width="140">
-                                <a  onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardata/" . $item->agenda_exames_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=450');">Alterar Data Atendi.
-                                </a>
-                            </div>
-                            <div class="bt_link_new"  width="140">
-                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardatafaturamento/" . $item->agenda_exames_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=450');">Alterar Data Fatura.
-                                </a>
-                            </div>
-                        </td>
-
-                        </tr>
+    <? }else{ ?>
+                                              <td class="<?php echo $estilo_linha; ?>" width="60px;">&nbsp;</td>                          
+    <?}?>
+                                <td class="<?php echo $estilo_linha; ?>"><div class="bt_link_new">
+                                        <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardata/" . $item->agenda_exames_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=250');">Alterar Data
+                                        </a>
+                                    </div></td>
+                            </tr>
 
                         </tbody>
                         <?
@@ -219,7 +189,7 @@
                     ?>
                     <tfoot>
                         <tr>
-                            <th class="tabela_footer" colspan="6">
+                            <th class="tabela_footer" colspan="5">
                                 Valor Total: R$ <?php echo number_format($total, 2, ',', '.'); ?>
                             </th>
                             <th colspan="2"><div class="bt_link_new">
@@ -239,15 +209,6 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-                                        function percentual() {
-                                            var valordesconto = parseFloat(document.form_guia.desconto.value.replace(",", "."));
-                                            var desconto = valordesconto / 100;
-                                            var valortot = document.getElementById("valortot").value;
-                                            var valor = valortot * desconto;
-                                            var r = valor.toFixed(2);
-
-                                            document.getElementById("valor1").value = r;
-                                        }
 
                                         $(function () {
                                             $("#data").datepicker({
@@ -270,7 +231,7 @@
                                             $('#convenio1').change(function () {
                                                 if ($(this).val()) {
                                                     $('.carregando').show();
-                                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniofaturar', {convenio1: $(this).val(), ajax: true}, function (j) {
+                                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconvenio', {convenio1: $(this).val(), ajax: true}, function (j) {
                                                         options = '<option value=""></option>';
                                                         for (var c = 0; c < j.length; c++) {
                                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -290,36 +251,16 @@
                                                 if ($(this).val()) {
                                                     $('.carregando').show();
                                                     $.getJSON('<?= base_url() ?>autocomplete/procedimentovalor', {procedimento1: $(this).val(), ajax: true}, function (j) {
-
-                                                        var valorTotal = parseFloat(j[0].valortotal);
-                                                        var qt = document.getElementById("qtde1").value;
-                                                        document.getElementById("valor1").value = valorTotal;
-                                                        document.getElementById("valortot").value = valorTotal;
+                                                        options = "";
+                                                        options += j[0].valortotal;
+                                                        document.getElementById("valor1").value = options
                                                         $('.carregando').hide();
-
                                                     });
                                                 } else {
                                                     $('#valor1').html('value=""');
                                                 }
                                             });
                                         });
-
-                                        function alteraQuantidade() {
-                                            if ($("#procedimento1").val()) {
-                                                $('.carregando').show();
-                                                $.getJSON('<?= base_url() ?>autocomplete/procedimentovalor', {procedimento1: $("#procedimento1").val(), ajax: true}, function (j) {
-
-                                                    var valorTotal = parseFloat(j[0].valortotal);
-                                                    var qt = document.getElementById("qtde1").value;
-//                                                    document  .getElementById("valor1").value = qt * valorTotal;
-                                                    document.getElementById("valortot").value = valorTotal;
-                                                    $('.carregando').hide();
-
-                                                });
-                                            } else {
-                                                $('#valor1').html('value=""');
-                                            }
-                                        }
 
 
 

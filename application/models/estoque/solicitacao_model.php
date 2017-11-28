@@ -36,12 +36,11 @@ class solicitacao_model extends Model {
     }
 
     function solicitacaonome($estoque_solicitacao_id) {
-        $this->db->select('ec.nome  , esc.data_fechamento , o.nome as liberou, op.nome as solicitante, es.data_cadastro');
+        $this->db->select('ec.nome  , esc.data_fechamento , o.nome as liberou, op.nome as solicitante');
         $this->db->from('tb_estoque_solicitacao_cliente esc');
         $this->db->join('tb_estoque_cliente ec', 'ec.estoque_cliente_id = esc.cliente_id');
         $this->db->join('tb_operador o', 'o.operador_id = esc.operador_fechamento', 'left');
         $this->db->join('tb_operador op', 'op.operador_id = esc.operador_liberacao', 'left');
-        $this->db->join('tb_estoque_saida es', 'es.solicitacao_cliente_id = esc.estoque_solicitacao_setor_id', 'left');
         $this->db->where('esc.estoque_solicitacao_setor_id', $estoque_solicitacao_id);
         $return = $this->db->get();
         return $return->result();
@@ -125,24 +124,6 @@ class solicitacao_model extends Model {
         return $return->result();
     }
 
-    function saidaprodutositemverificacao($produto_id) {
-        $this->db->select('ep.estoque_entrada_id,
-                            p.descricao,
-                            ep.validade,
-                            ea.descricao as armazem,
-                            sum(ep.quantidade) as total');
-        $this->db->from('tb_estoque_saldo ep');
-        $this->db->join('tb_estoque_produto p', 'p.estoque_produto_id = ep.produto_id');
-        $this->db->join('tb_estoque_solicitacao_itens esi', 'esi.produto_id = ep.produto_id');
-        $this->db->join('tb_estoque_armazem ea', 'ea.estoque_armazem_id = ep.armazem_id');
-        $this->db->where('esi.estoque_solicitacao_itens_id', $estoque_solicitacao_itens_id);
-        $this->db->where('ep.ativo', 'true');
-        $this->db->groupby('ep.estoque_entrada_id, p.descricao, ep.validade, ea.descricao');
-        $this->db->orderby('ep.validade');
-        $return = $this->db->get();
-        return $return->result();
-    }
-
     function listarsaidaprodutositem($estoque_solicitacao_itens_id) {
         $this->db->select('ep.estoque_saida_id,
                             p.descricao,
@@ -169,63 +150,30 @@ class solicitacao_model extends Model {
     }
 
     function listarsaidaitem($estoque_solicitacao_id) {
-
         $this->db->select(' ep.estoque_saida_id,
                             p.descricao,
                             ep.validade,
                             ep.quantidade,
-                            u.descricao as unidade');
+                            u.descricao as unidade,
+                            sum(s.quantidade) as saldo,                            
+                            si.quantidade as quantidade_solicitada');
         $this->db->from('tb_estoque_saida ep');
-        $this->db->join('tb_estoque_produto p', 'p.estoque_produto_id = ep.produto_id');
-        $this->db->join('tb_estoque_unidade u', 'u.estoque_unidade_id= p.unidade_id');
-//        $this->db->join('tb_estoque_saldo s', 's.produto_id = ep.produto_id', 'left');
-//        $this->db->join('tb_estoque_solicitacao_itens si', 'si.estoque_solicitacao_itens_id = ep.estoque_solicitacao_itens_id', 'left');
-        $this->db->where('ep.solicitacao_cliente_id', $estoque_solicitacao_id);
-        $this->db->where('ep.ativo', 'true');
-//        $this->db->groupby('ep.estoque_saida_id, p.descricao, ep.validade , u.descricao ');
-        $this->db->orderby('ep.estoque_saida_id');
-        $return = $this->db->get();
-        return $return->result();
-    }
-    function listarsaidaitemrelatorio($estoque_solicitacao_id) {
-
-        $this->db->select("ep.estoque_saida_id,
-                            p.descricao,
-                            p.valor_compra,
-                            p.valor_venda,
-                            ep.validade,
-                            ep.quantidade,
-                            ( e.valor_compra / e.quantidade) as valor_unitario,
-                            (( e.valor_compra / e.quantidade) * ep.quantidade) as valor_total,
-                            si.quantidade as quantidade_solicitada,
-                            sum(s.quantidade) as saldo,
-                            (
-                                SELECT sum(saldo.quantidade) FROM ponto.tb_estoque_saldo saldo 
-                                WHERE saldo.ativo = 't' AND saldo.produto_id = ep.produto_id
-                                GROUP BY saldo.produto_id
-                            ) as saldo_atual,
-                            u.descricao as unidade");
-        $this->db->from('tb_estoque_saida ep');
-        $this->db->join('tb_estoque_entrada e', 'e.estoque_entrada_id = ep.estoque_entrada_id');
         $this->db->join('tb_estoque_produto p', 'p.estoque_produto_id = ep.produto_id');
         $this->db->join('tb_estoque_unidade u', 'u.estoque_unidade_id= p.unidade_id');
         $this->db->join('tb_estoque_saldo s', 's.produto_id = ep.produto_id', 'left');
         $this->db->join('tb_estoque_solicitacao_itens si', 'si.estoque_solicitacao_itens_id = ep.estoque_solicitacao_itens_id', 'left');
         $this->db->where('ep.solicitacao_cliente_id', $estoque_solicitacao_id);
-        $this->db->where('ep.data_cadastro >= s.data_cadastro');
-//        $this->db->where('s.ativo', 't');
         $this->db->where('ep.ativo', 'true');
-        $this->db->groupby('ep.estoque_saida_id,si.quantidade, p.descricao, ep.validade , u.descricao,p.valor_compra, p.valor_venda,e.valor_compra,e.quantidade ');
+        $this->db->groupby('ep.estoque_saida_id, p.descricao, ep.validade , u.descricao , si.quantidade');
         $this->db->orderby('ep.estoque_saida_id');
         $return = $this->db->get();
         return $return->result();
     }
 
+
     function listaritemliberado($estoque_solicitacao_id) {
         $this->db->select('sc.estoque_solicitacao_setor_id,
                           p.descricao,
-                          p.valor_compra,
-                          p.valor_venda,
                           u.descricao as unidade,
                           si.quantidade as quantidade_solicitada');
         $this->db->from('tb_estoque_solicitacao_cliente sc');
@@ -235,7 +183,6 @@ class solicitacao_model extends Model {
 
         $this->db->where('sc.estoque_solicitacao_setor_id', $estoque_solicitacao_id);
         $this->db->where('sc.ativo', 'true');
-        $this->db->where('si.ativo', 'true');
         $this->db->where('sc.situacao', 'LIBERADA');
         $this->db->orderby('sc.estoque_solicitacao_setor_id');
         $return = $this->db->get();
@@ -299,13 +246,6 @@ class solicitacao_model extends Model {
         $this->db->set('operador_atualizacao', $operador_id);
         $this->db->where('estoque_solicitacao_setor_id', $estoque_solicitacao_setor_id);
         $this->db->update('tb_estoque_solicitacao_cliente');
-
-        $this->db->set('ativo', 'f');
-        $this->db->set('data_atualizacao', $horario);
-        $this->db->set('operador_atualizacao', $operador_id);
-        $this->db->where('solicitacao_cliente_id', $estoque_solicitacao_setor_id);
-        $this->db->update('tb_estoque_saida');
-
         $erro = $this->db->_error_message();
         if (trim($erro) != "") // erro de banco
             return -1;
@@ -448,10 +388,7 @@ class solicitacao_model extends Model {
             $this->db->where("estoque_entrada_id", $_POST['produto_id']);
             $query = $this->db->get();
             $returno = $query->result();
-            
-//            echo "<pre>";
-//            var_dump($returno);
-//            die('bebo');
+
 
             $estoque_entrada_id = $_POST['produto_id'];
             $this->db->set('estoque_entrada_id', $estoque_entrada_id);
@@ -480,9 +417,6 @@ class solicitacao_model extends Model {
                 return -1;
             else
                 $estoque_saida_id = $this->db->insert_id();
-            
-//            var_dump($estoque_saida_id);
-//            die;
 
             $this->db->set('estoque_entrada_id', $estoque_entrada_id);
             $this->db->set('estoque_saida_id', $estoque_saida_id);

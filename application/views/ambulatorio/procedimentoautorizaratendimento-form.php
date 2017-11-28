@@ -1,8 +1,8 @@
 <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
     <!--<div class="clear"></div>-->
-    <div class="bt_link_new" style="width: 150pt">
-        <a style="width: 150pt" onclick="javascript:window.open('<?= base_url() ?>seguranca/operador/novorecepcao');">
-            Novo Medico Solicitante
+    <div class="bt_link_new">
+        <a onclick="javascript:window.open('<?= base_url() ?>seguranca/operador/novorecepcao');">
+            Novo Medico
         </a>
     </div>
     <div class="bt_link_new">
@@ -14,20 +14,23 @@
     <div>
         <form name="form_exametemp" id="form_exametemp" action="<?= base_url() ?>cadastros/pacientes/autorizarambulatoriotempgeral/<?= $paciente_id; ?>" method="post">
             <fieldset>
-                <legend>Dados do Paciente</legend>
+                <legend>Dados do Pacienete</legend>
                 <div>
                     <label>Nome</label>                      
                     <input type="text" id="txtNome" name="nome"  class="texto09" value="<?= $paciente['0']->nome; ?>" readonly/>
                 </div>
                 <div>
                     <label>Sexo</label>
-                    <input name="sexo" id="txtSexo" class="size2" 
-                           value="<?
-                           if ($paciente['0']->sexo == "M"):echo 'Masculino';
-                           endif;
-                           if ($paciente['0']->sexo == "F"):echo 'Feminino';
-                           endif;
-                           ?>" readonly="true">
+                    <select name="sexo" id="txtSexo" class="size2">
+                        <option value="M" <?
+                        if ($paciente['0']->sexo == "M"):echo 'selected';
+                        endif;
+                        ?>>Masculino</option>
+                        <option value="F" <?
+                        if ($paciente['0']->sexo == "F"):echo 'selected';
+                        endif;
+                        ?>>Feminino</option>
+                    </select>
                 </div>
 
                 <div>
@@ -40,7 +43,7 @@
                 <div>
 
                     <label>Idade</label>
-                    <input type="text" name="txtIdade" id="txtIdade" class="texto01" readonly/>
+                    <input type="text" name="idade" id="txtIdade" class="texto01" alt="numeromask" value="<?= $paciente['0']->idade; ?>" readonly />
 
                 </div>
 
@@ -52,7 +55,7 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend>Atendimentos anteriores</legend>
+                <legend>Consultas anteriores</legend>
                 <?
                 if (count($consultasanteriores) > 0) {
                     foreach ($consultasanteriores as $value) {
@@ -62,13 +65,13 @@
 
                         $intervalo = $data1->diff($data2);
                         ?>
-                        <h6><?= $value->procedimento; ?> - DATA: <b><?= substr($value->data, 8, 2) . '/' . substr($value->data, 5, 2) . '/' . substr($value->data, 0, 4); ?> </b> - M&eacute;dico: <b> <?= $value->medico; ?></b> - Convenio:  <?= $value->convenio; ?> - <?= $intervalo->days ?> dia(s)</h6>
+                        <h6>ULTIMA ATENDIMENTO: <?= $value->procedimento; ?> - DATA: <b><?= substr($value->data, 8, 2) . '/' . substr($value->data, 5, 2) . '/' . substr($value->data, 0, 4); ?> </b> - M&eacute;dico: <b> <?= $value->medico; ?></b> - Convenio:  <?= $value->convenio; ?> - <?= $intervalo->d . ' dias' ?></h6>
 
                         <?
                     }
                 } else {
                     ?>
-                    <h6>NENHUM ATENDIMENTO ENCONTRADO</h6>
+                    <h6>NENHUMA CONSULTA ENCONTRADA</h6>
                     <?
                 }
                 ?>
@@ -76,7 +79,7 @@
             <input type="hidden" name="paciente_id" value="<?= $paciente_id; ?>" />
 
             <fieldset>
-                <legend>Autorizar Atendimento</legend>
+                <legend>Autorizar sess&otilde;es de fisioterapia</legend>
                 <table id="table_justa">
                     <thead>
 
@@ -86,13 +89,11 @@
                             <th class="tabela_header">Medico</th>
                             <th class="tabela_header">Solicitante</th>
                             <th class="tabela_header">Convenio</th>
-                            <th class="tabela_header">Grupo</th>
                             <th class="tabela_header">Procedimento</th>
                             <th class="tabela_header">autorizacao</th>
                             <th class="tabela_header">V. Unit</th>
                             <th class="tabela_header">Qtde</th>
                             <th class="tabela_header">Pagamento</th>
-                            <th class="tabela_header">Recomendação</th>
                             <th class="tabela_header">ordenador</th>
                             <th class="tabela_header">Confir.</th>
                             <th class="tabela_header">Descricao</th>
@@ -110,51 +111,38 @@
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= substr($item->inicio, 0, 5); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>">
-                                    <select  name="sala[<?= $i; ?>]" id="sala<?= $i; ?>" class="size1"  >
-                                        <option value="">Selecione</option>
+                                    <select  name="sala[<?= $i; ?>]" id="sala<?= $i; ?>" class="size1" >
+                                        <option value="-1">Selecione</option>
                                         <? foreach ($salas as $itens) : ?>
-                                            <option value="<?= $itens->exame_sala_id; ?>" <?if (@$item->agenda_exames_nome_id == @$itens->exame_sala_id) echo "selected"; ?>>
-                                                <?= $itens->nome; ?></option>
+                                            <option value="<?= $itens->exame_sala_id; ?>"><?= $itens->nome; ?></option>
                                         <? endforeach; ?>
                                     </select>
                                 </td>
                                 <td class="<?php echo $estilo_linha; ?>">
                                     <select  name="medico_id[<?= $i; ?>]" id="medico_id<?= $i; ?>" class="size1" >
-                                        <option value="">Selecione</option>
+                                        <option value="-1">Selecione</option>
                                         <? foreach ($medicos as $itens) : ?>
-                                            <option value="<?= $itens->operador_id; ?>" <?if (@$item->medico_consulta_id == @$itens->operador_id) echo "selected"; ?>>
-                                                <?= $itens->nome; ?>
-                                            </option>
+                                            <option value="<?= $itens->operador_id; ?>"><?= $itens->nome; ?></option>
                                         <? endforeach; ?>
                                     </select>
                                 </td>
 
                                 <td class="<?php echo $estilo_linha; ?>"><input type="text" name="medico[<?= $i; ?>]" id="medico<?= $i; ?>" class="size1"/>
-                                    <input type="hidden" name="crm[<?= $i; ?>]" id="crm<?= $i; ?>" class="texto01"/></td>
                                 <td class="<?php echo $estilo_linha; ?>">
-                                    <select  name="convenio[<?= $i; ?>]" id="convenio<?= $i; ?>" class="size1"  >
+                                    <select  name="convenio[<?= $i; ?>]" id="convenio<?= $i; ?>" class="size1" >
                                         <option value="">Selecione</option>
                                     </select>
                                 </td>
-                                
-                                <td class="<?php echo $estilo_linha; ?>" >
-                                    <select  name="grupo1" id="grupo<?= $i; ?>" class="size1" >
-                                        <option value="">Selecione</option>
-                                        <?foreach ($grupos as $item2) :?>
-                                            <option value="<?= $item2->nome; ?>" <? if ($item2->nome == $item->grupo) echo "selected"; ?>><?= $item2->nome; ?></option>
-                                        <? endforeach; ?>
-                                    </select>
-                                </td>
-                                
-                                <td class="<?php echo $estilo_linha; ?>" >
-                                    <select  name="procedimento[<?= $i; ?>]" id="procedimento<?= $i; ?>" class="size1"  >
-                                        <option value="">-- Escolha um procedimento --</option>
+
+                                <td class="<?php echo $estilo_linha; ?>">
+                                    <select  name="procedimento[<?= $i; ?>]" id="procedimento<?= $i; ?>" class="size1" >
+                                        <option value="-1">-- Escolha um procedimento --</option>
                                     </select>
                                 </td>
 
                                 <td class="<?php echo $estilo_linha; ?>"><input type="text" name="autorizacao[<?= $i; ?>]" id="autorizacao" class="size1"/></td>
                                 <td class="<?php echo $estilo_linha; ?>"><input type="text" name="valor[<?= $i; ?>]" id="valor<?= $i; ?>" class="texto01" readonly=""/></td>
-                                <td class="<?php echo $estilo_linha; ?>"><input type="number" name="qtde[<?= $i; ?>]" id="qtde<?= $i; ?>"  value="1"  min="1" class="texto01"/></td>
+                                <td class="<?php echo $estilo_linha; ?>"><input type="text" name="qtde[<?= $i; ?>]" id="qtde<?= $i; ?>" alt="numeromask" value="1" class="texto00"/></td>
                                 <td class="<?php echo $estilo_linha; ?>">
                                     <select  name="formapamento[<?= $i; ?>]" id="formapamento<?= $i; ?>" class="size1" >
                                         <option value="0">Selecione</option>
@@ -163,24 +151,9 @@
                                         <? endforeach; ?>
                                     </select>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>">
-                                    <select name="indicacao[<?= $i; ?>]" id="indicacao" class="size1" >
-                                        <option value=''>Selecione</option>
-                                        <?php
-                                        $indicacao = $this->paciente->listaindicacao($_GET);
-                                        foreach ($indicacao as $itens) {
-                                            ?>
-                                            <option value="<?php echo $itens->paciente_indicacao_id; ?>">
-                                                <?php echo $itens->nome; ?>
-                                            </option>
-                                            <?php
-                                        }
-                                        ?> 
-                                    </select>
-                                </td>
                                 <td class="<?php echo $estilo_linha; ?>" ><input type="text" name="ordenador" class="texto01"/></td>
-                                <td class="<?php echo $estilo_linha; ?>" ><input type="checkbox" name="confimado[<?= $i; ?>]" id="checkbox<?= $i; ?>"/> <input type="hidden" name="agenda_exames_id[<?= $i; ?>]" value="<?= $agenda_exame_id; ?>" /></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= substr(@$item->medico, 0, 12); ?> <br><?= substr(@$item->procedimento, 0, 12); ?></td>
+                                <td class="<?php echo $estilo_linha; ?>" ><input type="checkbox" name="confimado[<?= $i; ?>]" /><input type="hidden" name="agenda_exames_id[<?= $i; ?>]" value="<?= $agenda_exame_id; ?>" /></td>
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= substr($item->medico, 0, 12); ?> <br><?= substr($item->procedimento, 0, 12); ?></td>
                             </tr>
 
                         </tbody>
@@ -202,127 +175,16 @@
     </div> <!-- Final da DIV content -->
 </div> <!-- Final da DIV content -->
 
-<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 
-
-                        $(document).ready(function () { 
-                            
-                            var convenio_agendado = new Array();
-                            var proc_agendado = new Array();
-                            
-                            <? //foreach ($exames as $item) { ?>
-                                
-                            <? // } ?>
-
-<? for ($b = 1; $b <= $i; $b++) { ?>
-    <? $it = ($b == 1) ? '' : $b; ?>
-                                 $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $('#medico_id<?= $b ?>').val(), ajax: true}, function (j) {
-//                                        alert('ola');
-                                        var options = '<option value=""></option>';
-                                        for (var i = 0; i < j.length; i++) {
-                                            var selected = '';
-                                            
-                                            convenio_agendado[<?= $b - 1 ?>] = <?= @$exames[$b - 1]->convenio_agenda ?>;
-                                            proc_agendado[<?= $b - 1 ?>] = <?= @$exames[$b - 1]->procedimento_tuss_id ?>;
-//                                            alert(convenio_agendado[<?= $b - 1 ?>], proc_agendado[<?= $b - 1 ?>]);
-//                                            var convenio_agendado = <?= @$exames[$b-1]->convenio_agenda ?>;
-//                                            var proc_agendado = <?= @$exames[$b-1]->procedimento_tuss_id ?>;
-                                            
-                                            if(convenio_agendado[<?= $b - 1 ?>] == j[i].convenio_id){
-                                                selected = "selected='true'";
-                                                <?$it = ($b == 1)?'':$b;?>
-//                                                        procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico1').val(), 
-                                                $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: j[i].convenio_id, teste: $('#medico_id<?= $b ?>').val(), ajax: true}, function (t) {
-                                                    var opt = '<option value=""></option>';
-                                                    var slt = '';
-                                                    for (var c = 0; c < t.length; c++) {
-                                                        if(proc_agendado[<?= $b - 1 ?>] == t[c].procedimento_convenio_id){
-                                                           slt = "selected='true'";
-                                                           $.getJSON('<?= base_url() ?>autocomplete/procedimentovalorfisioterapia<?= $it ?>', {procedimento<?= $b ?>: t[c].procedimento_convenio_id, ajax: true}, function (a) {
-                                                                var valor = a[0].valortotal;
-                                                                var qtde = a[0].qtde;
-                                                                if(qtde == 0){
-                                                                    qtde = 1;
-                                                                }
-                                                if(a[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor<?= $b ?>").prop('readonly', false);
-                                                }else{
-                                                    $("#valor<?= $b ?>").prop('readonly', true);
-                                                }
-                                                                document.getElementById("valor<?= $b ?>").value = valor;
-                                                                document.getElementById("qtde<?= $b ?>").value = qtde;
-                                                                $('.carregando').hide();
-                                                            });
-                                                            $.getJSON('<?= base_url() ?>autocomplete/formapagamentoporprocedimento<?= $b ?>', {procedimento<?= $b ?>: t[c].procedimento_convenio_id, ajax: true}, function (j) {
-                                                                var options = '<option value="0">Selecione</option>';
-                                                                for (var c = 0; c < j.length; c++) {
-                                                                    if (j[c].forma_pagamento_id != null) {
-                                                                        options += '<option value="' + j[c].forma_pagamento_id + '">' + j[c].nome + '</option>';
-                                                                    }
-                                                                }
-                                                                $('#formapamento<?= $b ?>').html(options).show();
-                                                                $('.carregando').hide();
-                                                            });
-//                                                            formapagamentoporprocedimento
-                                                        }
-                                                        opt += '<option value="' + t[c].procedimento_convenio_id + '"'+ slt + '>' + t[c].procedimento + '</option>';
-                                                        slt = '';
-                                                    }
-                                                    $('#procedimento<?= $b ?>').html(opt).show();
-                                                    $('.carregando').hide();
-                                                });
-                                            }
-                                            options += '<option value="' + j[i].convenio_id + '"'+ selected + '>' + j[i].nome + '</option>';
-                                            selected = '';
-                                        }
-                                        
-                                        
-                                        $('#convenio<?= $b ?>').html(options).show();
-                                        $('.carregando').hide();
-                                    });
-
-
-                                    
-                                    $('#grupo<?= $b ?>').change(function () {
-//                                        alert('teste');
-                                        if ($('#convenio<?= $b ?>').val()) {
-                                            $('.carregando').show();
-                                            $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniogrupomedico', {grupo1: $(this).val(), convenio1: $('#convenio1').val(), teste: $('#medico_id<?= $b ?>').val(), ajax: true}, function (j) {
-                                                options = '<option value=""></option>';
-                                                for (var c = 0; c < j.length; c++) {
-                                                    options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
-                                                }
-                                                $('#procedimento<?= $b ?>').html(options).show();
-                                                $('.carregando').hide();
-                                            });
-                                        }
-                                    });
-                                
-                                $('#checkbox<?= $b ?>').change(function () {
-                                    if ($(this).is(":checked")) {
-                                        $("#medico_id<?= $b; ?>").prop('required', true);
-                                        $("#sala<?= $b; ?>").prop('required', true);
-                                        $("#convenio<?= $b; ?>").prop('required', true);
-                                        $("#qtde<?= $b; ?>").prop('required', true);
-                                        $("#procedimento<?= $b; ?>").prop('required', true);
-                                    } else {
-                                        $("#medico_id<?= $b; ?>").prop('required', false);
-                                        $("#sala<?= $b; ?>").prop('required', false);
-                                        $("#convenio<?= $b; ?>").prop('required', false);
-                                        $("#qtde<?= $b; ?>").prop('required', false);
-                                        $("#procedimento<?= $b; ?>").prop('required', false);
-                                    }
-                                });
-
-<? }
-?>
-
-                        });
-
+<?php if ($this->session->flashdata('message') != ''): ?>
+                            alert("<? echo $this->session->flashdata('message') ?>");
+<? endif; ?>
                         $(function () {
                             $("#medico1").autocomplete({
                                 source: "<?= base_url() ?>index.php?c=autocomplete&m=medicos",
@@ -487,7 +349,7 @@
                             $('#medico_id1').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio1', {medico_id1: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -505,7 +367,7 @@
                             $('#convenio1').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico_id1').val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniotodos', {convenio1: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var c = 0; c < j.length; c++) {
                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -527,16 +389,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                                                        if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor1").value = options;
                                         document.getElementById("qtde1").value = qtde;
                                         $('.carregando').hide();
@@ -551,7 +404,7 @@
                             $('#medico_id2').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio2', {medico_id2: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -569,7 +422,7 @@
                             $('#convenio2').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico2').val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniotodos2', {convenio2: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var c = 0; c < j.length; c++) {
                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -591,15 +444,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor2").value = options;
                                         document.getElementById("qtde2").value = qtde;
                                         $('.carregando').hide();
@@ -614,7 +459,7 @@
                             $('#medico_id3').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio3', {medico_id3: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -631,7 +476,7 @@
                             $('#convenio3').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico3').val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniotodos3', {convenio3: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var c = 0; c < j.length; c++) {
                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -653,16 +498,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                                                        if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor3").value = options;
                                         document.getElementById("qtde3").value = qtde;
                                         $('.carregando').hide();
@@ -677,7 +513,7 @@
                             $('#medico_id4').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio4', {medico_id4: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -695,7 +531,7 @@
                             $('#convenio4').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico4').val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniotodos4', {convenio4: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var c = 0; c < j.length; c++) {
                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -717,16 +553,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor4").value = options;
                                         document.getElementById("qtde4").value = qtde;
                                         $('.carregando').hide();
@@ -741,7 +568,7 @@
                             $('#medico_id5').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio5', {medico_id5: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -759,7 +586,7 @@
                             $('#convenio5').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico5').val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniotodos5', {convenio5: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var c = 0; c < j.length; c++) {
                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -781,16 +608,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                                                        if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor5").value = options;
                                         document.getElementById("qtde5").value = qtde;
                                         $('.carregando').hide();
@@ -805,7 +623,7 @@
                             $('#medico_id6').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio6', {medico_id6: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -823,7 +641,7 @@
                             $('#convenio6').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $('#medico6').val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniotodos6', {convenio6: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var c = 0; c < j.length; c++) {
                                             options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -845,16 +663,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                 if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor6").value = options;
                                         document.getElementById("qtde6").value = qtde;
                                         $('.carregando').hide();
@@ -869,7 +678,7 @@
                             $('#medico_id7').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio7', {medico_id7: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -909,16 +718,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor7").value = options;
                                         document.getElementById("qtde7").value = qtde;
                                         $('.carregando').hide();
@@ -933,7 +733,7 @@
                             $('#medico_id8').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio8', {medico_id8: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -973,16 +773,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }                                        
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor8").value = options;
                                         document.getElementById("qtde8").value = qtde;
                                         $('.carregando').hide();
@@ -997,7 +788,7 @@
                             $('#medico_id9').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio9', {medico_id9: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1037,16 +828,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }                                        
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor9").value = options;
                                         document.getElementById("qtde9").value = qtde;
                                         $('.carregando').hide();
@@ -1061,7 +843,7 @@
                             $('#medico_id10').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio10', {medico_id10: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1101,16 +883,7 @@
                                         options = "";
                                         options += j[0].valortotal;
                                         qtde = "";
-                                        if(j[0].qtde == ''){
-                                           qtde += j[0].qtde; 
-                                        }else{
-                                           qtde = 1; 
-                                        }
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }                                        
+                                        qtde += j[0].qtde;
                                         document.getElementById("valor10").value = options;
                                         document.getElementById("qtde10").value = qtde;
                                         $('.carregando').hide();
@@ -1126,7 +899,7 @@
                             $('#medico_id11').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio11', {medico_id11: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1167,11 +940,6 @@
                                         options += j[0].valortotal;
                                         qtde = "";
                                         qtde += j[0].qtde;
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }                                        
                                         document.getElementById("valor11").value = options;
                                         document.getElementById("qtde11").value = qtde;
                                         $('.carregando').hide();
@@ -1186,7 +954,7 @@
                             $('#medico_id12').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio12', {medico_id12: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1227,11 +995,6 @@
                                         options += j[0].valortotal;
                                         qtde = "";
                                         qtde += j[0].qtde;
-                                                if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }                                        
                                         document.getElementById("valor12").value = options;
                                         document.getElementById("qtde12").value = qtde;
                                         $('.carregando').hide();
@@ -1246,7 +1009,7 @@
                             $('#medico_id13').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio13', {medico_id13: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1287,11 +1050,6 @@
                                         options += j[0].valortotal;
                                         qtde = "";
                                         qtde += j[0].qtde;
-                                                                                        if(j[0].grupo == 'ODONTOLOGIA'){
-                                                    $("#valor1").prop('readonly', false);
-                                                }else{
-                                                    $("#valor1").prop('readonly', true);
-                                                }
                                         document.getElementById("valor13").value = options;
                                         document.getElementById("qtde13").value = qtde;
                                         $('.carregando').hide();
@@ -1306,7 +1064,7 @@
                             $('#medico_id14').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio14', {medico_id14: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1361,7 +1119,7 @@
                             $('#medico_id15').change(function () {
                                 if ($(this).val()) {
                                     $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio', {exame: $(this).val(), ajax: true}, function (j) {
+                                    $.getJSON('<?= base_url() ?>autocomplete/medicoconvenio15', {medico_id15: $(this).val(), ajax: true}, function (j) {
                                         var options = '<option value=""></option>';
                                         for (var i = 0; i < j.length; i++) {
                                             options += '<option value="' + j[i].convenio_id + '">' + j[i].nome + '</option>';
@@ -1426,18 +1184,6 @@
                                         $('#formapamento1').html(options).show();
                                         $('.carregando').hide();
                                     });
-                                    
-                                    $.getJSON('<?= base_url() ?>autocomplete/formapagamentoporprocedimento<?= $b ?>', {procedimento<?= $b ?>: t[c].procedimento_convenio_id, ajax: true}, function (j) {
-                                        var options = '<option value="0">Selecione</option>';
-                                        for (var c = 0; c < j.length; c++) {
-                                            if (j[c].forma_pagamento_id != null) {
-                                                options += '<option value="' + j[c].forma_pagamento_id + '">' + j[c].nome + '</option>';
-                                            }
-                                        }
-                                        $('#formapamento<?= $b ?>').html(options).show();
-                                        $('.carregando').hide();
-                                    });
-                                    
                                 } else {
                                     $('#formapamento1').html('<option value="0">Selecione</option>');
                                 }
@@ -1657,14 +1403,5 @@
                                 }
                             });
                         });
-
-                        function calculoIdade() {
-                            var data = document.getElementById("txtNascimento").value;
-                            var ano = data.substring(6, 12);
-                            var idade = new Date().getFullYear() - ano;
-                            document.getElementById("txtIdade").value = idade;
-                        }
-
-                        calculoIdade();
 
 </script>

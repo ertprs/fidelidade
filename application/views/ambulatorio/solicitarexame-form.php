@@ -1,6 +1,3 @@
-<head>
-    <title>Solicitar Exames</title>
-</head>
 <div >
     <?
     $dataFuturo = date("Y-m-d");
@@ -52,12 +49,6 @@
                                         <option value="<?php echo $item->ambulatorio_modelo_solicitar_exames_id; ?>" ><?php echo $item->nome; ?></option>
                                     <?php } ?>
                                 </select>
-
-                                <label>Carimbo</label>
-                                <input type="checkbox" id="carimbo"  name="carimbo"/>
-
-                                <label>Assinatura</label>
-                                <input type="checkbox" id="assinatura" name="assinatura"/>
 
                             </div>
                             <div>

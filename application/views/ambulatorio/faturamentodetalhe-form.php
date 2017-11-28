@@ -1,5 +1,4 @@
 <body bgcolor="#C0C0C0">
-    <meta charset="UTF-8">
     <div class="content"> <!-- Inicio da DIV content -->
         <h3 class="singular">Faturamento Detalhe</h3>
         <div>
@@ -8,29 +7,21 @@
 
                     <dl class="dl_desconto_lista">
                         <dt>
-                            <label>Autoriza&ccedil;&atilde;o</label>
+                        <label>Autoriza&ccedil;&atilde;o</label>
                         </dt>
                         <dd>
                             <input type="text" name="autorizacao" id="autorizacao" class="texto01" value="<?= $exame[0]->autorizacao; ?>" />
                             <input type="hidden" name="agenda_exames_id" id="agenda_exames_id" class="texto01" value="<?= $agenda_exames_id; ?>"/>
                             <input type="hidden" name="paciente_id" id="paciente_id" class="texto01" value="<?= $exame[0]->paciente_id; ?>"/>
-                            <input type="hidden" name="procedimento1" id="procedimento1" class="texto01" value="<?= $exame[0]->procedimento_tuss_id; ?>"/>
                         </dd>
                         <dt>
-                            <label>Guia Convênio</label>
-                        </dt>
-                        <dd>
-                            <input type="text" name="guiaconvenio" id="guiaconvenio" class="texto01" value="<?= $exame[0]->guiaconvenio; ?>"/>
-                            <input type="hidden" name="ambulatorio_guia_id" id="ambulatorio_guia_id" class="texto01" value="<?= $exame[0]->ambulatorio_guia_id; ?>"/>
-                        </dd>
-                        <dt>
-                            <label>Faturista</label>
+                        <label>Faturista</label>
                         </dt>
                         <dd>
                             <input type="text" name="faturista" id="faturista" class="texto01" value="<?= $exame[0]->atendente_fatura; ?>" readonly/>
                         </dd>
                         <dt>
-                            <label>Ra&ccedil;a / Cor</label>
+                        <label>Ra&ccedil;a / Cor</label>
                         </dt>
                         <dd>
                             <select name="raca_cor" id="txtRacaCor" class="size2">
@@ -62,63 +53,7 @@
                             </select>
                         </dd>
                         <dt>
-                         
-                            <label>Sala</label>
-                            
-                        </dt>
-                        <dd>
-                         
-                            <select name="sala" id="sala" class="size2">
-                                <option value=""></option>
-                                <? foreach ($salas as $value) : ?>
-                                    <option value="<?= $value->exame_sala_id; ?>" <?
-                                    if ($exame[0]->agenda_exames_nome_id == $value->exame_sala_id):echo 'selected';
-                                    endif;
-                                    ?>><?php echo $value->nome; ?></option>
-                                        <? endforeach; ?>
-                            </select>
-                        </dd>
-                        <dt>
-                            <label>Medico</label>
-                        </dt>
-                        <dd>
-                            <select name="medico" id="medico" class="size1">
-                                    <option value=""> </option>
-                                    <? foreach ($medico as $value) : ?>
-                                        <option value="<?= $value->operador_id; ?>"<?
-                                        if ($exame[0]->medico_agenda == $value->operador_id):echo 'selected';
-                                        endif;
-                                        ?>>
-                                                    <?php echo $value->nome; ?>
-
-                                        </option>
-                                    <? endforeach; ?>
-
-                                </select>
-                        </dd>
-                        
-                        <dt>
-                            <label>Medico Solicitante</label>
-                        </dt>
-                        <dd>
-                            <select name="medico_solicitante" id="medico_solicitante" class="size1">
-                                    <option value=""> </option>
-                                    <? foreach ($medico as $value) : ?>
-                                        <option value="<?= $value->operador_id; ?>"<?
-                                        if ($exame[0]->medico_solicitante == $value->operador_id):echo 'selected';
-                                        endif;
-                                        ?>>
-                                                    <?php echo $value->nome; ?>
-
-                                        </option>
-                                    <? endforeach; ?>
-
-                                </select>
-                        </dd>
-                        
-                        
-                        <dt>
-                            <label>Observacao</label>
+                        <label>Observacao</label>
                         </dt>
                         <textarea type="text" name="txtobservacao" cols="55" class="texto12"><?= $exame[0]->observacoes; ?></textarea>
                     </dl>    
@@ -143,7 +78,7 @@
     //    })(jQuery);
 
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         function multiplica()
         {

@@ -8,130 +8,85 @@
     $args['paciente'] = $paciente_id;
     $perfil_id = $this->session->userdata('perfil_id');
     $internacao = $this->session->userdata('internacao');
-    $imagem = $this->session->userdata('imagem');
-    $consulta = $this->session->userdata('consulta');
-    $especialidade = $this->session->userdata('especialidade');
-    $geral = $this->session->userdata('geral');
-    $faturamento = $this->session->userdata('faturamento');
-    $estoque = $this->session->userdata('estoque');
-    $financeiro = $this->session->userdata('financeiro');
-    $marketing = $this->session->userdata('marketing');
-    $laboratorio = $this->session->userdata('laboratorio');
-    $ponto = $this->session->userdata('ponto');
-    $calendario = $this->session->userdata('calendario');
+    ?>
+    <?
+    //LISTANDO AS INFORMAÇÕES DE CARÊNCIA E PARCELAS PAGAS PELO PACIENTE
+    //VERIFICA SE É DEPENDENTE. CASO SIM, ELE VAI PEGAR O ID DO TITULAR E FAZER AS BUSCAS ABAIXO UTILIZANDO ESSE ID
+    $paciente_informacoes = $this->paciente->listardados($paciente_id);
+    if ($paciente_informacoes[0]->situacao == 'Dependente') {
+        $dependente = true;
+    } else {
+        $dependente = false;
+    }
+
+    if ($dependente == true) {
+        $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+//        $paciente_id = $retorno[0]->paciente_id;
+        @$paciente_titular_id = $retorno[0]->paciente_id;
+        $paciente_dependente_id = $paciente_id;
+    } else {
+//        $paciente_id = $_POST['txtNomeid'];
+        $paciente_titular_id = $paciente_id;
+        $paciente_dependente_id = null;
+    }
+//        var_dump($_POST['txtNomeid']);
+//        var_dump($paciente_id);
+//        die;
+//        $paciente_id = $_POST['txtNomeid'];
+
+    $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id);
+    $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
+
+    $listaratendimentoexame = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'EXAME');
+    $listaratendimentoconsulta = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'CONSULTA');
+    $listaratendimentoespecialidade = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'ESPECIALIDADE');
+    @$carencia_exame = $carencia[0]->carencia_exame;
+    @$carencia_consulta = $carencia[0]->carencia_consulta;
+    @$carencia_especialidade = $carencia[0]->carencia_especialidade;
+
+    $dias_parcela = 30 * count($parcelas);
+    $dias_atendimentoexame = $carencia_exame * count($listaratendimentoexame);
+    $dias_atendimentoconsulta = $carencia_consulta * count($listaratendimentoconsulta);
+    $dias_atendimentoespecialidade = $carencia_especialidade * count($listaratendimentoespecialidade);
+    // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
+// Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
+// 
+//        echo '<pre>';
+//        var_dump($parcelas);
+//        var_dump($atendimento_parcela);
+//        var_dump($dias_parcela);
+//        var_dump($carencia);
+//        var_dump($dias_atendimento);
+//        var_dump($listaratendimento);
+//        die;
+    // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
+    // o sistema vai gravar. 
+    //
+  
+    if (($dias_parcela - $dias_atendimentoexame) >= $carencia_exame) {
+        $exame_liberado = 'Liberado';
+    } else {
+        $exame_liberado = 'Pendência';
+    }
+    if (($dias_parcela - $dias_atendimentoconsulta) >= $carencia_consulta) {
+        $consulta_liberado = 'Liberado';
+    } else {
+        $consulta_liberado = 'Pendência';
+    }
+    if (($dias_parcela - $dias_atendimentoespecialidade) >= $carencia_especialidade) {
+        $especialidade_liberado = 'Liberado';
+    } else {
+        $especialidade_liberado = 'Pendência';
+    }
     ?>
 
+
     <fieldset>
-        <legend>Solicita&ccedil;&otilde;es do Paciente</legend>
+        <legend>Solicita&ccedil;&otilde;es do Cliente</legend>
         <div>
             <table>
-                <tr>
-                    <? if ($imagem == 't') { ?>
-
-
-                        <td width="80px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/guia/novo/<?= $paciente_id ?>">Novo exame</a></div></td>
-                    <? } ?>
-                    <? if ($consulta == 't') { ?>
-
-
-                        <td width="80px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/guia/novoconsulta/<?= $paciente_id ?>">Nova consulta</a></div></td>
-                    <? } ?>
-                    <? if ($especialidade == 't') { ?>
-
-
-                        <td width="80px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/guia/novofisioterapia/<?= $paciente_id ?>">Nova Especialidade</a></div></td>
-                    <? } ?>
-                    <? if ($geral == 't') { ?>
-
-                        <td width="80px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/guia/novoatendimento/<?= $paciente_id ?>">Novo Atendimento</a></div></td>
-                    <? } ?>
-                    <td ><div style="width:80px; text-align: center;" class="bt_linkm botao_pequeno"><a class="botao_pequeno" href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Guias</a></div></td>
-                </tr>
-                <tr>
-                    <? if ($imagem == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>cadastros/pacientes/procedimentoautorizar/<?= $paciente_id ?>">Autorizar exame</a></div></td>
-                    <? } ?>
-                    <? if ($consulta == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>cadastros/pacientes/procedimentoautorizarconsulta/<?= $paciente_id ?>">Autorizar consulta</a></div></td>
-                    <? } ?>
-                    <? if ($especialidade == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>cadastros/pacientes/procedimentoautorizarfisioterapia/<?= $paciente_id ?>">Autorizar Especialidade</a></div></td>
-                    <? } ?>
-                    <? if ($geral == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>cadastros/pacientes/procedimentoautorizaratendimento/<?= $paciente_id ?>">Autorizar Atendimento</a></div></td>
-                    <? } ?>
-
-                    <? if ($perfil_id == 1 || $perfil_id == 5) { ?>
-                        <td width="100px;"><div style="width:80px; text-align: center;" class="bt_link_new"><a style="width:80px; text-align: center;" href="<?= base_url() ?>ambulatorio/exametemp/unificar/<?= $paciente_id ?>"> Unificar</a></div></td>
-                    <? }
-                    ?>
-
-
-
-
-
-
-                </tr>
-                <tr>
-                    <? if ($imagem == 't') { ?>
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/guia/acompanhamento/<?= $paciente_id ?>">Acompanhamento</a></div></td>
-                    <? } ?>
-                    <? if ($consulta == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/laudo/carregarlaudohistorico/<?= $paciente_id ?>">Hist. Consulta</a></div></td>
-                    <? } ?>
-<!--                    <td width="250px;"><div class="bt_link_new"><a href="<?= base_url() ?>emergencia/triagem/gravarsolicitacaotriagem/<?= $paciente_id ?>">triagem</a></div></td>-->
-                    <? if ($especialidade == 't') { ?>
-                        <td width="250px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/exame/autorizarsessaofisioterapia/<?= $paciente_id ?>">Sessao Especialidade</a></div></td>
-                    <? } ?>
-                    <td width="250px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/guia/orcamento/<?= $paciente_id ?>">Or&ccedil;amento</a></div></td>
-
-                    <? if ($perfil_id == 1) {
-                        ?>
-                        <td width="100px;"><div class="bt_link_new botao_pequeno"><a style="width:80px; text-align: center;" href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">Excluir</a></div></td>
-                    <? } ?>
-
-<!--                    <td width="250px;"><div class="bt_link"><a href="<?= base_url() ?>emergencia/filaacolhimento/gravarsolicitacao/<?= $paciente_id ?>">Acolhimento</a></div></td>
-                <td width="200px;"><div class="bt_link"><a href="<?= base_url() ?>cadastros/pacientes/carregar">Ficha</a></div></td>
-                <td width="200px;"><div class="bt_link_new"><a href="<?= base_url() ?>internacao/internacao/novosolicitacaointernacao/<?= $paciente_id ?>">Sol. Interna&ccedil;&atilde;o</a></div></td>
-                <td width="200px;"><div class="bt_link_new"><a href="<?= base_url() ?>internacao/internacao/novointernacao/<?= $paciente_id ?>">Internar</a></div></td></tr>-->
-                <!--<td width="200px;"><div class="bt_link"><a href="<?= base_url() ?>cadastros/pacientes/carregar">Marcar consulta</a></div></td></tr>-->
-                </tr>
-
-                <tr>
-                    <? if ($imagem == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/exametemp/carregarpacientetemp/<?= $paciente_id ?>">Exames</a></div></td>
-                    <? } ?>
-
-                    <? if ($consulta == 't') { ?>
-
-
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>ambulatorio/exametemp/carregarpacienteconsultatemp/<?= $paciente_id ?>">Consultas</a></div></td>
-                    <? } ?>
-                    <td width="100px;"><div class="bt_link_new"><a  href="<?= base_url() ?>ambulatorio/exametemp/listarcredito/<?= $paciente_id ?>">Credito</a></div></td>
-                    <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>cadastros/pacientes/cancelamento/<?= $paciente_id ?>" target="_blank">Cancelamentos</a></div></td>
-
-
-                    <td width="100px;"><div class="bt_link_new"  style="width:80px; text-align: center;"><a  style="width:80px; text-align: center;" href="<?= base_url() ?>cadastros/pacientes/anexarimagem/<?= $paciente_id ?>">Arquivos</a></div></td>
-
-
-                </tr>
-
-                <tr>
-                    <? if ($internacao == 't') { ?>
-                        <td width="100px;"><div class="bt_link_new"><a href="<?= base_url() ?>internacao/internacao/novointernacao/<?= $paciente_id ?>">Internação</a></div></td>
-                    <? } ?>
+                <tr><td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Contrato</a></div></td>
+                    <td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">excluir</a></div></td>
                 </tr>
             </table>            
         </div>
@@ -140,7 +95,7 @@
     <div>
         <form name="form_paciente" id="form_paciente" action="<?= base_url() ?>cadastros/pacientes/gravar" method="post">
             <fieldset>
-                <legend>Dados do Paciente</legend>
+                <legend>Dados do Cliente</legend>
                 <div>
                     <label>Nome</label>                      
                     <input type="text" id="txtNome" name="nome"  class="texto09" value="<?= $paciente['0']->nome; ?>" readonly/>
@@ -153,9 +108,9 @@
                         endif;
                         ?>>Masculino</option>
                         <option value="F" <?
-                        if ($paciente['0']->sexo == "F"):echo 'selected';
-                        endif;
-                        ?>>Feminino</option>
+                                if ($paciente['0']->sexo == "F"):echo 'selected';
+                                endif;
+                                ?>>Feminino</option>
                     </select>
                 </div>
 
@@ -179,19 +134,42 @@
 
                     <input type="text"  name="nome_pai" id="txtNomePai" class="texto08" value="<?= $paciente['0']->nome_pai; ?>" readonly/>
                 </div>
-
-                <div>
-                    <legend>Foto</legend>
-
-                    <!--            <div id="results"> A imagem capturada aparece aqui...</div>-->
-                    <img src="<?= base_url() ?>upload/webcam/pacientes/<?= $paciente_id ?>.jpg" alt="" height="140" width="100"  />
-                </div>
                 <div>
                     <label>CNS</label>
 
 
                     <input type="text" id="txtCns" name="cns"  class="texto04" value="<?= $paciente['0']->cns; ?>" readonly/>
                 </div>
+
+            </fieldset>
+            <fieldset>
+                <legend>Situação de pagamento em relação a carência</legend>
+                <table border="1">
+                    <tr>
+                        <td style="width: 200px">
+                            Carência Exame   
+                        </td>
+                        <td>
+<?= $exame_liberado ?>     
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Carência Consulta    
+                        </td>
+                        <td>
+<?= $consulta_liberado ?>       
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Carência Especialidade    
+                        </td>
+                        <td>
+<?= $especialidade_liberado ?>       
+                        </td>
+                    </tr>
+                </table>
 
             </fieldset>
             <fieldset>
@@ -295,11 +273,6 @@
     <div class="clear"></div>
 </div>
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
-<style>
-    .bt_link_new{ width: 150pt; }
-    .bt_link_new a{ width: 150pt; }
-    .botao_pequeno{ width:80px; text-align: center; }
-</style>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-verificaCPF.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/funcoes.js"></script>

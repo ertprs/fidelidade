@@ -35,37 +35,37 @@
                         <label>Ajuste CH (%)</label>
                     </dt>
                     <dd>
-                        <input type="number" name="ajustech" id="ajustech" class="number" step=0.01 />
+                        <input type="number" name="ajustech" id="ajustech" class="number" />
                     </dd>
                     <dt>
                         <label>Ajuste Filme (%)</label>
                     </dt>
                     <dd>
-                        <input type="number" name="ajustefilme" id="ajustefilme" class="number" step=0.01  />
+                        <input type="number" name="ajustefilme" id="ajustefilme" class="number"  />
                     </dd>
                     <dt>
                         <label>Ajuste Porte (%)</label>
                     </dt>
                     <dd>
-                        <input type="number" name="ajusteporte" id="ajusteporte" class="number"  step=0.01 />
+                        <input type="number" name="ajusteporte" id="ajusteporte" class="number"  />
                     </dd>
                     <dt>
                         <label>Ajuste UCO (%)</label>
                     </dt>
                     <dd>
-                        <input type="number" name="ajusteuco" id="ajusteuco" class="number" step=0.01  />
+                        <input type="number" name="ajusteuco" id="ajusteuco" class="number"  />
                     </dd>
                     <dt>
                         <label>Desconto TOTAL (%)</label>
                     </dt>
                     <dd>
-                        <input type="number" name="ajustetotal" id="ajustetotal" class="number" step=0.01  />
+                        <input type="number" name="ajustetotal" id="ajustetotal" class="number"  />
                     </dd>
                     <dt>
-                        <label>Arredondar</label>
+                        <label>Arredondar p/ cima</label>
                     </dt>
                     <dd>
-                        <input type="checkbox" name="arrendondamento" id="arrendondamento" step=0.01  />
+                        <input type="checkbox" name="arrendondamento" id="arrendondamento"  />
                     </dd>
                     <dt>
                 </dl>    

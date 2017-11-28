@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_voltar">
-        <a href="<?= base_url() ?>ambulatorio/agenda/listarhorarioagenda/<?= $agenda_id ?>">
+        <a href="<?= base_url() ?>ponto/horariostipo">
             Voltar
         </a>
 
@@ -15,33 +15,35 @@
                     <label>Nome</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtNome" class="texto10 bestupper" required/>
+                        <input type="text" name="txtNome" class="texto10 bestupper"/>
                     </dd>
                     <dt>
                     <label>Data inicial</label>
                     </dt>
                     <dd>
-                        <input type="text"  id="txtdatainicial" name="txtdatainicial" alt="date" class="size2" required />
+                        <input type="text"  id="txtdatainicial" name="txtdatainicial" alt="date" class="size2" />
                     </dd>
                     <dt>
                     <label>Data final</label>
                     </dt>
                     <dd>
-                        <input type="text"  id="txtdatafinal" name="txtdatafinal" alt="date" class="size2" required/>
+                        <input type="text"  id="txtdatafinal" name="txtdatafinal" alt="date" class="size2" />
                     </dd>
                     <dt>
                     <label>Horario *</label>
                     </dt>
                     <dd>
-                         <input type="hidden"  id="txthorario" name="txthorario" value="<?= $agenda_id ?>"  class="size2" />
-                        <input type="text"  id="txthorariolabel" name="txthorariotitulo" value="<?= $agenda[0]->nome ?>"  class="size4" readonly=""/>
+                        <select name="txthorario" id="txthorario" class="size4">
+                            <? foreach ($agenda as $item) : ?>
+                                <option value="<?= $item->agenda_id; ?>"><?= $item->nome; ?></option>
+                                    <? endforeach; ?>
+                        </select>
                     </dd>
                     <dt>
                     <label>Medico *</label>
                     </dt>
                     <dd>
-                        <select name="txtmedico" id="txtsala" class="size4" required>
-                            <option value="">Selecione</option>
+                        <select name="txtmedico" id="txtsala" class="size4">
                             <? foreach ($medico as $item) : ?>
                                 <option value="<?= $item->operador_id; ?>"><?= $item->nome; ?></option>
                                     <? endforeach; ?>
@@ -51,8 +53,7 @@
                     <label>Especialidade *</label>
                     </dt>
                     <dd>
-                        <select name="txtespecialidade" id="txtespecialidade" class="size4" required>
-                            <option value="">Selecione</option>
+                        <select name="txtespecialidade" id="txtespecialidade" class="size4">
                             <? foreach ($tipo as $item) : ?>
                                 <option value="<?= $item->ambulatorio_grupo_id; ?>"><?= $item->nome; ?></option>
                             <? endforeach; ?>

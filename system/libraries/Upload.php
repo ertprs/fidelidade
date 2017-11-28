@@ -538,36 +538,29 @@ class CI_Upload {
 	 */	
 	function is_image()
 	{
-       // IE will sometimes return odd mime-types during upload, so here we just standardize all
-        // jpegs or pngs to the same file type.
+		// IE will sometimes return odd mime-types during upload, so here we just standardize all
+		// jpegs or pngs to the same file type.
 
-        $png_mimes  = array('image/x-png');
-        $jpeg_mimes = array('image/jpg', 'image/jpe', 'image/jpeg', 'image/pjpeg');
-                $bmp_mimes = array('image/bmp');
+		$png_mimes  = array('image/x-png');
+		$jpeg_mimes = array('image/jpg', 'image/jpe', 'image/jpeg', 'image/pjpeg');
+		
+		if (in_array($this->file_type, $png_mimes))
+		{
+			$this->file_type = 'image/png';
+		}
+		
+		if (in_array($this->file_type, $jpeg_mimes))
+		{
+			$this->file_type = 'image/jpeg';
+		}
 
-        if (in_array($this->file_type, $png_mimes))
-        {
-            $this->file_type = 'image/png';
-        }
+		$img_mimes = array(
+							'image/gif',
+							'image/jpeg',
+							'image/png',
+						   );
 
-        if (in_array($this->file_type, $jpeg_mimes))
-        {
-            $this->file_type = 'image/jpeg';
-        }
-
-                if (in_array($this->file_type, $bmp_mimes))
-        {
-            $this->file_type = 'image/bmp';
-        }
-
-        $img_mimes = array(
-                            'image/gif',
-                            'image/jpeg',
-                            'image/png',
-                                                        'image/bmp'
-                        );
-
-        return (in_array($this->file_type, $img_mimes, TRUE)) ? TRUE : FALSE;
+		return (in_array($this->file_type, $img_mimes, TRUE)) ? TRUE : FALSE;
 	}
 	
 	// --------------------------------------------------------------------

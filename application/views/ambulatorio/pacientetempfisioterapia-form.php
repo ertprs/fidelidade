@@ -5,14 +5,14 @@
         <fieldset>
             <div>
                 <label>Data</label>
-                <input type="text"  id="data_ficha" name="data_ficha" class="size1" required />
+                <input type="text"  id="data_ficha" name="data_ficha" class="size1"  />
                 <input type="hidden" name="txtpaciente_id"  value="<?= @$obj->_ambulatorio_pacientetemp_id; ?>" />
             </div>
             <legend>Manter Fisioterapia</legend>
 
             <div>
                 <label>Medico</label>
-                <select name="exame" id="exame" class="size4" required>
+                <select name="exame" id="exame" class="size4">
                     <option value="" >Selecione</option>
                     <? foreach ($medico as $item) : ?>
                         <option value="<?= $item->operador_id; ?>"><?= $item->nome; ?></option>
@@ -22,7 +22,7 @@
 
             <div>
                 <label>Horarios</label>
-                <select name="horarios" id="horarios" class="size2" required>
+                <select name="horarios" id="horarios" class="size2">
                     <option value="" >-- Escolha um horario --</option>
                 </select>
             </div>
@@ -37,7 +37,7 @@
             <legend>Paciente</legend>
             <div>
                 <label>Nome</label>
-                <input type="text" name="txtNome" class="texto10" required/>
+                <input type="text" name="txtNome" class="texto10"/>
             </div>
             <div>
                 <label>Dt de nascimento</label>
@@ -49,16 +49,16 @@
             </div>
             <div>
                 <label>Telefone</label>
-                <input type="text" id="txtTelefone" class="texto02" name="telefone" />
+                <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="phone"/>
             </div>
             <div>
                 <label>Celular</label>
-                <input type="text" id="txtCelular" class="texto02" name="celular" />
+                <input type="text" id="txtCelular" class="texto02" name="celular" alt="phone"/>
             </div>
 
             <div>
                 <label>Convenio *</label>
-                <select name="convenio" id="convenio" class="size4" required>
+                <select name="convenio" id="convenio" class="size4">
                     <option  value="0">Selecione</option>
                     <? foreach ($convenio as $value) : ?>
                         <option value="<?= $value->convenio_id; ?>"><?php echo $value->nome; ?></option>
@@ -78,54 +78,7 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-<script>
-    function mascaraTelefone(campo) {
-
-        function trata(valor, isOnBlur) {
-
-            valor = valor.replace(/\D/g, "");
-            valor = valor.replace(/^(\d{2})(\d)/g, "($1)$2");
-
-            if (isOnBlur) {
-
-                valor = valor.replace(/(\d)(\d{4})$/, "$1-$2");
-            } else {
-
-                valor = valor.replace(/(\d)(\d{3})$/, "$1-$2");
-            }
-            return valor;
-        }
-
-        campo.onkeypress = function (evt) {
-
-            var code = (window.event) ? window.event.keyCode : evt.which;
-            var valor = this.value
-
-            if (code > 57 || (code < 48 && code != 0 && code != 8 && code != 9)) {
-                return false;
-            } else {
-                this.value = trata(valor, false);
-            }
-        }
-
-        campo.onblur = function () {
-
-            var valor = this.value;
-            if (valor.length < 13) {
-                this.value = ""
-            } else {
-                this.value = trata(this.value, true);
-            }
-        }
-
-        campo.maxLength = 14;
-    }
-
-
-</script>
 <script type="text/javascript">
-    mascaraTelefone(form_exametemp.txtTelefone);
-    mascaraTelefone(form_exametemp.txtCelular);
 
 
     $(function() {

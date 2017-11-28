@@ -1,9 +1,8 @@
 <div class="content"> <!-- Inicio da DIV content -->
-    <? $empresas = $this->exame->listarempresas(); ?>
     <div id="accordion">
         <h3><a href="#">Gerar relatorio Entrada</a></h3>
         <div>
-            <form name="form_entrada" id="form_entrada" method="post" action="<?= base_url() ?>cadastros/caixa/gerarelatorioentrada">
+            <form method="post" action="<?= base_url() ?>cadastros/caixa/gerarelatorioentrada">
                 <dl>
                     <dt>
                         <label>Conta</label>
@@ -32,7 +31,7 @@
                     </dt>
                     <dd>
                         <select name="tipo" id="tipo" class="size2">
-                            <option value= "0">TODOS</option>
+                            <option value= 0>TODOS</option>
                             <? foreach ($tipo as $value) : ?>
                                 <option value="<?= $value->tipo_entradas_saida_id; ?>" ><?php echo $value->descricao; ?></option>
                             <? endforeach; ?>
@@ -50,7 +49,7 @@
                         <label>Data inicio</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtdata_inicio" id="txtdata_inicio"/>
+                        <input type="text" name="txtdata_inicio" id="txtdata_inicio" alt="date"/>
                     </dd>
                     <dt>
                         <label>Data fim</label>
@@ -58,17 +57,17 @@
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
                     </dd>
-                    <dt>
-                        <label>Empresa</label>
-                    </dt>
-                    <dd>
-                        <select name="empresa" id="empresa" class="size2">
-                            <? foreach ($empresas as $value) : ?>
-                                <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
-                            <? endforeach; ?>
-                            <option value="">TODOS</option>
-                        </select>
-                    </dd>
+                    <!--                    <dt>
+                                        <label>Empresa</label>
+                                        </dt>
+                                        <dd>
+                                            <select name="empresa" id="empresa" class="size2">
+                    <? foreach ($empresa as $value) : ?>
+                                                                <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
+                    <? endforeach; ?>
+                                                <option value="0">TODOS</option>
+                                            </select>
+                                        </dd>-->
                     <dt>
                         <label>Enviar para Email?</label>
                     </dt>
@@ -88,7 +87,6 @@
 
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
-<!--<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>-->
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
@@ -115,8 +113,8 @@
             dateFormat: 'dd/mm/yy'
         });
     });
-    
-    
+
+
     $(function () {
         $("#accordion").accordion();
     });

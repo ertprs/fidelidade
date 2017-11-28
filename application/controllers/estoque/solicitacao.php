@@ -70,11 +70,11 @@ class Solicitacao extends BaseController {
     }
 
     function imprimir($estoque_solicitacao_id) {
-        
+
         $data['estoque_solicitacao_id'] = $estoque_solicitacao_id;
 //        $data['empresa'] = $this->guia->listarempresa($_POST['empresa']);
         $data['nome'] = $this->solicitacao->solicitacaonome($estoque_solicitacao_id);
-        $data['produtossaida'] = $this->solicitacao->listarsaidaitemrelatorio($estoque_solicitacao_id);
+        $data['produtossaida'] = $this->solicitacao->listarsaidaitem($estoque_solicitacao_id);
         $this->load->View('estoque/impressaosaida', $data);
     }
 
@@ -110,71 +110,34 @@ class Solicitacao extends BaseController {
     function gravarsaidaitens() {
         $estoque_solicitacao_id = $_POST['txtestoque_solicitacao_id'];
         $estoque_solicitacao_itens_id = $_POST['txtestoque_solicitacao_itens_id'];
-//        
-//        $_POST['txtqtde'] = (int) $_POST['txtqtde'];
-//        $_POST['qtdedisponivel'] = (int) $_POST['qtdedisponivel'];
-//        var_dump($_POST['qtdedisponivel']); die;
-        
-        if($_POST['produto_id'] == ''){
-            $data['mensagem'] = 'Insira um produto valido.';
-            $this->session->set_flashdata('message', $data['mensagem']);
-        }                
-        elseif( $_POST['txtqtde'] == ''){
-            $data['mensagem'] = 'Insira uma quantidade valida.';
-            $this->session->set_flashdata('message', $data['mensagem']);
-        }
-        elseif( isset($_POST['qtdedisponivel']) && ( (int)$_POST['txtqtde'] > (int)$_POST['qtdedisponivel']) ){
-            $data['mensagem'] = 'Quantidade selecionada excede o saldo disponivel.';
-            $this->session->set_flashdata('message', $data['mensagem']);
-        }
-        else{
-            //nao permitir quantidades maiores que o que tem
-            $data['produtos'] = $this->solicitacao->listarprodutositem($estoque_solicitacao_itens_id);
-            $this->solicitacao->gravarsaidaitens();
-        }
+        $this->solicitacao->gravarsaidaitens();
         redirect(base_url() . "estoque/solicitacao/saidaitens/$estoque_solicitacao_itens_id/$estoque_solicitacao_id");
     }
 
     function gravaritens() {
         $estoque_solicitacao_id = $_POST['txtestoque_solicitacao_id'];
-        if($_POST['produto_id'] == '' ){
-            $data['mensagem'] = 'Insira um produto valido.';
-            $this->session->set_flashdata('message', $data['mensagem']);
-        }
-        elseif($_POST['txtqtde'] == ''){
-            $data['mensagem'] = 'Insira uma quantidade valida.';
-            $this->session->set_flashdata('message', $data['mensagem']);
-        }
-        else {
-            $this->solicitacao->gravaritens();
-        }
-        
-        redirect(base_url() . "estoque/solicitacao/carregarsolicitacao/$estoque_solicitacao_id");
+        $this->solicitacao->gravaritens();
+        $this->carregarsolicitacao($estoque_solicitacao_id);
     }
 
     function excluirsolicitacao($estoque_solicitacao_itens_id, $estoque_solicitacao_id) {
         $this->solicitacao->excluirsolicitacao($estoque_solicitacao_itens_id);
-        redirect(base_url() . "estoque/solicitacao/carregarsolicitacao/$estoque_solicitacao_id");
+        $this->carregarsolicitacao($estoque_solicitacao_id);
     }
 
     function excluirsaida($estoque_saida_id, $estoque_solicitacao_id, $estoque_solicitacao_itens_id) {
         $this->solicitacao->excluirsaida($estoque_saida_id);
-        redirect(base_url() . "estoque/solicitacao/saidaitens/$estoque_solicitacao_itens_id/$estoque_solicitacao_id");
-    }
-
-    function excluirsaidasolicitacao($estoque_saida_id, $estoque_solicitacao_id) {
-        $this->solicitacao->excluirsaida($estoque_saida_id);
-        redirect(base_url() . "estoque/solicitacao/carregarsaida/$estoque_solicitacao_id");
+        $this->saidaitens($estoque_solicitacao_itens_id, $estoque_solicitacao_id);
     }
 
     function liberarsolicitacao($estoque_solicitacao_id) {
         $this->solicitacao->liberarsolicitacao($estoque_solicitacao_id);
-        redirect(base_url() . "estoque/solicitacao/pesquisar");
+        $this->pesquisar();
     }
 
     function fecharsolicitacao($estoque_solicitacao_id) {
         $this->solicitacao->fecharsolicitacao($estoque_solicitacao_id);
-        redirect(base_url() . "estoque/solicitacao/pesquisar");
+        $this->pesquisar();
     }
 
     function pesquisar($args = array()) {

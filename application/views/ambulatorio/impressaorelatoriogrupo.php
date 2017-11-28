@@ -18,7 +18,7 @@
                 <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">FATURAMENTO POR GRUPO DE PRODUTO</th>
             </tr>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_inicio) ) ); ?> ate <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_fim) ) ); ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></th>
             </tr>
             <? if ($grupo == "0") { ?>
                 <tr>
@@ -174,6 +174,10 @@
                         if ($item->grupo == "ESPIROMETRIA") {
                             $ESPIROMETRIA = $ESPIROMETRIA + $item->valor;
                             $NUMEROESPIROMETRIA = $NUMEROESPIROMETRIA + $item->quantidade;
+                        }
+                        if ($item->grupo == "LABORATORIAL") {
+                            $LABORATORIAL = $LABORATORIAL + $item->valor;
+                            $NUMEROLABORATORIAL = $NUMEROLABORATORIAL + $item->quantidade;
                         }
                         if ($item->grupo == "FISIOTERAPIA") {
                             $FISIOTERAPIA = $FISIOTERAPIA + $item->valor;

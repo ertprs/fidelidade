@@ -20,7 +20,6 @@ class Contasreceber extends BaseController {
         $this->load->model('cadastro/forma_model', 'forma');
         $this->load->model('cadastro/tipo_model', 'tipo');
         $this->load->model('cadastro/classe_model', 'classe');
-        $this->load->model('ambulatorio/exame_model', 'exame');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -42,7 +41,7 @@ class Contasreceber extends BaseController {
         $obj_contasreceber = new contasreceber_model($financeiro_contasreceber_id);
         $data['obj'] = $obj_contasreceber;
         $data['conta'] = $this->forma->listarforma();
-        $data['tipo'] = $this->tipo->listartipo();
+//        $data['tipo'] = $this->tipo->listartipo();
         $data['classe'] = $this->classe->listarclasse();
         $this->loadView('cadastros/contasreceber-form', $data);
     }
@@ -110,8 +109,8 @@ class Contasreceber extends BaseController {
     }
 
     function gerarelatoriocontasreceber() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
-        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
+        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
@@ -217,107 +216,17 @@ class Contasreceber extends BaseController {
 
     function gravar() {
         $repetir = $_POST['repitir'];
-        $dia = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['inicio'])));
-        $parcela = 1;
-        $contador = 0;
-        $a = 0;
-        $c = 0;
+        $dia = str_replace("/", "-", $_POST['inicio']);
         if ($_POST['financeiro_contasreceber_id'] == '') {
-            if ($_POST['devedor'] == '') {
-                $mensagem = 'É necessário selecionar o item no campo Receber de: ';
-                $this->session->set_flashdata('message', $mensagem);
-                redirect(base_url() . "cadastros/contasreceber/carregar/0");
-            }
             if ($repetir == '' || $repetir == 1) {
-
+                $parcela = 1;
                 $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
             } elseif ($repetir >= 2) {
-                if (date("d", strtotime($dia)) != 29 && date("d", strtotime($dia)) != 30 && date("d", strtotime($dia)) != 31) {
-                    $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                } else {
-
-                    if (date("d", strtotime($dia)) == 29) {
-                        $contador = 29;
-                    }
-                    if (date("d", strtotime($dia)) == 30) {
-                        $contador = 30;
-                    }
-                    if (date("d", strtotime($dia)) == 31) {
-                        $contador = 30;
-                        $dia = date('Y-m-d', strtotime("-1 day", strtotime($dia)));
-                    }
-                }
-
+                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
                 for ($index = 2; $index <= $repetir; $index++) {
-                    if ($contador == 29 || $contador == 30 || $contador == 31) {
-                        if ($contador == 29) {
-                            if (date("m", strtotime($dia)) == 01) {
-                                $a ++;
-                                if ($c == 0) {
-                                    $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-                                $dia = date('Y-m-d', strtotime("-1 day", strtotime($dia)));
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-
-                                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                            } elseif (date("m", strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+1 day", strtotime($dia)));
-
-                                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                            } else {
-                                if ($a == 0) {
-                                    $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-                                $a++;
-                                $c++;
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                            }
-                            $parcela++;
-                        } elseif ($contador == 30) {
-                            if (date("m", strtotime($dia)) == 01) {
-                                $a ++;
-                                if ($c == 0) {
-                                    $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-
-                                $dia = date('Y-m-d', strtotime("-2 day", strtotime($dia)));
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-
-                                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                            } elseif (date("m", strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+2 day", strtotime($dia)));
-
-                                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                            } else {
-                                if ($a == 0) {
-//                                    var_dump($dia); die;
-                                    $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-                                $a++;
-                                $c++;
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                
-                                $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                                
-                            }
-                            $parcela++;
-                        }
-                    } else {
-                        $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                        $parcela = $index;
-                        $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
-                    }
+                    $dia = date('d-m-Y', strtotime("+1 month", strtotime($dia)));
+                    $parcela = $index;
+                    $financeiro_contasreceber_id = $this->contasreceber->gravar($dia, $parcela);
                 }
             }
         } else {
@@ -364,10 +273,6 @@ class Contasreceber extends BaseController {
     }
 
     function anexarimagemcontasareceber($financeiro_contasreceber_id) {
-        if (!is_dir("./upload/contasareceber")) {
-            mkdir("./upload/contasareceber");
-            chmod("./upload/contasareceber", 0777);
-        }
 
         $this->load->helper('directory');
         $data['arquivo_pasta'] = directory_map("./upload/contasareceber/$financeiro_contasreceber_id/");
@@ -381,12 +286,9 @@ class Contasreceber extends BaseController {
 
     function importarimagemcontasareceber() {
         $financeiro_contasreceber_id = $_POST['paciente_id'];
-
-        if (!is_dir("./upload/contasareceber")) {
-            mkdir("./upload/contasareceber");
-            chmod("./upload/contasareceber", 0777);
-        }
-
+//        $data = $_FILES['userfile'];
+//        var_dump($data);
+//        die;
         if (!is_dir("./upload/contasareceber/$financeiro_contasreceber_id")) {
             mkdir("./upload/contasareceber/$financeiro_contasreceber_id");
             $destino = "./upload/contasareceber/$financeiro_contasreceber_id";

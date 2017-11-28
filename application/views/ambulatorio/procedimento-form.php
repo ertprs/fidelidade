@@ -35,10 +35,10 @@
                         <select name="grupo" id="grupo" class="size2" >
                             <option value='' >Selecione</option>
                             <? foreach ($grupos as $grupo) { ?>                                
-                                <option value='<?= $grupo->nome ?>' <?
+                                <option value='<?= $grupo->nome?>' <?
                                 if (@$obj->_grupo == $grupo->nome):echo 'selected';
                                 endif;
-                                ?>><?= $grupo->nome ?></option>
+                                ?>><?=$grupo->nome?></option>
                                     <? } ?>
                         </select>
                     </dd>
@@ -137,7 +137,6 @@
                             ?>>N&Atilde;O</option>
                         </select>
                     </dd>
-                    
                     <dt>
                         <label>Medico</label>
                     </dt>
@@ -157,56 +156,11 @@
                             ?>>N&Atilde;O</option>
                         </select>
                     </dd>
-
-                    <dt>
-                        <label>Home Care</label>
-                    </dt>
-                    <dd>
-                        <select name="homecare" id="homecare" class="size2">
-                            <option value="" <?
-                            if (@$obj->_home_care == ""):echo 'selected';
-                            endif;
-                            ?>>Selecione</option>
-                            <option value="1" <?
-                            if (@$obj->_home_care == "t"):echo 'selected';
-                            endif;
-                            ?>>SIM</option>
-                            <option value="0" <?
-                            if (@$obj->_home_care == "f"):echo 'selected';
-                            endif;
-                            ?>>N&Atilde;O</option>
-                        </select>
-                    </dd>
-<!--                    <dt>
-                        <label>Perc./Valor Promotor</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="txtperc_promotor" id="txtperc_promotor" class="texto" value="<?= @$obj->_valor_promotor; ?>" />
-                    </dd>
-                    <dt>
-                        <label>Promotor Percentual</label>
-                    </dt>
-                    <dd>
-                        <select name="percentual_promotor" id="percentual_promotor" class="size2">
-                            <option value="" <?
-                            if (@$obj->_percentual_promotor == ""):echo 'selected';
-                            endif;
-                            ?>>Selecione</option>
-                            <option value="1" <?
-                            if (@$obj->_percentual_promotor == "t"):echo 'selected';
-                            endif;
-                            ?>>SIM</option>
-                            <option value="0" <?
-                            if (@$obj->_percentual_promotor == "f"):echo 'selected';
-                            endif;
-                            ?>>N&Atilde;O</option>
-                        </select>
-                    </dd>-->
                     <dt>
                         <label>Qtde de sess&otilde;es</label>
                     </dt>
                     <dd>
-                        <input required type="number" name="txtqtde" min="1" class="texto" value="<?= @$obj->_qtde; ?>" />
+                        <input type="text" name="txtqtde" class="texto" value="<?= @$obj->_qtde; ?>" />
                     </dd>
                     <dt>
                         <label>Prazo entrega</label>
@@ -214,38 +168,12 @@
                     <dd>
                         <input type="text" name="entrega" class="texto" value="<?= @$obj->_entrega; ?>" />
                     </dd>
-                    <dt>
-                        <label>Descrição</label>
-                    </dt>
-                    <dd>
-                        <textarea  type="text" name="descricao" id="descricao" class="textarea" cols="60" rows="1" ><?= @$obj->_descricao_procedimento; ?> </textarea>
-                    </dd>
-                    
-                     <dt>
-                        <label>Revisão?</label>
-                    </dt>
-                    <dd>
-                        <input type="checkbox" name="rev" id="rev" <?if(@$obj->_revisao == 't'){ echo "checked"; }?>/>
-                        <div class="dias" style="display: inline">
-                            <?if(@$obj->_revisao == 't'){ ?>
-                            <span>Dias</span><input type="text" alt="integer" name="dias" id="dias" class="texto03" value="<?= @$obj->_revisao_dias; ?>" required/>
-                            <?}?>
-                        </div>
-                    </dd>
-                    
-                     <dt>
-                        <label>Sala de Preparo?</label>
-                    </dt>
-                    <dd>
-                        <input type="checkbox" name="salaPreparo" id="salaPreparo" <?if(@$obj->_sala_preparo == 't'){ echo "checked"; }?>/>
-                    </dd>
-
                 </dl>    
 
                 <hr/>
                 <button type="submit" name="btnEnviar">Enviar</button>
                 <button type="reset" name="btnLimpar">Limpar</button>
-                <!--<button type="button" id="btnVoltar" name="btnVoltar">Voltar</button>-->
+                <button type="button" id="btnVoltar" name="btnVoltar">Voltar</button>
             </form>
         </div>
     </div>
@@ -253,17 +181,9 @@
 
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-    $('#rev').change(function () {
-        if(this.checked){
-            var tag = '<span>Dias</span><input type="text" alt="integer" name="dias" id="dias" required/>';
-            $(".dias").append(tag);
-        }
-        else{
-            $(".dias span").remove();
-            $(".dias input").remove();
-        }
+    $('#btnVoltar').click(function () {
+        $(location).attr('href', '<?= base_url(); ?>ponto/cargo');
     });
-
 
     $(function () {
         $("#accordion").accordion();

@@ -20,7 +20,6 @@ class Contaspagar extends BaseController {
         $this->load->model('cadastro/forma_model', 'forma');
         $this->load->model('cadastro/tipo_model', 'tipo');
         $this->load->model('cadastro/classe_model', 'classe');
-        $this->load->model('ambulatorio/exame_model', 'exame');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -42,7 +41,7 @@ class Contaspagar extends BaseController {
         $obj_contaspagar = new contaspagar_model($financeiro_contaspagar_id);
         $data['obj'] = $obj_contaspagar;
         $data['conta'] = $this->forma->listarforma();
-        $data['tipo'] = $this->tipo->listartipo();
+//        $data['tipo'] = $this->tipo->listartipo();
         $data['classe'] = $this->classe->listarclasse();
         $this->loadView('cadastros/contaspagar-form', $data);
     }
@@ -100,8 +99,8 @@ class Contaspagar extends BaseController {
     }
 
     function gerarelatoriocontaspagar() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
-        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
+        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
@@ -215,133 +214,17 @@ class Contaspagar extends BaseController {
 
     function gravar() {
         $repetir = $_POST['repitir'];
-        $dia = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['inicio'])));
-        $parcela = 1;
-        $contador = 0;
-        $a = 0;
-        $c = 0;
+        $dia = str_replace("/", "-", $_POST['inicio']);
         if ($_POST['financeiro_contaspagar_id'] == '') {
-            if ($_POST['credor'] == '') {
-                $data['mensagem'] = 'É necessário selecionar o item no campo Pagar a ';
-                $this->session->set_flashdata('message', $data['mensagem']);
-                redirect(base_url() . "cadastros/contaspagar/carregar/0", $data);
-            }
             if ($repetir == '' || $repetir == 1) {
-
+                $parcela = 1;
                 $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
             } elseif ($repetir >= 2) {
-                if (date("d",strtotime($dia)) != 29 && date("d",strtotime($dia)) != 30 && date("d",strtotime($dia)) != 31) {
-                    $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                } else {
-
-                    if (date("d",strtotime($dia)) == 29) {
-                        $contador = 29;
-                    }
-                    if (date("d",strtotime($dia)) == 30) {
-                        $contador = 30;
-                    }
-                    if (date("d",strtotime($dia)) == 31) {
-                        $contador = 30;
-                        $dia = date('Y-m-d', strtotime("-1 day", strtotime($dia)));
-                    }
-                }
-
+                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
                 for ($index = 2; $index <= $repetir; $index++) {
-                    if ($contador == 29 || $contador == 30 || $contador == 31) {
-                        if ($contador == 29) {
-                            if (date("m",strtotime($dia)) == 01) {
-                                $a ++;
-                                if ($c == 0) {
-                                    $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-                                $dia = date('Y-m-d', strtotime("-1 day", strtotime($dia)));
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } elseif (date("m",strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+1 day", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } else {
-                                if ($a == 0) {
-                                    $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-                                $a++;
-                                $c++;
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            }
-                            $parcela++;
-                        } elseif ($contador == 30) {
-                            if (date("m",strtotime($dia)) == 01) {
-                                $a++;
-                                if ($c == 0) {
-                                    $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-
-                                $dia = date('Y-m-d', strtotime("-2 day", strtotime($dia)));
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } elseif (date("m",strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+2 day", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } else {
-                                if ($a == 0) {
-//                                    var_dump($dia); die;
-                                    $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                                    $parcela++;
-                                }
-                                $a++;
-                                $c++;
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                                
-                            }
-                            $parcela++;
-                        } elseif ($contador == 31) {
-                            if (date("m",strtotime($dia)) == 01) {
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                                $dia = date('Y-m-d', strtotime("-3 day", strtotime($dia)));
-
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } elseif (date("m",strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+3 day", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } elseif (date("m",strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+3 day", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } elseif (date("m",strtotime($dia)) == 02) {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $dia = date('Y-m-d', strtotime("+3 day", strtotime($dia)));
-
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            } else {
-                                $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                                $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                            }
-                        }
-                    } else {
-                        $dia = date('Y-m-d', strtotime("+1 month", strtotime($dia)));
-                        $parcela = $index;
-                        $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
-                    }
+                    $dia = date('d-m-Y', strtotime("+1 month", strtotime($dia)));
+                    $parcela = $index;
+                    $financeiro_contaspagar_id = $this->contaspagar->gravar($dia, $parcela);
                 }
             }
         } else {
@@ -356,20 +239,7 @@ class Contaspagar extends BaseController {
         redirect(base_url() . "cadastros/contaspagar");
     }
 
-    function confirmar($financeiro_contaspagar_id) {
-//        var_dump($_POST['conta']);
-//        die;
-        if ($_POST['conta'] == '') {
-            $data['mensagem'] = 'Associe uma conta a este pagamento';
-            $this->session->set_flashdata('message', $data['mensagem']);
-            redirect(base_url() . "cadastros/contaspagar/carregarconfirmacao/$financeiro_contaspagar_id", $data);
-        }
-
-        if ($_POST['credor'] == '') {
-            $data['mensagem'] = 'Associe um credor a este pagamento.';
-            $this->session->set_flashdata('message', $data['mensagem']);
-            redirect(base_url() . "cadastros/contaspagar/carregarconfirmacao/$financeiro_contaspagar_id", $data);
-        }
+    function confirmar() {
         $financeiro_contaspagar_id = $this->contaspagar->gravarconfirmacao();
         if ($financeiro_contaspagar_id == "-1") {
             $data['mensagem'] = 'Erro ao confirmar a Contas a pagar. Opera&ccedil;&atilde;o cancelada.';
@@ -401,10 +271,7 @@ class Contaspagar extends BaseController {
     }
 
     function anexarimagemcontasapagar($financeiro_contaspagar_id) {
-        if (!is_dir("./upload/contasapagar")) {
-            mkdir("./upload/contasapagar");
-            chmod("./upload/contasapagar", 0777);
-        }
+
         $this->load->helper('directory');
         $data['arquivo_pasta'] = directory_map("./upload/contasapagar/$financeiro_contaspagar_id/");
 //        $data['arquivo_pasta'] = directory_map("/home/vivi/projetos/clinica/upload/consulta/$paciente_id/");
@@ -416,11 +283,6 @@ class Contaspagar extends BaseController {
     }
 
     function importarimagemcontasapagar() {
-        if (!is_dir("./upload/contasapagar")) {
-            mkdir("./upload/contasapagar");
-            chmod("./upload/contasapagar", 0777);
-        }
-        
         $financeiro_contaspagar_id = $_POST['paciente_id'];
 //        $data = $_FILES['userfile'];
 //        var_dump($data);

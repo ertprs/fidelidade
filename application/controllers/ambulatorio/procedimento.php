@@ -33,47 +33,9 @@ class Procedimento extends BaseController {
         $data["limite_paginacao"] = $limite;
         $this->loadView('ambulatorio/procedimento-lista', $data);
     }
-    
-    function procedimentoconveniovalor($procedimento_tuss_id) {
-
-        $data['procedimento'] = $this->procedimento->listarprocedimentoprodutovalor($procedimento_tuss_id);
-        $data['valor'] = $this->procedimento->listarprocedimentoconveniovalor($procedimento_tuss_id);
-        $data['convenio'] = $this->convenio->listardados();
-//        var_dump($data['valor']); die;
-        $this->loadView('ambulatorio/procedimentoconveniovalor-form', $data);
-    }
-    
-    function gravarprocedimentoconveniovalor($procedimento_tuss_id) {
-        
-        $this->procedimento->gravarprocedimentoconveniovalor($procedimento_tuss_id);
-        redirect(base_url() . "ambulatorio/procedimento/procedimentoconveniovalor/$procedimento_tuss_id");
-    }
-    
-    function excluirprocedimentoconveniovalor($procedimento_convenio_produto_valor_id, $procedimento_tuss_id) {
-        
-        $this->procedimento->excluirprocedimentoconveniovalor($procedimento_convenio_produto_valor_id);
-        
-        redirect(base_url() . "ambulatorio/procedimento/procedimentoconveniovalor/$procedimento_tuss_id");
-    }
 
     function pesquisartuss($args = array()) {
         $this->loadView('ambulatorio/procedimentotuss-lista', $args);
-    }
-    
-    function carregarajustevalores() {
-        $data['grupos'] = $this->procedimento->listargrupos();
-        $this->loadView('ambulatorio/ajustevalores-form', $data);
-    }
-    
-    function gravarajustevalores() {
-        $verifica = $this->procedimento->gravarajustevalores();
-        if ($verifica) {
-            $data['mensagem'] = 'Erro ao ajustar os valores. Opera&ccedil;&atilde;o cancelada.';
-        } else {
-            $data['mensagem'] = 'Sucesso ao ajustar os valores.';
-        }
-        $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "ambulatorio/procedimento");
     }
 
     function carregarprocedimento($procedimento_tuss_id) {
@@ -127,8 +89,7 @@ class Procedimento extends BaseController {
         $data['conveniotipo'] = $_POST['convenio'];
         $data['relatorio'] = $this->procedimento->relatorioprocedimentoconvenio();
         $html = $this->load->view('ambulatorio/impressaorelatorioprocedimentoconvenio', $data, true);
-        
-//        pdf($html, $filename, $cabecalho, $rodape, $grupo);
+        pdf($html, $filename, $cabecalho, $rodape, $grupo);
         $this->load->View('ambulatorio/impressaorelatorioprocedimentoconvenio', $data);
     }
 

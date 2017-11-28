@@ -6,14 +6,10 @@
         </a>
     </div>
     <?
-    $classe = $this->classe->listarclasse();
     $saldo = $this->caixa->saldo();
-    $credores = $this->caixa->empresa();
-    $empresas = $this->exame->listarempresas();
+    $empresa = $this->caixa->empresa();
     $conta = $this->forma->listarforma();
     $tipo = $this->tipo->listartipo();
-    
-    $perfil_id = $this->session->userdata('perfil_id');
     ?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Entrada</a></h3>
@@ -27,7 +23,6 @@
                         <th class="tabela_title">Data Fim</th>
                         <th class="tabela_title">Tipo</th>
                         <th class="tabela_title">Classe</th>
-                        <th class="tabela_title">Credor/Devedor</th>
                         <th class="tabela_title">Empresa</th>
                         <th class="tabela_title">Observacao</th>
                     </tr>
@@ -76,33 +71,16 @@
                         <th class="tabela_title">
                             <select name="nome_classe" id="nome_classe" class="size2">
                                 <option value="">TODOS</option>
-                                <? foreach ($classe as $value) : ?>
-                                    <option value="<?= $value->descricao; ?>" <?
-                                    if (@$_GET['nome_classe'] == $value->descricao):echo 'selected';
-                                    endif;
-                                    ?>><?php echo $value->descricao; ?></option>
-                                        <? endforeach; ?>
                             </select>
                         </th>
                         <th class="tabela_title">
                             <select name="empresa" id="empresa" class="size1">
                                 <option value="">TODOS</option>
-                                <? foreach ($credores as $value) : ?>
+                                <? foreach ($empresa as $value) : ?>
                                     <option value="<?= $value->financeiro_credor_devedor_id; ?>" <?
                                     if (@$_GET['empresa'] == $value->financeiro_credor_devedor_id):echo 'selected';
                                     endif;
                                     ?>><?php echo $value->razao_social; ?></option>
-                                        <? endforeach; ?>
-                            </select>
-                        </th>
-                        <th class="tabela_title">
-                            <select name="txtempresa" id="txtempresa" class="size1">
-                                <option value="">TODOS</option>
-                                <? foreach ($empresas as $value) : ?>
-                                    <option value="<?= $value->empresa_id; ?>" <?
-                                    if (@$_GET['txtempresa'] == $value->empresa_id):echo 'selected';
-                                    endif;
-                                    ?>><?php echo $value->nome; ?></option>
                                         <? endforeach; ?>
                             </select>
                         </th>
@@ -165,25 +143,13 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->conta; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->observacao; ?></td>
 
-                                <?if($perfil_id != 10){?>
-                                
-                                
+
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
-                                        <a onclick="javascript: return confirm('Deseja realmente excluir a entrada?');" href="<?= base_url() ?>cadastros/caixa/excluirentrada/<?= $item->entradas_id ?>">Excluir</a></div>
+                                        <a href="<?= base_url() ?>cadastros/caixa/excluirentrada/<?= $item->entradas_id ?>">Excluir</a></div>
                                 </td>
                                 <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/caixa/anexarimagementrada/<?= $item->entradas_id ?>">Arquivos</a></div>
                                 </td>
-                                <?}else{?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
-                                            Excluir
-                                    </div>
-                                </td>
-                                
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/caixa/anexarimagementrada/<?= $item->entradas_id ?>">Arquivos</a></div>
-                                </td>
-                                <?}?>
                             </tr>
 
                         </tbody>
@@ -240,49 +206,49 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
-
-                                    $(function () {
-                                        $('#nome').change(function () {
-                                            if ($(this).val()) {
-                                                $('.carregando').show();
-                                                $.getJSON('<?= base_url() ?>autocomplete/classeportiposaidalista', {nome: $(this).val(), ajax: true}, function (j) {
-                                                    options = '<option value=""></option>';
-                                                    for (var c = 0; c < j.length; c++) {
-                                                        options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
-                                                    }
-                                                    $('#nome_classe').html(options).show();
-                                                    $('.carregando').hide();
-                                                });
-                                            } else {
-                                                $('#nome_classe').html('<option value="">TODOS</option>');
-                                            }
-                                        });
-                                    });
-
-                                    $(function () {
-                                        $("#datainicio").datepicker({
-                                            autosize: true,
-                                            changeYear: true,
-                                            changeMonth: true,
-                                            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                                            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-                                            buttonImage: '<?= base_url() ?>img/form/date.png',
-                                            dateFormat: 'dd/mm/yy'
-                                        });
-                                    });
-                                    $(function () {
-                                        $("#datafim").datepicker({
-                                            autosize: true,
-                                            changeYear: true,
-                                            changeMonth: true,
-                                            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                                            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-                                            buttonImage: '<?= base_url() ?>img/form/date.png',
-                                            dateFormat: 'dd/mm/yy'
-                                        });
-                                    });
-                                    $(function () {
-                                        $("#accordion").accordion();
-                                    });
+    
+        $(function () {
+        $('#nome').change(function () {
+            if ($(this).val()) {
+                $('.carregando').show();
+                $.getJSON('<?= base_url() ?>autocomplete/classeportiposaidalista', {nome: $(this).val(), ajax: true}, function (j) {
+                    options = '<option value=""></option>';
+                    for (var c = 0; c < j.length; c++) {
+                        options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
+                    }
+                    $('#nome_classe').html(options).show();
+                    $('.carregando').hide();
+                });
+            } else {
+                $('#nome_classe').html('<option value="">TODOS</option>');
+            }
+        });
+    });
+    
+    $(function () {
+        $("#datainicio").datepicker({
+            autosize: true,
+            changeYear: true,
+            changeMonth: true,
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            buttonImage: '<?= base_url() ?>img/form/date.png',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
+    $(function () {
+        $("#datafim").datepicker({
+            autosize: true,
+            changeYear: true,
+            changeMonth: true,
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            buttonImage: '<?= base_url() ?>img/form/date.png',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
+    $(function () {
+        $("#accordion").accordion();
+    });
 
 </script>

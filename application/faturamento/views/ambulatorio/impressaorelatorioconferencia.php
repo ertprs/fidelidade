@@ -106,7 +106,7 @@
 
                 foreach ($relatorio as $item) :
                     $p = $i + 1;
-                if($item->grupo == 'MEDICAMENTO'  || $item->grupo == 'MATERIAL'){
+                if($item->grupo == 'MEDICAMENTO'){
                 $medicamento = $medicamento + $item->quantidade;
                 }
                     $i++;

@@ -2,13 +2,7 @@
 
     <table>
         <tr>
-            <td width="20px;">
-                <div class="bt_link" style="width: 110pt">
-                    <a href="<?php echo base_url() ?>cadastros/pacientes/novo" style="width: 100pt">
-                        Novo Cadastro
-                    </a>
-                </div>
-            </td>
+
             <!--            
                         <td width="100px;"><center>
                             <div class="bt_link_new">
@@ -42,48 +36,44 @@
 
     </table>
     <div id="accordion">
-        <h3><a href="#">Manter pacientes</a></h3>
+        <h3><a href="#">Clientes Cadastrados</a></h3>
         <div>
             <table >
                 <thead>
                     <tr>
-                        <th class="tabela_title" ></th>
-                        <th class="tabela_title" >Prontuario</th>
-                        <th class="tabela_title" colspan="3">Nome / Nome da Mae / Telefone / CPF</th>
+                        <!--<th class="tabela_title" ></th>-->
+                        <th class="tabela_title" >Numero</th>
+                        <th class="tabela_title" >Nome / Telefone / Nome da Mae / CPF</th>
                         <th class="tabela_title" colspan="2">Dt. Nascimento</th>
-                        <th class="tabela_title" ></th>
                     </tr>
                     <tr>
-                <form method="get" action="<?php echo base_url() ?>cadastros/pacientes/pesquisar">
-                    <th class="tabela_title" colspan=""></th>
-                    <th class="tabela_title" colspan="">
-                        <input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />
-                    </th>
-                    <th class="tabela_title" colspan="3">
-                        <input type="text" name="nome" class="texto08" value="<?php echo @$_GET['nome']; ?>" />
-                    </th>
-                    <th class="tabela_title" colspan="2">
-                        <input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />
-                    </th>
-                    <th class="tabela_title" colspan="">
-                        <button type="submit" name="enviar">Pesquisar</button>
-                    </th>
-
-
-
-
-
-
-                </form>
-                </th>
-                </tr>
-                </thead>
-            </table>
-            
-            <table >
-                <thead>
+                        <form method="get" action="<?php echo base_url() ?>cadastros/pacientes/pesquisar">
+<!--                        <th class="tabela_title" >
+                                <input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />
+                                <input type="text" name="nome" class="texto08" value="<?php echo @$_GET['nome']; ?>" />
+                                <input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />
+                        </th>-->
+                            <th class="tabela_title" >
+                                <input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />
+                        </th>
+                        <th class="tabela_title" >
+                                <!--<input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />-->
+                                <input type="text" name="nome" class="texto08" value="<?php echo @$_GET['nome']; ?>" />
+                                <!--<input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />-->
+                        </th>
+                        
+                        <th class="tabela_title" colspan="2">
+                                <input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />
+                        </th>
+                        <th class="tabela_title" >
+                                <button type="submit" name="enviar">Pesquisar</button>
+                        </th>
+                        </form>
+                    </tr>
+                    </table>
+                    <table >
                     <tr>
-                        <th class="tabela_header">Prontuario</th>
+                        <th class="tabela_header">Numero</th>
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">Nome da Mãe</th>
                         <th class="tabela_header" width="100px;">Nascimento</th>
@@ -93,13 +83,10 @@
                 </tr>
                 </thead>
                 <?php
-                $imagem = $this->session->userdata('imagem');
-                $consulta = $this->session->userdata('consulta');
-                                
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->paciente->listar($_GET);
                 $total = $consulta->count_all_results();
-                $limit = 10;
+                $limit = $limite_paginacao;
                 isset($_GET['per_page']) ? $pagina = $_GET['per_page'] : $pagina = 0;
 
                 if ($total > 0) {
@@ -132,32 +119,11 @@
                                             <b>Op&ccedil;&otilde;es</b>
                                         </a></div>
                                 </td>
-                                <? if($imagem == 't'){ ?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="50px;" >
-                                            <div class="bt_link">
-                                                <a href="<?= base_url() ?>ambulatorio/exametemp/carregarpacientetemp/<?= $item->paciente_id ?>">
-                                                    <b>Exames</b>
-                                                </a></div>
-                                    </td>
-                                <? } 
-                                if($imagem == 't'){ ?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="50px;" >
-                                            <div class="bt_link">
-                                                <a href="<?= base_url() ?>ambulatorio/exametemp/carregarpacienteconsultatemp/<?= $item->paciente_id ?>">
-                                                    <b>Consultas</b>
-                                                </a></div>
-                                    </td>
-                                <? } ?>
-        <!--                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/pacientes/procedimentoautorizar/<?= $item->paciente_id ?>">
-                                            <b>Autorizar</b>
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">                    <div class="bt_linkm">
+                                        <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . $item->paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                                         </a></div>
-                                </td>-->
-        <!--                                                                <td class="<?php echo $estilo_linha; ?>" width="50px;" ><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/pacientes/carregar/<?= $item->paciente_id ?>">
-                                            <b>Autorizar</b>
-                                        </a></div>
-                                </td>-->
+                                </td>
+
                             </tr>
                         </tbody>
                         <?php
@@ -169,6 +135,17 @@
                         <th class="tabela_footer" colspan="9">
                             <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
+                            <div style="display: inline">
+                                <span style="margin-left: 15px; color: white; font-weight: bolder;"> Limite: </span>
+                                <select style="width: 50px">
+                                    <option onclick="javascript:window.location.href = ('<?= base_url() ?>cadastros/pacientes/pesquisar/50');" <? if ($limit == 50) {
+                                echo "selected";
+                            } ?>> 50 </option>
+                                    <option onclick="javascript:window.location.href = ('<?= base_url() ?>cadastros/pacientes/pesquisar/100');" <? if ($limit == 100) {
+                                echo "selected";
+                            } ?>> 100 </option>
+                                    </select>
+                            </div>
                         </th>
                     </tr>
                 </tfoot>

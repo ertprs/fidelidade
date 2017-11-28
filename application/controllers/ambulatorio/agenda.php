@@ -39,9 +39,7 @@ class Agenda extends BaseController {
     function listarhorarioagenda($agenda) {
         $data['agenda'] = $agenda;
         $data['lista'] = $this->agenda->listarhorarioagenda($agenda);
-        $data['lista_agenda'] = $this->exame->listaragendacriada($agenda);
-//        echo "<pre>";
-//        var_dump($agenda);die;
+        
         $this->loadView('ambulatorio/horarioagenda-lista', $data);
     }
 
@@ -75,98 +73,8 @@ class Agenda extends BaseController {
 
 //            $this->carregarView($data);
     }
-    
-    function editaragendacriada($agenda_id) {
-        $data['horario_id'] = $agenda_id;
-        $data['horarios'] = $this->agenda->listarhorariosagendacriada($agenda_id);
-        $data['horarios_consolidados'] = $this->agenda->listarhorariosagendacriadaconsolidados($agenda_id);
-        $this->loadView('ambulatorio/editaragendacriada-form',$data );
-    }
-    
-    function carregarexclusaohorario($horariovariavel_id, $horariotipo) {
-//        var_dump($horariotipo); die;
-        $data['horariotipo'] = $horariotipo;
-        $data['horariovariavel_id'] = $horariovariavel_id;
-        $data['medicos'] = $this->operador_m->listarmedicos();
-        $data['lista'] = $this->agenda->listarhorarioagendaexclusao($horariovariavel_id);
-        $this->loadView('ambulatorio/agendaexclusaohorario-form',$data );
-//        $this->session->set_flashdata('message', $mensagem);
-//        redirect(base_url() . "ambulatorio/agenda/listarhorarioagenda/$horariotipo");
-    }
-    function carregarexclusaoagenda($agenda_id) {
-//        var_dump($agenda_id); die;
-        $data['agenda_id'] = $agenda_id;
-//        $data['horariovariavel_id'] = $horariovariavel_id;
-        $data['medicos'] = $this->operador_m->listarmedicos();
-        $data['lista'] = $this->agenda->listaragendaexclusao($agenda_id);
-//        var_dump($data['lista']); die;
-        $this->loadView('ambulatorio/agendaexclusao-form',$data );
-//        $this->session->set_flashdata('message', $mensagem);
-//        redirect(base_url() . "ambulatorio/agenda/listarhorarioagenda/$horariotipo");
-    }
 
-    function excluiragendascriadas($agenda_id) {
-        if ( $this->agenda->excluiragendascriadas() ) {
-            $mensagem = 'Sucesso ao excluir as agendas.';
-        } else {
-            $mensagem = 'Erro ao excluir as agendas. Opera&ccedil;&atilde;o cancelada.';
-        }
-        $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "ambulatorio/agenda/listarhorarioagenda/$agenda_id");
-    }
-
-    function excluirhorarioagendaconsolidada($agenda_id) {
-        if ( $this->agenda->excluirhorarioagendaconsolidada($agenda_id) ) {
-            $mensagem = 'Sucesso ao excluir o Horario';
-        } else {
-            $mensagem = 'Erro ao excluir o Horario. Opera&ccedil;&atilde;o cancelada.';
-        }
-        
-        $parametro = "";
-        foreach ($_GET as $key => $value) {
-            $value = str_replace(" ", "+", $value);
-            $parametro .= $key . "=" . $value . "&";
-        }
-        
-        $this->session->set_flashdata('message', $data['mensagem']);
-//        var_dump($parametro); die;
-        
-        redirect(base_url() . "ambulatorio/agenda/editaragendacriada/$agenda_id?".$parametro);
-    }
-
-    function excluirhorarioagendacriada($agenda_id) {
-        if ( $this->agenda->excluirhorarioagendacriada($agenda_id) ) {
-            $mensagem = 'Sucesso ao excluir o Horario';
-        } else {
-            $mensagem = 'Erro ao excluir o Horario. Opera&ccedil;&atilde;o cancelada.';
-        }
-        
-        $parametro = "";
-        foreach ($_GET as $key => $value) {
-            $value = str_replace(" ", "+", $value);
-            $parametro .= $key . "=" . $value . "&";
-        }
-        
-        $this->session->set_flashdata('message', $data['mensagem']);
-//        var_dump($parametro); die;
-        
-        redirect(base_url() . "ambulatorio/agenda/editaragendacriada/$agenda_id?".$parametro);
-    }
-
-    function excluirhorarioagendaeditada($horario_id) {
-//        var_dump($_POST); die;
-        if ( $this->agenda->excluirhorarioagendaeditada($horario_id) ) {
-            $mensagem = 'Sucesso ao excluir o Horario';
-        } else {
-            $mensagem = 'Erro ao excluir o Horario. Opera&ccedil;&atilde;o cancelada.';
-        }
-        $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
-    }
-    
-    
     function excluirhorarioagenda($horariovariavel_id, $horariotipo) {
-//        var_dump($_POST); die;
         if ($this->agenda->excluirhorariofixo($horariovariavel_id)) {
             $mensagem = 'Sucesso ao excluir o Horario';
         } else {
@@ -206,6 +114,8 @@ class Agenda extends BaseController {
     }
 
     function gravarmedicogeral() {
+        echo 'geral';
+        die;
         $agenda_id = $this->agenda->gravarmedicogeral();
         if ($agenda_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar o Medico. Opera&ccedil;&atilde;o cancelada.';
@@ -294,19 +204,11 @@ class Agenda extends BaseController {
         $this->loadView('ponto/virada-tipo');
     }
 
-    function novohorarioagendacriada($agenda_id) {
-        $data['agenda_id'] = $agenda_id;
-        $data['empresas'] = $this->agenda->listarempresa();
-        $data['horarios'] = $this->agenda->listarhorarioagendaeditadas($agenda_id);
-        $this->loadView('ambulatorio/horarioagendacriada-form', $data);
-    }
-
     function novohorarioagenda($agenda_id) {
         $data['agenda_id'] = $agenda_id;
-        $data['empresas'] = $this->agenda->listarempresa();
         $this->loadView('ambulatorio/horarioagenda-form', $data);
     }
-    
+
     function gravarhorarioagenda() {
         $horariotipo = $_POST['txtagendaID'];
         if ($this->agenda->gravarhorariofixo()) {
@@ -316,20 +218,6 @@ class Agenda extends BaseController {
         }
         $this->session->set_flashdata('message', $data['mensagem']);
         redirect(base_url() . "ambulatorio/agenda/listarhorarioagenda/$horariotipo");
-    }
-
-    function gravarhorarioagendacriada($agenda_id) {
-        
-        if ($this->agenda->gravarhorarioagendacriada($agenda_id)) {
-            $data['mensagem'] = 'Erro ao gravar o Horario. Opera&ccedil;&atilde;o cancelada.';
-        } else {
-            $data['mensagem'] = 'Sucesso ao gravar o Horario.';
-        }
-        
-        $parametro = "nome=" . $_POST['nome_agenda'] . "&" . "medico_id=" . $_POST['medico_id'];
-        
-        $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "ambulatorio/agenda/novohorarioagendacriada/$agenda_id?".$parametro);
     }
 
     private function carregarView($data = null, $view = null) {

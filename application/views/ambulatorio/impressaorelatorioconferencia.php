@@ -1,6 +1,4 @@
 <div class="content"> <!-- Inicio da DIV content -->
-    
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <table>
         <thead>
 
@@ -17,7 +15,7 @@
                 <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">CONFERENCIA DOS CONVENIOS</th>
             </tr>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_inicio) ) ); ?> ate <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_fim) ) ); ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></th>
             </tr>
             <? if ($grupo == "0") { ?>
                 <tr>
@@ -73,9 +71,9 @@
                 <tr>
                     <td class="tabela_teste" width="80px;">Atend.</th>
                     <td class="tabela_teste" >Emissao</th>
-                    <td class="tabela_teste" width="350px;">Paciente</th>
-                    <td class="tabela_teste" >Autorizacao</th>
-                    <td class="tabela_teste" >Procedimentos</th>
+                    <td class="tabela_teste"  width="350px;">Paciente</th>
+                    <td class="tabela_teste">Autorizacao</th>
+                    <td class="tabela_teste"  >Procedimentos</th>
                     <td class="tabela_teste" >Codigo</th>
                     <td class="tabela_teste" >QTDE</th>
                     <td class="tabela_teste" width="80px;">V. UNIT</th>
@@ -108,7 +106,7 @@
 
                 foreach ($relatorio as $item) :
                     $p = $i + 1;
-                if($item->grupo == 'MEDICAMENTO' || $item->grupo == 'MATERIAL'){
+                if($item->grupo == 'MEDICAMENTO'){
                 $medicamento = $medicamento + $item->quantidade;
                 }
                     $i++;
@@ -136,11 +134,7 @@
                                 <td>&nbsp;</td>
                             <? } else { ?>
                                 <td><?= $item->guia_id; ?></td>
-                                <td>
-                                    <?if($item->data_antiga != ""){ echo " ** ";}?>
-                                    <?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?>
-                                    <?if($item->data_antiga != ""){ echo " ** ";}?>
-                                </td>
+                                <td><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                                 <td><?= utf8_decode($item->paciente); ?></td>
                                 <?
                                 $contadorpaciente++;
@@ -151,8 +145,8 @@
                             <td><?= utf8_decode($item->exame); ?></td>
                             <td><?= $item->codigo; ?></td>
                             <td><?= $item->quantidade; ?></td>
-                            <td ><?= number_format($item->valor, 2, ',', '.') ?></td>
-                            <td <?if($item->ajuste_cbhpm == 't' && $item->valor != $item->valor_total){?>style="color: blue;" title="Ajustado" <?}?>><?= number_format($item->valor_total, 2, ',', '.') ?></td>
+                            <td><?= number_format($item->valortotal, 2, ',', '.') ?></td>
+                            <td><?= number_format($item->valor_total, 2, ',', '.') ?></td>
                             <? if ($item->paciente != $relatorio[$p]->paciente || $p == $maximo) { ?>
                             <td><b><?= number_format($totalpaciente, 2, ',', '.') ?></b></td>
                                 <?
@@ -200,7 +194,7 @@
                                 <td>&nbsp;</td>
                             <? } else { ?>
                                 <td><?= $item->guia_id; ?></td>
-                                <td><?if($item->data_antiga != ""){ echo " ** ";}?><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?><?if($item->data_antiga != ""){ echo " ** ";}?></td>
+                                <td><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                                 <td><?= utf8_decode($item->paciente); ?></td>
                                 <?
                                 $contadorpaciente++;
@@ -262,6 +256,7 @@
 
 
 </div> <!-- Final da DIV content -->
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript">
 

@@ -25,13 +25,12 @@
         </tbody>
     </table>
     <hr>
-    <table cellpadding="5">
+    <table>
         <tr>
             <td >Procedimento</td>
             <td >Qtde</td>
             <td >V. Unit</td>
-            <td >Grupo</td>
-            <td >Convenio</td>
+            <td >CONVENIO</td>
             <td >V. Total</td>
         </tr>
         <?
@@ -44,7 +43,6 @@
                 <td width="25%;"><?= utf8_decode($item->procedimento) ?></td>
                 <td ><?= utf8_decode($item->quantidade) ?></td>
                 <td width="25%;"><?= number_format($item->valor, 2, ',', '.') ?></td>
-                <td width="15%;"><?= $item->grupo ?></td>
                 <td width="25%;"><?= $item->convenio ?></td>
                 <td width="25%;"><?= number_format($item->valor_total, 2, ',', '.') ?></td>
             </tr>

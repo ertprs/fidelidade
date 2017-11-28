@@ -1,9 +1,5 @@
 <div class="content"> <!-- Inicio da DIV content -->
-    <meta charset="utf8"/>
-    <?
-    $tipoempresa = "";
-    $credito = 0;
-    ?>
+    <? $tipoempresa = ""; ?>
     <table>
         <thead>
 
@@ -34,7 +30,7 @@
                 <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">EMPRESA: <?= $tipoempresa ?></th>
             </tr>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= str_replace("-", "/", date("d-m-Y", strtotime($txtdata_inicio))); ?> ate <?= str_replace("-", "/", date("d-m-Y", strtotime($txtdata_fim))); ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></th>
             </tr>
             <tr>
                 <th style='width:10pt;border:solid windowtext 1.0pt;
@@ -45,49 +41,16 @@
             <?
             $contador = count($convenio);
             ?>
-            
-            <? if( count($creditos) > 0) { ?>
-                <tr>
-                    <td colspan="4"><center><font size="-1"><B>CRÉDITOS LANÇADOS</B></center></td>
-                </tr>
-                <tr>
-                    <td width="350px;"><font size="-1"><B>Paciente</B></td>
-                    <td style='text-align: right;'width="120px;"><font size="-1"><B>Data</B></td>
-                    <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor</B></td>
-                </tr>
-                <? foreach ($creditos as $item){ ?>
-                <tr>
-                    <td><?= $item->paciente ?></td>
-                    <td style='text-align: right;'><?= date("d/m/Y", strtotime($item->data)) ?></td>
-                    <td style='text-align: right;'><?= number_format($item->valor, 2, ',', '') ?></td>
-                </tr>
-                <? } ?>
-                <tr>
-                    <td colspan="3"><hr><br></td>
-                </tr>
-            <? } ?>
-        
-<? if (count($medico) > 0): ?>
             <tr>
-                <td colspan="4"><center><font size="-1"><B>PRODUÇÃO AMBULATORIAL</B></center></td>
+                <td width="350px;"><font size="-1"><B>Medico</B></th>
+                <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor Produzido</B></th>
+                <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor Pago</B></th>
             </tr>
-<? endif; ?>
-
-
-
-        <tr>
-            <td width="350px;"><font size="-1"><B>Medico</B></td>
-            <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor Produzido</B></td>
-            <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor Pago</B></td>
-        </tr>
-
-<? if (count($medico) > 0): ?>
             <tr>
                 <th style='width:10pt;border:solid windowtext 1.0pt;
                     border-bottom:none;mso-border-top-alt:none;border-left:
                     none;border-right:none;' colspan="4">&nbsp;</th>
             </tr>
-<? endif; ?>
         </thead>
 
 
@@ -105,76 +68,33 @@
             $total_convenio = 0;
             $liquidodinheiro = 0;
             $faturamento_clinica = 0;
-            $TOTALCARTAO = 0;
-
-            foreach ($formapagamento as $value) {
-                $data[$value->nome] = 0;
-                $numero[$value->nome] = 0;
-                $desconto[$value->nome] = 0;
-            }
-            foreach ($medicorecebido as $itens) :
-
-                if ($itens->dinheiro == 't') {
-
-                    foreach ($formapagamento as $value) {
-                        if ($itens->forma_pagamento == $value->forma_pagamento_id) {
-                            $data[$value->nome] = $data[$value->nome] + $itens->valor1;
-                            $numero[$value->nome] ++;
-//                                $desconto[$value->nome] = $desconto[$value->nome] + $item->desconto;
-                        }
-                    }
-                    foreach ($formapagamento as $value) {
-                        if ($itens->forma_pagamento2 == $value->forma_pagamento_id) {
-                            $data[$value->nome] = $data[$value->nome] + $itens->valor2;
-                            $numero[$value->nome] ++;
-//                                $desconto[$value->nome] = $desconto[$value->nome] + $item->desconto;
-                        }
-                    }
-                    foreach ($formapagamento as $value) {
-                        if ($itens->forma_pagamento3 == $value->forma_pagamento_id) {
-                            $data[$value->nome] = $data[$value->nome] + $itens->valor3;
-
-                            $numero[$value->nome] ++;
-//                                $desconto[$value->nome] = $desconto[$value->nome] + $item->desconto;
-                        }
-                    }
-                    foreach ($formapagamento as $value) {
-                        if ($itens->forma_pagamento4 == $value->forma_pagamento_id) {
-                            $data[$value->nome] = $data[$value->nome] + $itens->valor4;
-                            $numero[$value->nome] ++;
-//                                $desconto[$value->nome] = $desconto[$value->nome] + $item->desconto;
-                        }
-                    }
-                }
-
-
-            endforeach;
-
             foreach ($medico as $item) :
                 foreach ($medicorecebido as $itens) :
                     if ($item->medico == $itens->medico) {
                         $procedimentopercentual = $itens->procedimento_tuss_id;
                         $medicopercentual = $itens->medico_parecer1;
-
                         $percentual = $this->guia->percentualmedico($procedimentopercentual, $medicopercentual);
-
+                        
                         $testearray = count($percentual);
-
-                        if ($itens->percentual_medico == "t") {
-
-                            $valorpercentualmedico = $itens->valor_medico;
-
+                        if ($itens->percentual == "t") {
+                            if ($testearray > 0) {
+                                $valorpercentualmedico = $percentual[0]->valor;
+                            } else {
+                                $valorpercentualmedico = $itens->perc_medico;
+                            }
                             $perc = $itens->valor_total * ($valorpercentualmedico / 100);
-
                             $medicos = $medicos + $perc;
                         } else {
                             $simbolopercebtual = "";
-                            $valorpercentualmedico = $itens->valor_medico;
+                            if ($testearray > 0) {
+                                $valorpercentualmedico = $percentual[0]->valor;
+                            } else {
+                                $valorpercentualmedico = $itens->perc_medico;
+                            }
                             $perc = $valorpercentualmedico;
                             $medicos = $medicos + $perc;
                         }
                     }
-
 
                 endforeach;
                 $i++;
@@ -183,96 +103,18 @@
                 <tr>
                     <td><font size="-1" width="350px;"><?= utf8_decode($item->medico); ?></td>
                     <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item->valor, 2, ',', '.') ?></td>
-                    <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($medicos, 2, ',', '.') ?></td>
+                    <td style='text-align: right;'><font size="-1" width="200px;"><?=  number_format($medicos, 2, ',', '.') ?></td>
                 </tr>
                 <?php
                 $total_medicos = $total_medicos + $item->valor;
                 $medicos = 0;
             endforeach;
             ?>
-            <?
-            $valCirurgico = 0;
-
-            if (count($relatoriocirurgico) > 0):
-                ?>
-                <tr>
-                    <th style='width:10pt;border:solid windowtext 1.0pt;
-                        border-bottom:none;mso-border-top-alt:none;border-left:
-                        none;border-right:none;' colspan="4">&nbsp;</th>
-                </tr>
-
-                <tr>
-                    <td colspan="3"><center><font size="-1"><B>PRODUÇÃO CIRURGICA</B></center></td>
-            </tr>
-            <?
-            $i = 0;
-            $ultimo = count($relatoriocirurgico);
-            foreach ($relatoriocirurgico as $item) :
-                if ($i == 0) {
-                    $guia_anterior = $item->guia_id;
-                    $valGuiaAnterior = (float) $item->valor;
-                }
-
-                if ($item->guia_id != $guia_anterior):
-                    ?>
-                    <tr>                        
-                        <td style='text-align: right;' colspan=""></td>
-                        <td style='text-align: right;' colspan="">
-                            <div style="font-weight: bold">
-                                Produzido: <?= number_format($valGuiaAnterior, 2, ',', '.') ?>
-                            </div>
-                        </td>
-                        <td style='text-align: right;' colspan=""></td>
-                    </tr>
-                    <?
-                    $guia_anterior = $item->guia_id;
-                    $valGuiaAnterior = (float) $item->valor;
-                endif;
-                $total_medicospagar += (float) $item->valor_medico;
-                $i++;
-                ?>
-
-                <tr>
-                    <td><font size="-1" width="350px;"><?= $item->guia_id . ' => ' . utf8_decode($item->medico); ?></td>
-                    <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item->valor, 2, ',', '.') ?></td>
-                    <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item->valor_medico, 2, ',', '.') ?></td>
-                </tr>
-        <? if ($i == $ultimo): ?>
-                    <tr>
-                        <td style='text-align: right;' colspan=""></td>
-                        <td style='text-align: right;' colspan="">
-                            <div style="font-weight: bold">
-                                Produzido: <?= number_format($item->valor, 2, ',', '.') ?>
-                            </div>
-                        </td>
-                        <td style='text-align: right;' colspan=""></td>
-                    </tr>
-        <? endif; ?>
-
-
-                <?
-            endforeach;
-
-            foreach ($procedimentoscirurgicos as $value):
-                $total_medicos += (float) $value->valor;
-            endforeach;
-            ?>
-
             <tr>
-                <th style='width:10pt;border:solid windowtext 1.0pt;
-                    border-bottom:none;mso-border-top-alt:none;border-left:
-                    none;border-right:none;' colspan="4">&nbsp;</th>
+                <td><font size="-1" width="350px;"><b>Valor Total Medicos</b></td>
+                <td style='text-align: right;'><font size="-1" width="200px;"><b><?= number_format($total_medicos, 2, ',', '.') ?></b></td>
+                <td style='text-align: right;'><font size="-1" width="200px;"><b><?= number_format($total_medicospagar, 2, ',', '.') ?></b></td>
             </tr>
-            <?
-        endif;
-        ?>
-
-
-        <tr>
-            <td><font size="-1" width="350px;"><b>Valor Total Medicos</b></td>
-            <td style='text-align: right;'><font size="-1" width="200px;"><b><?= number_format($total_medicos, 2, ',', '.') ?></b></td>
-            <td style='text-align: right;'><font size="-1" width="200px;"><b><?= number_format($total_medicospagar, 2, ',', '.') ?></b></td>
-        </tr>
         </tbody>
     </table>
     <br>
@@ -282,7 +124,7 @@
         <tbody>           
 
             <tr>
-                <td width="350px;"><font size="-1"><B>Valor Convênio</B></th>
+                <td width="350px;"><font size="-1"><B>Forma de Pagamento</B></th>
                 <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor</B></th>
             </tr>
             <tr>
@@ -302,14 +144,12 @@
                         }
                     }
                 endforeach;
-                if ($item->dinheiro == 'f') {
-                    ?>
-                    <tr>
-                        <td><font size="-1" width="350px;"><?= utf8_decode($item->convenio); ?></td>
-                        <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item->valor, 2, ',', '.') ?></td>
-                    </tr>
-                    <?php
-                }
+                ?>
+                <tr>
+                    <td><font size="-1" width="350px;"><?= utf8_decode($item->convenio); ?></td>
+                    <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item->valor, 2, ',', '.') ?></td>
+                </tr>
+                <?php
                 $total_geral = $total_geral + $item->valor;
             endforeach;
 
@@ -318,54 +158,9 @@
             $faturamento_clinica = $liquidodinheiro + $total_convenio;
             ?>
             <tr>
-                <td><font size="-1" width="350px;"><b>VALOR GERAL</b></td>
-                <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($total_convenio, 2, ',', '.') ?></td>
+                <td><font size="-1" width="350px;">VALOR GERAL</td>
+                <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($total_geral, 2, ',', '.') ?></td>
             </tr>
-
-        </tbody>
-    </table>
-    <br>
-    <br>
-    <br>
-    <table>
-        <tbody>           
-
-            <tr>
-                <td width="350px;"><font size="-1"><B>Valor Não-Convênio</B></th>
-                <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor</B></th>
-            </tr>
-            <tr>
-                <th style='width:10pt;border:solid windowtext 1.0pt;
-                    border-bottom:none;mso-border-top-alt:none;border-left:
-                    none;border-right:none;' colspan="4">&nbsp;</th>
-            </tr>
-            <?
-            foreach ($convenio as $item2) :
-
-                if ($item2->dinheiro == 't') {
-                    ?>
-                    <tr>
-                        <td><font size="-1" width="350px;"><?= utf8_decode($item2->convenio); ?></td>
-                        <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item2->valor, 2, ',', '.') ?></td>
-                    </tr>
-                    <?php
-                }
-            endforeach;
-
-//            if ($item->dinheiro == 't') {
-            ?>
-<!--                <tr>
-<td><font size="-1" width="350px;"><?= utf8_decode($item->convenio); ?></td>
-<td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($item->valor, 2, ',', '.') ?></td>
-</tr>-->
-            <?php
-//            }
-            ?>
-            <tr>
-                <td><font size="-1" width="350px;"><b>VALOR GERAL</b></td>
-                <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($total_particular, 2, ',', '.') ?></td>
-            </tr>
-
         </tbody>
     </table>
     <BR>
@@ -373,15 +168,6 @@
     <BR>
     <table>
         <tbody>
-<!--            <tr>
-                <td width="350px;"><font size="-1"><B>Valor Não-Convênio</B></th>
-                <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor</B></th>
-            </tr>-->
-<!--            <tr>
-                <th style='width:10pt;border:solid windowtext 1.0pt;
-                    border-bottom:none;mso-border-top-alt:none;border-left:
-                    none;border-right:none;' colspan="4">&nbsp;</th>
-            </tr>-->
             <tr>
                 <td width="350px;"><font size="-1"><B>Resumo</B></th>
                 <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor</B></th>
@@ -392,7 +178,7 @@
                     none;border-right:none;' colspan="4">&nbsp;</th>
             </tr>
             <tr>
-                <td><font size="-1" width="350px;">VALOR LIQUIDO NÃO-CONVÊNIO</td>
+                <td><font size="-1" width="350px;">VALOR LIQUIDO DINHEIRO</td>
                 <td style='text-align: right;'><font size="-1" width="200px;"><?= number_format($liquidodinheiro, 2, ',', '.') ?></td>
             </tr>
             <tr>
@@ -405,93 +191,6 @@
             </tr>
         </tbody>
     </table>
-    <br>
-    <br>
-    <table>
-        <tr>
-            <td width="350px;"><font size="-1"><B>Valor Não-Convênio</B></th>
-            <td style='text-align: right;'width="120px;"><font size="-1"><B>Valor</B></th>
-        </tr>
-        <tr>
-            <th style='width:10pt;border:solid windowtext 1.0pt;
-                border-bottom:none;mso-border-top-alt:none;border-left:
-                none;border-right:none;' colspan="4">&nbsp;</th>
-        </tr>
-        <tr>
-            <td colspan="1" bgcolor="#C0C0C0"><center><font size="-1">FORMA DE PAGAMENTO NÃO CONVÊNIO</center></td>
-        <td colspan="1" bgcolor="#C0C0C0"><center><font size="-1">VALOR</center></td>
-        </tr>
-        <? foreach ($formapagamento as $value) { ?>
-    <? if ($numero[$value->nome] > 0) { ?>
-                <tr>
-                    <td ><font size="-1"><?= $value->nome ?></td>
-                    <td ><font size="-1"><?= number_format($data[$value->nome], 2, ',', '.'); ?></td>
-                </tr>  
-                <?
-            }
-            $totalgeral = $totalgeral + $data[$value->nome];
-            if ($value->cartao != 'f') {
-                $TOTALCARTAO = $TOTALCARTAO + $data[$value->nome];
-            }
-            ?>
-
-
-<? } ?>
-        <tr>
-            <td ><font size="-1">TOTAL CARTÃO</td>
-            <td ><font size="-1"> <?= number_format($TOTALCARTAO, 2, ',', '.'); ?></td>
-        </tr>  
-        <tr>
-            <td ><font size="-1">TOTAL GERAL</td>
-            <td ><font size="-1"><?= number_format($totalgeral, 2, ',', '.'); ?></td>
-        </tr>  
-
-    </table>
-    <?
-        if (count($relatoriocredito) > 0) { ?>
-            <br>
-            <table border="1">
-                <tr>
-                    <td colspan="5"><center><font size="-1"><B>PACIENTES CRÉDITO</B></center></td>
-                </tr>
-                <tr>
-                    <th style='text-align: left;'><font size="-1">Paciente</th>
-                    <th style='text-align: right;'width="120px;"><font size="-1">Procedimento</th>
-                    <th style='text-align: right;'width="120px;"><font size="-1">Valor Crédito</th>
-                    <th style='text-align: right;'width="120px;"><font size="-1">Saldo Atual</th>
-                    <th style='text-align: right;'width="120px;"><font size="-1">Data</th>
-                </tr> <?
-
-                foreach ($relatoriocredito as $item) {
-                    if ($item->forma_pagamento == 1000) {
-                        $credito = $credito + $item->valor1;
-                    }
-                    if ($item->forma_pagamento2 == 1000) {
-                        $credito = $credito + $item->valor2;
-                    }
-                    if ($item->forma_pagamento3 == 1000) {
-                        $credito = $credito + $item->valor3;
-                    }
-                    if ($item->forma_pagamento4 == 1000) {
-                        $credito = $credito + $item->valor4;
-                    }
-                    ?>
-                    <tr>
-                        <td ><font size="-1"><?= $item->paciente ?></td>
-                        <td style='text-align: right;'width="120px;"><font size="-1"><?= $item->procedimento ?></td>
-                        <td style='text-align: right;'width="120px;"><font size="-1"><?= "R$ " . number_format($credito, 2, ',', '.') ?></td>
-                        <td style='text-align: right;'width="120px;"><font size="-1"><?= "R$ " . number_format($item->saldo_credito, 2, ',', '.') ?></td>
-                        <td style='text-align: right;'width="120px;"><font size="-1"><?= date("d/m/Y", strtotime($item->data)) ?></td>
-                    </tr> 
-
-                    <?
-                    $credito = 0;
-                }?>
-            </table>
-            <?
-        }
-        ?>
-
 
 
 </div> <!-- Final da DIV content -->
@@ -501,7 +200,7 @@
 
 
 
-    $(function () {
+    $(function() {
         $("#accordion").accordion();
     });
 

@@ -7,7 +7,7 @@
             $salas = $this->exame->listartodassalas();
             $convenios = $this->convenio->listarconvenionaodinheiro();
             $medicos = $this->operador_m->listarmedicos();
-//            $pacientes = $this->guia->listarpacientes();
+            $pacientes = $this->guia->listarpacientes();
             $paciente_nome = "";
             $paciente_id = "";
             $classificacao = $this->guia->listarclassificacao();
@@ -100,7 +100,7 @@
                                     $this->load->helper('directory');
                                     foreach ($convenios as $item) {
                                         foreach ($pacientes as $paciente) {
-                                            $arquivo_pasta = directory_map("./upload/laudo/$item->nome/$paciente->paciente_id/");
+                                            $arquivo_pasta = directory_map("/home/sisprod/projetos/clinica/upload/laudo/$item->nome/$paciente->paciente_id/");
                                             if ($arquivo_pasta != false) {
                                                 ?>
                                                  <tr><th width="900px" class="tabela_header"><? echo $paciente->nome; ?></th></tr>
@@ -129,7 +129,7 @@
                         <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
                         <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
                         <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
-                        <!--<script type="text/javascript" src="<?= base_url() ?>js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>-->
+                        <script type="text/javascript" src="<?= base_url() ?>js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
                         <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
                         <script type="text/javascript">
 

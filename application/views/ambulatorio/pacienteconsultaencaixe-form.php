@@ -2,7 +2,7 @@
     <div class="clear"></div>
     <form name="form_exametemp" id="form_exametemp" action="<?= base_url() ?>ambulatorio/exametemp/gravapacienteconsultaencaixe" method="post">
         <fieldset>
-            <legend>Dados do paciente</legend>
+            <legend>Dados do Pacienete</legend>
             <div>
                 <label>Nome</label>                      
                 <input type="text" id="txtNome" name="nome"  class="texto09" value="<?= $paciente['0']->nome; ?>" readonly/>

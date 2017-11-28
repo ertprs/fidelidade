@@ -25,20 +25,6 @@
                     <label>Codigo identifica&ccedil;&atilde;o</label>
                     <input type="text" name="txtcodigo" maxlength="20" class="texto03" value="<?= @$obj->_codigoidentificador; ?>" />
                 </div>
-                <div>
-                    <label>&nbsp;</label>
-                    <?php
-                    if (@$obj->_carteira_obrigatoria == "t") {
-                        ?>
-                        <input type="checkbox" name="txtcarteira" checked ="true" />Número da carteira/autorização obrigatorio
-                        <?php
-                    } else {
-                        ?>
-                        <input type="checkbox" name="txtcarteira"  />Número da carteira/autorização obrigatorio
-                        <?php
-                    }
-                    ?>
-                </div>
 
             </fieldset>
             <fieldset>
@@ -116,16 +102,7 @@
                         if (@$obj->_tabela == "TUSS"):echo 'selected';
                         endif;
                         ?>>TUSS</option>
-                        <option value="CBHPM" <?
-                        if (@$obj->_tabela == "CBHPM"):echo 'selected';
-                        endif;
-                        ?>>CBHPM</option>
-                        <option value="PROPRIA" <?
-                        if (@$obj->_tabela == "PROPRIA"):echo 'selected';
-                        endif;
-                        ?>>TABELA PROPRIA</option>
                     </select>
-
                 </div>
                 <div>
                     <label>Grupo convenio</label>
@@ -184,9 +161,7 @@
                 <div>
                     <label>Tempo para pagamento</label>
                     <input type="text" id="pagamento" class="texto02" name="pagamento" alt="integer" value="<?= @$obj->_pagamento; ?>" />
-
                 </div>
-
             </fieldset>
             <fieldset>
                 <legend>Condi&ccedil;&atilde;o de recebimento</legend>
@@ -265,69 +240,46 @@
 
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
-//    $(document).ready(function () {
-//        jQuery('#form_convenio').validate({
-//            rules: {
-//                txtNome: {
-//                    required: true,
-//                    minlength: 2
-//                },
-//                txtrazaosocial: {
-//                    required: true
-//                },
-//                txtCNPJ: {
-//                    required: true
-//                }
-//
-//            },
-//            messages: {
-//                txtNome: {
-//                    required: "*",
-//                    minlength: "*"
-//                },
-//                txtrazaosocial: {
-//                    required: "*"
-//                },
-//                txtCNPJ: {
-//                    required: "*"
-//                }
-//            }
-//        });
-//    });
-    var teste = '<? echo $obj->_tabela; ?>';
-    if (teste == 'CBHPM' || teste == 'PROPRIA') {
-        $("#procedimento1").prop('required', true);
-        $("#procedimento2").prop('required', true);
-    } else {
-        $("#procedimento1").prop('required', false);
-        $("#procedimento2").prop('required', false);
-    }
+    $(document).ready(function() {
+        jQuery('#form_convenio').validate({
+            rules: {
+                txtNome: {
+                    required: true,
+                    minlength: 2
+                },
+                txtrazaosocial: {
+                    required: true
+                },
+                txtCNPJ: {
+                    required: true
+                }
 
-    $(function () {
-        $('#tipo').change(function () {
-            if ($(this).val() == 'PROPRIA' || $(this).val() == 'CBHPM') {
-                $("#procedimento1").prop('required', true);
-                $("#procedimento2").prop('required', true);
-
-            } else {
-                $("#procedimento1").prop('required', false);
-                $("#procedimento2").prop('required', false);
+            },
+            messages: {
+                txtNome: {
+                    required: "*",
+                    minlength: "*"
+                },
+                txtrazaosocial: {
+                    required: "*"
+                },
+                txtCNPJ: {
+                    required: "*"
+                }
             }
         });
     });
 
-    $(function () {
+    $(function() {
         $("#txtCidade").autocomplete({
             source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
             minLength: 3,
-            focus: function (event, ui) {
+            focus: function(event, ui) {
                 $("#txtCidade").val(ui.item.label);
                 return false;
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 $("#txtCidade").val(ui.item.value);
                 $("#txtCidadeID").val(ui.item.id);
                 return false;

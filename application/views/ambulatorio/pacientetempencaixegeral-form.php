@@ -1,11 +1,10 @@
-<? $empresa_logada = $this->session->userdata('empresa_id'); ?>
 <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
     <div class="clear"></div>
     <form name="form_exametemp" id="form_exametemp" action="<?= base_url() ?>ambulatorio/exametemp/gravarpacienteencaixegeral" method="post">
         </fieldset>
         <fieldset>
 
-            <legend>Agenda Geral</legend>
+            <legend>Manter Exames</legend>
             <div>
                 <label>Data</label>
                 <input type="text"  id="data_ficha" name="data_ficha" class="size1"  />
@@ -13,7 +12,7 @@
             </div>
             <div>
                 <label>Sala</label>
-                <select name="sala" id="sala" class="size4" required>
+                <select name="sala" id="sala" class="size4">
                     <option value="" >Selecione</option>
                     <? foreach ($salas as $item) : ?>
                         <option value="<?= $item->exame_sala_id; ?>"><?= $item->nome; ?></option>
@@ -22,7 +21,7 @@
             </div>
             <div>
                 <label>Medico</label>
-                <select name="medico" id="medico" class="size2" required>
+                <select name="medico" id="medico" class="size2">
                     <option value="" >Selecione</option>
                     <? foreach ($medico as $item) : ?>
                         <option value="<?= $item->operador_id; ?>"><?= $item->nome; ?></option>
@@ -30,33 +29,18 @@
                 </select>
             </div>
             <div>
-                <label>Empresa</label>
-                <select name="empresa" id="empresa" class="size1">
-                    <?
-                    foreach ($empresas as $value) :
-                        ?>
-                        <option value="<?= $value->empresa_id; ?>" <?
-                        if ($empresa_logada == $value->empresa_id) {
-                            echo 'selected';
-                        }
-                        ?>><?php echo $value->nome; ?></option>
-                            <? endforeach; ?>
-                </select>
-
-            </div>
-            <div>
                 <label>Horarios</label>
-                <input type="text" id="horarios" class="size1" name="horarios"/>
+                <input type="text" id="horarios" alt="time" class="size1" name="horarios" />
             </div>
             <div>
                 <label>Convenio *</label>
-                <select name="convenio1" id="convenio1" class="size4" required>
+                <select name="convenio1" id="convenio1" class="size4">
                     <option value="">Selecione</option>
                 </select>
             </div>
             <div>
                 <label>Procedimento</label>
-                <select  name="procedimento1" id="procedimento1" class="size1" required>
+                <select  name="procedimento1" id="procedimento1" class="size1" >
                     <option value="">Selecione</option>
                 </select>
             </div>
@@ -78,28 +62,28 @@
             <legend>Paciente</legend>
             <div>
                 <label>Nome</label>
-                <input type="hidden" id="txtNomeid" class="texto_id" name="txtNomeid" readonly="true" />
+                <input type="text" id="txtNomeid" class="texto_id" name="txtNomeid" readonly="true" />
                 <input type="text" id="txtNome" name="txtNome" class="texto10"/>
             </div>
             <div>
                 <label>Dt de nascimento</label>
-                <input type="text" name="nascimento" id="nascimento" class="texto02"/>
+                <input type="text" name="nascimento" id="nascimento" class="texto02" alt="date"/>
             </div>
             <div>
 
-                <input type="hidden" name="idade" id="txtIdade" class="texto01"/>
+                <input type="hidden" name="idade" id="txtIdade" class="texto01" alt="numeromask"/>
             </div>
             <div>
                 <label>End.</label>
-                <input type="text" id="txtEnd" class="texto06" name="txtEnd" />
+                <input type="text" id="txtEnd" class="texto06" name="txtEnd" alt="phone"/>
             </div>
             <div>
                 <label>Telefone</label>
-                <input type="text" id="telefone" class="texto02" name="telefone"/>
+                <input type="text" id="telefone" class="texto02" name="telefone" alt="phone"/>
             </div>
             <div>
                 <label>Celular</label>
-                <input type="text" id="txtCelular" class="texto02" name="celular"/>
+                <input type="text" id="txtCelular" class="texto02" name="celular" alt="phone"/>
             </div>
 
             <div>
@@ -111,61 +95,12 @@
 
 
 </div> <!-- Final da DIV content -->
-<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
-
+<!--<script type="text/javascript" src="<?= base_url() ?>js/jquery-meiomask.js" ></script>-->
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
-<script>
-    function mascaraTelefone(campo) {
-
-        function trata(valor, isOnBlur) {
-
-            valor = valor.replace(/\D/g, "");
-            valor = valor.replace(/^(\d{2})(\d)/g, "($1)$2");
-
-            if (isOnBlur) {
-
-                valor = valor.replace(/(\d)(\d{4})$/, "$1-$2");
-            } else {
-
-                valor = valor.replace(/(\d)(\d{3})$/, "$1-$2");
-            }
-            return valor;
-        }
-
-        campo.onkeypress = function (evt) {
-
-            var code = (window.event) ? window.event.keyCode : evt.which;
-            var valor = this.value
-
-            if (code > 57 || (code < 48 && code != 0 && code != 8 && code != 9)) {
-                return false;
-            } else {
-                this.value = trata(valor, false);
-            }
-        }
-
-        campo.onblur = function () {
-
-            var valor = this.value;
-            if (valor.length < 13) {
-                this.value = ""
-            } else {
-                this.value = trata(this.value, true);
-            }
-        }
-
-        campo.maxLength = 14;
-    }
-
-
-</script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-    mascaraTelefone(form_exametemp.telefone);
-    mascaraTelefone(form_exametemp.txtCelular);
 
 
 
@@ -201,10 +136,9 @@
 
     $(function () {
         $('#convenio1').change(function () {
-//                            alert('entrou');
             if ($(this).val()) {
                 $('.carregando').show();
-                $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $("#medico").val()}, function (j) {
+                $.getJSON('<?= base_url() ?>autocomplete/procedimentoconveniomedico', {convenio1: $(this).val(), teste: $("#exame").val()}, function (j) {
                     options = '<option value=""></option>';
                     for (var c = 0; c < j.length; c++) {
                         options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -243,8 +177,8 @@
     });
 
 
-    
-    jQuery("#nascimento").mask("99/99/9999");
-    jQuery("#horarios").mask("99:99");
+
+
+
 
 </script>

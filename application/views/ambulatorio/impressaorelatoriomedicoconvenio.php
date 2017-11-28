@@ -1,4 +1,3 @@
-<meta charset="UTF-8">
 <div class="content"> <!-- Inicio da DIV content -->
     <? $tipoempresa = ""; ?>
     <table>
@@ -62,7 +61,7 @@
                 </tr>
             <? } ?>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= str_replace("-", "/", date("d-m-Y", strtotime($txtdata_inicio))); ?> ate <?= str_replace("-", "/", date("d-m-Y", strtotime($txtdata_fim))); ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></th>
             </tr>
             <? IF (COUNT($medico) > 0) { ?>
                 <tr>
@@ -131,7 +130,7 @@
                         if ($i == 1) {
                             ?>
                             <tr>
-                                <td colspan="8"><font ><b>Convenio:&nbsp;<?= $item->convenio; ?></b></td>
+                                <td colspan="8"><font ><b>Convenio:&nbsp;<?= utf8_decode($item->convenio); ?></b></td>
                             </tr>
                         <? } ?>
                         <tr>
@@ -143,47 +142,30 @@
                                 <td><?= $item->paciente; ?></td>
                             <? } ?>
                             <td><font size="-2"><?= $item->quantidade; ?></td>
-                            <td><font size="-2"><?= $item->procedimento; ?></td>
+                            <td><font size="-2"><?= utf8_decode($item->procedimento); ?></td>
                             <?
                             if ($empresa[0]->producaomedicadinheiro == "f") {
-                                if ($item->percentual_medico == "t") {
-                                    $simbolopercebtual = " %";
-
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $item->valor_total * ($valorpercentualmedico / 100);
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                if ($testearray > 0) {
+                                    $valorpercentualmedico = $percentual[0]->valor;
                                 } else {
-                                    $simbolopercebtual = "";
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $valorpercentualmedico;
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                    $valorpercentualmedico = $item->perc_medico;
                                 }
+                                $perc = $item->valor_total * ($valorpercentualmedico / 100);
+                                $totalperc = $totalperc + $perc;
+                                $totalgeral = $totalgeral + $item->valor_total;
                             } else {
-                                if ($item->percentual_medico == "t") {
-                                    $simbolopercebtual = " %";
-
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $item->valor_total * ($valorpercentualmedico / 100);
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                if ($testearray > 0) {
+                                    $valorpercentualmedico = $percentual[0]->valor;
                                 } else {
-                                    $simbolopercebtual = "";
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $valorpercentualmedico;
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                    $valorpercentualmedico = $item->perc_medico;
                                 }
+                                $perc = $valorpercentualmedico;
+                                $totalperc = $totalperc + $perc;
+                                $totalgeral = $totalgeral + $item->valor_total;
                             }
                             ?>
                             <td style='text-align: right;'><font size="-2"><?= number_format($perc, 2, ",", "."); ?></td>
-                            <td style='text-align: right;'><font size="-2"><?= $valorpercentualmedico . $simbolopercebtual ?></td>
-                            
+                            <td style='text-align: right;'><font size="-2"><?= $valorpercentualmedico; ?> %</td>
                         </tr>
 
 
@@ -204,7 +186,7 @@
                         $qtdetotal++;
                         ?>
                         <tr>
-                            <td colspan="8"><font ><b>Convenio:&nbsp;<?= $item->convenio; ?></b></td>
+                            <td colspan="8"><font ><b>Convenio:&nbsp;<?= utf8_decode($item->convenio); ?></b></td>
                         </tr>
                         <tr>
                             <td><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
@@ -212,49 +194,33 @@
                             <? if ($paciente == $item->paciente) { ?>
                                 <td>&nbsp;</td>
                             <? } else { ?>
-                                <td><?= $item->paciente ; ?></td>
+                                <td><?= $item->paciente; ?></td>
                             <? } ?>
                             <td><font size="-2"><?= $item->quantidade; ?></td>
                             <td><font size="-2"><?= $item->procedimento; ?></td>
                             <?
                             if ($empresa[0]->producaomedicadinheiro == "f") {
-                                if ($item->percentual_medico == "t") {
-                                    $simbolopercebtual = " %";
-
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $item->valor_total * ($valorpercentualmedico / 100);
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                if ($testearray > 0) {
+                                    $valorpercentualmedico = $percentual[0]->valor;
                                 } else {
-                                    $simbolopercebtual = "";
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $valorpercentualmedico;
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                    $valorpercentualmedico = $item->perc_medico;
                                 }
+                                $perc = $item->valor_total * ($valorpercentualmedico / 100);
+                                $totalperc = $totalperc + $perc;
+                                $totalgeral = $totalgeral + $item->valor_total;
                             } else {
-                                if ($item->percentual_medico == "t") {
-                                    $simbolopercebtual = " %";
-
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $item->valor_total * ($valorpercentualmedico / 100);
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                if ($testearray > 0) {
+                                    $valorpercentualmedico = $percentual[0]->valor;
                                 } else {
-                                    $simbolopercebtual = "";
-                                    $valorpercentualmedico = $item->valor_medico;
-
-                                    $perc = $valorpercentualmedico;
-                                    $totalperc = $totalperc + $perc;
-                                    $totalgeral = $totalgeral + $item->valor_total;
+                                    $valorpercentualmedico = $item->perc_medico;
                                 }
+                                $perc = $valorpercentualmedico;
+                                $totalperc = $totalperc + $perc;
+                                $totalgeral = $totalgeral + $item->valor_total;
                             }
                             ?>
                             <td style='text-align: right;'><font size="-2"><?= number_format($perc, 2, ",", "."); ?></td>
-                            <td style='text-align: right;'><font size="-2"><?= $valorpercentualmedico . $simbolopercebtual ?></td>
+                            <td style='text-align: right;'><font size="-2"><?= $valorpercentualmedico; ?> %</td>
                         </tr>
                         <?
                         $paciente = $item->paciente;

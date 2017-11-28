@@ -6,11 +6,7 @@
     $datarealizacao = $exame[0]->data_realizacao;
     $inicio = $exame[0]->inicio;
     $operador_autorizacao = $exame[0]->atendente;
-    ?>
 
-    <?
-    ?>
-    <?
     $dataFuturo = date("Y-m-d");
     $dataAtual = $paciente['0']->nascimento;
     $date_time = new DateTime($dataAtual);
@@ -20,24 +16,16 @@
     <table>
         <tbody>
         <td rowspan="3" width="70%;"><img align = 'left'  width='330px' height='100px' src=<?= base_url() . "img/logoclinicadez.png" ?>></td>
-        <tr>
-        <td>( &nbsp; ) RAIOS X 
-            <br>( &nbsp; ) DENS. 
-            <br>( &nbsp; ) MMG
-            <br>( &nbsp; ) RNM
-            <br>( &nbsp; ) USG SALA
-            <br>( &nbsp; ) TOMOGRAFIA
-        
-        </td>
-        
+        <td>( &nbsp; ) RAIOS X</td>
+        <td>( &nbsp; ) DENS.</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>( &nbsp; ) MMG</td>
+            <td>( &nbsp; ) RNM</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>( &nbsp; ) USG</td>
+            <td>( &nbsp; ) TOMOGRAFIA</td>
         </tr>
         <tr>
             <td ><font size = -1><?= substr($exame[0]->sala, 0, 10); ?></td>
@@ -59,28 +47,27 @@
             </tr>
             <tr>
                 <td colspan="2"><font size = -1>C&oacute;d. Paciente: <?= $paciente['0']->paciente_id; ?></td>
-                <td><font size = -1>Finalizado: <?= date("H:i:s", strtotime($exame[0]->data_entregue)); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2"><font size = -1>Paciente:<b><?= utf8_decode($paciente['0']->nome); ?></b></td>
                 <td><font size = -1>D.U.M:</td>
             </tr>
             <tr>
-                <td colspan="2"><font size = -1>Nascimento:<?= substr($paciente['0']->nascimento, 8, 2) . '/' . substr($paciente['0']->nascimento, 5, 2) . '/' . substr($paciente['0']->nascimento, 0, 4); ?></td>
+                <td colspan="2"><font size = -1>Paciente:<b><?= utf8_decode($paciente['0']->nome); ?></b></td>
                 <td><font size = -1>Sexo: <?= $exame[0]->sexo; ?></td>
             </tr>
             <tr>
-                <td colspan="2"><font size = -1>Endere&ccedil;o: <?= utf8_decode($paciente['0']->logradouro) ?></td>
+                <td colspan="2"><font size = -1>Nascimento:<?= substr($paciente['0']->nascimento, 8, 2) . '/' . substr($paciente['0']->nascimento, 5, 2) . '/' . substr($paciente['0']->nascimento, 0, 4); ?></td>
                 <td><font size = -1>Idade: <?= $teste; ?></td>
             </tr>
             <tr>
-                <td colspan="1"><font size = -1>Cidade:<?= $paciente['0']->cidade_desc ?></td>
+                <td><font size = -1>Endere&ccedil;o: <?= utf8_decode($paciente['0']->logradouro) ?></td>
                 <td><font size = -1>Num: <?= $paciente['0']->numero ?></td>
                 <td><font size = -1>Bairro:<?= utf8_decode($paciente['0']->bairro) ?></td>
             </tr>
             <tr>
-                <td colspan="2"><font size = -1>Fone: <?= $paciente['0']->telefone; ?>/<?= $paciente['0']->celular; ?></td>
+                <td colspan="2"><font size = -1>Cidade:<?= $paciente['0']->cidade_desc ?></td>
                 <td><font size = -1>Estado: <?= $paciente['0']->estado ?></td>
+            </tr>
+            <tr>
+                <td><font size = -1>Fone: <?= $paciente['0']->telefone; ?>/<?= $paciente['0']->celular; ?></td>
             </tr>
             <tr>
                 <td colspan="2"><font size = -1>Data da Entrega:</td>
@@ -91,7 +78,7 @@
                 <td><font size = -1>Valor Devido:_________</td>
             </tr>
             <tr>
-                <td colspan="2"><font size = -1>TECNICO(A):</td>
+                <td colspan="2"><font size = -1>TECNICA:</td>
                 <td><font size = -1>Valor Pago:___________</td>
             </tr>
         </tbody>
@@ -114,7 +101,7 @@
                 ?>
                 <tr>
                     <td ><font size = -1><?= $item->quantidade ?></td>
-                    <td ><font size = -1><?= utf8_decode($item->codigo) ?></td>
+                    <td ><font size = -1><?= utf8_decode($item->agenda_exames_id) ?></td>
                     <td width="40%;"><font size = -1><?= utf8_decode($item->procedimento) ?></td>
                     <td ><font size = -1><?= $item->convenio ?></td>
                     <td width="25%;"><font size = -1>Dr(a). <?= utf8_decode($item->medicosolicitante) ?></td>

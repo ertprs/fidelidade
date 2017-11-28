@@ -1,58 +1,59 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_voltar">
-        <a href="<?= base_url() ?>ambulatorio/agenda/listarhorarioagenda/<?= $agenda_id ?>">
+        <a href="<?= base_url() ?>ponto/horariostipo">
             Voltar
         </a>
 
     </div>
     <div id="accordion">
-        <h3 class="singular"><a href="#">Consolidar Agenda de Exames</a></h3>
+        <h3 class="singular"><a href="#">Cadastro de Horario</a></h3>
         <div>
             <form name="form_exame" id="form_exame" action="<?= base_url() ?>ambulatorio/exame/gravar" method="post">
 
                 <dl class="dl_desconto_lista">
                     <dt>
-                        <label>Nome</label>
+                    <label>Nome</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtNome" class="texto10 bestupper" required/>
+                        <input type="text" name="txtNome" class="texto10 bestupper"/>
                     </dd>
                     <dt>
-                        <label>Data inicial</label>
+                    <label>Data inicial</label>
                     </dt>
                     <dd>
-                        <input type="text"  id="txtdatainicial" name="txtdatainicial" alt="date" class="size2" required/>
+                        <input type="text"  id="txtdatainicial" name="txtdatainicial" alt="date" class="size2" />
                     </dd>
                     <dt>
-                        <label>Data final</label>
+                    <label>Data final</label>
                     </dt>
                     <dd>
-                        <input type="text"  id="txtdatafinal" name="txtdatafinal" alt="date" class="size2" required/>
+                        <input type="text"  id="txtdatafinal" name="txtdatafinal" alt="date" class="size2" />
                     </dd>
                     <dt>
-                        <label>Horario *</label>
+                    <label>Horario *</label>
                     </dt>
                     <dd>
-                        <input type="hidden"  id="txthorario" name="txthorario" value="<?= $agenda_id ?>"  class="size2"  />
-                        <input type="text"  id="txthorariolabel" name="txthorariotitulo" value="<?= $agenda[0]->nome ?>"  class="size4" readonly=""/>
+                        <select name="txthorario" id="txthorario" class="size4">
+                            <? foreach ($agenda as $item) : ?>
+                                <option value="<?= $item->agenda_id; ?>"><?= $item->nome; ?></option>
+                            <? endforeach; ?>
+                        </select>
                     </dd>
                     <dt>
-                        <label>Salas *</label>
+                    <label>Salas *</label>
                     </dt>
                     <dd>
-                        
-                        <select name="txtsala" id="txtsala" class="size4" required>
-                            <option value="">Selecione</option>
+                        <select name="txtsala" id="txtsala" class="size4">
                             <? foreach ($salas as $item) : ?>
                                 <option value="<?= $item->exame_sala_id; ?>"><?= $item->nome; ?></option>
                             <? endforeach; ?>
                         </select>
                     </dd>
                     <dt>
-                        <label>Medico *</label>
+                    <label>Medico *</label>
                     </dt>
                     <dd>
-                        <select name="txtmedico" id="txtsala" class="size4" required>
+                        <select name="txtmedico" id="txtsala" class="size4">
                             <option value="">Selecione</option>
                             <? foreach ($medico as $item) : ?>
                                 <option value="<?= $item->operador_id; ?>"><?= $item->nome; ?></option>
@@ -72,7 +73,7 @@
 
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-    $(function () {
+    $(function() {
         $("#txtdatainicial").datepicker({
             autosize: true,
             changeYear: true,
@@ -84,7 +85,7 @@
         });
     });
 
-    $(function () {
+    $(function() {
         $("#txtdatafinal").datepicker({
             autosize: true,
             changeYear: true,
@@ -96,19 +97,19 @@
         });
     });
 
-    $(function () {
+    $(function() {
         $("#accordion").accordion();
     });
 
-    $(function () {
+    $(function() {
         $("#txtprocedimentolabel").autocomplete({
             source: "<?= base_url() ?>index.php?c=autocomplete&m=paciente",
             minLength: 3,
-            focus: function (event, ui) {
+            focus: function(event, ui) {
                 $("#txtpacientelabel").val(ui.item.label);
                 return false;
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 $("#txtpacientelabel").val(ui.item.value);
                 $("#txtpacienteid").val(ui.item.id);
                 return false;
@@ -116,7 +117,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         jQuery('#form_exame').validate({
             rules: {
                 txtNome: {

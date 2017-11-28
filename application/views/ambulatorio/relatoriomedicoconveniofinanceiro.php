@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar Relatório Produção Médica</a></h3>
+        <h3><a href="#">Gerar relatorio Medico convenio</a></h3>
         <div>
             <form name="form_paciente" id="form_paciente"  method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatoriomedicoconveniofinanceiro">
                 <dl>
@@ -9,17 +9,6 @@
                     </dt>
                     <dd>
                         <select name="medicos" id="medicos" class="size2">
-                            <option value="0">TODOS</option>
-                            <? foreach ($medicos as $value) : ?>
-                                <option value="<?= $value->operador_id; ?>" ><?php echo $value->nome; ?></option>
-                            <? endforeach; ?>
-                        </select>
-                    </dd>
-                    <dt>
-                        <label>Revisor</label>
-                    </dt>
-                    <dd>
-                        <select name="revisor" id="revisor" class="size2">
                             <option value="0">TODOS</option>
                             <? foreach ($medicos as $value) : ?>
                                 <option value="<?= $value->operador_id; ?>" ><?php echo $value->nome; ?></option>
@@ -85,17 +74,6 @@
                             <option value='NAO' >NAO</option>
                         </select>
                     </dd>
-
-                    <dt>
-                        <label>Situação</label>
-                    </dt>
-                    <dd>
-                        <select name="situacao" id="situacao" class="size1" >
-                            <option value='' >TODOS</option>
-                            <option value='1'>FINALIZADO</option>
-                            <option value='0' >ABERTO</option>
-                        </select>
-                    </dd>
                     <dt>
                         <label>Solicitante</label>
                     </dt>
@@ -103,38 +81,6 @@
                         <select name="solicitante" id="solicitante" class="size1" >
                             <option value='SIM' >SIM</option>
                             <option value='NAO' >NAO</option>
-                        </select>
-                    </dd>
-
-                    <dt>
-                        <label>Taxa de administração</label>
-                    </dt>
-                    <dd>
-                        <select name="mostrar_taxa" id="mostrar_taxa" class="size1" >
-                            <option value='NAO' >NÃO</option>
-                            <option value='SIM' >SIM</option>
-                        </select>
-                    </dd>
-
-                    <dt>
-                        <label>Recibo</label>
-                    </dt>
-                    <dd>
-                        <select name="recibo" id="recibo" class="size1" >
-
-                            <option value='NAO' >NÃO</option>
-                            <option value='SIM' >SIM</option>
-                        </select>
-                    </dd>
-
-                    <dt>
-                        <label>Previsão de recebimento</label>
-                    </dt>
-                    <dd>
-                        <select name="tabela_recebimento" id="recibo" class="size1" >
-
-                            <option value='NAO' >NÃO</option>
-                            <option value='SIM' >SIM</option>
                         </select>
                     </dd>
                     <dt>

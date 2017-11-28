@@ -13,13 +13,10 @@ class cliente_model extends Model {
     }
 
     function listar($args = array()) {
-        $this->db->select('ec.estoque_cliente_id,
-                            ec.nome, ec.telefone,
-                            m.descricao as menu
-                            ');
-        $this->db->from('tb_estoque_cliente ec');
-        $this->db->join('tb_estoque_menu m', 'm.estoque_menu_id = ec.menu_id');
-        $this->db->where('ec.ativo', 'true');
+        $this->db->select('estoque_cliente_id,
+                            nome, telefone');
+        $this->db->from('tb_estoque_cliente');
+        $this->db->where('ativo', 'true');
         if (isset($args['nome']) && strlen($args['nome']) > 0) {
             $this->db->where('descricao ilike', "%" . $args['nome'] . "%");
         }
@@ -32,18 +29,6 @@ class cliente_model extends Model {
                             descricao');
         $this->db->from('tb_estoque_menu');
         $this->db->where('ativo', 'true');
-        $return = $this->db->get();
-        return $return->result();
-    }
-    
-    
-    function listarsalamenu() {
-        $empresa_id = $this->session->userdata('empresa_id');
-        $this->db->select('exame_sala_id,
-                            nome');
-        $this->db->from('tb_exame_sala');
-        $this->db->where('ativo', 'true');
-        $this->db->where('empresa_id', $empresa_id);
         $return = $this->db->get();
         return $return->result();
     }
@@ -71,19 +56,6 @@ class cliente_model extends Model {
         $this->db->join('tb_estoque_cliente ec', 'ec.estoque_cliente_id = oc.cliente_id');
         $this->db->where('oc.operador_id', $operador_id);
         $this->db->where('oc.ativo', 't');
-        $return = $this->db->get();
-        return $return->result();
-    }
-
-    function testaclienterepetidos($cliente_id, $operador_id) {
-//        $operador_id = $this->session->userdata('operador_id');
-        $this->db->select('estoque_operador_cliente_id');
-        $this->db->from('tb_estoque_operador_cliente oc');
-//        $this->db->join('tb_operador o', 'o.operador_id = oc.operador_id');
-        $this->db->where('oc.operador_id', $operador_id);
-        $this->db->where('oc.cliente_id', $cliente_id);
-        $this->db->where('oc.ativo', 't');
-//        $this->db->where('o.ativo', 't');
         $return = $this->db->get();
         return $return->result();
     }
@@ -127,8 +99,8 @@ class cliente_model extends Model {
         $this->db->set('ativo', 'f');
         $this->db->set('data_atualizacao', $horario);
         $this->db->set('operador_atualizacao', $operador_id);
-        $this->db->where('estoque_operador_cliente_id', $operado_cliente);
-        $this->db->update('tb_estoque_operador_cliente');
+        $this->db->where('estoque_menu_produtos_id', $operado_cliente);
+        $this->db->update('tb_estoque_menu_produtos');
         $erro = $this->db->_error_message();
         if (trim($erro) != "") // erro de banco
             return -1;
@@ -159,9 +131,6 @@ class cliente_model extends Model {
             $this->db->set('nome', $_POST['txtNome']);
             $this->db->set('menu_id', $_POST['menu']);
             $this->db->set('telefone', $_POST['txttelefone']);
-            if($_POST['sala'] != ''){
-                $this->db->set('sala_id', $_POST['sala']);
-            }
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 

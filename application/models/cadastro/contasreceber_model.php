@@ -13,7 +13,6 @@ class contasreceber_model extends Model {
     var $_tipo_numero = null;
     var $_conta = null;
     var $_conta_id = null;
-    var $_classe = null;
 
     function Contasreceber_model($financeiro_contasreceber_id = null) {
         parent::Model();
@@ -23,17 +22,7 @@ class contasreceber_model extends Model {
     }
 
     function listar($args = array()) {
-        if (isset($args['nome']) && strlen($args['nome']) > 0) {
-            $this->db->select('
-                            tes.descricao
-                            ');
-            $this->db->from('tb_tipo_entradas_saida tes');
-            $this->db->where('tes.ativo', 'true');
-            $this->db->where('tes.tipo_entradas_saida_id', $args['nome']);
-            $return = $this->db->get()->result();
-        }
-
-        $this->db->select("fc.financeiro_contasreceber_id,
+        $this->db->select('fc.financeiro_contasreceber_id,
                             fc.valor,
                             fc.devedor,
                             fc.parcela,
@@ -44,26 +33,17 @@ class contasreceber_model extends Model {
                             fc.classe,
                             fc.data,
                             cd.razao_social,
-                            fc.tipo_numero");
+                            fc.tipo_numero');
         $this->db->from('tb_financeiro_contasreceber fc');
         $this->db->where('fc.ativo', 'true');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = fc.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor cd', 'cd.financeiro_credor_devedor_id = fc.devedor', 'left');
-//        $this->db->join('tb_financeiro_classe f', 'f.descricao = fc.classe', 'left');
+                $this->db->join('tb_financeiro_classe f', 'f.descricao = fc.classe', 'left');
         if (isset($args['empresa']) && strlen($args['empresa']) > 0) {
             $this->db->where('fc.devedor', $args['empresa']);
         }
-        
-        if (isset($args['txtempresa']) && strlen($args['txtempresa']) > 0) {
-            $this->db->where('fc.empresa_id', $args['txtempresa']);
-        }
-        else{
-            $empresa_id = $this->session->userdata('empresa_id');
-            $this->db->where('fc.empresa_id', $empresa_id);
-        }
-        
         if (isset($args['nome']) && strlen($args['nome']) > 0) {
-            $this->db->where('tipo', $return[0]->descricao);
+            $this->db->where('tipo_id', $args['nome']);
         }
         if (isset($args['nome_classe']) && strlen($args['nome_classe']) > 0) {
             $this->db->where('fc.classe', $args['nome_classe']);
@@ -72,10 +52,10 @@ class contasreceber_model extends Model {
             $this->db->where('fc.conta', $args['conta']);
         }
         if (isset($args['datainicio']) && strlen($args['datainicio']) > 0) {
-            $this->db->where('fc.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $args['datainicio']))));
+            $this->db->where('fc.data >=', $args['datainicio']);
         }
         if (isset($args['datafim']) && strlen($args['datafim']) > 0) {
-            $this->db->where('fc.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $args['datafim']))));
+            $this->db->where('fc.data <=', $args['datafim']);
         }
         if (isset($args['obs']) && strlen($args['obs']) != '') {
             $this->db->where('fc.observacao ilike', "%" . $args['obs'] . "%");
@@ -101,9 +81,6 @@ class contasreceber_model extends Model {
         if ($_POST['credordevedor'] != 0) {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
         }
-        if ($_POST['empresa'] != "") {
-            $this->db->where('fc.empresa_id', $_POST['empresa']);
-        }
         if ($_POST['tipo'] != 0) {
             $this->db->where('tipo_id', $_POST['tipo']);
         }
@@ -113,8 +90,8 @@ class contasreceber_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('fc.conta', $_POST['conta']);
         }
-        $this->db->where('fc.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
-        $this->db->where('fc.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->where('fc.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
+        $this->db->where('fc.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
         $this->db->orderby('fc.data');
         $this->db->orderby('fcd.razao_social');
         $return = $this->db->get();
@@ -136,8 +113,8 @@ class contasreceber_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('fc.conta', $_POST['conta']);
         }
-        $this->db->where('fc.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
-        $this->db->where('fc.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->where('fc.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
+        $this->db->where('fc.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
         $return = $this->db->count_all_results();
         return $return;
     }
@@ -184,7 +161,6 @@ class contasreceber_model extends Model {
 
     function gravarconfirmacao() {
         try {
-            $_POST['inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio'])));
             /* inicia o mapeamento no banco */
             $financeiro_contasreceber_id = $_POST['financeiro_contasreceber_id'];
             $horario = date("Y-m-d H:i:s");
@@ -194,13 +170,10 @@ class contasreceber_model extends Model {
             $this->db->set('data', $_POST['inicio']);
             $this->db->set('nome', $_POST['devedor']);
             $this->db->set('tipo', $_POST['tipo']);
-            $this->db->set('classe', $_POST['classe']);
             $this->db->set('conta', $_POST['conta_id']);
             $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
-            $empresa_id = $this->session->userdata('empresa_id');
-            $this->db->set('empresa_id', $empresa_id);
             $this->db->insert('tb_entradas');
             $entrada_id = $this->db->insert_id();
             $erro = $this->db->_error_message();
@@ -214,7 +187,6 @@ class contasreceber_model extends Model {
             $this->db->set('conta', $_POST['conta_id']);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('data', $_POST['inicio']);
-            $this->db->set('empresa_id', $empresa_id);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_saldo');
 
@@ -238,7 +210,7 @@ class contasreceber_model extends Model {
 
     function gravar($dia, $parcela) {
         try {
-            $empresa_id = $this->session->userdata('empresa_id');
+
             //busca tipo
             $this->db->select('t.descricao');
             $this->db->from('tb_tipo_entradas_saida t');
@@ -247,11 +219,8 @@ class contasreceber_model extends Model {
             $this->db->where('c.descricao', $_POST['classe']);
             $return = $this->db->get();
             $result = $return->result();
-            if (count($result) > 0) {
-                $tipo = $result[0]->descricao;
-            } else {
-                $tipo = '';
-            }
+            $tipo = $result[0]->descricao;
+
             /* inicia o mapeamento no banco */
             $financeiro_contasreceber_id = $_POST['financeiro_contasreceber_id'];
             $this->db->set('valor', str_replace(",", ".", str_replace(".", "", $_POST['valor'])));
@@ -259,7 +228,6 @@ class contasreceber_model extends Model {
             $this->db->set('data', $dia);
             $this->db->set('parcela', $parcela);
             $this->db->set('tipo', $tipo);
-            $this->db->set('empresa_id', $empresa_id);
             $this->db->set('classe', $_POST['classe']);
             $this->db->set('conta', $_POST['conta']);
             $this->db->set('tipo_numero', $_POST['tiponumero']);
@@ -304,8 +272,7 @@ class contasreceber_model extends Model {
                             fe.forma_entradas_saida_id,
                             fc.data,
                             cd.razao_social,
-                            fc.tipo_numero,
-                            fc.classe');
+                            fc.tipo_numero');
             $this->db->from('tb_financeiro_contasreceber fc');
             $this->db->where('fc.ativo', 'true');
             $this->db->join('tb_financeiro_credor_devedor cd', 'cd.financeiro_credor_devedor_id = fc.devedor', 'left');
@@ -325,7 +292,6 @@ class contasreceber_model extends Model {
             $this->_tipo_numero = $return[0]->tipo_numero;
             $this->_conta = $return[0]->descricao;
             $this->_conta_id = $return[0]->forma_entradas_saida_id;
-            $this->_classe = $return[0]->classe;
         } else {
             $this->_estoque_produto_id = null;
         }

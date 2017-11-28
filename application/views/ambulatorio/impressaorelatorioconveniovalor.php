@@ -64,7 +64,7 @@
                 </tr>
 <? } ?>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_inicio) ) ); ?> ate <?= str_replace("-","/",date("d-m-Y", strtotime($txtdata_fim) ) ); ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></th>
             </tr>
 <? IF (COUNT($medico) > 0) { ?>
                 <tr>
@@ -103,7 +103,7 @@
             $valortotal = $valortotal + $itens->valortotal;
             ?>
             <tr>
-                <td><?= str_replace("-","/",date("d-m-Y", strtotime($itens->data))); ?></td>
+                <td><?= ($itens->data); ?></td>
                 <td><?= utf8_decode($itens->nome); ?></td>
                 <td style='text-align: right;'><?= number_format($itens->valortotal, 2, ',', '.'); ?></td>
             </tr>
@@ -140,7 +140,7 @@
             $valortotal = $valortotal + $itens->valortotal;
             ?>
             <tr>
-                <td><?= (str_replace("-","/",date("d-m-Y", strtotime($itens->data)))); ?></td>
+                <td><?= ($itens->data); ?></td>
                 <td><?= utf8_decode($itens->nome); ?></td>
                 <td style='text-align: right;'><?= number_format($itens->valortotal, 2, ',', '.'); ?></td>
             </tr>
@@ -153,7 +153,7 @@
                 $valortotal = $valortotal + $itens->valortotal;
                 ?>
                 <tr>
-                    <td><?= (str_replace("-","/",date("d-m-Y", strtotime($itens->data)))); ?></td>
+                    <td><?= ($itens->data); ?></td>
                     <td><?= utf8_decode($itens->nome); ?></td>
                     <td style='text-align: right;'><?= number_format($itens->valortotal, 2, ',', '.'); ?></td>
                 </tr>
@@ -179,7 +179,7 @@
             $valortotal = $valortotal + $itens->valortotal;
             ?>
             <tr>
-                <td><?= (str_replace("-","/",date("d-m-Y", strtotime($itens->data)))); ?></td>
+                <td><?= ($itens->data); ?></td>
                 <td><?= utf8_decode($itens->nome); ?></td>
                 <td style='text-align: right;'><?= number_format($itens->valortotal, 2, ',', '.'); ?></td>
             </tr>

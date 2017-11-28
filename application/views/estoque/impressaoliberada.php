@@ -21,8 +21,6 @@
         <thead>
             <tr>
                 <td class="tabela_teste"><font size="-2">Produto</td>
-                <!--<td class="tabela_teste"><font size="-2">Valor de Compra</td>-->
-                <!--<td class="tabela_teste"><font size="-2">Valor de Venda</td>-->
                 <td class="tabela_teste"><font size="-2">UNID</td>
                 <td class="tabela_teste"><font size="-2">QTDE/SOLIC.</td>
             </tr>
@@ -30,11 +28,9 @@
         <tbody>
             <? foreach ($produtossaida as $item) : ?>
                 <tr>
-                    <td><font size="-2"><?= utf8_encode($item->descricao); ?></td>
-                    <!--<td><font size="-2"><?= number_format($item->valor_compra, 2, ",", ".") ; ?></td>-->
-                    <!--<td><font size="-2"><?= number_format($item->valor_venda, 2, ",", ".") ; ?></td>-->
-                    <td><font size="-2"><?= utf8_encode($item->unidade); ?></td>
-                    <td><font size="-2"><?= utf8_encode($item->quantidade_solicitada); ?></td>
+                    <td><font size="-2"><?= utf8_decode($item->descricao); ?></td>
+                    <td><font size="-2"><?= utf8_decode($item->unidade); ?></td>
+                    <td><font size="-2"><?= utf8_decode($item->quantidade_solicitada); ?></td>
                 </tr>
             <? endforeach; ?>
 

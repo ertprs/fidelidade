@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3 class="singular"><a href="#">Manter Atendimentos</a></h3>
+        <h3 class="singular"><a href="#">Manter Exames</a></h3>
         <div>
             <?
             $salas = $this->exame->listartodassalas();
@@ -57,7 +57,7 @@
                     <tbody>
                         <?php
                         $perfil_id = $this->session->userdata('perfil_id');
-                        $lista = $this->exame->listarexames($_GET)->orderby('e.data_cadastro')->limit($limit, $pagina)->get()->result();
+                        $lista = $this->exame->listarexames($_GET)->limit($limit, $pagina)->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             $dataFuturo = date("Y-m-d H:i:s");
@@ -77,12 +77,10 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->sala; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->tecnico; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->procedimento; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;"> 
-                                    <div class="bt_link" style="width: 85px">                                 
-                                        <a style="width: 85px" href="<?= base_url() ?>ambulatorio/exame/anexarimagem/<?= $item->exames_id ?>/<?= $item->sala_id ?>">
-                                            Atendimento
-                                        </a>
-                                    </div>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;"> <div class="bt_link">                                 
+                                        <a href="<?= base_url() ?>ambulatorio/exame/anexarimagem/<?= $item->exames_id ?>/<?= $item->sala_id ?>">
+                                            Imagem
+                                        </a></div>
                                 </td>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/exame/finalizarexame/<?= $item->exames_id ?>/<?= $item->sala_id ?> ">
@@ -102,10 +100,10 @@
                                 <td>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/laudo/chamarpaciente2/<?= $item->ambulatorio_laudo_id ?> ">
-                                            Chamar</a></div>
+                                            chamar</a></div>
                                     <!--                                        impressaolaudo -->
                                 </td>
-                                
+                                </td>
                                 <? if ($perfil_id == 1) { ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="70px;"><div class="bt_link">
                                             <a href="<?= base_url() ?>ambulatorio/exame/examecancelamento/<?= $item->exames_id ?>/<?= $item->sala_id ?> /<?= $item->agenda_exames_id ?>/<?= $item->paciente_id ?>/<?= $item->procedimento_tuss_id ?> ">

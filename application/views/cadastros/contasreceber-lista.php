@@ -6,13 +6,10 @@
         </a>
     </div>
     <?
-    $classe = $this->classe->listarclasse();
-    $credores = $this->caixa->empresa();
-    $empresas = $this->exame->listarempresas();
+    $empresa = $this->caixa->empresa();
     $saldo = $this->caixa->saldo();
     $conta = $this->forma->listarforma();
     $tipo = $this->tipo->listartipo();
-    $perfil_id = $this->session->userdata('perfil_id');
     ?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Contas a Receber</a></h3>
@@ -26,7 +23,6 @@
                         <th class="tabela_title">Data Fim</th>
                         <th class="tabela_title">Tipo</th>
                         <th class="tabela_title">Classe</th>
-                        <th class="tabela_title">Credor/Devedor</th>
                         <th class="tabela_title">Empresa</th>
                         <th class="tabela_title">Observacao</th>
                     </tr>
@@ -75,33 +71,16 @@
                         <th class="tabela_title">
                             <select name="nome_classe" id="nome_classe" class="size2">
                                 <option value="">TODOS</option>
-                                <? foreach ($classe as $value) : ?>
-                                    <option value="<?= $value->descricao; ?>" <?
-                                    if (@$_GET['nome_classe'] == $value->descricao):echo 'selected';
-                                    endif;
-                                    ?>><?php echo $value->descricao; ?></option>
-                                        <? endforeach; ?>
                             </select>
                         </th>
                         <th class="tabela_title">
                             <select name="empresa" id="empresa" class="size1">
                                 <option value="">TODOS</option>
-                                <? foreach ($credores as $value) : ?>
+                                <? foreach ($empresa as $value) : ?>
                                     <option value="<?= $value->financeiro_credor_devedor_id; ?>" <?
                                     if (@$_GET['empresa'] == $value->financeiro_credor_devedor_id):echo 'selected';
                                     endif;
                                     ?>><?php echo $value->razao_social; ?></option>
-                                        <? endforeach; ?>
-                            </select>
-                        </th>
-                        <th class="tabela_title">
-                            <select name="txtempresa" id="txtempresa" class="size1">
-                                <option value="">TODOS</option>
-                                <? foreach ($empresas as $value) : ?>
-                                    <option value="<?= $value->empresa_id; ?>" <?
-                                    if (@$_GET['txtempresa'] == $value->empresa_id):echo 'selected';
-                                    endif;
-                                    ?>><?php echo $value->nome; ?></option>
                                         <? endforeach; ?>
                             </select>
                         </th>
@@ -123,7 +102,6 @@
                     <th class="tabela_header">Classe</th>
                     <th class="tabela_header">Dt contasreceber</th>
                     <th class="tabela_header">Conta</th>
-                    <th class="tabela_header">Parcela</th>
                     <th class="tabela_header">Valor</th>
                     <th class="tabela_header">Observacao</th>
                     <th class="tabela_header" colspan="4"><center>Detalhes</center></th>
@@ -159,14 +137,8 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->classe; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->conta; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>">
-                                <?if($item->parcela != ''){
-                                    echo $item->parcela, "/", $item->numero_parcela; 
-                                }?>
-                                </td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ",", "."); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->observacao; ?></td>
-                                <?if($perfil_id != 10){?>
 
                                 <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contasreceber/carregar/<?= $item->financeiro_contasreceber_id ?>">Editar</a></div>
@@ -180,22 +152,6 @@
                                 <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contasreceber/anexarimagemcontasareceber/<?= $item->financeiro_contasreceber_id ?>">Arquivos</a></div>
                                 </td>
-                                
-                                <?}else{?>
-                                
-                                    <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
-                                        Editar</div>
-                                </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
-                                        Excluir</div>
-                                </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
-                                        Confirmar</div>
-                                </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/contasreceber/anexarimagemcontasareceber/<?= $item->financeiro_contasreceber_id ?>">Arquivos</a></div>
-                                </td>
-                                <?}?>
                             </tr>
 
                         </tbody>
