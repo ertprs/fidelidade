@@ -119,6 +119,23 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function listarcontratoativo($paciente_id) {
+
+        $this->db->select('pc.paciente_contrato_id,
+                            fp.nome as plano,
+                            pc.ativo,
+                            fp.nome as plano,
+                            pc.data_cadastro');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->where("pc.paciente_id", $paciente_id);
+        $this->db->where("pc.ativo", 't');
+        $this->db->orderby('pc.paciente_contrato_id');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listartitular($paciente_id) {
 
         $this->db->select('p.paciente_id,
@@ -159,26 +176,27 @@ class guia_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function listardependentes($paciente_contrato_id) {
 
-        $this->db->select('p.nome as paciente,p.situacao,p.cpf');
+        $this->db->select('p.nome as paciente,p.situacao,p.cpf, fp.nome as contrato');
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente p', 'p.paciente_id = pcd.paciente_id', 'left');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcd.paciente_contrato_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("pcd.paciente_contrato_id", $paciente_contrato_id);
         $this->db->orderby('p.situacao desc');
         $return = $this->db->get();
         return $return->result();
     }
-    
-    
-     function listarparcelaspacientedependente($paciente_id) {
+
+    function listarparcelaspacientedependente($paciente_id) {
 
         $this->db->select('pc.paciente_id');
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente_contrato pc', 'pcd.paciente_contrato_id = pc.paciente_contrato_id', 'left');
         $this->db->where("pcd.paciente_id", $paciente_id);
-//        $this->db->where("pcp.ativo", 'f');
+        $this->db->where("pc.ativo", 't');
 //        $this->db->orderby('pcp.data');
         $return = $this->db->get();
         return $return->result();
@@ -201,6 +219,7 @@ class guia_model extends Model {
         $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
         $this->db->where("pc.paciente_id", $paciente_contrato_id);
         $this->db->where("pcp.ativo", 'f');
+        $this->db->where("pc.ativo", 't');
         $this->db->orderby('pcp.data');
         $return = $this->db->get();
         return $return->result();
@@ -1548,16 +1567,15 @@ ORDER BY p.nome";
         return $return->result();
     }
 
-    
     function listarvendedor() {
 
         $this->db->select('nome');
         $this->db->from('tb_operador');
-        $this->db->where('operador_id', $_POST['vendedor']);
+        $this->db->where('operador_id', @$_POST['vendedor']);
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function relatoriocomissao() {
 
         $this->db->select('pc.paciente_id,
@@ -1572,6 +1590,89 @@ ORDER BY p.nome";
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.excluido', 'false');
         $this->db->where('p.vendedor', $_POST['vendedor']);
+        $this->db->where("pc.data_cadastro >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
+        $this->db->where("pc.data_cadastro <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        $this->db->orderby('p.nome');
+        $this->db->orderby('fp.nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function relatoriocomissaovendedor() {
+
+        $this->db->select('pc.paciente_id,
+                            pc.plano_id,
+                            fp.nome as plano,
+                            p.nome as paciente,
+                            fp.comissao,
+                            pcp.ativo,
+                            pcp.valor,
+                            pcp.data,
+                            fp.comissao_vendedor_mensal,
+                            o.nome as vendedor');
+        $this->db->from('tb_paciente_contrato_parcelas pcp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
+        $this->db->where('pc.excluido', 'false');
+        $this->db->where('p.vendedor', $_POST['vendedor']);
+        $this->db->where("pcp.data >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where("pcp.data <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->orderby('p.nome');
+        $this->db->orderby('fp.nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function relatoriocomissaogerente() {
+
+        $this->db->select('pc.paciente_id,
+                            pc.plano_id,
+                            fp.nome as plano,
+                            p.nome as paciente,
+                            fp.comissao,
+                            pcp.ativo,
+                            pcp.data,
+                            pcp.valor,
+                            fp.comissao_gerente_mensal,
+                            o.nome as vendedor');
+        $this->db->from('tb_paciente_contrato_parcelas pcp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->join('tb_ambulatorio_gerente_operador ago', 'ago.operador_id = p.vendedor', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = ago.gerente_id', 'left');
+        $this->db->where('pc.excluido', 'false');
+        $this->db->where('ago.gerente_id', $_POST['vendedor']);
+        $this->db->where('ago.ativo', 't');
+        $this->db->where("pcp.data >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where("pcp.data <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->orderby('p.nome');
+        $this->db->orderby('fp.nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function relatoriocomissaoseguradora() {
+
+         $this->db->select('pc.paciente_id,
+                            pc.plano_id,
+                            fp.nome as plano,
+                            p.nome as paciente,
+                            fp.comissao,
+                            pc.data_cadastro as data,
+                            fp.comissao_seguradora,
+                            o.nome as vendedor');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
+        $this->db->where('pc.excluido', 'false');
+        if($_POST['seguradora'] != ''){
+        $this->db->where('p.vendedor', $_POST['seguradora']);    
+        }
+        
         $this->db->where("pc.data_cadastro >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
         $this->db->where("pc.data_cadastro <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
         $this->db->orderby('p.nome');
@@ -3588,7 +3689,7 @@ ORDER BY p.nome";
     function listaratendimentoparceiro($paciente_id, $grupo) {
         $this->db->select('ef.paciente_fidelidade_id');
         $this->db->from('tb_exames_fidelidade ef');
-        $this->db->where("ef.paciente_titular_id" , $paciente_id );    
+        $this->db->where("ef.paciente_titular_id", $paciente_id);
         $this->db->where("ef.grupo", $grupo);
 
         $return = $this->db->get();
@@ -4246,7 +4347,7 @@ AND data <= '$data_fim'";
             return -1;
         }
     }
-    
+
     function gravar($paciente_id) {
         try {
             /* inicia o mapeamento no banco */
@@ -4535,7 +4636,7 @@ AND data <= '$data_fim'";
             $this->db->insert('tb_paciente_contrato');
             $erro = $this->db->_error_message();
             $paciente_contrato_id = $this->db->insert_id();
-                return $paciente_contrato_id;
+            return $paciente_contrato_id;
         } catch (Exception $exc) {
             return -1;
         }
@@ -6318,6 +6419,68 @@ ORDER BY ae.agenda_exames_id)";
             if (trim($erro) != "") { // erro de banco
                 return -1;
             }
+            return 1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravarnovocontratoanual($paciente_contrato_id) {
+        try {
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+
+            $this->db->select('pc.*');
+            $this->db->from('tb_paciente_contrato pc');
+            $this->db->where("pc.paciente_contrato_id", $paciente_contrato_id);
+//        $this->db->where("pc.ativo", 't');
+            $this->db->orderby('pc.paciente_contrato_id');
+            $return = $this->db->get()->result();
+
+
+            $this->db->select('pcp.*');
+            $this->db->from('tb_paciente_contrato_parcelas pcp');
+            $this->db->where("pcp.paciente_contrato_id", $paciente_contrato_id);
+//        $this->db->where("pc.ativo", 't');
+            $this->db->orderby('pcp.paciente_contrato_parcelas_id');
+            $return_parcelas = $this->db->get()->result();
+
+            $this->db->set('paciente_id', $return[0]->paciente_id);
+            $this->db->set('plano_id', $return[0]->plano_id);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_paciente_contrato');
+            $paciente_contrato_novo_id = $this->db->insert_id();
+
+
+            $data_receber = $return_parcelas[0]->data;
+//            $mes = 1;
+            foreach ($return_parcelas as $item) {
+
+                $this->db->set('valor', $item->valor);
+                $this->db->set('parcela', $item->parcela);
+                $this->db->set('paciente_contrato_id', $paciente_contrato_novo_id);
+                $this->db->set('data', $data_receber);
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->insert('tb_paciente_contrato_parcelas');
+
+                $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+            }
+
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('paciente_contrato_id', $paciente_contrato_novo_id);
+            $this->db->where('paciente_contrato_id', $paciente_contrato_id);
+            $this->db->update('tb_paciente_contrato_dependente');
+
+            $this->db->set('ativo', 'f');
+            $this->db->where('paciente_contrato_id', $paciente_contrato_id);
+            $this->db->update('tb_paciente_contrato');
+
+//            echo '<pre>';
+//            var_dump($return);
+//            die;
+
             return 1;
         } catch (Exception $exc) {
             return -1;

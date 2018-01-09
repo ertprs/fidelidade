@@ -86,7 +86,12 @@
         <div>
             <table>
                 <tr><td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Contrato</a></div></td>
-                    <td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">excluir</a></div></td>
+                    <? if ($perfil_id == 1) { ?>
+
+
+                        <td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">Excluir</a></div></td>
+                    <? }
+                    ?>
                 </tr>
             </table>            
         </div>
@@ -104,13 +109,13 @@
                     <label>Sexo</label>
                     <select name="sexo" id="txtSexo" class="size2">
                         <option value="M" <?
-                        if ($paciente['0']->sexo == "M"):echo 'selected';
-                        endif;
-                        ?>>Masculino</option>
+                    if ($paciente['0']->sexo == "M"):echo 'selected';
+                    endif;
+                    ?>>Masculino</option>
                         <option value="F" <?
-                                if ($paciente['0']->sexo == "F"):echo 'selected';
-                                endif;
-                                ?>>Feminino</option>
+                        if ($paciente['0']->sexo == "F"):echo 'selected';
+                        endif;
+                    ?>>Feminino</option>
                     </select>
                 </div>
 
@@ -150,7 +155,7 @@
                             Carência Exame   
                         </td>
                         <td>
-<?= $exame_liberado ?>     
+                            <?= $exame_liberado ?>     
                         </td>
                     </tr>
                     <tr>
@@ -158,7 +163,7 @@
                             Carência Consulta    
                         </td>
                         <td>
-<?= $consulta_liberado ?>       
+                            <?= $consulta_liberado ?>       
                         </td>
                     </tr>
                     <tr>
@@ -166,7 +171,7 @@
                             Carência Especialidade    
                         </td>
                         <td>
-<?= $especialidade_liberado ?>       
+                            <?= $especialidade_liberado ?>       
                         </td>
                     </tr>
                 </table>

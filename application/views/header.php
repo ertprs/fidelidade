@@ -270,6 +270,7 @@ function debug($object) {
                             <?
                             if ($perfil_id == 1) {
                                 ?>
+                                
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriosaida">Relatorio Saida</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriosaidagrupo">Relatorio Saida Tipo</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatorioentrada">Relatorio Entrada</a></span></ul>
@@ -278,6 +279,9 @@ function debug($object) {
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/contasreceber/relatoriocontasreceber">Relatorio Contas a Receber</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriomovitamentacao">Relatorio Moviten&ccedil;&atilde;o</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissao">Relatorio Comiss&atilde;o</a></span></ul>
+                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaovendedor">Relatorio Comissão Vendedor</a></span></ul>
+                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>
+                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoseguradora">Relatorio Comissão Seguradora</a></span></ul>
                                 <?
                             }
                             ?>
@@ -292,6 +296,7 @@ function debug($object) {
                         <li><span class="folder">Recep&ccedil;&atilde;o</span>
                             <? if ($perfil_id == 1) { ?>
                                 <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador">Listar Profissionais</a></span></ul>
+                                <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisargerentevendas">Listar Gerente de Vendas</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/motivocancelamento">Motivo cancelamento</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Manter indica&ccedil;&atilde;o</a></span></ul>
                             <? } ?>

@@ -1,8 +1,8 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar relatorio comissão</a></h3>
+        <h3><a href="#">Gerar relatorio comissão seguradora</a></h3>
         <div>
-            <form name="relatorio" id="relatorio" method="post"  action="<?= base_url() ?>ambulatorio/guia/gerarelatoriocomissao">
+            <form name="relatorio" id="relatorio" method="post"  action="<?= base_url() ?>ambulatorio/guia/gerarelatoriocomissaoseguradora">
                 <dl>
                     <dt>
                         <label>Data inicio</label>
@@ -17,10 +17,10 @@
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date" required="true"/>
                     </dd>
                     <dt>
-                        <label>Vendedor</label>
+                        <label>Seguradora</label>
                     </dt>
                     <dd>
-                        <select name="vendedor" id="vendedor" class="size2" required="true">
+                        <select name="seguradora" id="seguradora" class="size2" >
                             <option value="" >selecione</option>
                             <?php
                             foreach ($listarvendedor as $item) {

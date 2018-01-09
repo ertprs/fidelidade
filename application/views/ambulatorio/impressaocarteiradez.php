@@ -1,18 +1,38 @@
 <meta charset="UTF-8">
-<div>
-    <table style="background-color:#011F51;color: white;font-weight: bold;border-spacing: 12px; " border="0">
+<style>
+    .div-chave{
+    transform: scale(.75,.75);  
+    /*-ms-transform: scale(.75,.75);*/  
+    /*-webkit-transform: scale(.75,.75);*/  
+    /*transform: scale(3,1);*/
+    /*height: 200px;*/
+    }
+   
+    
+    @font-face {
+    font-family: 'Lucida-Sans-Unicode';
+    src:url('<?= base_url() ?>/css/fonts/lucida/Lucida-Sans-Unicode.ttf.woff') format('woff'),
+        url('<?= base_url() ?>/css/fonts/lucida/Lucida-Sans-Unicode.ttf.svg#Lucida-Sans-Unicode') format('svg'),
+        url('<?= base_url() ?>/css/fonts/lucida/Lucida-Sans-Unicode.ttf.eot'),
+        url('<?= base_url() ?>/css/fonts/lucida/Lucida-Sans-Unicode.ttf.eot?#iefix') format('embedded-opentype'); 
+    font-weight: bolder;
+    font-style: normal;
+}
+</style>
+<div class="div-chave">
+    <table style="background-color:#011F51;color: white;font-weight: bold;border-spacing: 12px;" border="0">
 
         <tbody>
             <tr>
-                <td rowspan="2"><img style="width: 100px;" src="<?= base_url() ?>img/dez/soudez.png"></td>
-                <td style="text-align: center;" rowspan="2">CATEGORIA <br> ESPECIAL</td>
-                <td>Nome:</td>
-                <td style="background-color: #00AAE7;border-radius: 10px;border-color: #66afe9;border-width: 3px;border:5px solid #67B3FF;"><?= $dependente[0]->paciente ?></td>
+                <td rowspan="3"><img style="width: 150px;" src="<?= base_url() ?>img/dez/soudez.png"></td>
+                <td style="text-align: center;font-family: 'Showcard Gothic';font-size: 15pt;" rowspan="2">CATEGORIA <br> <?=$dependente[0]->contrato?></td>
+                <td style="font-family: 'Aharoni';">NOME</td>
+                <td style="font-family: 'Lucida-Sans-Unicode';background-color: #00AAE7;border-radius: 10px;border-color: #66afe9;border-width: 3px;border:5px solid #67B3FF;"><?= $dependente[0]->paciente ?></td>
             </tr>
             <tr>
                 <!--<td><img style="width: 120px;" src="<?= base_url() ?>img/dez/soudez.png"></td>-->
                 <!--<td>CATEGORIA <br> ESPECIAL</td>-->
-                <td >CPF:</td>
+                <td style="font-family: 'Aharoni';font-size: 18px;">CPF</td>
                 <?
                 $parte_um = substr($dependente[0]->cpf, 0, 3);
                 $parte_dois = substr($dependente[0]->cpf, 3, 3);
@@ -21,15 +41,16 @@
 
                 $monta_cpf = "$parte_um.$parte_dois.$parte_tres-$parte_quatro";
                 ?>
-                <td style="background-color: #00AAE7;border-radius: 10px;border-color: #66afe9;border-width: 3px;border:5px solid #67B3FF;"><?= $monta_cpf ?></td>
+                <td style="font-weight: bold;font-family: 'Lucida-Sans-Unicode' ;background-color: #00AAE7;border-radius: 10px;border-color: #66afe9;border-width: 3px;border:5px solid #67B3FF;"><?= $monta_cpf ?></td>
             </tr>
             <tr>
-                <td style="text-align: right" colspan="4">DEPENDENTES</td>
-<!--                <td></td>-->
+                <td style="text-align: center;font-family: 'Aharoni';"></td>
+                <td style="text-align: center;font-family: 'Aharoni';" colspan="3">DEPENDENTES</td>
+                <!--<td></td>-->
                 <!--<td></td>-->
             </tr>
             <tr>
-                <td style="background-color: #00AAE7;border-radius: 15px;text-align: center;border-color: #66afe9;border:5px solid #67B3FF;" colspan="2">Central  de <br> Atendimento <br>
+                <td style="font-family: 'Lucida-Sans-Unicode';background-color: #00AAE7;border-radius: 15px;text-align: center;border-color: #66afe9;border:5px solid #67B3FF;font-size: 15pt;font-weight: 900" colspan="2">Central  de <br> Atendimento <br>
                     (85) 3276.1883</td>
                 <!--<td></td>-->
                 <td style="background-color: #00AAE7;border-radius: 10px;" colspan="2">
@@ -46,7 +67,7 @@
                             $monta_cpf = "$parte_um.$parte_dois.$parte_tres-$parte_quatro";
                             ?>
 
-                            <span style="color: red">+</span> <?= $item->paciente ?> <br>
+                            <span style="font-family: 'Lucida-Sans-Unicode' ;color: red">+</span> <?= $item->paciente ?> <br>
                             CPF: <?=$monta_cpf?>
                             <br>
 
@@ -57,8 +78,8 @@
 </td>          <!--<td></td>-->
             </tr>
             <tr>
-                <td style="text-align: center;" colspan="4">
-                    Emissão : 20/10/2017
+                <td style="text-align: left;font-family: 'Lucida-Sans-Unicode';" colspan="4">
+                    &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-style: italic; font-size: 10pt;"> Emissão : 20/10/2017</span>
                 </td>  
             </tr>
         </tbody>

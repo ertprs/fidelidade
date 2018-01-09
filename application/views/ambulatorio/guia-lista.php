@@ -1,10 +1,29 @@
 
+<?
+if (count($exames) > 0) {
+
+    foreach ($exames as $item) {
+        if ($item->ativo == 't') {
+            $ativo = 't';
+            break;
+        } else {
+            $ativo = 'f';
+        }
+    }
+} else {
+    $ativo = 'f';
+}
+?>
 <div class="content ficha_ceatox">
-    <div class="bt_link_new">
-        <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontrato/" . $paciente['0']->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
-            Novo Contrato
-        </a>
-    </div>
+    <? if ($ativo == 'f') { ?>
+
+
+        <div class="bt_link_new">
+            <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontrato/" . $paciente['0']->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                Novo Contrato
+            </a>
+        </div>
+    <? } ?>
     <?
     $operador_id = $this->session->userdata('operador_id');
     $empresa = $this->session->userdata('empresa');
@@ -59,103 +78,99 @@
             <?
             $guia_id = 0;
             $cancelado = 0;
-            if (count($exames)>0){
-            ?>
-            <table >
-                <thead>
-                    <tr>
-                        <th class="tabela_header">Contrato</th>
-                        <th class="tabela_header">Data</th>
-                        <th class="tabela_header">Status</th>
-                        <th colspan="4" class="tabela_header"></th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <?
-                    $estilo_linha = "tabela_content01";
-                    foreach ($exames as $item) :
-                        ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                        ?>
+            if (count($exames) > 0) {
+                ?>
+                <table >
+                    <thead>
                         <tr>
-                            <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $paciente['0']->paciente_id; ?>/<?= $item->paciente_contrato_id ?>');"><?= $item->paciente_contrato_id . "-" . $item->plano; ?></td>
-                            <td class="<?php echo $estilo_linha; ?>" width="50px;"><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
-                            <? if ($item->ativo == 't') { ?>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;">Ativo</td>
-                            <? } else { ?>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;">Inativo</td>
-                            <? } ?>
-                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                <div class="bt_link_new">
-                                    <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . $item->paciente_contrato_id ?> ', '_blank', 'width=1000,height=1000');">
-                                        Carteira
-                                    </a>
-                                </div>
-                            </td>
-                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                <div class="bt_link_new">
-                                    <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentos/" . $paciente['0']->paciente_id .  "/" . $item->paciente_contrato_id ?>">
-                                        Pagamento
-                                    </a>
-                                </div>
-                            </td>
-<!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                <div class="bt_link_new">
-                                    <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id .  "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
-                                        Pagamento Iugu
-                                    </a>
-                                </div>
-                            </td>-->
-                                   <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                <div >
-<a target='_blank' href='https://go.gerencianet.com.br/#/cobranca/pagar/7b571b2be28ba7e2b3638f0b7121df634aa60bcd'><img src='https://go.gerencianet.com.br/frontend/images/buttons/bt_pay_orange_round_gradient.png'></a>
-                                </div>
-                            </td>
-                            
+                            <th class="tabela_header">Contrato</th>
+                            <th class="tabela_header">Data</th>
+                            <th class="tabela_header">Status</th>
+                            <th colspan="4" class="tabela_header"></th>
 
 
                         </tr>
-
-
+                    </thead>
+                    <tbody>
                         <?
-                    endforeach;
-                    }else{
+                        $estilo_linha = "tabela_content01";
+                        foreach ($exames as $item) :
+                            ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                            ?>
+                            <tr>
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $paciente['0']->paciente_id; ?>/<?= $item->paciente_contrato_id ?>');"><?= $item->paciente_contrato_id . "-" . $item->plano; ?></td>
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
+                                <? if ($item->ativo == 't') { ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;">Ativo</td>
+                                <? } else { ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;">Inativo</td>
+                                <? } ?>
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                    <div class="bt_link_new">
+                                        <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . $item->paciente_contrato_id ?> ', '_blank', 'width=1000,height=1000');">
+                                            Carteira
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                    <div class="bt_link_new">
+                                        <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentos/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?>">
+                                            Pagamento
+                                        </a>
+                                    </div>
+                                </td>
+        <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                    <div class="bt_link_new">
+                                        <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
+                                            Pagamento Iugu
+                                        </a>
+                                    </div>
+                                </td>-->
+
+
+
+
+                            </tr>
+
+
+                            <?
+                        endforeach;
+                    } else {
                         $estilo_linha = "tabela_content01";
                         ?>
-           <table >
-                <thead>
-                    <tr>
-                        <th class="tabela_header">Contrato</th>
-                        <th class="tabela_header">Titular</th>
-                        <th colspan="2" class="tabela_header"></th>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th class="tabela_header">Contrato</th>
+                                <th class="tabela_header">Titular</th>
+                                <th colspan="2" class="tabela_header"></th>
 
 
-                    </tr>
-                </thead>
-                <tbody>
-                        
-                         <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $titular['0']->paciente_id; ?>/<?= $titular['0']->paciente_contrato_id ?>');"><?= $titular['0']->paciente_contrato_id; ?></td>
-                         <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $titular['0']->paciente_id; ?>/<?= $titular['0']->paciente_contrato_id ?>');"><?= $titular['0']->nome; ?></td>
-                                                    <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                <div class="bt_link_new">
-                                    <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . $titular['0']->paciente_contrato_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">
-                                        Boleto
-                                    </a>
-                                </div>
-                            </td>
-                      <?
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $titular['0']->paciente_id; ?>/<?= $titular['0']->paciente_contrato_id ?>');"><?= $titular['0']->paciente_contrato_id; ?></td>
+                        <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $titular['0']->paciente_id; ?>/<?= $titular['0']->paciente_contrato_id ?>');"><?= $titular['0']->nome; ?></td>
+                        <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                            <div class="bt_link_new">
+                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . $titular['0']->paciente_contrato_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">
+                                    Boleto
+                                </a>
+                            </div>
+                        </td>
+                        <?
                     }
-?>
-                </tbody>                                
-                <br>
-                <tfoot>
-                    <tr>
-                        <th class="tabela_footer" colspan="11">
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
+                    ?>
+                    </tbody>                                
+                    <br>
+                    <tfoot>
+                        <tr>
+                            <th class="tabela_footer" colspan="11">
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
         </fieldset>
     </div>
 

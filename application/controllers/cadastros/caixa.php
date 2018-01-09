@@ -194,6 +194,30 @@ class Caixa extends BaseController {
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriosaida', $data);
     }
+    
+//    function relatoriovendedorcomissao() {
+//        $data['conta'] = $this->forma->listarforma();
+//        $data['credordevedor'] = $this->caixa->listarcredordevedor();
+//        $data['tipo'] = $this->tipo->listartipo();
+////        $data['empresa'] = $this->guia->listarempresas();
+//        $this->loadView('ambulatorio/relatoriosaida', $data);
+//    }
+//    
+//    function relatoriogerentecomissao() {
+//        $data['conta'] = $this->forma->listarforma();
+//        $data['credordevedor'] = $this->caixa->listarcredordevedor();
+//        $data['tipo'] = $this->tipo->listartipo();
+////        $data['empresa'] = $this->guia->listarempresas();
+//        $this->loadView('ambulatorio/relatoriosaida', $data);
+//    }
+//    
+//    function relatorioseguradoracomissao() {
+//        $data['conta'] = $this->forma->listarforma();
+//        $data['credordevedor'] = $this->caixa->listarcredordevedor();
+//        $data['tipo'] = $this->tipo->listartipo();
+////        $data['empresa'] = $this->guia->listarempresas();
+//        $this->loadView('ambulatorio/relatoriosaida', $data);
+//    }
 
     function relatorioacompanhamentodecontas() {
         $data['grupo'] = $this->guia->listargrupo();

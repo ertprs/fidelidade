@@ -95,3 +95,43 @@ CREATE TABLE ponto.tb_paciente_contrato_parcelas_iugu
 ALTER TABLE ponto.tb_empresa ADD COLUMN email text;
 --25/11
 ALTER TABLE ponto.tb_empresa ADD COLUMN modelo_carteira integer;
+
+-- 06/01/2018
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_mensal numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_gerente_mensal numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_gerente numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_seguradora numeric(10,2);
+
+
+CREATE TABLE ponto.tb_ambulatorio_gerente_operador
+(
+  ambulatorio_gerente_operador_id serial,
+  operador_id integer,
+  gerente_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  empresa_id integer,
+  CONSTRAINT tb_ambulatorio_gerente_operador_pkey PRIMARY KEY (ambulatorio_gerente_operador_id)
+);
+
+
+CREATE OR REPLACE FUNCTION insereValor()
+RETURNS text AS $$
+DECLARE
+    resultado integer;
+BEGIN
+    resultado := ( SELECT COUNT(*) FROM ponto.tb_perfil WHERE nome = 'GERENTE DE VENDAS');
+    IF resultado = 0 THEN 
+	INSERT INTO ponto.tb_perfil(perfil_id, nome)
+        VALUES (5, 'GERENTE DE VENDAS');
+    END IF;
+    RETURN 'SUCESSO';
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT insereValor();

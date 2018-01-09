@@ -280,7 +280,14 @@ class formapagamento_model extends Model {
             $this->db->set('valor6', str_replace(",", ".", str_replace(".", "", $_POST['valor6'])));
             $this->db->set('valor10', str_replace(",", ".", str_replace(".", "", $_POST['valor10'])));
             $this->db->set('valor12', str_replace(",", ".", str_replace(".", "", $_POST['valor12'])));
+            
             $this->db->set('comissao', str_replace(",", ".", str_replace(".", "", $_POST['comissao'])));
+            $this->db->set('comissao_vendedor_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_mensal'])));
+            $this->db->set('comissao_vendedor', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor'])));
+            $this->db->set('comissao_gerente_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_gerente_mensal'])));
+            $this->db->set('comissao_gerente', str_replace(",", ".", str_replace(".", "", $_POST['comissao_gerente'])));
+            $this->db->set('comissao_seguradora', str_replace(",", ".", str_replace(".", "", $_POST['comissao_seguradora'])));
+            
             $this->db->set('valoradcional', str_replace(",", ".", str_replace(".", "", $_POST['valoradcional'])));
             $this->db->set('parcelas', str_replace(".", "", $parcelas));
             $horario = date("Y-m-d H:i:s");
@@ -342,6 +349,11 @@ class formapagamento_model extends Model {
                                valor10, 
                                valor12,
                                comissao,
+                               comissao_vendedor_mensal,
+                               comissao_vendedor,
+                               comissao_gerente_mensal,
+                               comissao_gerente,
+                               comissao_seguradora,
                                carencia_exame, 
                                carencia_consulta, 
                                carencia_especialidade, 
@@ -364,6 +376,11 @@ class formapagamento_model extends Model {
             $this->_valoradcional = $return[0]->valoradcional;
             $this->_parcelas = $return[0]->parcelas;
             $this->_comissao = $return[0]->comissao;
+            $this->_comissao_vendedor_mensal = $return[0]->comissao_vendedor_mensal;
+            $this->_comissao_vendedor = $return[0]->comissao_vendedor;
+            $this->_comissao_gerente_mensal = $return[0]->comissao_gerente_mensal;
+            $this->_comissao_gerente = $return[0]->comissao_gerente;
+            $this->_comissao_seguradora = $return[0]->comissao_seguradora;
         } else {
             $this->_forma_pagamento_id = null;
         }

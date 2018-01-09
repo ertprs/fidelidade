@@ -1,8 +1,8 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar relatorio comissão</a></h3>
+        <h3><a href="#">Gerar relatorio comissão vendedor</a></h3>
         <div>
-            <form name="relatorio" id="relatorio" method="post"  action="<?= base_url() ?>ambulatorio/guia/gerarelatoriocomissao">
+            <form name="relatorio" id="relatorio" method="post"  action="<?= base_url() ?>ambulatorio/guia/gerarelatoriocomissaovendedor">
                 <dl>
                     <dt>
                         <label>Data inicio</label>

@@ -43,6 +43,18 @@ class Guia extends BaseController {
 
     function pesquisar($paciente_id) {
         $data['exames'] = $this->guia->listarexames($paciente_id);
+        $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
+//        var_dump($contrato_ativo); die;
+        if (count($contrato_ativo) > 0) {
+            $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
+            $data_contrato = $contrato_ativo[0]->data_cadastro;
+            $data_atual = date("Y-m-d H:i:s");
+            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
+            if ($data_atual > $data_contrato_year) {
+                $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
+            }
+        }
+//        var_dump($data['contrato_ativo']); die;
         $data['titular'] = $this->guia->listartitular($paciente_id);
         $data['guia'] = $this->guia->listar($paciente_id);
         $data['paciente'] = $this->paciente->listardados($paciente_id);
@@ -254,6 +266,7 @@ class Guia extends BaseController {
     }
 
     function impressaoficha($paciente_contrato_id) {
+        $this->load->plugin('mpdf');
         $data['emissao'] = date("d-m-Y");
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
@@ -264,7 +277,12 @@ class Guia extends BaseController {
         if ($data['empresa'][0]->modelo_carteira == 1) {
             $this->load->View('ambulatorio/impressaoficharonaldo', $data);
         } elseif ($data['empresa'][0]->modelo_carteira == 2) {
+            $filename = 'cartão.pdf';
+            $cabecalho = '';
+            $rodape = '';
+//            $html = $this->load->View('ambulatorio/impressaocarteiradez', $data, true);
             $this->load->View('ambulatorio/impressaocarteiradez', $data);
+//            pdf($html, $filename, $cabecalho, $rodape);
         }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////        
@@ -1775,6 +1793,21 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriocomissao', $data);
     }
 
+    function relatoriocomissaovendedor() {
+        $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $this->loadView('ambulatorio/relatoriocomissaovendedor', $data);
+    }
+
+    function relatoriocomissaogerente() {
+        $data['listarvendedor'] = $this->operador_m->listargerentevendasrelatorio();
+        $this->loadView('ambulatorio/relatoriocomissaogerente', $data);
+    }
+
+    function relatoriocomissaoseguradora() {
+        $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $this->loadView('ambulatorio/relatoriocomissaoseguradora', $data);
+    }
+
     function gerarelatoriotecnicoconvenio() {
 
         $data['listarconvenio'] = $this->convenio->listardadosconvenios();
@@ -1834,6 +1867,41 @@ class Guia extends BaseController {
         $data['relatorio'] = $this->guia->relatoriocomissao();
         $this->load->View('ambulatorio/impressaorelatoriocomissao', $data);
     }
+    
+    function gerarelatoriocomissaoseguradora() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+        $data['vendedor'] = $this->guia->listarvendedor();
+        $data['relatorio'] = $this->guia->relatoriocomissaoseguradora();
+        $this->load->View('ambulatorio/impressaorelatoriocomissaoseguradora', $data);
+    }
+    
+    function gerarelatoriocomissaovendedor() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+//        var_dump($_POST); die;
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
+        $data['relatorio'] = $this->guia->relatoriocomissaovendedor();
+        $this->load->View('ambulatorio/impressaorelatoriocomissaovendedor', $data);
+    }
+    
+    function gerarelatoriocomissaogerente() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+//        var_dump($_POST); die;
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
+        $data['relatorio'] = $this->guia->relatoriocomissaogerente();
+        $this->load->View('ambulatorio/impressaorelatoriocomissaogerente', $data);
+    }
+    
+//    function gerarelatoriocomissaoseguradora() {
+//        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+//        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+////        var_dump($_POST); die;
+//        $data['vendedor'] = $this->guia->listarvendedor($_POST['seguradora']);
+//        $data['relatorio'] = $this->guia->relatoriocomissaoseguradora();
+//        $this->load->View('ambulatorio/impressaorelatoriocomissaoseguradora', $data);
+//    }
 
     function relatoriotecnicoconveniosintetico() {
         $data['convenio'] = $this->convenio->listardados();
