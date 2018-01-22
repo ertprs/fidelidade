@@ -42,6 +42,7 @@ class Formapagamento extends BaseController {
     }
 
     function carregargrupospagamento() {
+        $data['conta'] = $this->forma->listarforma();
         $data['forma_pagamento'] = $this->formapagamento->listarforma();
         $this->loadView('cadastros/grupopagamento-form', $data);
     }

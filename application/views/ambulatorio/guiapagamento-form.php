@@ -74,7 +74,9 @@
                         <?
                         $key = $empresa[0]->iugu_token;
                         Iugu::setApiKey($key);
+                        $contador = 0;
                         foreach ($listarpagamentoscontrato as $item) {
+                            $contador ++;
                             if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
                                 $invoice_id = $item->invoice_id;
 
@@ -129,19 +131,18 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
-                                        <?
-                                        if($perfil_id == 1){?>
-                                        <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                            <div class="bt_link">
-                                                <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <?}
+                                        <? if ($perfil_id == 1) { ?>
+                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                <div class="bt_link">
+                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        <? }
                                         ?>
                                         <? if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '') { ?>
                                             <td colspan="3" class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
+                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
                                                     </a></div>
                                             </td>  
                                         <? } else { ?>
@@ -152,12 +153,12 @@
                                                 </div>
                                             </td>
 
-                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                    <div class="bt_link">
-                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
-                        </a>
-                    </div>
-                </td>-->
+                                                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                    <div class="bt_link">
+                                                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
+                                                        </a>
+                                                    </div>
+                                                </td>-->
                                         <? }
                                         ?>
 
@@ -227,6 +228,12 @@
                                     }
                                 });
                             });
+
+<? for ($i = 0; $i <= $contador; $i++) { ?>
+                                $("#botaopagamento<?=$i?>").click(function () {
+                                    $("#botaopagamento<?=$i?>").hide();
+                                });
+<? } ?>
                             $(function () {
                                 $('#convenio1').change(function () {
                                     if ($(this).val()) {

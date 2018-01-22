@@ -11,21 +11,54 @@
                     <dd>
                         <input type="hidden" name="txtcadastrosformapagamentoid" class="texto10" value="<?= @$obj->_forma_pagamento_id; ?>" />
                         <input type="number" name="carencia_exame" class="texto03" value="<?= @$obj->_carencia_exame; ?>" />
+                        <?php
+                        if (@$obj->_carencia_exame_mensal == "t") {
+                            ?>
+                            <input type="checkbox" name="carencia_exame_mensal" checked ="true"/>Carência Mensal Exame
+                            <?php
+                        } else {
+                            ?>
+                            <input type="checkbox" name="carencia_exame_mensal"  />Carência Mensal Exame
+                            <?php
+                        }
+                        ?>
                     </dd>
                     <dt>
                         <label>Carência Consulta</label>
                     </dt>
                     <dd>
                         <input type="number" name="carencia_consulta" class="texto03" value="<?= @$obj->_carencia_consulta; ?>" />
+                        <?php
+                        if (@$obj->_carencia_consulta_mensal == "t") {
+                            ?>
+                            <input type="checkbox" name="carencia_consulta_mensal" checked ="true"/>Carência Mensal Consulta
+                            <?php
+                        } else {
+                            ?>
+                            <input type="checkbox" name="carencia_consulta_mensal"  />Carência Mensal Consulta
+                            <?php
+                        }
+                        ?>
                     </dd>
                     <dt>
                         <label>Carência Especialidade</label>
                     </dt>
                     <dd>
                         <input type="number" name="carencia_especialidade" class="texto03" value="<?= @$obj->_carencia_especialidade; ?>" />
+                        <?php
+                        if (@$obj->_carencia_especialidade_mensal == "t") {
+                            ?>
+                            <input type="checkbox" name="carencia_especialidade_mensal" checked ="true"/>Carência Mensal Especialidade
+                            <?php
+                        } else {
+                            ?>
+                            <input type="checkbox" name="carencia_especialidade_mensal"  />Carência Mensal Especialidade
+                            <?php
+                        }
+                        ?>
                     </dd>
 
-                    
+
 
                 </dl>    
                 <hr/>

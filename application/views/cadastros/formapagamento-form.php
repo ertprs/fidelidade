@@ -92,6 +92,20 @@
                     <dd>
                         <input type="text" name="comissao_seguradora" class="texto02" id="comissao_seguradora" alt="decimal" value="<?= @$obj->_comissao_seguradora; ?>" />
                     </dd>
+                    <dt title="Selecione a conta onde o dinheiro irá ingressar">
+                        <label>Conta</label>
+                    </dt>
+                    <dd title="Selecione a conta onde o dinheiro irá ingressar">
+                        <select name="conta" id="conta" class="texto03" required>
+                            <option value="">SELECIONE</option>
+                            <? foreach ($conta as $value) { ?>
+                                <option value="<?= $value->forma_entradas_saida_id ?>" <?
+                                if (@$obj->_conta_id == $value->forma_entradas_saida_id):echo 'selected';
+                                endif;
+                                ?>><?= $value->descricao ?></option>
+                                    <? } ?>                            
+                        </select>
+                    </dd>
 
                 </dl>    
                 <hr/>

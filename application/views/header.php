@@ -232,7 +232,8 @@ function debug($object) {
                         <li><span class="folder">Cadastro</span>
                             <ul>
                                 <? if ($perfil_id == 1 || $perfil_id == 2 ) { ?>
-                                    <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocadastro">Relatorio Cadastro</a></span></li>

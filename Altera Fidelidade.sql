@@ -135,3 +135,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 SELECT insereValor();
+
+-- 13/01/2018
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN carencia_exame_mensal boolean  DEFAULT false;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN carencia_consulta_mensal boolean  DEFAULT false;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN carencia_especialidade_mensal boolean  DEFAULT false;
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN carencia_liberada boolean DEFAULT true;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN financeiro_credor_devedor_id integer;
+-- 15/01/2018
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN conta_id integer;
+ALTER TABLE ponto.tb_paciente ADD COLUMN grau_parentesco text;

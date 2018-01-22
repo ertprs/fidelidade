@@ -42,13 +42,13 @@ class Autocomplete extends Controller {
         $parceiro_id = $_GET['parceiro_id'];
         $paciente_id = $_GET['paciente'];
 //        $paciente_ip = $_GET['paciente_ip'];
-        
+
         @$parceiro = $this->parceiro->listarparceiroendereco($parceiro_id);
         @$endereco = $parceiro[0]->endereco_ip;
 //        $parceiro_id = $parceiro[0]->financeiro_parceiro_id;
         @$convenio_id = $parceiro[0]->convenio_id;
-        
-        
+
+
 
         $parceiro = $this->parceiro->listarparceiroendereco($parceiro_id);
         @$endereco = $parceiro[0]->endereco_ip;
@@ -66,7 +66,7 @@ class Autocomplete extends Controller {
         } else {
             $dependente = false;
         }
-        
+
         if ($dependente == true) {
             $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
             $paciente_id = $retorno[0]->paciente_id;
@@ -90,17 +90,15 @@ class Autocomplete extends Controller {
         $carencia_exame = $carencia[0]->carencia_exame;
         $carencia_consulta = $carencia[0]->carencia_consulta;
         $carencia_especialidade = $carencia[0]->carencia_especialidade;
-        
+
         // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
         if ($grupo == 'EXAME') {
             $carencia = (int) $carencia_exame;
         } elseif ($grupo == 'CONSULTA') {
             $carencia = (int) $carencia_consulta;
-        } 
-        elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
+        } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
             $carencia = (int) $carencia_especialidade;
-        }
-        else {
+        } else {
             $carencia = 0;
         }
 //        var_dump($grupo); die;
@@ -119,7 +117,7 @@ class Autocomplete extends Controller {
         }
 //        die;
     }
-    
+
     function autorizaragendaweb() {
         header('Access-Control-Allow-Origin: *');
 
@@ -137,7 +135,7 @@ class Autocomplete extends Controller {
         //LISTANDO AS INFORMAÇÕES DE CARÊNCIA E PARCELAS PAGAS PELO PACIENTE
 
         $paciente_id = $this->guia->listarpacientecpf($cpf);
-        
+
 
         $parcelas = $this->guia->listarparcelaspaciente($paciente_id);
         $carencia = $this->guia->listarparcelaspacientecarencia($paciente_id);
@@ -145,7 +143,7 @@ class Autocomplete extends Controller {
         $carencia_exame = $carencia[0]->carencia_exame;
         $carencia_consulta = $carencia[0]->carencia_consulta;
         $carencia_especialidade = $carencia[0]->carencia_especialidade;
-        
+
         // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
         if ($grupo == 'EXAME') {
             $carencia = (int) $carencia_exame;
@@ -1640,6 +1638,23 @@ class Autocomplete extends Controller {
             $result = $this->exame->listarautocompletepaciente($_GET['term']);
         } else {
             $result = $this->exame->listarautocompletepaciente();
+        }
+        foreach ($result as $item) {
+            $retorno['value'] = $item->nome;
+            $retorno['itens'] = $item->telefone;
+            $retorno['valor'] = substr($item->nascimento, 8, 2) . "/" . substr($item->nascimento, 5, 2) . "/" . substr($item->nascimento, 0, 4);
+            $retorno['id'] = $item->paciente_id;
+            $retorno['endereco'] = $item->logradouro . " - " . $item->numero;
+            $var[] = $retorno;
+        }
+        echo json_encode($var);
+    }
+
+    function pacientetitular() {
+        if (isset($_GET['term'])) {
+            $result = $this->exame->listarautocompletepacientetitular($_GET['term']);
+        } else {
+            $result = $this->exame->listarautocompletepacientetitular();
         }
         foreach ($result as $item) {
             $retorno['value'] = $item->nome;

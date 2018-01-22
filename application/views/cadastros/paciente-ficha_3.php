@@ -289,7 +289,11 @@ if (@$obj->_cpfresp == "t") {
             </div>
             <div>
                 <label>Data Ades&atilde;o</label>
-                <input type="text" name="adesao" id="adesao" required class="texto02" alt="date"/>
+                <input type="text" name="adesao" id="adesao" required class="texto02" alt="date" required/>
+            </div>
+            <div>
+                <label>Dia Vencimento Parcela</label>
+                <input type="number" name="vencimentoparcela" id="vencimentoparcela" required max="30" class="texto02" required />
             </div>
         </fieldset>
         <button type="submit">Fechamento</button>

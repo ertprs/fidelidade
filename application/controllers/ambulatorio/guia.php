@@ -571,6 +571,7 @@ class Guia extends BaseController {
 
     function confirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 
+//        var_dump($valor); die;
         if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
@@ -593,6 +594,7 @@ class Guia extends BaseController {
         $key = $empresa[0]->iugu_token;
 
         $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
         $valor = $pagamento[0]->valor * 100;
         $data = date('d/m/Y', strtotime($pagamento[0]->data));
 //        var_dump($prefixo); 
@@ -605,6 +607,7 @@ class Guia extends BaseController {
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
 //        die;
         //GERANDO A COBRANÇA
+        if (count($pagamento_iugu) == 0) {
 
         $gerar = Iugu_Invoice::create(Array(
                     "email" => $cliente[0]->cns,
@@ -638,19 +641,20 @@ class Guia extends BaseController {
 //        echo '<pre>';
 //        var_dump($gerar);
 //        die;
-        if (count($gerar["errors"]) > 0) {
-            $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
+            if (count($gerar["errors"]) > 0) {
+                $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
 //            foreach ($gerar["errors"] as $item) {
 ////                echo $item;
 //                
 //            }
-        } else {
+            } else {
 
-            $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
-            $mensagem = 'Cobrança gerada com sucesso';
+                $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
+                $mensagem = 'Cobrança gerada com sucesso';
+            }
+        }else{
+             $mensagem = 'Cobrança já gerada';
         }
-
-
 
 //        echo $mensagem;
 //        die;
@@ -1867,7 +1871,7 @@ class Guia extends BaseController {
         $data['relatorio'] = $this->guia->relatoriocomissao();
         $this->load->View('ambulatorio/impressaorelatoriocomissao', $data);
     }
-    
+
     function gerarelatoriocomissaoseguradora() {
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
@@ -1875,7 +1879,7 @@ class Guia extends BaseController {
         $data['relatorio'] = $this->guia->relatoriocomissaoseguradora();
         $this->load->View('ambulatorio/impressaorelatoriocomissaoseguradora', $data);
     }
-    
+
     function gerarelatoriocomissaovendedor() {
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
@@ -1884,7 +1888,7 @@ class Guia extends BaseController {
         $data['relatorio'] = $this->guia->relatoriocomissaovendedor();
         $this->load->View('ambulatorio/impressaorelatoriocomissaovendedor', $data);
     }
-    
+
     function gerarelatoriocomissaogerente() {
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
@@ -1893,7 +1897,7 @@ class Guia extends BaseController {
         $data['relatorio'] = $this->guia->relatoriocomissaogerente();
         $this->load->View('ambulatorio/impressaorelatoriocomissaogerente', $data);
     }
-    
+
 //    function gerarelatoriocomissaoseguradora() {
 //        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
 //        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);

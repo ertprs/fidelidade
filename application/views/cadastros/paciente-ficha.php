@@ -125,7 +125,7 @@
 
             <div>
                 <label>Situacao</label>
-                <select name="situacao" id="situacao" class="size2">
+                <select disabled="" name="situacao" id="situacao" class="size2">
                     <option value="" <?
                     if (@$obj->_situacao == ""):echo 'selected';
                     endif;

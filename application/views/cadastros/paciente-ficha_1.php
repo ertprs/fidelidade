@@ -123,17 +123,11 @@
                 </select>
             </div>
 
-            <div>
+            <div style="display: none;">
                 <label>Situacao</label>
                 <select name="situacao" id="situacao" class="size2" required>
-                    <option value="Titular" <?
-                    if (@$obj->_situacao == "Titular"):echo 'selected';
-                    endif;
-                    ?>>Titular</option>
-                    <option value="Dependente" <?
-                    if (@$obj->_situacao == "Dependente"):echo 'selected';
-                    endif;
-                    ?>>Dependente</option>
+                    <option value="Titular" selected="true">Titular</option>
+                    <!--<option value="Dependente">Dependente</option>-->
                 </select>
             </div>
             <div>

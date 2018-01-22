@@ -55,7 +55,27 @@ class exame_model extends Model {
                             logradouro,
                             numero');
         $this->db->from('tb_paciente');
+//        $this->db->where('situacao', 'Titular');
         $this->db->where('ativo', 'true');
+        
+        if ($parametro != null) {
+            $this->db->where('nome ilike', "%" . $parametro . "%");
+        }
+        $return = $this->db->get();
+        return $return->result();
+    }
+    function listarautocompletepacientetitular($parametro = null) {
+        $this->db->select('paciente_id,
+                            nome,
+                            telefone,
+                            nascimento,
+                            cpf,
+                            logradouro,
+                            numero');
+        $this->db->from('tb_paciente');
+        $this->db->where('situacao', 'Titular');
+        $this->db->where('ativo', 'true');
+        
         if ($parametro != null) {
             $this->db->where('nome ilike', "%" . $parametro . "%");
         }

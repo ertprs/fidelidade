@@ -130,12 +130,9 @@
 //                $('.carregando').show();
 //alert('asd');
                 $.getJSON('<?= base_url() ?>autocomplete/procedimentoconsultarcarencia', {procedimento: $(this).val(), paciente: $('#txtNomeid').val(), parceiro_id: <?=$parceiro_ip?>, ajax: true}, function (j) {
-                    if(j == true){
+
                       $('#botaoenviar').show();
-                    }else{
-                        $('#botaoenviar').hide();
-                       alert('Pendências de pagamento. Parcelas pagas não permitem agendar esse procedimento');  
-                    }
+
 
                 });
             } else {

@@ -274,22 +274,25 @@ class formapagamento_model extends Model {
             if ($_POST['parcelas'] == "" || $_POST['parcelas'] == 0) {
                 $parcelas = 1;
             }
+//            var_dump($_POST); die;
 
+            
             $this->db->set('valor1', str_replace(",", ".", str_replace(".", "", $_POST['valor1'])));
             $this->db->set('valor5', str_replace(",", ".", str_replace(".", "", $_POST['valor5'])));
             $this->db->set('valor6', str_replace(",", ".", str_replace(".", "", $_POST['valor6'])));
             $this->db->set('valor10', str_replace(",", ".", str_replace(".", "", $_POST['valor10'])));
             $this->db->set('valor12', str_replace(",", ".", str_replace(".", "", $_POST['valor12'])));
-            
+
             $this->db->set('comissao', str_replace(",", ".", str_replace(".", "", $_POST['comissao'])));
             $this->db->set('comissao_vendedor_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_mensal'])));
             $this->db->set('comissao_vendedor', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor'])));
             $this->db->set('comissao_gerente_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_gerente_mensal'])));
             $this->db->set('comissao_gerente', str_replace(",", ".", str_replace(".", "", $_POST['comissao_gerente'])));
             $this->db->set('comissao_seguradora', str_replace(",", ".", str_replace(".", "", $_POST['comissao_seguradora'])));
-            
+
             $this->db->set('valoradcional', str_replace(",", ".", str_replace(".", "", $_POST['valoradcional'])));
             $this->db->set('parcelas', str_replace(".", "", $parcelas));
+            $this->db->set('conta_id', $_POST['conta']);
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
@@ -320,7 +323,21 @@ class formapagamento_model extends Model {
         try {
             /* inicia o mapeamento no banco */
             $forma_pagamento_id = $_POST['txtcadastrosformapagamentoid'];
-
+            if ($_POST['carencia_exame_mensal'] != '') {
+                $this->db->set('carencia_exame_mensal', 't');
+            } else {
+                $this->db->set('carencia_exame_mensal', 'f');
+            }
+            if ($_POST['carencia_consulta_mensal'] != '') {
+                $this->db->set('carencia_consulta_mensal', 't');
+            } else {
+                $this->db->set('carencia_consulta_mensal', 'f');
+            }
+            if ($_POST['carencia_especialidade_mensal'] != '') {
+                $this->db->set('carencia_especialidade_mensal', 't');
+            } else {
+                $this->db->set('carencia_especialidade_mensal', 'f');
+            }
             $this->db->set('carencia_exame', $_POST['carencia_exame']);
             $this->db->set('carencia_consulta', $_POST['carencia_consulta']);
             $this->db->set('carencia_especialidade', $_POST['carencia_especialidade']);
@@ -354,8 +371,12 @@ class formapagamento_model extends Model {
                                comissao_gerente_mensal,
                                comissao_gerente,
                                comissao_seguradora,
+                               carencia_exame_mensal,
+                               carencia_consulta_mensal,
+                               carencia_especialidade_mensal,
                                carencia_exame, 
                                carencia_consulta, 
+                               conta_id, 
                                carencia_especialidade, 
                                valoradcional,
                                parcelas');
@@ -368,6 +389,10 @@ class formapagamento_model extends Model {
             $this->_carencia_exame = $return[0]->carencia_exame;
             $this->_carencia_consulta = $return[0]->carencia_consulta;
             $this->_carencia_especialidade = $return[0]->carencia_especialidade;
+            $this->_carencia_exame_mensal = $return[0]->carencia_exame_mensal;
+            $this->_carencia_consulta_mensal = $return[0]->carencia_consulta_mensal;
+            $this->_carencia_especialidade_mensal = $return[0]->carencia_especialidade_mensal;
+            $this->_conta_id = $return[0]->conta_id;
             $this->_valor1 = $return[0]->valor1;
             $this->_valor5 = $return[0]->valor5;
             $this->_valor6 = $return[0]->valor6;

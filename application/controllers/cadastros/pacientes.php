@@ -44,6 +44,15 @@ class pacientes extends BaseController {
         $this->loadView('cadastros/paciente-ficha_1', $data);
     }
 
+    function novodependente() {
+
+        $data['idade'] = 0;
+        $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
+        $data['listaconvenio'] = $this->paciente->listaconvenio();
+        $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $this->loadView('cadastros/paciente-fichadependente_1', $data);
+    }
+
     function novo2() {
 
         $data['idade'] = 0;
@@ -290,7 +299,7 @@ class pacientes extends BaseController {
         $obj_paciente = new paciente_model($paciente_id);
         $data['obj'] = $obj_paciente;
         $data['idade'] = 1;
-        
+
         $this->loadView('cadastros/paciente-ficha_2', $data);
     }
 
@@ -310,23 +319,32 @@ class pacientes extends BaseController {
     }
 
     function gravar() {
- 
 
-            if ($paciente_id = $this->paciente->gravar()) {
-                $data['mensagem'] = 'Paciente gravado com sucesso';
-            } else {
-                $data['mensagem'] = 'Erro ao gravar paciente';
-            }
-            $this->session->set_flashdata('message', $data['mensagem']);
-            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
+
+        if ($paciente_id = $this->paciente->gravar()) {
+            $data['mensagem'] = 'Paciente gravado com sucesso';
+        } else {
+            $data['mensagem'] = 'Erro ao gravar paciente';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
     }
 
     function gravardocumentos() {
 
-            $paciente_id = $this->paciente->gravardocumentos();
+        $paciente_id = $this->paciente->gravardocumentos();
 
-            redirect(base_url() . "cadastros/pacientes/carregardocumentos/$paciente_id");
+        redirect(base_url() . "cadastros/pacientes/carregardocumentos/$paciente_id");
+    }
+    
+    function gravardependente() {
 
+        $paciente_id = $this->paciente->gravardependente();
+//        var_dump($paciente_id); die;
+        $this->paciente->gravardependente2($paciente_id);
+//        var_dump($paciente_id); die;
+
+        redirect(base_url() . "cadastros/pacientes/carregardocumentos/$paciente_id");
     }
 
     function gravar2() {

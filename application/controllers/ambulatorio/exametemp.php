@@ -479,7 +479,7 @@ class Exametemp extends BaseController {
         } else {
             $dependente = false;
         }
-        
+
         if ($dependente == true) {
             $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
             $paciente_id = $retorno[0]->paciente_id;
@@ -502,17 +502,35 @@ class Exametemp extends BaseController {
         $carencia_exame = $carencia[0]->carencia_exame;
         $carencia_consulta = $carencia[0]->carencia_consulta;
         $carencia_especialidade = $carencia[0]->carencia_especialidade;
+        $carencia_exame_mensal = $carencia[0]->carencia_exame_mensal;
+        $carencia_consulta_mensal = $carencia[0]->carencia_consulta_mensal;
+        $carencia_especialidade_mensal = $carencia[0]->carencia_especialidade_mensal;
 
         // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
         if ($grupo == 'EXAME') {
             $carencia = (int) $carencia_exame;
+            $carencia_mensal = $carencia_exame_mensal;
         } elseif ($grupo == 'CONSULTA') {
             $carencia = (int) $carencia_consulta;
+            $carencia_mensal = $carencia_consulta_mensal;
         } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
             $carencia = (int) $carencia_especialidade;
+            $carencia_mensal = $carencia_especialidade_mensal;
         }
-        // 
 
+//        var_dump($carencia_mensal); die;
+        $parcelas_mensal = $this->guia->listarparcelaspacientemensal($paciente_id);
+        if ($carencia_mensal == 't') {
+            $listaratendimentomensal = $this->guia->listaratendimentoparceiromensal($paciente_titular_id, $grupo);
+//            var_dump($listaratendimentomensal);
+//            die;
+
+            if (count($listaratendimentomensal) == 0) {
+                $carencia_mensal_liberada = 't';
+            } else {
+                $carencia_mensal_liberada = 'f';
+            }
+        }
         $dias_parcela = 30 * count($parcelas);
         $dias_atendimento = $carencia * count($listaratendimento);
         // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
@@ -529,8 +547,26 @@ class Exametemp extends BaseController {
         // o sistema vai gravar. 
         //
         //
-        if (($dias_parcela - $dias_atendimento) >= $carencia) {
-            // Realiza a gravação da consulta caso o teste seja verdadeiro 
+        if ($carencia_mensal == 't') {
+            if ($carencia_mensal_liberada == 't') {
+                $carencia_liberada = 't';
+            } else {
+                $carencia_liberada = 'f';
+            }
+        } else {
+            if (($dias_parcela - $dias_atendimento) >= $carencia) {
+                // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
+                // Assim ele vai ter que pagar, porem, com um descontro cadastrado já como o valor do procedimento na clinica
+                $carencia_liberada = 't';
+            } else {
+                $carencia_liberada = 'f';
+            }
+        }
+
+
+
+
+        if (count($parcelas_mensal) > 0) {
             if ($_POST['nascimento'] != '') {
 //                var_dump($_POST['nascimento']); die;
                 $nascimento = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['nascimento'])));
@@ -589,7 +625,7 @@ class Exametemp extends BaseController {
 //                var_dump($paciente_parceiro_id);
 //                die;
                 if ($consultas != ' 0') {
-                    $gravaratendimento = $this->guia->gravaratendimentoparceiro($parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data, $grupo, $paciente_titular_id);
+                    $gravaratendimento = $this->guia->gravaratendimentoparceiro($parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data, $grupo, $paciente_titular_id, $carencia_liberada);
                     echo '<html>
         <meta charset = "UTF-8">
         <script type="text/javascript">
@@ -618,12 +654,14 @@ class Exametemp extends BaseController {
 //            $data['medico'] = $this->exametemp->listarmedicoconsulta();
 //            $paciente_id = $this->exametemp->gravarpacienteconsultas($agenda_exames_id);
 //            redirect(base_url() . "ambulatorio/exame/listarmultifuncaoconsulta");
+//        die;
+                // DEFININDO OS PARAMETROS PARA MANDAR NA URL
             }
         } else {
             echo '<html>
         <meta charset = "UTF-8">
         <script type="text/javascript">
-        alert("Erro ao gravar atendimento. Cliente possui pendências de pagamento");
+        alert("Erro ao gravar consulta. Problemas de pagamento no cliente");
         window.onunload = fechaEstaAtualizaAntiga;
         function fechaEstaAtualizaAntiga() {
             window.opener.location.reload();
@@ -632,9 +670,7 @@ class Exametemp extends BaseController {
             </script>
             </html>';
         }
-
-//        die;
-        // DEFININDO OS PARAMETROS PARA MANDAR NA URL
+        // Realiza a gravação da consulta caso o teste seja verdadeiro 
     }
 
     function gravarpacientefisioterapiatemp($agenda_exames_id) {
@@ -881,4 +917,5 @@ class Exametemp extends BaseController {
 }
 
 /* End of file welcome.php */
-/* Location: ./system/application/controllers/welcome.php */
+    /* Location: ./system/application/controllers/welcome.php */
+    
