@@ -157,6 +157,7 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
+
     function listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id) {
         $this->db->select('invoice_id');
         $this->db->from('tb_paciente_contrato_parcelas_iugu cp');
@@ -323,6 +324,25 @@ class paciente_model extends BaseModel {
     function gravar() {
 
         try {
+            if ($_POST['txtcbo'] != $_POST['txtcbohidden']) {
+                $this->db->select('cbo_ocupacao_id');
+                $this->db->from('tb_cbo_ocupacao');
+                $this->db->orderby('cbo_ocupacao_id desc');
+                $this->db->limit(1);
+                $ultimaprofissao = $this->db->get()->result();
+//                var_dump($ultimaprofissao); die;
+                $last_id = $ultimaprofissao[0]->cbo_ocupacao_id + 1;
+
+                $this->db->set('cbo_ocupacao_id', $last_id);
+                $this->db->set('descricao', $_POST['txtcbo']);
+                $this->db->insert('tb_cbo_ocupacao');
+                $ocupacao_id = $last_id;
+
+                $this->db->set('profissao', $ocupacao_id);
+            } elseif ($_POST['txtcboID'] != "") {
+                $this->db->set('profissao', $_POST['txtcboID']);
+            }
+
             $this->db->set('nome', $_POST['nome']);
 //            $nascimento = $_POST['nascimento'];
             if ($_POST['nascimento'] != '') {
@@ -353,9 +373,12 @@ class paciente_model extends BaseModel {
             if ($_POST['municipio_id'] != '') {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
             }
-            if ($_POST['txtcboID'] != '') {
-                $this->db->set('profissao', $_POST['txtcboID']);
-            }
+
+
+
+//            if ($_POST['txtcboID'] != '') {
+//                $this->db->set('profissao', $_POST['txtcboID']);
+//            }
             $this->db->set('cep', $_POST['cep']);
 
             if ($_POST['cpf'] != '') {
@@ -427,6 +450,25 @@ class paciente_model extends BaseModel {
     function gravardocumentos() {
 
         try {
+            if ($_POST['txtcboID'] == "") {
+                $this->db->select('cbo_ocupacao_id');
+                $this->db->from('tb_cbo_ocupacao');
+                $this->db->orderby('cbo_ocupacao_id desc');
+                $this->db->limit(1);
+                $ultimaprofissao = $this->db->get()->result();
+//                var_dump($ultimaprofissao); die;
+                $last_id = $ultimaprofissao[0]->cbo_ocupacao_id + 1;
+
+                $this->db->set('cbo_ocupacao_id', $last_id);
+                $this->db->set('descricao', $_POST['txtcbo']);
+                $this->db->insert('tb_cbo_ocupacao');
+                $ocupacao_id = $last_id;
+
+                $this->db->set('profissao', $ocupacao_id);
+            } elseif ($_POST['txtcboID'] != "") {
+                $this->db->set('profissao', $_POST['txtcboID']);
+            }
+
             $this->db->set('nome', $_POST['nome']);
 //            $nascimento = $_POST['nascimento'];
             if ($_POST['nascimento'] != '') {
@@ -460,9 +502,12 @@ class paciente_model extends BaseModel {
             if ($_POST['municipio_id'] != '') {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
             }
-            if ($_POST['txtcboID'] != '') {
-                $this->db->set('profissao', $_POST['txtcboID']);
-            }
+
+
+
+//            if ($_POST['txtcboID'] != '') {
+//                $this->db->set('profissao', $_POST['txtcboID']);
+//            }
             $this->db->set('cep', $_POST['cep']);
 
             $horario = date("Y-m-d H:i:s");
@@ -637,11 +682,15 @@ class paciente_model extends BaseModel {
         if ((int) $_POST['vencimentoparcela'] < 10) {
             $dia = "0" . $_POST['vencimentoparcela'];
         }
-        $data_receber = date("Y-m-$dia", strtotime(str_replace("/", "-", $_POST['adesao'])));
-        if ($data_receber > date("Y-m-d")) {
+
+        $data_post = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['adesao'])));
+        $data_receber = date("Y-m-$dia", strtotime($data_post));
+//        echo '<pre>';
+//        var_dump($data_receber);
+//        die;
+        if ($data_receber < date("Y-m-d")) {
             $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
         }
-//        var_dump($_POST); die;
 
         $this->db->set('razao_social', $_POST['nome']);
         $this->db->set('cep', $_POST['cep']);
