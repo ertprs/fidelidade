@@ -124,23 +124,7 @@
                 </select>
             </div>
 
-            <div>
-                <label>Situacao</label>
-                <select disabled="" name="situacao" id="situacao" class="size2">
-                    <option value="" <?
-                    if (@$obj->_situacao == ""):echo 'selected';
-                    endif;
-                    ?>>Selecione</option>
-                    <option value="Titular" <?
-                    if (@$obj->_situacao == "Titular"):echo 'selected';
-                    endif;
-                    ?>>Titular</option>
-                    <option value="Dependente" <?
-                    if (@$obj->_situacao == "Dependente"):echo 'selected';
-                    endif;
-                    ?>>Dependente</option>
-                </select>
-            </div>
+            
             <div>
                 <label>Plano *</label>
 
@@ -149,16 +133,29 @@
                     <?php
                     $planos = $this->formapagamento->listarforma();
                     foreach ($planos as $itens) {
-
                         ?>
-                    <option   value =<?php echo $itens->forma_pagamento_id; ?> <?
-                        if (@$obj->_plano_id == $itens->forma_pagamento_id):echo 'selected';
-                        endif;
+                        <option   value =<?php echo $itens->forma_pagamento_id; ?> <?
+                    if (@$obj->_plano_id == $itens->forma_pagamento_id):echo 'selected';
+                    endif;
                         ?>><?php echo $itens->nome; ?></option>
-                    
+
                         <?php
                     }
                     ?> 
+                </select>
+            </div>
+            <div>
+                <label>Situacao</label>
+                <input  name="situacao" id="situacao" class="texto03" readonly value="<?=@$obj->_situacao?>">
+                   
+            </div>
+            <div>
+                <label>Pessoa Jurídica</label>
+
+                <select name="pessoajuridica" id="pessoajuridica" class="size2" required="true">
+                    <option value="NAO" <?if(@$obj->_pessoa_juridica == 'f'){echo 'selected';}?>>NÃO</option>
+                    <option value="SIM" <?if(@$obj->_pessoa_juridica == 't'){echo 'selected';}?>>SIM</option>
+
                 </select>
             </div>
 
@@ -169,8 +166,8 @@
 
                 <select name="estado_civil_id" id="txtEstadoCivil" class="size2" selected="<?= @$obj->_estado_civil; ?>">
                     <option value=0 <?
-                              if (@$obj->_estado_civil == 0):echo 'selected';
-                              endif;
+                    if (@$obj->_estado_civil == 0):echo 'selected';
+                    endif;
                     ?>>Selecione</option>
                     <option value=1 <?
                     if (@$obj->_estado_civil == 1):echo 'selected';
@@ -202,9 +199,9 @@
 
 
                 <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" />
-<?php
-if (@$obj->_cpfresp == "t") {
-    ?>
+                <?php
+                if (@$obj->_cpfresp == "t") {
+                    ?>
                     <input type="checkbox" name="cpfresp" checked ="true" />CPF Responsavel
                     <?php
                 } else {
@@ -262,6 +259,7 @@ if (@$obj->_cpfresp == "t") {
                     <label>Celular *</label>
                     <input type="text" id="txtCelular" class="texto02" name="celular" alt="phone" value="<?= @$obj->_celular; ?>" required/>
                 </div>
+
                 <div class="bt_linkm">
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>
@@ -330,52 +328,52 @@ if (@$obj->_cpfresp == "t") {
 //                        });
 //                    });
 
-                    $(function () {
-                        $("#txtcbo").autocomplete({
-                            source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",
-                            minLength: 3,
-                            focus: function (event, ui) {
-                                $("#txtcbo").val(ui.item.label);
-                                return false;
-                            },
-                            select: function (event, ui) {
-                                $("#txtcbo").val(ui.item.value);
-                                $("#txtcboID").val(ui.item.id);
-                                return false;
-                            }
+                        $(function () {
+                            $("#txtcbo").autocomplete({
+                                source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",
+                                minLength: 3,
+                                focus: function (event, ui) {
+                                    $("#txtcbo").val(ui.item.label);
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    $("#txtcbo").val(ui.item.value);
+                                    $("#txtcboID").val(ui.item.id);
+                                    return false;
+                                }
+                            });
                         });
-                    });
 
-                    $(function () {
-                        $("#txtCidade").autocomplete({
-                            source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
-                            minLength: 3,
-                            focus: function (event, ui) {
-                                $("#txtCidade").val(ui.item.label);
-                                return false;
-                            },
-                            select: function (event, ui) {
-                                $("#txtCidade").val(ui.item.value);
-                                $("#txtCidadeID").val(ui.item.id);
-                                return false;
-                            }
+                        $(function () {
+                            $("#txtCidade").autocomplete({
+                                source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
+                                minLength: 3,
+                                focus: function (event, ui) {
+                                    $("#txtCidade").val(ui.item.label);
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    $("#txtCidade").val(ui.item.value);
+                                    $("#txtCidadeID").val(ui.item.id);
+                                    return false;
+                                }
+                            });
                         });
-                    });
-                    $(function () {
-                        $("#txtEstado").autocomplete({
-                            source: "<?= base_url() ?>index.php?c=autocomplete&m=estado",
-                            minLength: 2,
-                            focus: function (event, ui) {
-                                $("#txtEstado").val(ui.item.label);
-                                return false;
-                            },
-                            select: function (event, ui) {
-                                $("#txtEstado").val(ui.item.value);
-                                $("#txtEstadoID").val(ui.item.id);
-                                return false;
-                            }
+                        $(function () {
+                            $("#txtEstado").autocomplete({
+                                source: "<?= base_url() ?>index.php?c=autocomplete&m=estado",
+                                minLength: 2,
+                                focus: function (event, ui) {
+                                    $("#txtEstado").val(ui.item.label);
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    $("#txtEstado").val(ui.item.value);
+                                    $("#txtEstadoID").val(ui.item.id);
+                                    return false;
+                                }
+                            });
                         });
-                    });
 
 
 

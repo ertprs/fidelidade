@@ -167,7 +167,7 @@
                         if (@$obj->_vendedor == $item->operador_id):echo 'selected';
                         endif;
                         ?>><?php echo $item->nome; ?></option>
-                        <?php
+                                  <?php
                               }
                               ?> 
                 </select>
@@ -181,29 +181,29 @@
 
                 <select name="estado_civil_id" id="txtEstadoCivil" class="size2" selected="<?= @$obj->_estado_civil; ?>">
                     <option value=0 <?
-                              if (@$obj->_estado_civil == 0):echo 'selected';
-                              endif;
-                              ?>>Selecione</option>
+                    if (@$obj->_estado_civil == 0):echo 'selected';
+                    endif;
+                    ?>>Selecione</option>
                     <option value=1 <?
-                            if (@$obj->_estado_civil == 1):echo 'selected';
-                            endif;
-                            ?>>Solteiro</option>
+                    if (@$obj->_estado_civil == 1):echo 'selected';
+                    endif;
+                    ?>>Solteiro</option>
                     <option value=2 <?
-                            if (@$obj->_estado_civil == 2):echo 'selected';
-                            endif;
-                            ?>>Casado</option>
+                    if (@$obj->_estado_civil == 2):echo 'selected';
+                    endif;
+                    ?>>Casado</option>
                     <option value=3 <?
-                            if (@$obj->_estado_civil == 3):echo 'selected';
-                            endif;
-                            ?>>Divorciado</option>
+                    if (@$obj->_estado_civil == 3):echo 'selected';
+                    endif;
+                    ?>>Divorciado</option>
                     <option value=4 <?
-                            if (@$obj->_estado_civil == 4):echo 'selected';
-                            endif;
-                            ?>>Viuvo</option>
+                    if (@$obj->_estado_civil == 4):echo 'selected';
+                    endif;
+                    ?>>Viuvo</option>
                     <option value=5 <?
-                            if (@$obj->_estado_civil == 5):echo 'selected';
-                            endif;
-                            ?>>Outros</option>
+                    if (@$obj->_estado_civil == 5):echo 'selected';
+                    endif;
+                    ?>>Outros</option>
                 </select>
             </div>
         </fieldset>
@@ -214,9 +214,9 @@
 
 
                 <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" readonly/>
-<?php
-if (@$obj->_cpfresp == "t") {
-    ?>
+                <?php
+                if (@$obj->_cpfresp == "t") {
+                    ?>
                     <input type="checkbox" name="cpfresp" checked ="true" readonly/>CPF Responsavel
                     <?php
                 } else {
@@ -281,11 +281,11 @@ if (@$obj->_cpfresp == "t") {
         <fieldset>
             <legend>Forma de pagamento</legend>
             <div>
-                <input type="radio" name="checkboxvalor1" value="<?= "01" . "-" . $forma_pagamento[0]->valor1; ?>"/>1 x <?= $forma_pagamento[0]->valor1; ?><br>
-                <input type="radio" name="checkboxvalor1"  value="<?= "05" . "-" . $forma_pagamento[0]->valor5; ?>"/>5 x <?= $forma_pagamento[0]->valor5; ?><br>
-                <input type="radio" name="checkboxvalor1"  value="<?= "06" . "-" . $forma_pagamento[0]->valor6; ?>"/>6 x <?= $forma_pagamento[0]->valor6; ?><br>
-                <input type="radio" name="checkboxvalor1"  value="<?= "10" . "-" . $forma_pagamento[0]->valor10; ?>"/>10 x <?= $forma_pagamento[0]->valor10; ?><br>
-                <input type="radio" name="checkboxvalor1"  value="<?= "12" . "-" . $forma_pagamento[0]->valor12; ?>"/>12 x <?= $forma_pagamento[0]->valor12; ?><br>
+                <input required="" type="radio" name="checkboxvalor1" value="<?= "01" . "-" . $forma_pagamento[0]->valor1; ?>"/>1 x <?= $forma_pagamento[0]->valor1; ?><br>
+                <input required type="radio" name="checkboxvalor1"  value="<?= "05" . "-" . $forma_pagamento[0]->valor5; ?>"/>5 x <?= $forma_pagamento[0]->valor5; ?><br>
+                <input required type="radio" name="checkboxvalor1"  value="<?= "06" . "-" . $forma_pagamento[0]->valor6; ?>"/>6 x <?= $forma_pagamento[0]->valor6; ?><br>
+                <input required type="radio" name="checkboxvalor1"  value="<?= "10" . "-" . $forma_pagamento[0]->valor10; ?>"/>10 x <?= $forma_pagamento[0]->valor10; ?><br>
+                <input required type="radio" name="checkboxvalor1"  value="<?= "12" . "-" . $forma_pagamento[0]->valor12; ?>"/>12 x <?= $forma_pagamento[0]->valor12; ?><br>
             </div>
             <div>
                 <label>Data Ades&atilde;o</label>
@@ -293,7 +293,16 @@ if (@$obj->_cpfresp == "t") {
             </div>
             <div>
                 <label>Dia Vencimento Parcela</label>
-                <input type="number" name="vencimentoparcela" id="vencimentoparcela" required max="30" class="texto02" required />
+                <input type="number" name="vencimentoparcela" id="vencimentoparcela" required max="30" min="1" class="texto02" required />
+            </div>
+            <div>
+                <label>Pessoa Jurídica</label>
+
+                <select name="pessoajuridica" id="pessoajuridica" class="size2" required="true">
+                    <option value="NAO" <?if(@$obj->_pessoa_juridica == 'f'){echo 'selected';}?>>NÃO</option>
+                    <option value="SIM" <?if(@$obj->_pessoa_juridica == 't'){echo 'selected';}?>>SIM</option>
+
+                </select>
             </div>
         </fieldset>
         <button type="submit">Fechamento</button>
@@ -322,27 +331,7 @@ if (@$obj->_cpfresp == "t") {
                             });
                         });
 
-                        $(document).ready(function () {
-                            jQuery('#form_paciente').validate({
-                                rules: {
-                                    checkboxvalor1: {
-                                        required: true
-                                    },
-                                    adesao: {
-                                        required: true
-                                    }
 
-                                },
-                                messages: {
-                                    checkboxvalor1: {
-                                        required: "*"
-                                    },
-                                    adesao: {
-                                        required: "*"
-                                    }
-                                }
-                            });
-                        });
 
                         $(function () {
                             $("#txtcbo").autocomplete({

@@ -21,7 +21,7 @@ class login_model extends Model {
         $this->db->where('o.ativo = true');
         $this->db->where('p.ativo = true');
         $return = $this->db->get()->result();
-
+        
         $this->db->select('empresa_id,
                             nome,
                             internacao

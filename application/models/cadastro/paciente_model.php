@@ -202,13 +202,17 @@ class paciente_model extends BaseModel {
     private function instanciar($paciente_id) {
         if ($paciente_id != 0) {
 
-            $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, p.vendedor, c.nome as cidade_desc,c.municipio_id as cidade_cod');
+            $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, p.vendedor, c.nome as cidade_desc,c.municipio_id as cidade_cod,
+                pcd.pessoa_juridica
+
+                ');
             $this->db->from('tb_paciente p');
             $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
             $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
             $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
             $this->db->join('tb_cbo_ocupacao cbo', 'cbo.cbo_ocupacao_id = p.profissao', 'left');
             $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+            $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
             $this->db->where("p.paciente_id", $paciente_id);
 //            $this->db->where("pc.ativo", 't');
             $query = $this->db->get();
@@ -228,6 +232,7 @@ class paciente_model extends BaseModel {
             $this->_titulo_eleitor = $return[0]->titulo_eleitor;
             $this->_raca_cor = $return[0]->raca_cor;
             $this->_sexo = $return[0]->sexo;
+            $this->_pessoa_juridica = $return[0]->pessoa_juridica;
             $this->_estado_civil = $return[0]->estado_civil_id;
             $this->_nomepai = $return[0]->nome_pai;
             $this->_nomemae = $return[0]->nome_mae;
@@ -438,6 +443,15 @@ class paciente_model extends BaseModel {
                 $this->db->set('operador_atualizacao', $operador_id);
                 $this->db->where('paciente_id', $paciente_id);
                 $this->db->update('tb_paciente');
+//                var_dump($_POST); die;
+                if ($_POST['pessoajuridica'] == 'SIM') {
+                    $this->db->set('pessoa_juridica', 't');
+                }
+
+                $this->db->set('data_atualizacao', $data);
+                $this->db->set('operador_atualizacao', $operador_id);
+                $this->db->where('paciente_id', $paciente_id);
+                $this->db->update('tb_paciente_contrato_dependente');
             }
 
 
@@ -660,6 +674,7 @@ class paciente_model extends BaseModel {
     }
 
     function gravar3() {
+//        die;
         $horario = date("Y-m-d H:i:s");
         $operador_id = $this->session->userdata('operador_id');
 
@@ -672,7 +687,7 @@ class paciente_model extends BaseModel {
         $return = $query->result();
 
         $paciente_contrato_id = $return[0]->paciente_contrato_id;
-        $ajuste = $return[0]->ajuste;
+//        $ajuste = $return[0]->ajuste;
         $ajuste = substr($_POST['checkboxvalor1'], 3, 5);
         $parcelas = substr($_POST['checkboxvalor1'], 0, 2);
 
@@ -688,10 +703,23 @@ class paciente_model extends BaseModel {
 //        echo '<pre>';
 //        var_dump($data_receber);
 //        die;
-        if ($data_receber < date("Y-m-d")) {
-            $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+        if ($data_receber < $data_post) {
+            if (date("d", strtotime($data_receber)) == '30') {
+                $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
+                $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                $b = 2;
+            } elseif (date("d", strtotime($data_receber)) == '29') {
+                $data_receber = date("Y-m-d", strtotime("-1 days", strtotime($data_receber)));
+                $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                $b = 1;
+            } else {
+                $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                $b = 0;
+            }
         }
-
+//        echo '<pre>';
+//        var_dump($data_receber);
+//        die;
         $this->db->set('razao_social', $_POST['nome']);
         $this->db->set('cep', $_POST['cep']);
         if ($_POST['cpf'] != '') {
@@ -719,8 +747,8 @@ class paciente_model extends BaseModel {
         $financeiro_credor_devedor_id = $this->db->insert_id();
 
 
-
-//        var_dump($data_receber); die;
+//        echo '<pre>';
+//        var_dump($data_receber);
         for ($i = 1; $i <= $parcelas; $i++) {
 
             $this->db->set('valor', $ajuste);
@@ -732,9 +760,56 @@ class paciente_model extends BaseModel {
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
             //$mes++;
-            $data_receber = date("Y-m-d", strtotime("+$mes month", strtotime($data_receber)));
-        }
+            if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas) {
 
+
+                if (date("d", strtotime($data_receber)) == '30') {
+
+
+                    $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
+                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                    $this->db->set('valor', $ajuste);
+                    $this->db->set('parcela', $i);
+                    $this->db->set('paciente_contrato_id', $paciente_contrato_id);
+                    $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
+                    $this->db->set('data', $data_receber);
+                    $this->db->set('data_cadastro', $horario);
+                    $this->db->set('operador_cadastro', $operador_id);
+                    $this->db->insert('tb_paciente_contrato_parcelas');
+
+                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                    $data_receber = date("Y-m-d", strtotime("+2 days", strtotime($data_receber)));
+                } elseif (date("d", strtotime($data_receber)) == '29') {
+                    $data_receber = date("Y-m-d", strtotime("-1 days", strtotime($data_receber)));
+                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+
+
+                    $this->db->set('valor', $ajuste);
+                    $this->db->set('parcela', $i);
+                    $this->db->set('paciente_contrato_id', $paciente_contrato_id);
+                    $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
+                    $this->db->set('data', $data_receber);
+                    $this->db->set('data_cadastro', $horario);
+                    $this->db->set('operador_cadastro', $operador_id);
+                    $this->db->insert('tb_paciente_contrato_parcelas');
+
+
+                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                    $data_receber = date("Y-m-d", strtotime("+1 days", strtotime($data_receber)));
+                }
+                $i++;
+            } else {
+
+                $data_receber = date("Y-m-d", strtotime("+$mes month", strtotime($data_receber)));
+                if ($b > 0) {
+                    $data_receber = date("Y-m-d", strtotime("+$b days", strtotime($data_receber)));
+                    $b = 0;
+                }
+            }
+        }
+        if ($_POST['pessoajuridica'] == 'SIM') {
+            $this->db->set('pessoa_juridica', 't');
+        }
         $this->db->set('paciente_id', $_POST['paciente_id']);
         $this->db->set('paciente_contrato_id', $paciente_contrato_id);
         $this->db->set('data_cadastro', $horario);
@@ -770,6 +845,7 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente_contrato_dependente');
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
         $this->db->where('ativo', 't');
+        $this->db->where('pessoa_juridica', 'f');
         $query = $this->db->get();
         $resultado = $query->result();
 
@@ -829,6 +905,7 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente_contrato_dependente');
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
         $this->db->where('ativo', 't');
+        $this->db->where('pessoa_juridica', 'f');
         $query = $this->db->get();
         $resultado = $query->result();
 

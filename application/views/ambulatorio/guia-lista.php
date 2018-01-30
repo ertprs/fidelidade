@@ -98,7 +98,7 @@ if (count($exames) > 0) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
                             ?>
                             <tr>
-                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $paciente['0']->paciente_id; ?>/<?= $item->paciente_contrato_id ?>');"><?= $item->paciente_contrato_id . "-" . $item->plano; ?></td>
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><a href="<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $paciente['0']->paciente_id; ?>/<?= $item->paciente_contrato_id ?>" target="_blank"><?= $item->paciente_contrato_id . "-" . $item->plano; ?></a></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="50px;"><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
                                 <? if ($item->ativo == 't') { ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="50px;">Ativo</td>
@@ -155,7 +155,7 @@ if (count($exames) > 0) {
                         <td class="<?php echo $estilo_linha; ?>" width="50px;">       
                             <div class="bt_link_new">
                                 <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . $titular['0']->paciente_contrato_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">
-                                    Boleto
+                                    Carteira
                                 </a>
                             </div>
                         </td>

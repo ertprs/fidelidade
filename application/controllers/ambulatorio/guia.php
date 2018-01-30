@@ -559,7 +559,7 @@ class Guia extends BaseController {
     }
 
     function excluir($paciente_id, $contrato_id) {
-        if ($this->guia->excluir($paciente_id)) {
+        if ($this->guia->excluir($paciente_id, $contrato_id)) {
             $mensagem = 'Sucesso ao excluir a dependente';
         } else {
             $mensagem = 'Erro ao excluir a dependente. Opera&ccedil;&atilde;o cancelada.';

@@ -78,6 +78,7 @@
                         <th class="tabela_header">Nome da Mãe</th>
                         <th class="tabela_header" width="100px;">Nascimento</th>
                         <th class="tabela_header" width="100px;">Telefone</th>
+                        <th class="tabela_header" width="100px;">Situação</th>
                         <th class="tabela_header" colspan="4"  width="70px;"><center>A&ccedil;&otilde;es</center></th>
 
                 </tr>
@@ -109,6 +110,7 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo $item->nome_mae; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo substr($item->nascimento, 8, 2) . '/' . substr($item->nascimento, 5, 2) . '/' . substr($item->nascimento, 0, 4); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo $telefone; ?></td>
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= $item->situacao; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="50px;" ><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/pacientes/carregar/<?= $item->paciente_id ?>">
                                             <b>Editar</b>

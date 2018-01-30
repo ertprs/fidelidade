@@ -147,3 +147,5 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN financeiro_credor_dev
 -- 15/01/2018
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN conta_id integer;
 ALTER TABLE ponto.tb_paciente ADD COLUMN grau_parentesco text;
+-- 30/01/2018
+ALTER TABLE ponto.tb_paciente_contrato_dependente ADD COLUMN pessoa_juridica boolean DEFAULT false;
