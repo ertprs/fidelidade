@@ -276,13 +276,20 @@ class formapagamento_model extends Model {
             }
 //            var_dump($_POST); die;
 
-            
+
             $this->db->set('valor1', str_replace(",", ".", str_replace(".", "", $_POST['valor1'])));
             $this->db->set('valor5', str_replace(",", ".", str_replace(".", "", $_POST['valor5'])));
             $this->db->set('valor6', str_replace(",", ".", str_replace(".", "", $_POST['valor6'])));
             $this->db->set('valor10', str_replace(",", ".", str_replace(".", "", $_POST['valor10'])));
             $this->db->set('valor12', str_replace(",", ".", str_replace(".", "", $_POST['valor12'])));
 
+            if (isset($_POST['taxa_adesao'])) {
+                $this->db->set('taxa_adesao', 't');
+            } else {
+                $this->db->set('taxa_adesao', 'f');
+            }
+
+            $this->db->set('consulta_avulsa', str_replace(",", ".", str_replace(".", "", $_POST['consulta_avulsa'])));
             $this->db->set('comissao', str_replace(",", ".", str_replace(".", "", $_POST['comissao'])));
             $this->db->set('comissao_vendedor_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_mensal'])));
             $this->db->set('comissao_vendedor', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor'])));
@@ -366,6 +373,8 @@ class formapagamento_model extends Model {
                                valor10, 
                                valor12,
                                comissao,
+                               taxa_adesao,
+                               consulta_avulsa,
                                comissao_vendedor_mensal,
                                comissao_vendedor,
                                comissao_gerente_mensal,
@@ -386,6 +395,8 @@ class formapagamento_model extends Model {
             $return = $query->result();
             $this->_forma_pagamento_id = $forma_pagamento_id;
             $this->_nome = $return[0]->nome;
+            $this->_taxa_adesao = $return[0]->taxa_adesao;
+            $this->_consulta_avulsa = $return[0]->consulta_avulsa;
             $this->_carencia_exame = $return[0]->carencia_exame;
             $this->_carencia_consulta = $return[0]->carencia_consulta;
             $this->_carencia_especialidade = $return[0]->carencia_especialidade;

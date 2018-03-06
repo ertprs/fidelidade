@@ -44,13 +44,14 @@ class Guia extends BaseController {
     function pesquisar($paciente_id) {
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
+//        echo '<pre>';
 //        var_dump($contrato_ativo); die;
         if (count($contrato_ativo) > 0) {
             $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
-            $data_contrato = $contrato_ativo[0]->data_cadastro;
-            $data_atual = date("Y-m-d H:i:s");
-            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
-            if ($data_atual > $data_contrato_year) {
+            $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
+            $data_atual = date("Y-m-d");
+//            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
+            if ($data_atual > $data_contrato) {
                 $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
             }
         }
@@ -582,6 +583,114 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
 
+    function confirmarpagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
+
+//        var_dump($valor); die;
+        if ($this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $contrato_id)) {
+            $mensagem = 'Sucesso ao confirmar pagamento';
+        } else {
+            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+    }
+
+    function alterardatapagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+//        var_dump($data['pagamento']); die;
+        $this->load->View('ambulatorio/alterardatapagamento-form', $data);
+    }
+
+    function gravaralterardatapagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+
+        $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
+
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        if ($key != '') {
+            $cliente = $this->paciente->listardados($paciente_id);
+            $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+            $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+            $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+            $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+
+            $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+            $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
+            $valor = $pagamento[0]->valor * 100;
+            $data = date('d/m/Y', strtotime($pagamento[0]->data));
+
+            $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
+
+//            var_dump($pagamento_iugu);
+//            die;
+            $this->guia->cancelarpagamentoiugu($paciente_contrato_parcelas_id);
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+            if ($pagamento_iugu[0]->invoice_id != '') {
+                $invoice = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+                $invoice->cancel();
+
+
+
+
+
+                $gerar = Iugu_Invoice::create(Array(
+                            "email" => $cliente[0]->cns,
+                            "due_date" => $data,
+                            "items" => Array(
+                                Array(
+                                    "description" => $description,
+                                    "quantity" => "1",
+                                    "price_cents" => $valor
+                                )
+                            ),
+                            "payer" => Array(
+                                "cpf_cnpj" => $cliente[0]->cpf,
+                                "name" => $cliente[0]->nome,
+                                "phone_prefix" => $prefixo,
+                                "phone" => $celular_s_prefixo,
+                                "email" => $cliente[0]->cns,
+                                "address" => Array(
+                                    "street" => $cliente[0]->logradouro,
+                                    "number" => $cliente[0]->numero,
+                                    "city" => $cliente[0]->cidade_desc,
+                                    "state" => $codigoUF,
+                                    "district" => $cliente[0]->bairro,
+                                    "country" => "Brasil",
+                                    "zip_code" => $cliente[0]->cep,
+                                    "complement" => $cliente[0]->complemento
+                                )
+                            )
+                ));
+
+                if (count($gerar["errors"]) > 0) {
+                    $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
+//            foreach ($gerar["errors"] as $item) {
+////                echo $item;
+//                
+//            }
+//                echo '<pre>';
+//                var_dump($gerar);
+//                die;
+                } else {
+
+                    $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
+                    $mensagem = 'Data alterada com sucesso';
+                }
+            }
+        }
+
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
     function gerarpagamentoiugu($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 
         $cliente = $this->paciente->listardados($paciente_id);
@@ -609,34 +718,34 @@ class Guia extends BaseController {
         //GERANDO A COBRANÇA
         if (count($pagamento_iugu) == 0) {
 
-        $gerar = Iugu_Invoice::create(Array(
-                    "email" => $cliente[0]->cns,
-                    "due_date" => $data,
-                    "items" => Array(
-                        Array(
-                            "description" => $description,
-                            "quantity" => "1",
-                            "price_cents" => $valor
-                        )
-                    ),
-                    "payer" => Array(
-                        "cpf_cnpj" => $cliente[0]->cpf,
-                        "name" => $cliente[0]->nome,
-                        "phone_prefix" => $prefixo,
-                        "phone" => $celular_s_prefixo,
+            $gerar = Iugu_Invoice::create(Array(
                         "email" => $cliente[0]->cns,
-                        "address" => Array(
-                            "street" => $cliente[0]->logradouro,
-                            "number" => $cliente[0]->numero,
-                            "city" => $cliente[0]->cidade_desc,
-                            "state" => $codigoUF,
-                            "district" => $cliente[0]->bairro,
-                            "country" => "Brasil",
-                            "zip_code" => $cliente[0]->cep,
-                            "complement" => $cliente[0]->complemento
+                        "due_date" => $data,
+                        "items" => Array(
+                            Array(
+                                "description" => $description,
+                                "quantity" => "1",
+                                "price_cents" => $valor
+                            )
+                        ),
+                        "payer" => Array(
+                            "cpf_cnpj" => $cliente[0]->cpf,
+                            "name" => $cliente[0]->nome,
+                            "phone_prefix" => $prefixo,
+                            "phone" => $celular_s_prefixo,
+                            "email" => $cliente[0]->cns,
+                            "address" => Array(
+                                "street" => $cliente[0]->logradouro,
+                                "number" => $cliente[0]->numero,
+                                "city" => $cliente[0]->cidade_desc,
+                                "state" => $codigoUF,
+                                "district" => $cliente[0]->bairro,
+                                "country" => "Brasil",
+                                "zip_code" => $cliente[0]->cep,
+                                "complement" => $cliente[0]->complemento
+                            )
                         )
-                    )
-        ));
+            ));
 
 //        echo '<pre>';
 //        var_dump($gerar);
@@ -647,13 +756,16 @@ class Guia extends BaseController {
 ////                echo $item;
 //                
 //            }
+//                echo '<pre>';
+//                var_dump($gerar);
+//                die;
             } else {
 
                 $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
                 $mensagem = 'Cobrança gerada com sucesso';
             }
-        }else{
-             $mensagem = 'Cobrança já gerada';
+        } else {
+            $mensagem = 'Cobrança já gerada';
         }
 
 //        echo $mensagem;
@@ -662,6 +774,91 @@ class Guia extends BaseController {
         $this->session->set_flashdata('message', $mensagem);
 //        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function gerarpagamentoiuguconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
+
+        $cliente = $this->paciente->listardados($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+        $pagamento = $this->paciente->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoconsultaavulsaiugu($consultas_avulsas_id);
+        $valor = $pagamento[0]->valor * 100;
+        $data = date('d/m/Y', strtotime($pagamento[0]->data));
+//        var_dump($prefixo); 
+//        var_dump($celular_s_prefixo); 
+        $description = 'CONSULTA AVULSA';
+//        echo '<pre>';
+//        var_dump($valor); 
+//        die;
+
+        Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+//        die;
+        //GERANDO A COBRANÇA
+        if ($pagamento_iugu[0]->invoice_id == '') {
+
+            $gerar = Iugu_Invoice::create(Array(
+                        "email" => $cliente[0]->cns,
+                        "due_date" => $data,
+                        "items" => Array(
+                            Array(
+                                "description" => $description,
+                                "quantity" => "1",
+                                "price_cents" => $valor
+                            )
+                        ),
+                        "payer" => Array(
+                            "cpf_cnpj" => $cliente[0]->cpf,
+                            "name" => $cliente[0]->nome,
+                            "phone_prefix" => $prefixo,
+                            "phone" => $celular_s_prefixo,
+                            "email" => $cliente[0]->cns,
+                            "address" => Array(
+                                "street" => $cliente[0]->logradouro,
+                                "number" => $cliente[0]->numero,
+                                "city" => $cliente[0]->cidade_desc,
+                                "state" => $codigoUF,
+                                "district" => $cliente[0]->bairro,
+                                "country" => "Brasil",
+                                "zip_code" => $cliente[0]->cep,
+                                "complement" => $cliente[0]->complemento
+                            )
+                        )
+            ));
+
+//        echo '<pre>';
+//        var_dump($gerar);
+//        die;
+            if (count($gerar["errors"]) > 0) {
+                $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
+//            foreach ($gerar["errors"] as $item) {
+////                echo $item;
+//                
+//            }
+//                echo '<pre>';
+//                var_dump($gerar);
+//                die;
+            } else {
+
+                $gravar = $this->guia->gravarintegracaoiuguconsultaavulsa($gerar["secure_url"], $gerar["id"], $consultas_avulsas_id);
+                $mensagem = 'Cobrança gerada com sucesso';
+            }
+        } else {
+            $mensagem = 'Cobrança já gerada';
+        }
+
+//        echo $mensagem;
+//        die;
+//        $this->session->set_flashdata('message', $mensagem);
+        $this->session->set_flashdata('message', $mensagem);
+//        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
     }
 
     function apagarpagamentoiugu($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
@@ -711,6 +908,19 @@ class Guia extends BaseController {
         $this->session->set_flashdata('message', $mensagem);
 //        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function gravarconsultaavulsa($paciente_id, $contrato_id) {
+        $ambulatorio_guia_id = $this->guia->gravarconsultaavulsa($paciente_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
     }
 
     function gravar($paciente_id) {
@@ -1050,6 +1260,17 @@ class Guia extends BaseController {
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontrato($contrato_id);
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guiapagamento-form', $data);
+    }
+
+    function listarpagamentosconsultaavulsa($paciente_id, $contrato_id) {
+        $data['paciente_id'] = $paciente_id;
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['lista'] = $this->paciente->listardependentes();
+        $data['empresa'] = $this->guia->listarempresa();
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
+//        var_dump($data['listarpagamentoscontrato']); die;
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/guiaconsultaavulsapagamento-form', $data);
     }
 
     function integracaoiugu($paciente_id, $contrato_id) {

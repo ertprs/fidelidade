@@ -304,6 +304,11 @@
 
                 </select>
             </div>
+            <div>
+                <label>Pular Meses</label>
+
+                <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
+            </div>
         </fieldset>
         <button type="submit">Fechamento</button>
         <button type="reset">Limpar</button>

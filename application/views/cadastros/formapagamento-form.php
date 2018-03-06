@@ -32,7 +32,7 @@
                     <dd>
                         <input type="text" name="valor6" class="texto02" id="valor6" alt="decimal" value="<?= @$obj->_valor6; ?>" />
                     </dd>
-                                        <dt>
+                    <dt>
                         <label>Valor 10 vezes</label>
                     </dt>
                     <dd>
@@ -44,7 +44,23 @@
                     <dd>
                         <input type="text" name="valor12" class="texto02" id="valor12" alt="decimal" value="<?= @$obj->_valor12; ?>" />
                     </dd>
-                      <dt>
+                    <dt>
+                        <label>Taxa Adesão</label>
+                    </dt>
+                    <dd>
+                        <?php
+                        if (@$obj->_taxa_adesao == "t") {
+                            ?>
+                            <input type="checkbox" name="taxa_adesao" checked ="true"/>
+                            <?php
+                        } else {
+                            ?>
+                            <input type="checkbox" name="taxa_adesao"  />
+                            <?php
+                        }
+                        ?>
+                    </dd>
+                    <dt>
                         <label>N° Maximo de Clientes</label>
                     </dt>
                     <dd>
@@ -55,6 +71,13 @@
                     </dt>
                     <dd>
                         <input type="text" name="valoradcional" class="texto02" id="valoradcional" alt="decimal" value="<?= @$obj->_valoradcional; ?>" />
+                    </dd>
+
+                    <dt>
+                        <label>Consulta Avulsa</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="consulta_avulsa" class="texto02" id="consulta_avulsa" alt="decimal" value="<?= @$obj->_consulta_avulsa; ?>" />
                     </dd>
                     <dt>
                         <label>Comiss&atilde;o</label>

@@ -27,7 +27,7 @@
                 <td rowspan="3"><img style="width: 150px;" src="<?= base_url() ?>img/dez/soudez.png"></td>
                 <td style="text-align: center;font-family: 'Showcard Gothic';font-size: 15pt;" rowspan="2">CATEGORIA <br> <?=$dependente[0]->contrato?></td>
                 <td style="font-family: 'Aharoni';">NOME</td>
-                <td style="font-family: 'Lucida-Sans-Unicode';background-color: #00AAE7;border-radius: 10px;border-color: #66afe9;border-width: 3px;border:5px solid #67B3FF;"><?= $dependente[0]->paciente ?></td>
+                <td style="font-family: 'Lucida-Sans-Unicode';background-color: #4aa6bf;border-radius: 10px;border-color: #4e95a9;border-width: 3px;border:6px solid #4e95a9;"><?= $dependente[0]->paciente ?></td>
             </tr>
             <tr>
                 <!--<td><img style="width: 120px;" src="<?= base_url() ?>img/dez/soudez.png"></td>-->
@@ -41,7 +41,7 @@
 
                 $monta_cpf = "$parte_um.$parte_dois.$parte_tres-$parte_quatro";
                 ?>
-                <td style="font-weight: bold;font-family: 'Lucida-Sans-Unicode' ;background-color: #00AAE7;border-radius: 10px;border-color: #66afe9;border-width: 3px;border:5px solid #67B3FF;"><?= $monta_cpf ?></td>
+                <td style="font-weight: bold;font-family: 'Lucida-Sans-Unicode' ;background-color: #4aa6bf;border-radius: 10px;border-color: #4e95a9;border-width: 3px;border:6px solid #4e95a9;"><?= $monta_cpf ?></td>
             </tr>
             <tr>
                 <td style="text-align: center;font-family: 'Aharoni';"></td>
@@ -50,10 +50,9 @@
                 <!--<td></td>-->
             </tr>
             <tr>
-                <td style="font-family: 'Lucida-Sans-Unicode';background-color: #00AAE7;border-radius: 15px;text-align: center;border-color: #66afe9;border:5px solid #67B3FF;font-size: 15pt;font-weight: 900" colspan="2">Central  de <br> Atendimento <br>
-                    (85) 3276.1883</td>
+                <td colspan="2"><img style="height:200px;width: 320px" src="../../../img/dez/centro.png"></td>
                 <!--<td></td>-->
-                <td style="background-color: #00AAE7;border-radius: 10px;" colspan="2">
+                <td style="background-color: #4aa6bf;border-radius: 10px;" colspan="2">
                     <?
                     foreach ($dependente as $item) {
                         if ($item->situacao == 'Dependente') {

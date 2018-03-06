@@ -23,6 +23,7 @@
                 <tr>
                     <th class="tabela_header">Nome</th>
                     <th class="tabela_header">Data Prevista</th>
+                    <th class="tabela_header">Situação</th>
                     <th class="tabela_header">Detalhes</th>
 
                 </tr>
@@ -41,6 +42,7 @@
                         $lista = $this->centrocirurgico_m->listarcirurgia($_GET)->orderby('p.nome')->limit($limit, $pagina)->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
+                            $situacao = '';
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
                             ?>
                             <tr>
@@ -53,6 +55,7 @@
                                                             <?$datafinal= $dia . '/' . $mes . '/' . $ano . $hora; ?>
                                     
                                                             <?php echo$datafinal?></strong></td>
+                                <td class="<?php echo $estilo_linha; ?>"><?php echo $situacao; ?></td>    
                                 <td class="<?php echo $estilo_linha; ?>" width="30px;"><div class="bt_link">
                                             <a  href="<?= base_url() ?>centrocirurgico/centrocirurgico/impressaoorcamento/<?= $item->solicitacao_cirurgia_id; ?>">Imprimir</a></div>
                                 </td>

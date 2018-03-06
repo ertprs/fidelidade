@@ -149,3 +149,47 @@ ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN conta_id integer;
 ALTER TABLE ponto.tb_paciente ADD COLUMN grau_parentesco text;
 -- 30/01/2018
 ALTER TABLE ponto.tb_paciente_contrato_dependente ADD COLUMN pessoa_juridica boolean DEFAULT false;
+
+-- 02/02/2018
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN consulta_avulsa numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN taxa_adesao boolean DEFAULT false;
+ALTER TABLE ponto.tb_paciente ADD COLUMN consulta_avulsa numeric(10,2);
+
+CREATE TABLE ponto.tb_consultas_avulsas
+(
+  consultas_avulsas_id serial NOT NULL,
+  paciente_id integer,
+  data date,
+  valor numeric(10,2),
+  data_vencimento date,
+  charge_id text,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  carencia_liberada boolean DEFAULT true,
+  CONSTRAINT tb_consultas_avulsas_pkey PRIMARY KEY (consultas_avulsas_id)
+);
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN taxa_adesao boolean DEFAULT false;
+
+CREATE TABLE ponto.tb_consultas_avulsas
+(
+  consultas_avulsas_id serial NOT NULL,
+  paciente_id integer,
+  data date,
+  ativo boolean DEFAULT true,
+  pago boolean DEFAULT false,
+  valor numeric(10,2),
+  data_vencimento date,
+  charge_id text,
+  invoice_id text,
+  url text,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  operador_atualizacao integer,
+  data_atualizacao timestamp without time zone,
+  carencia_liberada boolean DEFAULT true,
+  CONSTRAINT tb_consultas_avulsas_pkey PRIMARY KEY (consultas_avulsas_id)
+);
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN adesao_digitada text;

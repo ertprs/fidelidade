@@ -10,13 +10,13 @@
         <?
         $empresa = $this->guia->listarempresa();
         ?>
-        <h3 class="singular"><a href="#">Marcar exames</a></h3>
+        <h3 class="singular"><a href="#">Consulta Avulsa</a></h3>
         <div>
             <fieldset>
                 <div class="bt_link">
 
-                    <a href="<?= base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id"; ?>">
-                        Consulta Avulsa
+                    <a target="_blank" href="<?= base_url() . "ambulatorio/guia/gravarconsultaavulsa/$paciente_id/$contrato_id"; ?>">
+                        Criar Consulta
                     </a>
                 </div>   
             </fieldset>
@@ -95,7 +95,7 @@
 //                                    echo '<pre>';
 //                                    var_dump($retorno);
 //                                    die;
-                                    $this->guia->confirmarpagamento($item->paciente_contrato_parcelas_id);
+                                    $this->guia->confirmarpagamentoconsultaavulsa($item->consultas_avulsas_id, $contrato_id);
                                 }
                             }
                             ?>
@@ -136,7 +136,7 @@
 
                             <tbody>
                                 <tr>
-                                    <td class="<?php echo $estilo_linha; ?>"><?= $mes; ?> <? if ($item->taxa_adesao == 't') { ?><span style="color:green;">Adesão </span><? } ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= $mes; ?></td>
                                     <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
                                     <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ',', '.') ?></td>
 
@@ -145,23 +145,16 @@
                                         <? if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                 <div class="bt_link">
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
+                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
                                                     </a>
                                                 </div>
                                             </td>
-                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                <div class="bt_link">
-
-                                                    <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardatapagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
-                                                        Alterar Data
-                                                    </a>
-                                                </div>
-                                            </td>
+                                            
                                         <? }
                                         ?>
-                                        <? if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '') { ?>
+                                        <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
                                             <td colspan="3" class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
-                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
+                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiuguconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Gerar Pagamento Iugu
                                                     </a></div>
                                             </td>  
                                         <? } else { ?>
