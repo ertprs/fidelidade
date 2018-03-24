@@ -224,7 +224,7 @@ class guia_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function listarparcelaconfirmarpagamentoconsultaavulsa($consultas_avulsas_id, $contrato_id) {
 
         $this->db->select('pc.paciente_contrato_id,
@@ -256,7 +256,7 @@ class guia_model extends Model {
         $this->db->where("pc.ativo", 't');
         $this->db->orderby('pcp.parcela');
         $this->db->limit(1);
-        
+
         $return = $this->db->get();
         return $return->result();
     }
@@ -4841,24 +4841,102 @@ AND data <= '$data_fim'";
     function gravarconsultaavulsa($paciente_id) {
         try {
 
-            $this->db->select('consulta_avulsa');
-            $this->db->from('tb_paciente');
-            $this->db->where("paciente_id", $paciente_id);
-            $return = $this->db->get()->result();
+//            $this->db->select('consulta_avulsa');
+//            $this->db->from('tb_paciente');
+//            $this->db->where("paciente_id", $paciente_id);
+//            $return = $this->db->get()->result();
 //            echo '<pre>';
-//            var_dump($return); die;
+            $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
+            $data = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
+//            var_dump($valor); die;
 
             /* inicia o mapeamento no banco */
             $horario = date("Y-m-d H:i:s");
             $hora = date("H:i:s");
-            $data = date("Y-m-d");
+//            $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('paciente_id', $paciente_id);
             $this->db->set('data', $data);
-            $this->db->set('valor', $return[0]->consulta_avulsa);
+            $this->db->set('valor', $valor);
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->insert('tb_consultas_avulsas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravarnovaparcelacontrato($paciente_id, $contrato_id) {
+        try {
+            
+            $this->db->select('parcela');
+            $this->db->from('tb_paciente_contrato_parcelas');
+            $this->db->where("paciente_contrato_id", $contrato_id);
+            $this->db->orderby("parcela desc");
+            $return = $this->db->get()->result();
+//            echo '<pre>';
+//            var_dump($return); die;
+            if(count($return) > 0){
+                $parcela = $return[0]->parcela + 1;
+            }else{
+                $parcela = 1;
+            }
+
+            $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
+            $data = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
+            $horario = date("Y-m-d H:i:s");
+            $hora = date("H:i:s");
+//            $data = date("Y-m-d");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('paciente_contrato_id', $contrato_id);
+            $this->db->set('data', $data);
+            $this->db->set('valor', $valor);
+            $this->db->set('parcela', $parcela);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_paciente_contrato_parcelas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id) {
+        try {
+
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            
+            $this->db->set('excluido', 't');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('paciente_contrato_parcelas_id', $parcela_id);
+            $this->db->update('tb_paciente_contrato_parcelas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+    
+    function excluirconsultaavulsa($consulta_id) {
+        try {
+
+            $horario = date("Y-m-d H:i:s");
+            $hora = date("H:i:s");
+
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('excluido', 't');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('consultas_avulsas_id', $consulta_id);
+            $this->db->update('tb_consultas_avulsas');
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
@@ -6844,7 +6922,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->insert('tb_paciente_contrato');
             $paciente_contrato_novo_id = $this->db->insert_id();
 
-            
+
             $data_receber = $return_parcelas[0]->data;
             $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
 //            var_dump($data_receber); die;

@@ -126,11 +126,11 @@
             <div>
                 <label>Situacao</label>
                 <select name="situacao" id="situacao" class="size2">
-                               <option value="Titular" <?
+                    <option value="Titular" <?
                     if (@$obj->_situacao == "Titular"):echo 'selected';
                     endif;
                     ?>>Titular</option>
-                               <option value="Dependente" <?
+                    <option value="Dependente" <?
                     if (@$obj->_situacao == "Dependente"):echo 'selected';
                     endif;
                     ?>>Dependente</option>
@@ -140,40 +140,38 @@
                 <label>Plano *</label>
 
                 <select name="plano" id="plano" class="size2" >
-                     <option value="" >selecione</option>
+                    <option value="" >selecione</option>
                     <?php
                     $planos = $this->formapagamento->listarforma();
                     foreach ($planos as $itens) {
                         ?>
                         <option   value =<?php echo $itens->forma_pagamento_id; ?> <?
-                    if (@$obj->_plano_id == $itens->forma_pagamento_id):echo 'selected';
-                    endif;
+                        if (@$obj->_plano_id == $itens->forma_pagamento_id):echo 'selected';
+                        endif;
                         ?>><?php echo $itens->nome; ?></option>
 
                         <?php
                     }
-                    
                     ?> 
                 </select>
             </div>
-                        
+
             <div>
                 <label>Vendedor</label>
 
                 <select name="vendedor" id="vendedor" class="size2" >
                     <option value="" >selecione</option>
                     <?php
-
                     $listarvendedor = $this->paciente->listarvendedor();
                     foreach ($listarvendedor as $item) {
                         ?>
                         <option   value =<?php echo $item->operador_id; ?><?
-                    if (@$obj->_vendedor == $item->operador_id):echo 'selected';
-                    endif;
+                        if (@$obj->_vendedor == $item->operador_id):echo 'selected';
+                        endif;
                         ?>><?php echo $item->nome; ?></option>
-                        <?php
-                    }
-                    ?> 
+                                  <?php
+                              }
+                              ?> 
                 </select>
             </div>
 
@@ -212,10 +210,24 @@
         <fieldset>
             <legend>Documentos / Contatos</legend>
             <div>
+                <label>CPF/CNPJ</label>
+                <? if (strlen(@$obj->_cpf) <= 11) { ?>
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF" checked=""/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
+                <? } elseif (strlen(@$obj->_cpf) > 11) { ?>
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ" checked=""/>CNJP<br>
+                <? } else { ?>
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
+                <? } ?>
+
+            </div>
+            <div>
                 <label>CPF *</label>
 
 
-                <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" required/>
+                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18"  class="texto03" value="<?= @$obj->_cpf; ?>" required/>
 
             </div>
             <div>
@@ -283,36 +295,63 @@
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
+                        $("#txtDataEmissao").mask("99/99/9999");
+                        $("#txtCelular").mask("(99) 99999-9999");
+                        $("#txtTelefone").mask("(99) 9999-9999");
 
-
-                        $(document).ready(function () {
-                            jQuery('#form_paciente').validate({
-                                rules: {
-                                    celular: {
-                                        required: true
-                                    },
-                                    cpf: {
-                                        required: true
-                                    },
-                                    telefone: {
-                                        required: true
-                                    }
-
-                                },
-                                messages: {
-                                    celular: {
-                                        required: "*"
-                                    },
-                                    cpf: {
-                                        required: "*"
-                                    },
-                                    telefone: {
-                                        required: "*"
-                                    }
-                                }
-                            });
+                        $("#seletorcpf").click(function () {
+                            $("#cpfcnpj").mask("999.999.999-99");
                         });
+                        $("#seletorcnpj").click(function () {
+                            $("#cpfcnpj").mask("99.999.999/9999-99");
+                        });
+
+
+//                        var tamanho = $("#cpfcnpj").val().length;
+//                        if (tamanho < 11) {
+////                                alert('sdas');
+//                         $("#cpfcnpj").mask("999.999.999-99");   
+//                        } else if (tamanho >= 11) {
+//                            $("#cpfcnpj").mask("99.999.999/9999-99");
+//                        }
+
+<? if (strlen(@$obj->_cpf) <= 11) { ?>
+                            $("#cpfcnpj").mask("999.999.999-99");
+<? } else { ?>
+                            $("#cpfcnpj").mask("99.999.999/9999-99");
+<? } ?>
+
+//                        $(document).ready(function () {
+//                            jQuery('#form_paciente').validate({
+//                                rules: {
+//                                    celular: {
+//                                        required: true
+//                                    },
+//                                    cpf: {
+//                                        required: true
+//                                    },
+//                                    telefone: {
+//                                        required: true
+//                                    }
+//
+//                                },
+//                                messages: {
+//                                    celular: {
+//                                        required: "*"
+//                                    },
+//                                    cpf: {
+//                                        required: "*"
+//                                    },
+//                                    telefone: {
+//                                        required: "*"
+//                                    }
+//                                }
+//                            });
+//                        });
 
                         $(function () {
                             $("#txtcbo").autocomplete({

@@ -143,6 +143,7 @@ class paciente_model extends BaseModel {
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->where("cp.paciente_contrato_id", $contrato_id);
         $this->db->orderby("data");
+        $this->db->where("cp.excluido", 'f');
         $return = $this->db->get();
         return $return->result();
     }
@@ -189,6 +190,7 @@ class paciente_model extends BaseModel {
         $this->db->select('*');
         $this->db->from('tb_consultas_avulsas cp');
         $this->db->where("paciente_id", $paciente_id);
+        $this->db->where("excluido", 'f');
         $this->db->orderby("data");
         $return = $this->db->get();
         return $return->result();
@@ -199,6 +201,7 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente_contrato_parcelas_iugu cpi');
         $this->db->where("paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
         $this->db->where("ativo", 't');
+//        $this->db->where("excluido", 'f');
         $return = $this->db->get();
         return $return->result();
     }

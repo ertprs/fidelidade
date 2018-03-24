@@ -182,8 +182,12 @@
                 <div>
                     <label>CPF</label>
 
-
-                    <input type="text" name="cpf" id ="txtCpf" maxlength="11" alt="cpf" class="texto02" value="<?= $paciente['0']->cpf; ?>" readonly/>
+                    <?if(strlen($paciente['0']->cpf) <= 11){?>
+                     <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
+                    <?}else{?>
+                     <input type="text" name="cpf" id ="txtCpf"  alt="cnpj" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
+                    <?}?>
+                    
                 </div>
                 <div>
                     <label>RG</label>

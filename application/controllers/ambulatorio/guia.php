@@ -710,7 +710,8 @@ class Guia extends BaseController {
 //        var_dump($celular_s_prefixo); 
         $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
 //        echo '<pre>';
-//        var_dump($data); 
+        $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
+//        var_dump($cpfcnpj); 
 //        die;
 
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
@@ -729,7 +730,7 @@ class Guia extends BaseController {
                             )
                         ),
                         "payer" => Array(
-                            "cpf_cnpj" => $cliente[0]->cpf,
+                            "cpf_cnpj" => $cpfcnpj,
                             "name" => $cliente[0]->nome,
                             "phone_prefix" => $prefixo,
                             "phone" => $celular_s_prefixo,
@@ -751,11 +752,14 @@ class Guia extends BaseController {
 //        var_dump($gerar);
 //        die;
             if (count($gerar["errors"]) > 0) {
-                $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
-//            foreach ($gerar["errors"] as $item) {
-////                echo $item;
-//                
-//            }
+                $mensagem = 'Erro ao gerar pagamento: \n';
+                foreach ($gerar["errors"] as $key => $item) {
+//                var_dump($item[0]);
+//                if(){
+//                    
+//                }
+                    $mensagem = $mensagem . "$key $item[0]" . '\n';
+                }
 //                echo '<pre>';
 //                var_dump($gerar);
 //                die;
@@ -797,6 +801,7 @@ class Guia extends BaseController {
 //        echo '<pre>';
 //        var_dump($valor); 
 //        die;
+        $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
 
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
 //        die;
@@ -814,7 +819,7 @@ class Guia extends BaseController {
                             )
                         ),
                         "payer" => Array(
-                            "cpf_cnpj" => $cliente[0]->cpf,
+                            "cpf_cnpj" => $cpfcnpj,
                             "name" => $cliente[0]->nome,
                             "phone_prefix" => $prefixo,
                             "phone" => $celular_s_prefixo,
@@ -836,11 +841,10 @@ class Guia extends BaseController {
 //        var_dump($gerar);
 //        die;
             if (count($gerar["errors"]) > 0) {
-                $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
-//            foreach ($gerar["errors"] as $item) {
-////                echo $item;
-//                
-//            }
+                $mensagem = 'Erro ao gerar pagamento: \n';
+                foreach ($gerar["errors"] as $key => $item) {
+                    $mensagem = $mensagem . "$key $item[0]" . '\n';
+                }
 //                echo '<pre>';
 //                var_dump($gerar);
 //                die;
@@ -912,6 +916,44 @@ class Guia extends BaseController {
 
     function gravarconsultaavulsa($paciente_id, $contrato_id) {
         $ambulatorio_guia_id = $this->guia->gravarconsultaavulsa($paciente_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+    }
+
+    function gravarnovaparcelacontrato($paciente_id, $contrato_id) {
+        $ambulatorio_guia_id = $this->guia->gravarnovaparcelacontrato($paciente_id, $contrato_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+    function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id) {
+        $ambulatorio_guia_id = $this->guia->excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function excluirconsultaavulsa($paciente_id, $contrato_id, $consulta_id) {
+        $ambulatorio_guia_id = $this->guia->excluirconsultaavulsa($consulta_id);
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
         } else {
@@ -1271,6 +1313,28 @@ class Guia extends BaseController {
 //        var_dump($data['listarpagamentoscontrato']); die;
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guiaconsultaavulsapagamento-form', $data);
+    }
+
+    function criarconsultaavulsa($paciente_id, $contrato_id) {
+        $data['paciente_id'] = $paciente_id;
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['lista'] = $this->paciente->listardependentes();
+        $data['empresa'] = $this->guia->listarempresa();
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
+//        var_dump($data['listarpagamentoscontrato']); die;
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/criarconsultaavulsapagamento-form', $data);
+    }
+
+    function criarparcelacontrato($paciente_id, $contrato_id) {
+        $data['paciente_id'] = $paciente_id;
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['lista'] = $this->paciente->listardependentes();
+        $data['empresa'] = $this->guia->listarempresa();
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
+//        var_dump($data['listarpagamentoscontrato']); die;
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/criarparcelacontrato-form', $data);
     }
 
     function integracaoiugu($paciente_id, $contrato_id) {

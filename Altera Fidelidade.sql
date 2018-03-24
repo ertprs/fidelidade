@@ -193,3 +193,8 @@ CREATE TABLE ponto.tb_consultas_avulsas
 );
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN adesao_digitada text;
+
+ALTER TABLE ponto.tb_paciente ALTER COLUMN cpf TYPE character varying(18);
+ALTER TABLE ponto.tb_financeiro_credor_devedor ALTER COLUMN cpf TYPE character varying(18);
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN excluido boolean DEFAULT false;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN excluido boolean DEFAULT false;

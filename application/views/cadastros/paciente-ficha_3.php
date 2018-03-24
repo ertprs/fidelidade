@@ -212,8 +212,11 @@
             <div>
                 <label>CPF *</label>
 
-
-                <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" readonly/>
+                <? if (strlen(@$obj->_cpf) <= 11) { ?>
+                    <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= @$obj->_cpf; ?>" readonly/>   
+                <? } else { ?>
+                    <input type="text" name="cpf" id ="txtCpf"  alt="cnpj" class="texto04" value="<?= @$obj->_cpf; ?>" readonly/>   
+                <? } ?>
                 <?php
                 if (@$obj->_cpfresp == "t") {
                     ?>
@@ -299,8 +302,16 @@
                 <label>Pessoa Jurídica</label>
 
                 <select name="pessoajuridica" id="pessoajuridica" class="size2" required="true">
-                    <option value="NAO" <?if(@$obj->_pessoa_juridica == 'f'){echo 'selected';}?>>NÃO</option>
-                    <option value="SIM" <?if(@$obj->_pessoa_juridica == 't'){echo 'selected';}?>>SIM</option>
+                    <option value="NAO" <?
+                    if (@$obj->_pessoa_juridica == 'f') {
+                        echo 'selected';
+                    }
+                    ?>>NÃO</option>
+                    <option value="SIM" <?
+                    if (@$obj->_pessoa_juridica == 't') {
+                        echo 'selected';
+                    }
+                    ?>>SIM</option>
 
                 </select>
             </div>
