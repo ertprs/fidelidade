@@ -14,6 +14,11 @@
 //           alert(j);
 //                    
         });
+        
+        $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoiugu', {plano: 'teste', ajax: true}, function (j) {
+//           alert(j);
+//                    
+        });
     });
 
 

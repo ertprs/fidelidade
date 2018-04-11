@@ -5242,6 +5242,14 @@ AND data <= '$data_fim'";
     function gravaralterardatapagamento($paciente_contrato_parcelas_id) {
         try {
 
+            $this->db->select('data_cartao_iugu');
+            $this->db->from('tb_paciente_contrato_parcelas pc');
+            $this->db->where("paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
+            $this->db->orderby("data");
+            $retorno_data = $this->db->get()->result();
+
+
+
             /* inicia o mapeamento no banco */
             $horario = date("Y-m-d H:i:s");
             $hora = date("H:i:s");
@@ -5249,7 +5257,9 @@ AND data <= '$data_fim'";
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
-            $this->db->set('data_cartao_iugu', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+            if (@$retorno_data[0]->data_cartao_iugu != '') {
+                $this->db->set('data_cartao_iugu', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+            }
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
             $erro = $this->db->_error_message();

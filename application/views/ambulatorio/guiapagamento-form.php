@@ -242,7 +242,7 @@
                                             <td colspan="8" class="<?php echo $estilo_linha; ?>"></td> 
                                         <? } ?>
                                     <? } else { ?>
-                                        <td colspan="8" class="<?php echo $estilo_linha; ?>">PAGA</td>
+                                        <td colspan="8" class="<?php echo $estilo_linha; ?>">PAGA (<?if($item->data_cartao_iugu != ''){echo 'Cartão';}else{echo 'Boleto';}?>)</td>
             <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                                 <a href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
                                                 </a></div>
