@@ -198,3 +198,30 @@ ALTER TABLE ponto.tb_paciente ALTER COLUMN cpf TYPE character varying(18);
 ALTER TABLE ponto.tb_financeiro_credor_devedor ALTER COLUMN cpf TYPE character varying(18);
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN excluido boolean DEFAULT false;
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN excluido boolean DEFAULT false;
+
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_cartao_iugu date;
+
+CREATE TABLE ponto.tb_paciente_cartao_credito
+(
+  paciente_cartao_credito_id serial NOT NULL,
+  paciente_id integer,
+  card_number text,
+  card_csv integer,
+  mes text,
+  ano text,
+  first_name text,
+  last_name text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_cartao_credito_pkey PRIMARY KEY (paciente_cartao_credito_id)
+);
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN pago_cartao boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_iugu ADD COLUMN status text;
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_iugu ADD COLUMN codigo_lr text;

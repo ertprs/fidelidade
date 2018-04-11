@@ -19,7 +19,7 @@ if (count($exames) > 0) {
 
 
         <div class="bt_link_new">
-            <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontrato/" . $paciente['0']->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+            <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontrato/" . $paciente['0']->paciente_id; ?> ', '_blank', 'width=900,height=600');">
                 Novo Contrato
             </a>
         </div>
@@ -119,6 +119,19 @@ if (count($exames) > 0) {
                                         </a>
                                     </div>
                                 </td>
+                                <?if($perfil_id == 1 && $item->ativo == 't'){?>
+                                 <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                    <div class="bt_link_new">
+                                        <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?>">
+                                            Excluir
+                                        </a>
+                                    </div>
+                                </td>   
+                                <?}else{?>
+                                 <td class="<?php echo $estilo_linha; ?>" width="50px;"> 
+                                 </td>      
+                                <?}?>
+                                
         <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
                                     <div class="bt_link_new">
                                         <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">

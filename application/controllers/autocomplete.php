@@ -1,5 +1,8 @@
 <?php
 
+require_once APPPATH . 'controllers/base/BaseController.php';
+require_once("./iugu/lib/Iugu.php");
+
 class Autocomplete extends Controller {
 
     function Autocomplete() {
@@ -31,6 +34,7 @@ class Autocomplete extends Controller {
         $this->load->model('ponto/horariostipo_model', 'horariostipo');
         $this->load->model('cadastro/formapagamento_model', 'formapagamento');
         $this->load->model('estoque/menu_model', 'menu');
+        $this->load->library('utilitario');
     }
 
     function index() {
@@ -179,12 +183,133 @@ class Autocomplete extends Controller {
         echo json_encode($result);
     }
 
+    function triggerinformationiugu() {
+        $invoice_id = $_POST["data"]['id'];
+        $status = $_POST["data"]['status'];
+//        $invoice_id = '0F9A25CAC06E486FA04359714E7CC378';
+//        $status = 'paid';
+        if ($status == 'paid') {
+            $this->guia->confirmarpagamentogatilhoiugu($invoice_id);
+            echo 'true';
+        } else {
+
+            echo 'false';
+        }
+    }
+
+    function pagamentoautomaticoiugu() {
+
+        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+        ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
+        
+        $pagamento = $this->paciente_m->listarparcelaiugucartao();
+//        echo '<pre>';
+//        var_dump($pagamento);
+      //  die;
+        
+        $retorno = 'false';
+        
+        
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
+        
+        foreach ($pagamento as $item) {
+
+            $paciente_id = $item->paciente_id;
+
+            $cartao_cliente = $this->paciente_m->listarcartaoclienteautocomplete($paciente_id);
+            $cliente = $this->paciente_m->listardados($paciente_id);
+            $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+            $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+            $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+            $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+            $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
+            $valor = $pagamento[0]->valor * 100;
+            $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
+
+            $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
+
+            $payment_token = Iugu_PaymentToken::create(Array(
+                        'method' => 'credit_card',
+                        'data' => Array(
+                            'number' => $cartao_cliente[0]->card_number,
+                            'verification_value' => $cartao_cliente[0]->card_csv,
+                            'first_name' => $cartao_cliente[0]->first_name,
+                            'last_name' => $cartao_cliente[0]->last_name,
+                            'month' => $cartao_cliente[0]->mes,
+                            'year' => $cartao_cliente[0]->ano,
+                        ),
+                            )
+            );
+//            echo '<pre>';
+//            var_dump($payment_token);
+//            die;
+            if ($payment_token['errors'] == 0) {
+
+                $gerar = Iugu_Charge::create(
+                                Array(
+                                    'token' => $payment_token,
+                                    "email" => $cliente[0]->cns,
+                                    'items' => Array(
+                                        Array(
+                                            "description" => $description,
+                                            "quantity" => "1",
+                                            "price_cents" => $valor
+                                        )
+                                    ),
+                                    "payer" => Array(
+                                        "cpf_cnpj" => $cpfcnpj,
+                                        "name" => $cliente[0]->nome,
+                                        "phone_prefix" => $prefixo,
+                                        "phone" => $celular_s_prefixo,
+                                        "email" => $cliente[0]->cns,
+                                        "address" => Array(
+                                            "street" => $cliente[0]->logradouro,
+                                            "number" => $cliente[0]->numero,
+                                            "city" => $cliente[0]->cidade_desc,
+                                            "state" => $codigoUF,
+                                            "district" => $cliente[0]->bairro,
+                                            "country" => "Brasil",
+                                            "zip_code" => $cliente[0]->cep,
+                                            "complement" => $cliente[0]->complemento
+                                        )
+                                    )
+                                )
+                );
+            } else {
+                $gerar["url"] = '';
+                $gerar["invoice_id"] = '';
+                $gerar["message"] = 'Cartão de Crédito Inválido';
+                $gerar["LR"] = '14';
+            }
+//            echo '<pre>';
+//            var_dump($payment_token);
+//            var_dump($gerar);
+//            die;
+
+            $retorno = 'true';
+            $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
+        }
+        echo json_encode($retorno);
+    }
+
     function unidadeleito() {
 
         if (isset($_GET['unidade'])) {
             $result = $this->internacao_m->listaleitointarnacao($_GET['unidade']);
         } else {
             $result = $this->internacao_m->listaleitointarnacao();
+        }
+        echo json_encode($result);
+    }
+
+    function parcelascontratojson() {
+
+        if (isset($_GET['plano'])) {
+            $result = $this->guia->parcelascontratojson($_GET['plano']);
+        } else {
+            $result = $this->guia->parcelascontratojson();
         }
         echo json_encode($result);
     }

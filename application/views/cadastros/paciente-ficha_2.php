@@ -224,7 +224,7 @@
 
             </div>
             <div>
-                <label>CPF *</label>
+                <label>CPF/CNPJ</label>
 
 
                 <input type="text" name="cpf" id ="cpfcnpj" maxlength="18"  class="texto03" value="<?= @$obj->_cpf; ?>" required/>

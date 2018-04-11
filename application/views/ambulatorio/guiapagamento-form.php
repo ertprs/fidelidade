@@ -84,8 +84,23 @@
                                 <th width="70px;" class="tabela_header">Valor</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
     <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
-                                <th width="70px;" colspan="6" class="tabela_header"></th>
-        <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
+                                <th width="70px;" colspan="2" class="tabela_header"></th>
+                                <? if (@$listarpagamentoscontrato[0]->contrato == 't') { ?>
+
+
+                                    <th class="tabela_header" colspan="1">
+                                        <div  class="bt_link">
+                                            <a href="<?= base_url() ?>ambulatorio/guia/gerartodosiugu/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Todos Iugu
+                                            </a>
+                                        </div>
+                                    </th>
+                                    <th class="tabela_header" colspan="2">
+                                        <div  class="bt_link">
+                                            <a href="<?= base_url() ?>ambulatorio/guia/pagamentocartaoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>">Pag. Cartão Agendado
+                                            </a>
+                                        </div>
+                                    </th>
+                                <? } ?>
                             </tr>
                         </thead>
                         <?
@@ -94,17 +109,17 @@
                         $contador = 0;
                         foreach ($listarpagamentoscontrato as $item) {
                             $contador ++;
-                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
-                                $invoice_id = $item->invoice_id;
-
-                                $retorno = Iugu_Invoice::fetch($invoice_id);
-                                if ($retorno['status'] == 'paid') {
-//                                    echo '<pre>';
-//                                    var_dump($retorno);
-//                                    die;
-                                    $this->guia->confirmarpagamento($item->paciente_contrato_parcelas_id);
-                                }
-                            }
+//                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
+//                                $invoice_id = $item->invoice_id;
+//
+//                                $retorno = Iugu_Invoice::fetch($invoice_id);
+//                                if ($retorno['status'] == 'paid') {
+////                                    echo '<pre>';
+////                                    var_dump($retorno);
+////                                    die;
+//                                    $this->guia->confirmarpagamento($item->paciente_contrato_parcelas_id);
+//                                }
+//                            }
                             ?>
                             <?
                             $MES = substr($item->data, 5, 2);
@@ -149,50 +164,83 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
-                                        <? if ($perfil_id == 1) { ?>
-                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                <div class="bt_link">
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                <div class="bt_link">
+                                        <? if ($item->contrato == 't') { ?>
 
-                                                    <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardatapagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
-                                                        Alterar Data
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        <? }
-                                        ?>
-                                        <? if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '') { ?>
-                                            <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 160px;" class="bt_link">
-                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
-                                                    </a></div>
-                                            </td>  
+
+                                            <? if ($perfil_id == 1) { ?>
+                                                <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                    <div class="bt_link">
+                                                        <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                    <div class="bt_link">
+
+                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardatapagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                            Alterar Data
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            <? }
+                                            ?>
+                                            <? if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') { ?>
+                                                <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 100px;" class="bt_link">
+                                                        <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pag. Iugu
+                                                        </a></div>
+                                                </td>  
+                                                <? if ($item->pago_cartao != 't') { ?>
+                                                    <td  class="<?php echo $estilo_linha; ?>" >
+
+                                                    </td>   
+                                                <? } else { ?>
+                        <!--                                            <td  class="<?php echo $estilo_linha; ?>" style="color: #ebcf11" >Aguardando Confirmação
+                                                    </td>  -->
+                                                <? } ?>
+
+                                            <? } elseif ($item->data_cartao_iugu != '') { ?>
+                                                <? if ($item->status != '') { ?>
+                                                    <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #888001;font-weight: bold" > <?
+                                                            if ($item->status == 'pending') {
+                                                                echo 'Pendente';
+                                                            } else {
+                                                                echo $item->status . ". Código LR: " . $item->codigo_lr;
+                                                            }
+                                                            ?></span><a target="_blank" href="https://support.iugu.com/hc/pt-br/articles/206858953-Como-identificar-o-erro-da-tentativa-de-pagamento-com-cart%C3%A3o-de-cr%C3%A9dito-falha-">->></a> </td>
+                                                <? } else { ?>
+                                                    <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #01882e;font-weight: bold" > Pagamento por Cartão Agendado</span> </td>      
+                                                <? } ?>
+
+
+                                                <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 120px;" class="bt_link">
+                                                        <a id="" href="<?= base_url() ?>ambulatorio/guia/cancelaragendamentocartao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Cancelar Agen.
+                                                        </a></div> 
+
+                                                </td> 
+                                            <? } else { ?>
+                                                <td colspan="2" class="<?php echo $estilo_linha; ?>">
+                                                    <div style="width: 100px;" class="bt_link">
+                                                        <a target="_blank" href="<?= $item->url ?>">Pag. Iugu
+                                                        </a>
+                                                    </div>
+                                                </td>
+
+
+                                            <? }
+                                            ?>
+                                            <? if ($operador_id == 1) { ?>
+                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>">
+                                                                                                                                                                <div  class="bt_link">
+                                                                                                                                                                    <a href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Excluir
+                                                                                                                                                                    </a>
+                                                                                                                                                                </div>
+                                                                                                                                                            </td>-->
+
+                                            <? }
+                                            ?>
                                         <? } else { ?>
-                                            <td class="<?php echo $estilo_linha; ?>">
-                                                <div style="width: 160px;" class="bt_link">
-                                                    <a target="_blank" href="<?= $item->url ?>">Pagamento Iugu
-                                                    </a>
-                                                </div>
-                                            </td>
-
-
-                                        <? }
-                                        ?>
-                                        <? if ($operador_id == 1) { ?>
-                                            <td class="<?php echo $estilo_linha; ?>">
-                                                <div  class="bt_link">
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Excluir
-                                                    </a>
-                                                </div>
-                                            </td>
-
-                                        <? }
-                                        ?>
-
+                                            <td colspan="8" class="<?php echo $estilo_linha; ?>"></td> 
+                                        <? } ?>
                                     <? } else { ?>
                                         <td colspan="8" class="<?php echo $estilo_linha; ?>">PAGA</td>
             <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
@@ -228,92 +276,92 @@
 <script type="text/javascript">
 
 <?php if ($this->session->flashdata('message') != ''): ?>
-                                                            alert("<? echo $this->session->flashdata('message') ?>");
+                                                                alert("<? echo $this->session->flashdata('message') ?>");
 <? endif; ?>
-                                                        $(function () {
-                                                            $("#data").datepicker({
-                                                                autosize: true,
-                                                                changeYear: true,
-                                                                changeMonth: true,
-                                                                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                                                                dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-                                                                buttonImage: '<?= base_url() ?>img/form/date.png',
-                                                                dateFormat: 'dd/mm/yy'
+                                                            $(function () {
+                                                                $("#data").datepicker({
+                                                                    autosize: true,
+                                                                    changeYear: true,
+                                                                    changeMonth: true,
+                                                                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                                                                    dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                                                                    buttonImage: '<?= base_url() ?>img/form/date.png',
+                                                                    dateFormat: 'dd/mm/yy'
+                                                                });
                                                             });
-                                                        });
-                                                        $(function () {
-                                                            $("#accordion").accordion();
-                                                        });
-                                                        $(function () {
-                                                            $("#medico1").autocomplete({
-                                                                source: "<?= base_url() ?>index.php?c=autocomplete&m=medicos",
-                                                                minLength: 3,
-                                                                focus: function (event, ui) {
-                                                                    $("#medico1").val(ui.item.label);
-                                                                    return false;
-                                                                },
-                                                                select: function (event, ui) {
-                                                                    $("#medico1").val(ui.item.value);
-                                                                    $("#crm1").val(ui.item.id);
-                                                                    return false;
-                                                                }
+                                                            $(function () {
+                                                                $("#accordion").accordion();
                                                             });
-                                                        });
+                                                            $(function () {
+                                                                $("#medico1").autocomplete({
+                                                                    source: "<?= base_url() ?>index.php?c=autocomplete&m=medicos",
+                                                                    minLength: 3,
+                                                                    focus: function (event, ui) {
+                                                                        $("#medico1").val(ui.item.label);
+                                                                        return false;
+                                                                    },
+                                                                    select: function (event, ui) {
+                                                                        $("#medico1").val(ui.item.value);
+                                                                        $("#crm1").val(ui.item.id);
+                                                                        return false;
+                                                                    }
+                                                                });
+                                                            });
 
 <? for ($i = 0; $i <= $contador; $i++) { ?>
-                                                            $("#botaopagamento<?= $i ?>").click(function () {
-                                                                $("#botaopagamento<?= $i ?>").hide();
-                                                            });
+                                                                $("#botaopagamento<?= $i ?>").click(function () {
+                                                                    $("#botaopagamento<?= $i ?>").hide();
+                                                                });
 <? } ?>
-                                                        $(function () {
-                                                            $('#convenio1').change(function () {
-                                                                if ($(this).val()) {
-                                                                    $('.carregando').show();
-                                                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentoconvenio', {convenio1: $(this).val(), ajax: true}, function (j) {
-                                                                        options = '<option value=""></option>';
-                                                                        for (var c = 0; c < j.length; c++) {
-                                                                            options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
-                                                                        }
-                                                                        $('#procedimento1').html(options).show();
-                                                                        $('.carregando').hide();
-                                                                    });
-                                                                } else {
-                                                                    $('#procedimento1').html('<option value="">Selecione</option>');
-                                                                }
-                                                            });
-                                                        });
-                                                        $(function () {
-                                                            $('#procedimento1').change(function () {
-                                                                if ($(this).val()) {
-                                                                    $('.carregando').show();
-                                                                    $.getJSON('<?= base_url() ?>autocomplete/procedimentovalor', {procedimento1: $(this).val(), ajax: true}, function (j) {
-                                                                        options = "";
-                                                                        options += j[0].valortotal;
-                                                                        document.getElementById("valor1").value = options
-                                                                        $('.carregando').hide();
-                                                                    });
-                                                                } else {
-                                                                    $('#valor1').html('value=""');
-                                                                }
-                                                            });
-                                                        });
-                                                        $(function () {
-                                                            $('#procedimento1').change(function () {
-                                                                if ($(this).val()) {
-                                                                    $('.carregando').show();
-                                                                    $.getJSON('<?= base_url() ?>autocomplete/formapagamentoporprocedimento1', {procedimento1: $(this).val(), ajax: true}, function (j) {
-                                                                        var options = '<option value="0">Selecione</option>';
-                                                                        for (var c = 0; c < j.length; c++) {
-                                                                            if (j[c].forma_pagamento_id != null) {
-                                                                                options += '<option value="' + j[c].forma_pagamento_id + '">' + j[c].nome + '</option>';
+                                                            $(function () {
+                                                                $('#convenio1').change(function () {
+                                                                    if ($(this).val()) {
+                                                                        $('.carregando').show();
+                                                                        $.getJSON('<?= base_url() ?>autocomplete/procedimentoconvenio', {convenio1: $(this).val(), ajax: true}, function (j) {
+                                                                            options = '<option value=""></option>';
+                                                                            for (var c = 0; c < j.length; c++) {
+                                                                                options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + ' - ' + j[c].codigo + '</option>';
                                                                             }
-                                                                        }
-                                                                        $('#formapamento').html(options).show();
-                                                                        $('.carregando').hide();
-                                                                    });
-                                                                } else {
-                                                                    $('#formapamento').html('<option value="0">Selecione</option>');
-                                                                }
+                                                                            $('#procedimento1').html(options).show();
+                                                                            $('.carregando').hide();
+                                                                        });
+                                                                    } else {
+                                                                        $('#procedimento1').html('<option value="">Selecione</option>');
+                                                                    }
+                                                                });
                                                             });
-                                                        });
+                                                            $(function () {
+                                                                $('#procedimento1').change(function () {
+                                                                    if ($(this).val()) {
+                                                                        $('.carregando').show();
+                                                                        $.getJSON('<?= base_url() ?>autocomplete/procedimentovalor', {procedimento1: $(this).val(), ajax: true}, function (j) {
+                                                                            options = "";
+                                                                            options += j[0].valortotal;
+                                                                            document.getElementById("valor1").value = options
+                                                                            $('.carregando').hide();
+                                                                        });
+                                                                    } else {
+                                                                        $('#valor1').html('value=""');
+                                                                    }
+                                                                });
+                                                            });
+                                                            $(function () {
+                                                                $('#procedimento1').change(function () {
+                                                                    if ($(this).val()) {
+                                                                        $('.carregando').show();
+                                                                        $.getJSON('<?= base_url() ?>autocomplete/formapagamentoporprocedimento1', {procedimento1: $(this).val(), ajax: true}, function (j) {
+                                                                            var options = '<option value="0">Selecione</option>';
+                                                                            for (var c = 0; c < j.length; c++) {
+                                                                                if (j[c].forma_pagamento_id != null) {
+                                                                                    options += '<option value="' + j[c].forma_pagamento_id + '">' + j[c].nome + '</option>';
+                                                                                }
+                                                                            }
+                                                                            $('#formapamento').html(options).show();
+                                                                            $('.carregando').hide();
+                                                                        });
+                                                                    } else {
+                                                                        $('#formapamento').html('<option value="0">Selecione</option>');
+                                                                    }
+                                                                });
+                                                            });
 </script>
