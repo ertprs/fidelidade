@@ -225,3 +225,32 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN pago_cartao boolean D
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_iugu ADD COLUMN status text;
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_iugu ADD COLUMN codigo_lr text;
+
+-- 18/04/2018
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN juros numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN multa_atraso numeric(10,2);
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN observacao text;
+
+-- 27/04/2018
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN tipo text;
+
+
+UPDATE ponto.tb_consultas_avulsas
+   SET tipo= 'EXTRA'
+ WHERE tipo is null;
+
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN consulta_coop numeric(10,2);
+
+UPDATE ponto.tb_forma_pagamento
+   SET consulta_coop= consulta_avulsa
+ WHERE consulta_coop is null;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN consulta_coop numeric(10,2);
+
+
+UPDATE ponto.tb_paciente
+   SET consulta_coop= consulta_avulsa
+ WHERE consulta_coop is null;

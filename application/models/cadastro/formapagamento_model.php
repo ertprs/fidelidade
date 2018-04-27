@@ -282,6 +282,8 @@ class formapagamento_model extends Model {
             $this->db->set('valor6', str_replace(",", ".", str_replace(".", "", $_POST['valor6'])));
             $this->db->set('valor10', str_replace(",", ".", str_replace(".", "", $_POST['valor10'])));
             $this->db->set('valor12', str_replace(",", ".", str_replace(".", "", $_POST['valor12'])));
+            $this->db->set('juros', str_replace(",", ".", str_replace(".", "", $_POST['juros'])));
+            $this->db->set('multa_atraso', str_replace(",", ".", str_replace(".", "", $_POST['multa_atraso'])));
 
             if (isset($_POST['taxa_adesao'])) {
                 $this->db->set('taxa_adesao', 't');
@@ -289,6 +291,7 @@ class formapagamento_model extends Model {
                 $this->db->set('taxa_adesao', 'f');
             }
 
+            $this->db->set('consulta_coop', str_replace(",", ".", str_replace(".", "", $_POST['consulta_coop'])));
             $this->db->set('consulta_avulsa', str_replace(",", ".", str_replace(".", "", $_POST['consulta_avulsa'])));
             $this->db->set('comissao', str_replace(",", ".", str_replace(".", "", $_POST['comissao'])));
             $this->db->set('comissao_vendedor_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_mensal'])));
@@ -384,7 +387,10 @@ class formapagamento_model extends Model {
                                carencia_consulta_mensal,
                                carencia_especialidade_mensal,
                                carencia_exame, 
+                               multa_atraso, 
+                               juros, 
                                carencia_consulta, 
+                               consulta_coop, 
                                conta_id, 
                                carencia_especialidade, 
                                valoradcional,
@@ -397,6 +403,9 @@ class formapagamento_model extends Model {
             $this->_nome = $return[0]->nome;
             $this->_taxa_adesao = $return[0]->taxa_adesao;
             $this->_consulta_avulsa = $return[0]->consulta_avulsa;
+            $this->_consulta_coop = $return[0]->consulta_coop;
+            $this->_multa_atraso = $return[0]->multa_atraso;
+            $this->_juros = $return[0]->juros;
             $this->_carencia_exame = $return[0]->carencia_exame;
             $this->_carencia_consulta = $return[0]->carencia_consulta;
             $this->_carencia_especialidade = $return[0]->carencia_especialidade;

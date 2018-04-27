@@ -10,12 +10,12 @@
         <?
         $empresa = $this->guia->listarempresa();
         ?>
-        <h3 class="singular"><a href="#">Consulta Extra</a></h3>
+        <h3 class="singular"><a href="#">Consulta Coparticipação</a></h3>
         <div>
             <fieldset>
                 <div class="bt_link">
 
-                    <a  href="<?= base_url() . "ambulatorio/guia/criarconsultaavulsa/$paciente_id/$contrato_id"; ?>">
+                    <a  href="<?= base_url() . "ambulatorio/guia/criarconsultacoop/$paciente_id/$contrato_id"; ?>">
                         Criar Consulta
                     </a>
                 </div>   
@@ -154,7 +154,7 @@
                                         ?>
                                         <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
                                             <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;"><div style="width: 160px;" class="bt_link">
-                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiuguconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>/EXTRA">Gerar Pagamento Iugu
+                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiuguconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>/COOP">Gerar Pagamento Iugu
                                                     </a></div>
                                             </td>  
                                         <? } else { ?>

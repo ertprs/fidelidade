@@ -1,7 +1,7 @@
 <?php
 
 require_once APPPATH . 'controllers/base/BaseController.php';
-
+require_once("./iugu/lib/Iugu.php");
 /**
  * Esta classe é o controler de Servidor. Responsável por chamar as funções e views, efetuando as chamadas de models
  * @author Equipe de desenvolvimento APH
@@ -382,7 +382,25 @@ class Exametemp extends BaseController {
     }
 
     function excluirpaciente($paciente_id) {
+        $pagamento = $this->paciente->listarparcelaiuguexclusaopaciente($paciente_id);
+//        var_dump($pagamento); die;
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
 
+
+        foreach ($pagamento as $item) {
+
+
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
+            $invoice_id = $item->invoice_id;
+
+            $retorno = Iugu_Invoice::fetch($invoice_id);
+            $retorno->cancel();
+//            echo '<pre>';
+//            var_dump($retorno);
+//            die;
+            $this->guia->cancelarpagamentoiugu($item->paciente_contrato_parcelas_id);
+        }
         $verifica = $this->exametemp->excluirpaciente($paciente_id);
         if ($verifica == "-1") {
             $data['mensagem'] = 'Erro ao excluir o Paciente. Opera&ccedil;&atilde;o cancelada.';

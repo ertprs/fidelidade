@@ -597,7 +597,7 @@ class Guia extends BaseController {
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
     }
-    
+
     function cancelaragendamentocartao($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 
 //        var_dump($valor); die;
@@ -621,8 +621,81 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/alterardatapagamento-form', $data);
     }
 
-    function gravaralterardatapagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+    function alterarobservacao($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarparcelaobservacao($paciente_contrato_parcelas_id);
+//        var_dump($data['pagamento']); die;
+        $this->load->View('ambulatorio/alterarobservacaopagamento-form', $data);
+    }
 
+    function reenviaremail($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $empresa = $this->guia->listarempresa();
+        $pagamento = $this->guia->listarparcelareenviaremail($paciente_contrato_parcelas_id);
+        $email = $pagamento[0]->cns;
+        $url = $pagamento[0]->url;
+        $nome_emp = $empresa[0]->nome;
+        $data = date("d/m/Y", strtotime($pagamento[0]->data));
+//        var_dump($pagamento);
+//        die;
+        $assunto = "$nome_emp referente a: $data";
+        $mensagem = "Aqui está o link para o pagamento da parcela referente a: $data <br> Link: $url "
+                . "<br>"
+                . "<br>"
+                . "<br>"
+                . "<br>"
+                . "Obs: Email automático. Por favor não responder";
+
+
+        $this->load->library('email');
+
+        $config['protocol'] = 'smtp';
+        $config['smtp_host'] = 'ssl://smtp.gmail.com';
+        $config['smtp_port'] = '465';
+        $config['smtp_user'] = 'stgsaude@gmail.com';
+        $config['smtp_pass'] = 'saude1234';
+        $config['validate'] = TRUE;
+        $config['mailtype'] = 'html';
+        $config['charset'] = 'utf-8';
+        $config['newline'] = "\r\n";
+
+        $this->email->initialize($config);
+        if (@$empresa[0]->email != '') {
+            $this->email->from($empresa[0]->email, $empresa[0]->nome);
+        } else {
+            $this->email->from('soudez@gmail.com', $nome_emp);
+        }
+//        var_dump($assunto); die;
+        $this->email->to($email);
+        $this->email->subject($assunto);
+        $this->email->message($mensagem);
+        $teste = '';
+        if ($this->email->send()) {
+            $alert = "Email enviado com sucesso";
+        } else {
+            $alert = "Envio de Email malsucedido";
+        }
+//        var_dump($teste); die;
+        $this->session->set_flashdata('message', $alert);
+//        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function gravaralterarobservacao($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+
+        $this->guia->gravaralterarobservacao($paciente_contrato_parcelas_id);
+//        $alert = "Observacao";
+//        $this->session->set_flashdata('message', $alert);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function gravaralterardatapagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+        $pagamento_iugu_old = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $data_antiga = $pagamento_iugu_old[0]->data;
+//        var_dump($data_antiga); die;
         $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
 
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
@@ -631,15 +704,37 @@ class Guia extends BaseController {
         $key = $empresa[0]->iugu_token;
         if ($key != '') {
             $cliente = $this->paciente->listardados($paciente_id);
-            $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+//            $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
             $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
             $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
             $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
 
             $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
             $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
-            $valor = $pagamento[0]->valor * 100;
+            $data_nova = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['data'])));
             $data = date('d/m/Y', strtotime($pagamento[0]->data));
+            if (strtotime($data_nova) > strtotime($data_antiga) && isset($_POST['juros'])) {
+                $data1 = new DateTime($data_nova);
+                $data2 = new DateTime($data_antiga);
+                $intervalo = $data1->diff($data2);
+                $dias = $intervalo->days;
+
+
+                $juros_dia = ($pagamento[0]->juros / 100) * $pagamento[0]->valor;
+
+                $multa_atraso = $pagamento[0]->multa_atraso;
+
+                $valor = round($pagamento[0]->valor + $multa_atraso + ($juros_dia * $dias), 2) * 100;
+            } else {
+                $valor = $pagamento[0]->valor * 100;
+            }
+//            echo '<pre>';
+//            var_dump($pagamento[0]->valor);
+//            var_dump($multa_atraso);
+//            var_dump($juros_dia);
+//            var_dump($_POST['juros']);
+//            var_dump($valor);
+//            die;
 
             $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
 
@@ -925,7 +1020,7 @@ class Guia extends BaseController {
                             'month' => '12',
                             'year' => date('Y'),
                         ),
-                      )
+                            )
             );
 
             $gerar = Iugu_Charge::create(
@@ -996,7 +1091,7 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
 
-    function gerarpagamentoiuguconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
+    function gerarpagamentoiuguconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id, $tipo) {
 
         $cliente = $this->paciente->listardados($paciente_id);
         $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
@@ -1013,7 +1108,12 @@ class Guia extends BaseController {
         $data = date('d/m/Y', strtotime($pagamento[0]->data));
 //        var_dump($prefixo); 
 //        var_dump($celular_s_prefixo); 
-        $description = 'CONSULTA AVULSA';
+        if ($tipo == 'EXTRA') {
+            $description = 'CONSULTA EXTRA';
+        } else {
+            $description = 'CONSULTA COPARTICIPAÇÃO';
+        }
+
 //        echo '<pre>';
 //        var_dump($valor); 
 //        die;
@@ -1078,7 +1178,12 @@ class Guia extends BaseController {
 //        $this->session->set_flashdata('message', $mensagem);
         $this->session->set_flashdata('message', $mensagem);
 //        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
-        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+        if($tipo == 'EXTRA'){
+          redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");  
+        }else{
+          redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");  
+        }
+        
     }
 
     function apagarpagamentoiugu($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
@@ -1143,6 +1248,19 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
     }
 
+    function gravarconsultacoop($paciente_id, $contrato_id) {
+        $ambulatorio_guia_id = $this->guia->gravarconsultacoop($paciente_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta coop.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta coop.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");
+    }
+
     function gravarnovaparcelacontrato($paciente_id, $contrato_id) {
         $ambulatorio_guia_id = $this->guia->gravarnovaparcelacontrato($paciente_id, $contrato_id);
         if ($ambulatorio_guia_id == "-1") {
@@ -1157,17 +1275,17 @@ class Guia extends BaseController {
     }
 
     function gravarcartaoclienteiugu($paciente_id, $contrato_id) {
-        
+
 //        echo '<pre>';
 //        var_dump($_POST);
 //        die;
         $ambulatorio_guia_id = $this->guia->gravarcartaoclienteiugu($paciente_id, $contrato_id);
-        
+
 //        $empresa = $this->guia->listarempresa();
 //        $key = $empresa[0]->iugu_token;
 //        Iugu::setApiKey($key);
 
-        
+
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar cartão.';
         } else {
@@ -1181,17 +1299,58 @@ class Guia extends BaseController {
 
     function excluircontrato($paciente_id, $contrato_id) {
 //        var_dump($contrato_id); die;
+        $pagamento = $this->paciente->listarparcelaiuguexclusaocontrato($contrato_id);
+//        var_dump($pagamento); die;
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+
+        foreach ($pagamento as $item) {
+
+
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
+            $invoice_id = $item->invoice_id;
+
+            $retorno = Iugu_Invoice::fetch($invoice_id);
+            $retorno->cancel();
+//            echo '<pre>';
+//            var_dump($retorno);
+//            die;
+            $this->guia->cancelarpagamentoiugu($item->paciente_contrato_parcelas_id);
+        }
+
         $ambulatorio_guia_id = $this->guia->excluircontrato($paciente_id, $contrato_id);
 
         redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
     }
 
+    function ativarcontrato($paciente_id, $contrato_id) {
+//        var_dump($contrato_id); die;
+        $ambulatorio_guia_id = $this->guia->ativarcontrato($paciente_id, $contrato_id);
+
+        redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
+    }
+
     function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id) {
+
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+//        var_dump($pagamento_iugu);
+//        die;
+        if ($key != '' && count($pagamento_iugu) > 0) {
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+
+            $retorno = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+            $retorno->cancel();
+        }
         $ambulatorio_guia_id = $this->guia->excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id);
         if ($ambulatorio_guia_id == "-1") {
-            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+            $data['mensagem'] = 'Erro ao excluir parcela';
         } else {
-            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+            $data['mensagem'] = 'Sucesso ao excluir parcela.';
         }
         $data['paciente_id'] = $paciente_id;
         $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
@@ -1548,6 +1707,8 @@ class Guia extends BaseController {
         $data['lista'] = $this->paciente->listardependentes();
         $data['empresa'] = $this->guia->listarempresa();
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontrato($contrato_id);
+        $data['listarpagamentosconsultaextra'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
+        $data['listarpagamentosconsultacoop'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }
@@ -1561,6 +1722,28 @@ class Guia extends BaseController {
 //        var_dump($data['listarpagamentoscontrato']); die;
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guiaconsultaavulsapagamento-form', $data);
+    }
+
+    function listarpagamentosconsultacoop($paciente_id, $contrato_id) {
+        $data['paciente_id'] = $paciente_id;
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['lista'] = $this->paciente->listardependentes();
+        $data['empresa'] = $this->guia->listarempresa();
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
+//        var_dump($data['listarpagamentoscontrato']); die;
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/guiaconsultacooppagamento-form', $data);
+    }
+
+    function criarconsultacoop($paciente_id, $contrato_id) {
+        $data['paciente_id'] = $paciente_id;
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['lista'] = $this->paciente->listardependentes();
+        $data['empresa'] = $this->guia->listarempresa();
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
+//        var_dump($data['listarpagamentoscontrato']); die;
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/criarconsultacooppagamento-form', $data);
     }
 
     function criarconsultaavulsa($paciente_id, $contrato_id) {

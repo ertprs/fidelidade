@@ -197,6 +197,41 @@ class Autocomplete extends Controller {
         }
     }
 
+    function apagarcontratosiugu() {
+//        $invoice_id = $_POST["data"]['id'];
+//        $status = $_POST["data"]['status'];
+        set_time_limit(0); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+        ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
+        $pagamento = $this->paciente_m->listarparcelaiuguexcluidos();
+        //echo '<pre>';
+        //var_dump($pagamento);
+        // die;
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        if ($key != '') {
+
+            foreach ($pagamento as $item) {
+
+
+                Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
+                $invoice_id = $item->invoice_id;
+
+                $retorno = Iugu_Invoice::fetch($invoice_id);
+//                echo '<pre>';
+//                var_dump($retorno);
+//                die;
+                if ($retorno['status'] == 'paid') {
+
+                    $this->guia->confirmarpagamento($item->paciente_contrato_parcelas_id);
+                }
+            }
+            echo 'true';
+        } else {
+            echo 'false';
+        }
+    }
+
     function confirmarpagamentoautomaticoiugu() {
 //        $invoice_id = $_POST["data"]['id'];
 //        $status = $_POST["data"]['status'];
@@ -224,6 +259,43 @@ class Autocomplete extends Controller {
                 if ($retorno['status'] == 'paid') {
 
                     $this->guia->confirmarpagamento($item->paciente_contrato_parcelas_id);
+                }
+            }
+            echo 'true';
+        } else {
+            echo 'false';
+        }
+    }
+
+    function confirmarpagamentoautomaticoconsultaavulsaiugu() {
+//        $invoice_id = $_POST["data"]['id'];
+//        $status = $_POST["data"]['status'];
+        set_time_limit(0); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+        ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
+        $pagamento = $this->paciente_m->listarparcelaiugupendentesconsultaavulsa();
+//        echo '<pre>';
+//        var_dump($pagamento);
+//        die;
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        if ($key != '') {
+
+            foreach ($pagamento as $item) {
+
+
+                Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
+                $invoice_id = $item->invoice_id;
+                $tipo = $item->tipo;
+                $valor = $item->valor;
+                $paciente_id = $item->paciente_id;
+                $retorno = Iugu_Invoice::fetch($invoice_id);
+//                echo '<pre>';
+//                var_dump($retorno);
+//                die;
+                if ($retorno['status'] == 'paid') {
+
+                    $this->guia->confirmarpagamentoconsultaavulsa($item->consultas_avulsas_id,$paciente_id, $tipo, $valor);
                 }
             }
             echo 'true';

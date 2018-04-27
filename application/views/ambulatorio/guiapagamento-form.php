@@ -16,7 +16,14 @@
                 <div class="bt_link">
 
                     <a href="<?= base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id"; ?>">
-                        Consulta Avulsa
+                        Consulta Extra
+                    </a>
+
+                </div>  
+                <div class="bt_link">
+
+                    <a href="<?= base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id"; ?>">
+                        Consulta Coparticipação
                     </a>
 
                 </div>  
@@ -74,6 +81,7 @@
 
             </form>
             <fieldset>
+                <legend>Parcelas</legend>
                 <? if (count($listarpagamentoscontrato) > 0) { ?>
                     <table id="table_justa">
                         <thead>
@@ -83,6 +91,7 @@
                                 <th width="70px;" class="tabela_header">Data</th>
                                 <th width="70px;" class="tabela_header">Valor</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
+                                <th width="70px;" class="tabela_header">Observações</th>
     <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
                                 <th width="70px;" colspan="2" class="tabela_header"></th>
                                 <? if (@$listarpagamentoscontrato[0]->contrato == 't') { ?>
@@ -161,9 +170,11 @@
                                     <td class="<?php echo $estilo_linha; ?>"><?= $mes; ?> <? if ($item->taxa_adesao == 't') { ?><span style="color:green;">Adesão </span><? } ?></td>
                                     <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
                                     <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ',', '.') ?></td>
+                                    
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                                        <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?=$item->observacao?></a></td>
                                         <? if ($item->contrato == 't') { ?>
 
 
@@ -218,9 +229,15 @@
 
                                                 </td> 
                                             <? } else { ?>
-                                                <td colspan="2" class="<?php echo $estilo_linha; ?>">
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>">
                                                     <div style="width: 100px;" class="bt_link">
                                                         <a target="_blank" href="<?= $item->url ?>">Pag. Iugu
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>">
+                                                    <div style="width: 100px;" class="bt_link">
+                                                        <a  href="<?= base_url() ?>ambulatorio/guia/reenviaremail/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Re-enviar Email
                                                         </a>
                                                     </div>
                                                 </td>
@@ -228,25 +245,261 @@
 
                                             <? }
                                             ?>
-                                            <? if ($operador_id == 1) { ?>
-                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>">
-                                                                                                                                                                <div  class="bt_link">
-                                                                                                                                                                    <a href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Excluir
-                                                                                                                                                                    </a>
-                                                                                                                                                                </div>
-                                                                                                                                                            </td>-->
+                                            <? if ($perfil_id == 1) { ?>
+                                                <td onclick="javascript: return confirm('Deseja realmente excluir a parcela?');"  class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
+                                                        <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Excluir
+                                                        </a></div> 
 
+                                                </td>
                                             <? }
                                             ?>
                                         <? } else { ?>
                                             <td colspan="8" class="<?php echo $estilo_linha; ?>"></td> 
                                         <? } ?>
                                     <? } else { ?>
-                                        <td colspan="8" class="<?php echo $estilo_linha; ?>">PAGA (<?if($item->data_cartao_iugu != ''){echo 'Cartão';}else{echo 'Boleto';}?>)</td>
+                                        <td style="width: 130px" class="<?php echo $estilo_linha; ?>">PAGA (<?if($item->data_cartao_iugu != ''){echo 'Cartão';}else{echo 'Boleto';}?>)</td>
             <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                                 <a href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
                                                 </a></div>
                                         </td> -->
+                                        <td colspan="7" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?=$item->observacao?></a></td>
+                                    <? } ?>
+                                </tr>
+                            </tbody>
+                            <?
+                        }
+                        ?>
+                        <tfoot>
+
+                        </tfoot>
+                    </table> 
+                    <br/>
+                    <?
+                }
+                ?>
+                </table> 
+                <br/>
+
+
+            </fieldset>
+            
+            <fieldset>
+                <legend>Consulta Extra</legend>
+                <? if (count($listarpagamentosconsultaextra) > 0) { ?>
+                    <table id="table_justa">
+                        <thead>
+
+                            <tr>
+                                <th width="70px;" class="tabela_header">Parcela</th>
+                                <th width="70px;" class="tabela_header">Data</th>
+                                <th width="70px;" class="tabela_header">Valor</th>
+                                <th width="70px;" class="tabela_header">Situacao</th>
+    <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
+                                <th width="70px;" colspan="6" class="tabela_header"></th>
+        <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
+                            </tr>
+                        </thead>
+                        <?
+                        $contador = 0;
+                        foreach ($listarpagamentosconsultaextra as $item) {
+                            $contador ++;
+
+                            ?>
+                            <?
+                            $MES = substr($item->data, 5, 2);
+
+                            switch ($MES) {
+                                case "01": $mes = 'Janeiro';
+                                    break;
+                                case "02": $mes = 'Fevereiro';
+                                    break;
+                                case "03": $mes = 'Março';
+                                    break;
+                                case "04": $mes = 'Abril';
+                                    break;
+                                case "05": $mes = 'Maio';
+                                    break;
+                                case "06": $mes = 'Junho';
+                                    break;
+                                case "07": $mes = 'Julho';
+                                    break;
+                                case "08": $mes = 'Agosto';
+                                    break;
+                                case "09": $mes = 'Setembro';
+                                    break;
+                                case "10": $mes = 'Outubro';
+                                    break;
+                                case "11": $mes = 'Novembro';
+                                    break;
+                                case "12": $mes = 'Dezembro';
+                                    break;
+                            }
+
+
+                            $estilo_linha = "tabela_content01";
+                            ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                            ?>
+
+                            <tbody>
+                                <tr>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= $mes; ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ',', '.') ?></td>
+
+                                    <? if ($item->ativo == 't') { ?>
+                                        <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                                        <? if ($perfil_id == 1) { ?>
+                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                
+                                            </td>
+
+                                        <? }
+                                        ?>
+                                        <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;">
+                                            </td>  
+                                        <? } else { ?>
+                                            <td class="<?php echo $estilo_linha; ?>" colspan="1">
+                                                
+                                            </td>
+
+                                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                                                                                                    <div class="bt_link">
+                                                                                                                                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
+                                                                                                                                        </a>
+                                                                                                                                    </div>
+                                                                                                                                </td>-->
+                                        <? }
+                                        ?>
+                                        <? if ($operador_id == 1) { ?>
+                                            <td class="<?php echo $estilo_linha; ?>">
+                                                
+                                            </td>
+
+                                        <? }
+                                        ?>
+
+                                    <? } else { ?>
+                                        <td colspan="4" class="<?php echo $estilo_linha; ?>">PAGA</td>
+
+                                    <? } ?>
+                                </tr>
+                            </tbody>
+                            <?
+                        }
+                        ?>
+                        <tfoot>
+
+                        </tfoot>
+                    </table> 
+                    <br/>
+                    <?
+                }
+                ?>
+                </table> 
+                <br/>
+
+
+            </fieldset>
+            <fieldset>
+                <legend>Consulta Coparticipação</legend>
+                <? if (count($listarpagamentosconsultacoop) > 0) { ?>
+                    <table id="table_justa">
+                        <thead>
+
+                            <tr>
+                                <th width="70px;" class="tabela_header">Parcela</th>
+                                <th width="70px;" class="tabela_header">Data</th>
+                                <th width="70px;" class="tabela_header">Valor</th>
+                                <th width="70px;" class="tabela_header">Situacao</th>
+    <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
+                                <th width="70px;" colspan="6" class="tabela_header"></th>
+        <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
+                            </tr>
+                        </thead>
+                        <?
+                        $contador = 0;
+                        foreach ($listarpagamentosconsultacoop as $item) {
+                            $contador ++;
+
+                            ?>
+                            <?
+                            $MES = substr($item->data, 5, 2);
+
+                            switch ($MES) {
+                                case "01": $mes = 'Janeiro';
+                                    break;
+                                case "02": $mes = 'Fevereiro';
+                                    break;
+                                case "03": $mes = 'Março';
+                                    break;
+                                case "04": $mes = 'Abril';
+                                    break;
+                                case "05": $mes = 'Maio';
+                                    break;
+                                case "06": $mes = 'Junho';
+                                    break;
+                                case "07": $mes = 'Julho';
+                                    break;
+                                case "08": $mes = 'Agosto';
+                                    break;
+                                case "09": $mes = 'Setembro';
+                                    break;
+                                case "10": $mes = 'Outubro';
+                                    break;
+                                case "11": $mes = 'Novembro';
+                                    break;
+                                case "12": $mes = 'Dezembro';
+                                    break;
+                            }
+
+
+                            $estilo_linha = "tabela_content01";
+                            ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                            ?>
+
+                            <tbody>
+                                <tr>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= $mes; ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ',', '.') ?></td>
+
+                                    <? if ($item->ativo == 't') { ?>
+                                        <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                                        <? if ($perfil_id == 1) { ?>
+                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                
+                                            </td>
+
+                                        <? }
+                                        ?>
+                                        <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;">
+                                            </td>  
+                                        <? } else { ?>
+                                            <td class="<?php echo $estilo_linha; ?>" colspan="1">
+                                                
+                                            </td>
+
+                                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                                                                                                    <div class="bt_link">
+                                                                                                                                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
+                                                                                                                                        </a>
+                                                                                                                                    </div>
+                                                                                                                                </td>-->
+                                        <? }
+                                        ?>
+                                        <? if ($operador_id == 1) { ?>
+                                            <td class="<?php echo $estilo_linha; ?>">
+                                                
+                                            </td>
+
+                                        <? }
+                                        ?>
+
+                                    <? } else { ?>
+                                        <td colspan="4" class="<?php echo $estilo_linha; ?>">PAGA</td>
+
                                     <? } ?>
                                 </tr>
                             </tbody>

@@ -45,6 +45,18 @@
                         <input type="text" name="valor12" class="texto02" id="valor12" alt="decimal" value="<?= @$obj->_valor12; ?>" />
                     </dd>
                     <dt>
+                        <label>Multa Por Atraso (R$)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="multa_atraso" class="texto02" id="multa_atraso" alt="decimal" value="<?= @$obj->_multa_atraso; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Juros (%)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="juros" class="texto02" id="juros" alt="decimal" value="<?= @$obj->_juros; ?>" />
+                    </dd>
+                    <dt>
                         <label>Taxa Adesão</label>
                     </dt>
                     <dd>
@@ -67,7 +79,7 @@
                         <input type="text" name="parcelas" class="texto02" id="parcelas" alt="integer" value= "<?= @$obj->_parcelas; ?>" />
                     </dd>
                     <dt>
-                        <label>Valor cliente adcional</label>
+                        <label>Valor cliente adicional</label>
                     </dt>
                     <dd>
                         <input type="text" name="valoradcional" class="texto02" id="valoradcional" alt="decimal" value="<?= @$obj->_valoradcional; ?>" />
@@ -78,6 +90,12 @@
                     </dt>
                     <dd>
                         <input type="text" name="consulta_avulsa" class="texto02" id="consulta_avulsa" alt="decimal" value="<?= @$obj->_consulta_avulsa; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Consulta Avulsa</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="consulta_coop" class="texto02" id="consulta_coop" alt="decimal" value="<?= @$obj->_consulta_coop; ?>" />
                     </dd>
                     <dt>
                         <label>Comiss&atilde;o</label>
