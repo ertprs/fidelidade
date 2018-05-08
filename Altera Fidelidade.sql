@@ -254,3 +254,27 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN consulta_coop numeric(10,2);
 UPDATE ponto.tb_paciente
    SET consulta_coop= consulta_avulsa
  WHERE consulta_coop is null;
+
+-- 30/04/2018
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN utilizada boolean DEFAULT FALSE;
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN data_utilizada date;
+-- 03/04/2018
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN consulta_avulsa boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN consulta_tipo text;
+
+-- 03/04/2018
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN valor numeric(10,2);
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN parceiro_convenio_id integer;
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN operador_pagamento integer;
+
+-- 04/04/2018
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN data_pagamento timestamp without time zone;
+
+ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN pagamento_confirmado boolean DEFAULT false;
+

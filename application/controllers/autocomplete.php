@@ -173,6 +173,187 @@ class Autocomplete extends Controller {
         die;
     }
 
+    function autorizaratendimentoweb() {
+        header('Access-Control-Allow-Origin: *');
+
+        $parceiro_id = (int) $_GET['parceiro_id'];
+
+        $cpf = $_GET['cpf'];
+
+        $agenda_exames_id = (int) $_GET['agenda_exames_id'];
+
+        $paciente_parceiro_id = (int) $_GET['paciente_id'];
+
+        $grupo = $_GET['grupo'];
+        
+        $procedimento = $_GET['procedimento'];
+        
+        $valor = $_GET['valor'];
+        
+        if($_GET['numero_consultas'] > 0){
+           $numero_consultas_aut = (int) $_GET['numero_consultas']; 
+        }else{
+           $numero_consultas_aut = (int) $_GET['numero_consultas'];  
+        }
+//        var_dump($grupo); die;
+        
+
+        $data = date("Y-m-d");
+
+        $parceiro = $this->parceiro->listarparceiroenderecoconvenio($parceiro_id);
+        @$endereco = $parceiro[0]->endereco_ip;
+        @$parceiro_gravar_id = $parceiro[0]->financeiro_parceiro_id;
+
+        // BUSCANDO O GRUPO DO PROCEDIMENTO NA CLINICA
+//        $grupo_busca = file_get_contents("http://{$endereco}/autocomplete/listargrupoagendamentoweb?procedimento_convenio_id={$_POST['procedimento']}");
+//        $grupo = json_decode($grupo_busca);
+        //LISTANDO AS INFORMAÇÕES DE CARÊNCIA E PARCELAS PAGAS PELO PACIENTE
+        //VERIFICA SE É DEPENDENTE. CASO SIM, ELE VAI PEGAR O ID DO TITULAR E FAZER AS BUSCAS ABAIXO UTILIZANDO ESSE ID
+        $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+//        var_dump($paciente_informacoes); die;
+        if (count($paciente_informacoes) > 0) {
+
+            $paciente_id = $paciente_informacoes[0]->paciente_id;
+//        var_dump($paciente_informacoes); die;
+//        $paciente_informacoes = $this->paciente_m->listardados($_POST['txtNomeid']);
+            if ($paciente_informacoes[0]->situacao == 'Dependente') {
+                $dependente = true;
+            } else {
+                $dependente = false;
+            }
+
+            if ($dependente) {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+//                $paciente_id = $retorno[0]->paciente_id;
+                $paciente_titular_id = $retorno[0]->paciente_id;
+//            $paciente_dependente_id = $paciente_informacoes[0]->paciente_id;
+            } else {
+//            $paciente_id = $_POST['txtNomeid'];
+                $paciente_titular_id = $paciente_id;
+                $paciente_dependente_id = null;
+            }
+
+            $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id);
+            $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
+
+            $listaratendimento = $this->guia->listaratendimentoparceiro($paciente_titular_id, $grupo);
+            $listaragendamentocriado = $this->guia->listaratendimentoagendaexames($paciente_titular_id, $agenda_exames_id);
+
+            $carencia_exame = $carencia[0]->carencia_exame;
+            $carencia_consulta = $carencia[0]->carencia_consulta;
+            $carencia_especialidade = $carencia[0]->carencia_especialidade;
+            $carencia_exame_mensal = $carencia[0]->carencia_exame_mensal;
+            $carencia_consulta_mensal = $carencia[0]->carencia_consulta_mensal;
+            $carencia_especialidade_mensal = $carencia[0]->carencia_especialidade_mensal;
+
+            // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
+            if ($grupo == 'EXAME') {
+                $carencia = (int) $carencia_exame;
+                $carencia_mensal = $carencia_exame_mensal;
+            } elseif ($grupo == 'CONSULTA') {
+                $carencia = (int) $carencia_consulta;
+                $carencia_mensal = $carencia_consulta_mensal;
+            } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
+                $carencia = (int) $carencia_especialidade;
+                $carencia_mensal = $carencia_especialidade_mensal;
+            }
+
+//        var_dump($carencia_mensal); die;
+            $parcelas_mensal = $this->guia->listarparcelaspacientemensal($paciente_titular_id);
+            if ($carencia_mensal == 't') {
+                $listaratendimentomensal = $this->guia->listaratendimentoparceiromensal($paciente_titular_id, $grupo);
+//            var_dump($listaratendimentomensal);
+//            die;
+
+                if (count($listaratendimentomensal) == 0 && count($parcelas_mensal) > 0) {
+                    $carencia_mensal_liberada = 't';
+                } else {
+                    $carencia_mensal_liberada = 'f';
+                }
+            }
+            $dias_parcela = 30 * count($parcelas);
+            $dias_atendimento = $carencia * count($listaratendimento);
+            $carencia_necessaria = $carencia * $numero_consultas_aut;
+            // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
+// Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
+// 
+//        echo '<pre>';
+//        var_dump($paciente_titular_id);
+//        var_dump($grupo);
+//        var_dump($carencia);
+//        var_dump($dias_parcela);
+//        var_dump($dias_atendimento);
+//        var_dump($parcelas);
+//        var_dump($parcelas_mensal);
+//        var_dump($listaratendimento);
+//        die;
+            // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
+            // o sistema vai gravar. 
+            //
+        //
+        if ($carencia_mensal == 't') {
+                if ($carencia_mensal_liberada == 't') {
+                    $carencia_liberada = 't';
+                } else {
+                    $carencia_liberada = 'f';
+                }
+            } else {
+                if ((($dias_parcela - $dias_atendimento) >= $carencia_necessaria) && $dias_parcela > 0) {
+                    // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
+                    // Assim ele vai ter que pagar, porem, com um descontro cadastrado já como o valor do procedimento na clinica
+                    $carencia_liberada = 't';
+                } else {
+                    $carencia_liberada = 'f';
+                }
+            }
+
+            
+//        $carencia_liberada = 'f';
+            // Caso o cliente não tenha carência, o sistema vai buscar consultas avulsas
+            if ($carencia_liberada == 'f') {
+                
+                $listarconsultaavulsa = $this->guia->listarconsultaavulsaliberada($paciente_titular_id);
+//                var_dump($listarconsultaavulsa); die;
+                if (count($listarconsultaavulsa) > 0) {
+                    $consulta_avulsa_id = $listarconsultaavulsa[0]->consultas_avulsas_id;
+                    $tipo_consulta = $listarconsultaavulsa[0]->tipo;
+                    // Marcando que foi utilizada
+
+                    $gravar_utilizacao = $this->guia->utilizarconsultaavulsaliberada($consulta_avulsa_id);
+
+                    // Libera a consulta sem necessidade de pagamento adicional
+                    $carencia_liberada = 't';
+                } else {
+                    $tipo_consulta = '';
+                }
+            } else {
+                $listarconsultaavulsa = array();
+                $tipo_consulta = '';
+            }
+            
+
+
+            /* Se no fim das contas se tudo der errado, a variável carencia_liberada vai conter a informacao 'f'que irá ser salva na linha da consulta
+              no banco, para dessa forma o sistema cobrar o valor do exame ao invés de utilizar da carência */
+
+            if ($carencia_liberada == 't') {
+                if (count($listaragendamentocriado) == 0) {
+                    $gravaratendimento = $this->guia->gravaratendimentoparceiroweb($paciente_id, $parceiro_id, $valor, $procedimento, $parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data, $grupo, $paciente_titular_id, $carencia_liberada, $tipo_consulta);
+                }
+
+                echo json_encode('true');
+            } else {
+                if (count($listaragendamentocriado) == 0) {
+                    $gravaratendimento = $this->guia->gravaratendimentoparceiroweb($paciente_id, $parceiro_id, $valor, $procedimento, $parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data, $grupo, $paciente_titular_id, $carencia_liberada, $tipo_consulta);
+                }
+                echo json_encode('false');
+            }
+        } else {
+            echo json_encode('no_exists');
+        }
+        // Realiza a gravação da consulta caso o teste seja verdadeiro 
+    }
+
     function horariosambulatorio() {
 
         if (isset($_GET['exame'])) {
@@ -295,7 +476,7 @@ class Autocomplete extends Controller {
 //                die;
                 if ($retorno['status'] == 'paid') {
 
-                    $this->guia->confirmarpagamentoconsultaavulsa($item->consultas_avulsas_id,$paciente_id, $tipo, $valor);
+                    $this->guia->confirmarpagamentoconsultaavulsa($item->consultas_avulsas_id, $paciente_id, $tipo, $valor);
                 }
             }
             echo 'true';

@@ -143,11 +143,13 @@
             }
         });
     });
+    
     $(function () {
         $('#convenio').change(function () {
+//            alert('asdas');
             if ($(this).val()) {
 //                $('.carregando').show();
-                $.getJSON('http://<?=$endereco_ip?>autocomplete/procedimentoconveniofidelidadeweb', {convenio1: $(this).val(), ajax: true}, function (j) {
+                $.getJSON('http://<?=$endereco_ip?>/autocomplete/procedimentoconveniofidelidadeweb', {convenio1: $(this).val(), ajax: true}, function (j) {
                     options = '<option value=""></option>';
                     for (var c = 0; c < j.length; c++) {
                         options += '<option value="' + j[c].procedimento_convenio_id + '">' + j[c].procedimento + '</option>';
@@ -171,7 +173,7 @@
             if ($(this).val()) {
                 $('#horarios').hide();
                 $('.carregando').show();
-                $.getJSON('<?= $endereco_ip ?>autocomplete/horariosambulatorio', {exame: $(this).val(), teste: $("#data_ficha").val()}, function (j) {
+                $.getJSON('http://<?=$endereco_ip?>/autocomplete/horariosambulatorio', {exame: $(this).val(), teste: $("#data_ficha").val()}, function (j) {
                     var options = '<option value=""></option>';
                     for (var i = 0; i < j.length; i++) {
                         options += '<option value="' + j[i].agenda_exames_id + '">' + j[i].inicio + '-' + j[i].nome + '-' + j[i].medico_agenda + '</option>';

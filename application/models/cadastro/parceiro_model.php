@@ -56,6 +56,14 @@ class parceiro_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
+    
+    function listarparceiroenderecoconvenio($financeiro_parceiro_id) {
+        $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("convenio_id", $financeiro_parceiro_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
 
     function excluir($financeiro_parceiro_id) {
 

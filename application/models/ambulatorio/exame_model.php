@@ -31,8 +31,8 @@ class exame_model extends Model {
         }
         return $this->db;
     }
-    
-        function listarparceiros() {
+
+    function listarparceiros() {
         $this->db->select('financeiro_parceiro_id,
                             razao_social,
                             fantasia,
@@ -57,13 +57,14 @@ class exame_model extends Model {
         $this->db->from('tb_paciente');
 //        $this->db->where('situacao', 'Titular');
         $this->db->where('ativo', 'true');
-        
+
         if ($parametro != null) {
             $this->db->where('nome ilike', "%" . $parametro . "%");
         }
         $return = $this->db->get();
         return $return->result();
     }
+
     function listarautocompletepacientetitular($parametro = null) {
         $this->db->select('paciente_id,
                             nome,
@@ -75,7 +76,7 @@ class exame_model extends Model {
         $this->db->from('tb_paciente');
         $this->db->where('situacao', 'Titular');
         $this->db->where('ativo', 'true');
-        
+
         if ($parametro != null) {
             $this->db->where('nome ilike', "%" . $parametro . "%");
         }
@@ -1524,39 +1525,15 @@ class exame_model extends Model {
         return $return->result();
     }
 
-    function listarexamemultifuncaofisioterapia($args = array()) {
+    function listaragendamentosautorizados($args = array()) {
         $data = date("Y-m-d");
-        $empresa_id = $this->session->userdata('empresa_id');
-        $this->db->select('ae.agenda_exames_id,
-                            ae.agenda_exames_nome_id,
-                            ae.data,
-                            ae.inicio,
-                            ae.fim,
-                            ae.ativo,
-                            ae.telefonema,
-                            ae.situacao,
-                            p.celular,
-                            p.telefone,
-                            ae.guia_id,
-                            ae.data_atualizacao,
-                            ae.paciente_id,
-                            ae.observacoes,
-                            o.nome as medicoagenda,
-                            an.nome as sala,
-                            p.nome as paciente,
-                            op.nome as secretaria,
-                            ae.procedimento_tuss_id,
-                            pt.nome as procedimento');
-        $this->db->from('tb_agenda_exames ae');
-        $this->db->join('tb_paciente p', 'p.paciente_id = ae.paciente_id', 'left');
-        $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_convenio_id = ae.procedimento_tuss_id', 'left');
-        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
-        $this->db->join('tb_exame_sala an', 'an.exame_sala_id = ae.agenda_exames_nome_id', 'left');
-        $this->db->join('tb_operador o', 'o.operador_id = ae.medico_consulta_id', 'left');
-        $this->db->join('tb_operador op', 'op.operador_id = ae.operador_atualizacao', 'left');
-        $this->db->where('ae.data >=', $data);
-        $this->db->where('ae.empresa_id', $empresa_id);
-        $this->db->where('ae.tipo', 'FISIOTERAPIA');
+        $this->db->select('ae.*,p.telefone,p.celular, p.nome as paciente, p2.nome as titular, fp.fantasia as parceiro');
+        $this->db->from('tb_exames_fidelidade ae');
+        $this->db->join('tb_paciente p', 'p.paciente_id = ae.paciente_fidelidade_id', 'left');
+        $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = ae.parceiro_id', 'left');
+        $this->db->join('tb_paciente p2', 'p2.paciente_id = ae.paciente_titular_id', 'left');
+
+
 //        $this->db->where('ae.confirmado', 'true');
 //        $this->db->where('ae.ativo', 'false');
 //        $this->db->where('ae.realizada', 'false');
@@ -1564,15 +1541,18 @@ class exame_model extends Model {
         if (isset($args['nome']) && strlen($args['nome']) > 0) {
             $this->db->where('p.nome ilike', "%" . $args['nome'] . "%");
         }
+        if (isset($args['nometitular']) && strlen($args['nometitular']) > 0) {
+            $this->db->where('p2.nome ilike', "%" . $args['nometitular'] . "%");
+        }
         if (isset($args['data']) && strlen($args['data']) > 0) {
             $this->db->where('ae.data', $args['data']);
+        } else {
+            $this->db->where('ae.data >=', $data);
         }
-        if (isset($args['medico']) && strlen($args['medico']) > 0) {
-            $this->db->where('ae.medico_consulta_id', $args['medico']);
+        if (isset($args['parceiro']) && strlen($args['parceiro']) > 0) {
+            $this->db->where('ae.parceiro_id', $args['parceiro']);
         }
-        if (isset($args['situacao']) && strlen($args['situacao']) > 0) {
-            $this->db->where('ae.situacao', $args['situacao']);
-        }
+
         return $this->db;
     }
 

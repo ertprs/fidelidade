@@ -56,7 +56,7 @@
 //        var_dump($atendimento_parcela);
 //        var_dump($dias_parcela);
 //        var_dump($carencia);
-//        var_dump($dias_atendimento);
+//        var_dump($dias_atendimentoexame);
 //        var_dump($listaratendimento);
 //        die;
     // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência

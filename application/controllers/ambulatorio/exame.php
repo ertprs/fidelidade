@@ -110,6 +110,8 @@ class Exame extends BaseController {
         $this->loadView('ambulatorio/examemultifuncaoconsulta-lista', $data);
     }
 
+
+
     function relatoriomedicoagendaexame() {
         $data['convenio'] = $this->convenio->listardados();
         $data['medicos'] = $this->operador_m->listarmedicos();
@@ -195,6 +197,11 @@ class Exame extends BaseController {
     function listarmultifuncaofisioterapia($args = array()) {
 
         $this->loadView('ambulatorio/examemultifuncaofisioterapia-lista', $args);
+    }
+    
+    function listaragendamentosautorizados($args = array()) {
+
+        $this->loadView('ambulatorio/examemultifuncaowebaut-lista', $args);
     }
 
     function autorizarsessaofisioterapia($paciente_id) {

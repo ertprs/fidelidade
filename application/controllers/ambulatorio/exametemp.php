@@ -2,6 +2,7 @@
 
 require_once APPPATH . 'controllers/base/BaseController.php';
 require_once("./iugu/lib/Iugu.php");
+
 /**
  * Esta classe é o controler de Servidor. Responsável por chamar as funções e views, efetuando as chamadas de models
  * @author Equipe de desenvolvimento APH
@@ -152,6 +153,18 @@ class Exametemp extends BaseController {
             $this->session->set_flashdata('message', $data['mensagem']);
             redirect(base_url() . "ambulatorio/exametemp/unificar/$pacientetemp_id");
         }
+    }
+
+    function confirmarpagamentofidelidade($exames_fidelidade_id) {
+
+        $verifica = $this->guia->confirmarpagamentofidelidade($exames_fidelidade_id);
+        if ($verifica == "-1") {
+            $data['mensagem'] = 'Erro ao unificar Paciente. Opera&ccedil;&atilde;o cancelada.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao unificar Paciente.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
     function carregarpacientetempgeral($pacientetemp_id, $faltou = null) {
@@ -498,7 +511,7 @@ class Exametemp extends BaseController {
             $dependente = false;
         }
 
-        if ($dependente == true) {
+        if ($dependente) {
             $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
             $paciente_id = $retorno[0]->paciente_id;
             $paciente_titular_id = $retorno[0]->paciente_id;
@@ -543,7 +556,7 @@ class Exametemp extends BaseController {
 //            var_dump($listaratendimentomensal);
 //            die;
 
-            if (count($listaratendimentomensal) == 0) {
+            if (count($listaratendimentomensal) == 0 && count($parcelas_mensal) > 0) {
                 $carencia_mensal_liberada = 't';
             } else {
                 $carencia_mensal_liberada = 'f';
@@ -558,7 +571,10 @@ class Exametemp extends BaseController {
 //        var_dump($paciente_titular_id);
 //        var_dump($grupo);
 //        var_dump($carencia);
+//        var_dump($dias_parcela);
 //        var_dump($dias_atendimento);
+//        var_dump($parcelas);
+//        var_dump($parcelas_mensal);
 //        var_dump($listaratendimento);
 //        die;
         // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
@@ -572,7 +588,7 @@ class Exametemp extends BaseController {
                 $carencia_liberada = 'f';
             }
         } else {
-            if (($dias_parcela - $dias_atendimento) >= $carencia) {
+            if ((($dias_parcela - $dias_atendimento) >= $carencia) && $dias_parcela > 0) {
                 // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
                 // Assim ele vai ter que pagar, porem, com um descontro cadastrado já como o valor do procedimento na clinica
                 $carencia_liberada = 't';
@@ -582,9 +598,38 @@ class Exametemp extends BaseController {
         }
 
 
+//        $carencia_liberada = 'f';
+        // Caso o cliente não tenha carência, o sistema vai buscar consultas avulsas
+//        if ($carencia_liberada == 'f') {
+//
+//            $listarconsultaavulsa = $this->guia->listarconsultaavulsaliberada($paciente_titular_id);
+//            if (count($listarconsultaavulsa) > 0) {
+//                $consulta_avulsa_id = $listarconsultaavulsa[0]->consultas_avulsas_id;
+//                $tipo_consulta = $listarconsultaavulsa[0]->tipo;
+//                // Marcando que foi utilizada
+//
+//                $gravar_utilizacao = $this->guia->utilizarconsultaavulsaliberada($consulta_avulsa_id);
+//
+//                // Libera a consulta sem necessidade de pagamento adicional
+//                $carencia_liberada = 't';
+//            } else {
+//                $tipo_consulta = '';
+//            }
+//        } else {
+//            $listarconsultaavulsa = array();
+//            $tipo_consulta = '';
+//        }
 
 
-        if (count($parcelas_mensal) > 0) {
+        /* Se no fim das contas se tudo der errado, a variável carencia_liberada vai conter a informacao 'f'que irá ser salva na linha da consulta
+          no banco, para dessa forma o sistema cobrar o valor do exame ao invés de utilizar da carência */
+
+//        var_dump($listarconsultaavulsa);
+//        die;
+
+
+
+        if (count($parcelas) > 0) {
             if ($_POST['nascimento'] != '') {
 //                var_dump($_POST['nascimento']); die;
                 $nascimento = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['nascimento'])));
@@ -643,7 +688,7 @@ class Exametemp extends BaseController {
 //                var_dump($paciente_parceiro_id);
 //                die;
                 if ($consultas != ' 0') {
-                    $gravaratendimento = $this->guia->gravaratendimentoparceiro($parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data, $grupo, $paciente_titular_id, $carencia_liberada);
+//                    $gravaratendimento = $this->guia->gravaratendimentoparceiro($parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data, $grupo, $paciente_titular_id, $carencia_liberada, $tipo_consulta);
                     echo '<html>
         <meta charset = "UTF-8">
         <script type="text/javascript">

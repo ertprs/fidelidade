@@ -25,13 +25,16 @@ class guia_model extends Model {
 
     function listarpacientecpf($cpf) {
 
-        $this->db->select('paciente_id,
-                            telefone
-                            ');
-        $this->db->from('tb_paciente');
+        $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
+        $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
         $this->db->where("cpf", $cpf);
+        $this->db->where("p.ativo", 't');
         $return = $this->db->get()->result();
-        return $return[0]->paciente_id;
+        return $return;
     }
 
     function listarpacientes($parametro = null) {
@@ -72,7 +75,7 @@ class guia_model extends Model {
         $this->db->where('p.ativo', 'true');
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcp.ativo', 'true');
-        $this->db->where('pcp.excluido', 'excluido');
+        $this->db->where('pcp.excluido', 'false');
         $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('p.nome');
@@ -379,6 +382,7 @@ class guia_model extends Model {
         $this->db->where("pc.paciente_id", $paciente_contrato_id);
         $this->db->where("pcp.ativo", 'f');
         $this->db->where("pc.ativo", 't');
+        $this->db->where("pcp.excluido", 'f');
         $this->db->orderby('pcp.data');
         $return = $this->db->get();
         return $return->result();
@@ -3846,7 +3850,7 @@ ORDER BY p.nome";
         }
     }
 
-    function gravaratendimentoparceiro($parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data_atendimento, $grupo, $paciente_titular_id, $carencia_liberada) {
+    function gravaratendimentoparceiro($parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data_atendimento, $grupo, $paciente_titular_id, $carencia_liberada, $tipo_consulta) {
         try {
             /* inicia o mapeamento no banco */
 //            var_dump($carencia_liberada); die;
@@ -3859,10 +3863,50 @@ ORDER BY p.nome";
             $this->db->set('paciente_titular_id', $paciente_titular_id);
             $this->db->set('carencia_liberada', $carencia_liberada);
             $this->db->set('parceiro_id', $parceiro_gravar_id);
+
+            if ($tipo_consulta != '') {
+                $this->db->set('consulta_tipo', $tipo_consulta);
+                $this->db->set('consulta_avulsa', 't');
+            }
             $this->db->set('data', $data);
             $this->db->set('grupo', $grupo);
             $this->db->set('data_atendimento', $data_atendimento);
             $this->db->set('procedimento_convenio_id', $_POST['procedimento']);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->insert('tb_exames_fidelidade');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravaratendimentoparceiroweb($paciente_id, $parceiro_id, $valor, $procedimento, $parceiro_gravar_id, $agenda_exames_id, $paciente_parceiro_id, $data_atendimento, $grupo, $paciente_titular_id, $carencia_liberada, $tipo_consulta) {
+        try {
+            /* inicia o mapeamento no banco */
+//            var_dump($carencia_liberada); die;
+            $data = date("Y-m-d");
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('agenda_exames_id', $agenda_exames_id);
+            $this->db->set('paciente_fidelidade_id', $paciente_id);
+            $this->db->set('paciente_parceiro_id', $paciente_parceiro_id);
+            $this->db->set('paciente_titular_id', $paciente_titular_id);
+            $this->db->set('carencia_liberada', $carencia_liberada);
+            $this->db->set('parceiro_id', $parceiro_gravar_id);
+            $this->db->set('parceiro_convenio_id', $parceiro_id);
+            $this->db->set('valor', $valor);
+
+            if ($tipo_consulta != '') {
+                $this->db->set('consulta_tipo', $tipo_consulta);
+                $this->db->set('consulta_avulsa', 't');
+            }
+            $this->db->set('data', $data);
+            $this->db->set('grupo', $grupo);
+            $this->db->set('data_atendimento', $data_atendimento);
+            $this->db->set('procedimento_convenio_id', $procedimento);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->set('data_cadastro', $horario);
             $this->db->insert('tb_exames_fidelidade');
@@ -3879,6 +3923,8 @@ ORDER BY p.nome";
         $this->db->from('tb_exames_fidelidade ef');
         $this->db->where("ef.paciente_titular_id", $paciente_id);
         $this->db->where("ef.grupo", $grupo);
+        $this->db->where("ef.carencia_liberada", 't');
+        $this->db->where("ef.consulta_avulsa", 'f');
 
         $return = $this->db->get();
         return $return->result();
@@ -3893,9 +3939,47 @@ ORDER BY p.nome";
         $this->db->where("Extract(Month From ef.data) = $data");
         $this->db->where("Extract(Year From ef.data) = $data_year");
         $this->db->where("ef.grupo", $grupo);
+        $this->db->where("ef.carencia_liberada", 't');
+        $this->db->where("ef.consulta_avulsa", 'f');
 
         $return = $this->db->get();
         return $return->result();
+    }
+
+    function listaratendimentoagendaexames($paciente_titular_id, $agenda_exames_id) {
+//        $data = date("m");
+//        $data_year = date("Y");
+        $this->db->select('ef.paciente_fidelidade_id');
+        $this->db->from('tb_exames_fidelidade ef');
+        $this->db->where("ef.paciente_titular_id", $paciente_titular_id);
+        $this->db->where("ef.agenda_exames_id", $agenda_exames_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarconsultaavulsaliberada($paciente_id) {
+
+
+        $this->db->select('consultas_avulsas_id, ef.paciente_id, tipo, data');
+        $this->db->from('tb_consultas_avulsas ef');
+        $this->db->where("ef.paciente_id", $paciente_id);
+        $this->db->where("ef.excluido", 'f');
+        $this->db->where("ef.utilizada", 'f');
+        $this->db->where("ef.ativo", 'f');
+        $this->db->orderby('ef.data');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function utilizarconsultaavulsaliberada($consulta_avulsa_id) {
+        $data = date("Y-m-d");
+
+        $this->db->set('data_utilizada', $data);
+        $this->db->set('utilizada', 't');
+        $this->db->where("consultas_avulsas_id", $consulta_avulsa_id);
+        $this->db->update('tb_consultas_avulsas');
+
+        return true;
     }
 
     function listarexamesguia($guia_id) {
@@ -4597,12 +4681,12 @@ ORDER BY p.nome";
             return true;
     }
 
-    function confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id , $tipo, $valor) {
+    function confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id, $tipo, $valor) {
 
         $parcela = $this->listarparcelaconfirmarpagamentoconsultaavulsa($paciente_id);
 //        echo '<pre>';
 //        var_dump($tipo); die;
-        
+
         $credor = $parcela[0]->financeiro_credor_devedor_id;
         if ($tipo == 'EXTRA') {
             $plano = 'CONSULTA EXTRA';
@@ -5265,6 +5349,77 @@ AND data <= '$data_fim'";
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('paciente_contrato_parcelas_id', $parcela_id);
             $this->db->update('tb_paciente_contrato_parcelas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function confirmarpagamentofidelidade($exames_fidelidade_id) {
+        try {
+            $this->db->select('valor, paciente_titular_id');
+            $this->db->where('exames_fidelidade_id', $exames_fidelidade_id);
+            $this->db->from('tb_exames_fidelidade');
+            $return = $this->db->get()->result();
+            $paciente_id = $return[0]->paciente_titular_id;
+
+
+            $this->db->select('cp.financeiro_credor_devedor_id, fp.conta_id');
+            $this->db->from('tb_paciente_contrato pc');
+            $this->db->join('tb_paciente_contrato_parcelas cp', 'cp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+            $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+            $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+            $this->db->where("pc.paciente_id", $paciente_id);
+            $this->db->where("cpi.paciente_contrato_parcelas_id is null");
+            $this->db->where("cp.ativo", 't');
+            $this->db->where("pc.ativo", 't');
+            $this->db->where("cp.excluido", 'f');
+            $this->db->limit(1);
+            $return2 = $this->db->get()->result();
+            $credor = $return2[0]->financeiro_credor_devedor_id;
+            $conta_id = $return2[0]->conta_id;
+            $data = date("Y-m-d");
+
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+
+            $valor = $return[0]->valor;
+//            var_dump($return);
+//            die;
+
+
+            $this->db->set('valor', $valor);
+            $this->db->set('data', $data);
+            $this->db->set('tipo', 'RECEBIMENTO');
+            $this->db->set('classe', 'PAGAMENTO NA CLINICA');
+            $this->db->set('nome', $credor);
+            $this->db->set('conta', $conta_id);
+//        $this->db->set('observacao', $_POST['Observacao']);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_entradas');
+            $entradas_id = $this->db->insert_id();
+
+
+            $this->db->set('valor', $valor);
+            $this->db->set('entrada_id', $entradas_id);
+            $this->db->set('conta', $conta_id);
+            $this->db->set('nome', $credor);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('data', $data);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_saldo');
+
+
+
+
+            $this->db->set('pagamento_confirmado', 't');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('exames_fidelidade_id', $exames_fidelidade_id);
+            $this->db->update('tb_exames_fidelidade');
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
