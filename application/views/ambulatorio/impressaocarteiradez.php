@@ -78,7 +78,7 @@
             </tr>
             <tr>
                 <td style="text-align: left;font-family: 'Lucida-Sans-Unicode';" colspan="4">
-                    &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-style: italic; font-size: 10pt;"> Emissão : 20/10/2017</span>
+                    &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-style: italic; font-size: 10pt;"> Emissão : <?=date("d/m/Y");?></span>
                 </td>  
             </tr>
         </tbody>

@@ -439,7 +439,7 @@ class Autocomplete extends Controller {
 //                die;
                 if ($retorno['status'] == 'paid') {
 
-                    $this->guia->confirmarpagamento($item->paciente_contrato_parcelas_id);
+                    $this->guia->confirmarpagamentoautomaticoiugu($item->paciente_contrato_parcelas_id);
                 }
             }
             echo 'true';
@@ -476,7 +476,7 @@ class Autocomplete extends Controller {
 //                die;
                 if ($retorno['status'] == 'paid') {
 
-                    $this->guia->confirmarpagamentoconsultaavulsa($item->consultas_avulsas_id, $paciente_id, $tipo, $valor);
+                    $this->guia->confirmarpagamentoautomaticoconsultaavulsaiugu($item->consultas_avulsas_id, $paciente_id, $tipo, $valor);
                 }
             }
             echo 'true';

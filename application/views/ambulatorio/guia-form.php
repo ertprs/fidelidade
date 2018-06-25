@@ -8,7 +8,7 @@
         <div>
             <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravardependentes" method="post">
                 <fieldset>
-                    <legend>Dados do Pacienete</legend>
+                    <legend>Dados do Paciente</legend>
                     <div>
                         <label>Nome</label>                      
                         <input type="text" id="txtNome" name="nome"  class="texto09" value="<?= $paciente['0']->nome; ?>" readonly/>
@@ -62,13 +62,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td > 
-                                    <select  name="dependente" id="dependente" class="size10" >
+                                <td> 
+                                    <select  name="dependente" id="dependente" class=" chosen-select" tabindex="1" required="" >
                                         <option value="">Selecione</option>
                                         <? foreach ($lista as $item) : ?>
                                             <option value="<?= $item->paciente_id; ?>"><?= $item->nome; ?></option>
                                         <? endforeach; ?>
-                                    </select></td>
+                                    </select>
+                                </td>
 
                             </tr>
 
@@ -141,9 +142,17 @@
         </div> 
     </div> 
 </div> <!-- Final da DIV content -->
+<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-verificaCPF.js"></script>
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/chosen.css">
+<!--<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/style.css">-->
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/prism.css">
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/chosen.jquery.js"></script>
+<!--<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/prism.js"></script>-->
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/init.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 
 <?php if ($this->session->flashdata('message') != ''): ?>

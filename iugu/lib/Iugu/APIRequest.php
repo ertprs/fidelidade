@@ -30,9 +30,10 @@ class Iugu_APIRequest
         }
 
         $headers = $this->_defaultHeaders();
+//        var_dump($headers); die;
 
         list($response_body, $response_code) = $this->requestWithCURL($method, $url, $headers, $data);
-
+//        var_dump($response_body); die;
         $response = json_decode($response_body);
 
         if (json_last_error() != JSON_ERROR_NONE) {
@@ -117,6 +118,7 @@ class Iugu_APIRequest
         $response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
+//        var_dump($response_body); die;
 
         return [$response_body, $response_code];
     }

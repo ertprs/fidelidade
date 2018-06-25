@@ -278,3 +278,7 @@ ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN data_pagamento timestamp witho
 
 ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN pagamento_confirmado boolean DEFAULT false;
 
+-- 16/05/2018
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN manual boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN manual boolean DEFAULT false;

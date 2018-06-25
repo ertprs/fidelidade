@@ -86,6 +86,19 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data);
     }
 
+    function relatoriocontratosinativos() {
+//        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriocontratosinativos');
+    }
+
+    function gerarelatoriocontratosinativos() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatoriocontratosinativos();
+
+        $this->load->View('ambulatorio/impressaorelatoriocontratosinativos', $data);
+    }
+
     function relatoriocadastro() {
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriocadastro');
@@ -695,6 +708,7 @@ class Guia extends BaseController {
     function gravaralterardatapagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
         $pagamento_iugu_old = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
         $data_antiga = $pagamento_iugu_old[0]->data;
+        $observacao = $pagamento_iugu_old[0]->observacao;
 //        var_dump($data_antiga); die;
         $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
 
@@ -728,14 +742,18 @@ class Guia extends BaseController {
             } else {
                 $valor = $pagamento[0]->valor * 100;
             }
+            $valor_gravar = $valor / 100;
+
 //            echo '<pre>';
-//            var_dump($pagamento[0]->valor);
-//            var_dump($multa_atraso);
+//            var_dump($data_nova);
+//            var_dump($data_antiga);
 //            var_dump($juros_dia);
 //            var_dump($_POST['juros']);
-//            var_dump($valor);
+//            var_dump($valor_gravar);
 //            die;
-
+            $observacao = $observacao . " Multa Atraso: " . number_format($multa_atraso, 2, ',', '.') . " Juros: "
+                    . number_format($juros_dia * $dias, 2, ',', '.') . " $dias Dias ";
+            $this->guia->gravarnovovalorparcela($paciente_contrato_parcelas_id, $valor_gravar, $observacao);
             $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
 
 //            var_dump($pagamento_iugu);
@@ -1178,12 +1196,11 @@ class Guia extends BaseController {
 //        $this->session->set_flashdata('message', $mensagem);
         $this->session->set_flashdata('message', $mensagem);
 //        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
-        if($tipo == 'EXTRA'){
-          redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");  
-        }else{
-          redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");  
+        if ($tipo == 'EXTRA') {
+            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+        } else {
+            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");
         }
-        
     }
 
     function apagarpagamentoiugu($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {

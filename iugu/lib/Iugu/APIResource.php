@@ -31,6 +31,7 @@ class APIResource extends Iugu_Object
         if (self::$_apiRequester == null) {
             self::$_apiRequester = new Iugu_APIRequest();
         }
+//        var_dump(self::$_apiRequester); die;
 
         return self::$_apiRequester;
     }
@@ -70,6 +71,7 @@ class APIResource extends Iugu_Object
         $attributes
       )
     );
+//    var_dump($response); die;
 
         foreach ($attributes as $attr => $value) {
             $response[ $attr ] = $value;

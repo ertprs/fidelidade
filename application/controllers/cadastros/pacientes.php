@@ -353,7 +353,7 @@ class pacientes extends BaseController {
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id");
         } else {
-            redirect(base_url() . "cadastros/pacientes/carregartitular/$paciente_id");
+            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
         }
     }
 
