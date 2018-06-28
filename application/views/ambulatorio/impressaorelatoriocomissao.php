@@ -26,9 +26,12 @@
         <table border="1">
             <thead>
                 <tr>
-                    <td class="tabela_teste">Cliente</th>
-                    <td class="tabela_teste">Plano</th>
-                    <td class="tabela_teste">Comiss&atilde;o</th>
+                    <th class="tabela_teste">Cliente</th>
+                    <th class="tabela_teste">Plano</th>
+                    <th class="tabela_teste">Comiss&atilde;o</th>
+                    <th class="tabela_teste">Comiss&atilde;o Vendedor</th>
+                    <th class="tabela_teste">Comiss&atilde;o Gerente</th>
+                    <th class="tabela_teste">Comiss&atilde;o Seguradora</th>
                 </tr>
             </thead>
             <hr>
@@ -45,11 +48,14 @@
                         <td ><font size="-2"><?= utf8_decode($item->paciente); ?></td>
                         <td ><font size="-2"><?= utf8_decode($item->plano); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao, 2, ',', '.'); ?></td>
+                        <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_vendedor, 2, ',', '.'); ?></td>
+                        <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_gerente, 2, ',', '.'); ?></td>
+                        <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_seguradora, 2, ',', '.'); ?></td>
                     </tr>
 
                 <? endforeach; ?>
                                         <tr>
-                        <td COLSPAN = 2>VALOR TOTAL</td>
+                        <td COLSPAN = 4>VALOR TOTAL</td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($valortotal, 2, ',', '.'); ?></td>
                     </tr>
             </tbody>

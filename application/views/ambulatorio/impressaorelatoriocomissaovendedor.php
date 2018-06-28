@@ -4,7 +4,7 @@
         <thead>
 
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">Relatorio Comiss&atilde;o Vendedor</th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">Relatorio Comiss&atilde;o Mensal</th>
             </tr>
             <tr>
                 <th style='width:10pt;border:solid windowtext 1.0pt;
@@ -12,7 +12,7 @@
                     none;border-right:none;' colspan="4">&nbsp;</th>
             </tr>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">VENDEDOR: <?= $vendedor[0]->nome ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">VENDEDOR: <?= $vendedor ?></th>
             </tr>
 
             <tr>
@@ -31,7 +31,8 @@
                     <th class="tabela_teste">Plano</th>
                     <th class="tabela_teste">Data</th>
                     <th class="tabela_teste">Valor Parcela</th>
-                    <th class="tabela_teste">Comissão Mensal</th>
+                    <th class="tabela_teste">Comissão Vendedor</th>
+                    <th class="tabela_teste">Comissão Gerente</th>
                     <th class="tabela_teste">Situação da Parcela</th>
                 </tr>
             </thead>
@@ -57,6 +58,13 @@
                             
                         }
                         ?>' ><font size="-2"><?= number_format($item->comissao_vendedor_mensal, 2, ',', '.'); ?></td>
+                        <td style='text-align: center;<?
+                        if ($item->ativo != 'f') {
+                            echo 'color:red';
+                        } else {
+                            
+                        }
+                        ?>' ><font size="-2"><?= number_format($item->comissao_gerente_mensal, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?
                             if ($item->ativo == 'f') {
                                 echo 'Paga';

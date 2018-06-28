@@ -99,6 +99,32 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/impressaorelatoriocontratosinativos', $data);
     }
 
+    function relatoriodependentes() {
+//        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriodependentes');
+    }
+
+    function gerarelatoriodependentes() {
+//        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+//        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatoriodependentes();
+
+        $this->load->View('ambulatorio/impressaorelatoriodependentes', $data);
+    }
+
+    function relatoriovendedores() {
+//        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriovendedores');
+    }
+
+    function gerarelatoriovendedores() {
+//        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+//        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatoriodependentes();
+
+        $this->load->View('ambulatorio/impressaorelatoriovendedores', $data);
+    }
+
     function relatoriocadastro() {
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriocadastro');
@@ -2611,7 +2637,7 @@ class Guia extends BaseController {
     function gerarelatoriocomissao() {
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
-        $data['vendedor'] = $this->guia->listarvendedor();
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
         $data['relatorio'] = $this->guia->relatoriocomissao();
         $this->load->View('ambulatorio/impressaorelatoriocomissao', $data);
     }
@@ -2619,7 +2645,7 @@ class Guia extends BaseController {
     function gerarelatoriocomissaoseguradora() {
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
-        $data['vendedor'] = $this->guia->listarvendedor();
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
         $data['relatorio'] = $this->guia->relatoriocomissaoseguradora();
         $this->load->View('ambulatorio/impressaorelatoriocomissaoseguradora', $data);
     }
