@@ -120,7 +120,7 @@ class Guia extends BaseController {
     function gerarelatoriovendedores() {
 //        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
 //        $data['txtdata_fim'] = $_POST['txtdata_fim'];
-        $data['relatorio'] = $this->guia->relatoriodependentes();
+        $data['relatorio'] = $this->guia->relatoriovendedores();
 
         $this->load->View('ambulatorio/impressaorelatoriovendedores', $data);
     }

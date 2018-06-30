@@ -103,7 +103,7 @@ class guia_model extends Model {
         return $return->result();
     }
 
-    function relatoriodependentes() {
+    function relatoriovendedores() {
         $this->db->select('o.operador_id, o.nome');
         $this->db->from('tb_operador o');
         $this->db->where('o.ativo', 'true');
@@ -115,8 +115,21 @@ class guia_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
-    function relatoriovendedores() {
+
+//    function relatoriovendedores() {
+//        $this->db->select('o.operador_id, o.nome');
+//        $this->db->from('tb_operador o');
+//        $this->db->where('o.ativo', 'true');
+//        $this->db->where('o.perfil_id', '4');
+////        $this->db->where('pc.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
+////        $this->db->where('pc.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+////        $this->db->groupby('pc.paciente_contrato_id,p2.nome,p.nome,fp.nome');
+//        $this->db->orderby('o.nome');
+//        $return = $this->db->get();
+//        return $return->result();
+//    }
+
+    function relatoriodependentes() {
         $this->db->select('p.nome,
                             p2.nome as dependente,
                             pc.paciente_contrato_id,
