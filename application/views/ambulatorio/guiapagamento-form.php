@@ -6,8 +6,7 @@
         $operador_id = $this->session->userdata('operador_id');
         $empresa_id = $this->session->userdata('empresa');
         $perfil_id = $this->session->userdata('perfil_id');
-        ?>
-        <?
+        
         $empresa = $this->guia->listarempresa();
         ?>
         <h3 class="singular"><a href="#">Marcar exames</a></h3>
