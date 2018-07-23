@@ -70,16 +70,55 @@ class Exame extends BaseController {
         $this->loadView('ambulatorio/examemultifuncaogeral-lista', $args);
     }
 
+    function relatorioconsultasagendadas() {
+        
+        $data['parceiros'] = $this->exame->listarparceiros();
+        $this->loadView('ambulatorio/relatorioconsultasagendadas', $data);
+    }
+
+    function gerarelatorioconsultasagendadas() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['lista'] = array();
+        
+        $parceiro = $this->parceiro->listarparceiroenderecotodos($_POST['parceiro']);
+        foreach ($parceiro as $value) {
+            
+            $endereco = $value->endereco_ip;
+            $convenio_id = $value->convenio_id;
+            
+            if ($endereco != '') {
+                $parametro = array(
+                    'data_inicio' => ($_POST['txtdata_inicio'] != '') ? date("Y-m-d", strtotime(str_replace("/","-",$_POST['txtdata_inicio']))) : '',
+                    'data_fim' => ($_POST['txtdata_fim'] != '') ? date("Y-m-d", strtotime(str_replace("/","-",$_POST['txtdata_fim']))) : '',
+                    'paciente' => str_replace(" ", "_", $_POST['paciente']),
+                    'convenio_id' => @$convenio_id
+                );
+
+                $url = "data_inicio={$parametro['data_inicio']}&data_fim={$parametro['data_fim']}&convenio_id={$parametro['convenio_id']}&paciente={$parametro['paciente']}";
+                $resposta = json_decode(file_get_contents("http://{$endereco}/autocomplete/gerarelatorioconsultasagendadas?{$url}"));
+//                echo "<pre>";
+//                var_dump("http://{$endereco}/autocomplete/gerarelatorioconsultasagendadas?{$url}"); die;
+                $data['lista'][] = array(
+                    "parceiro" => $value->razao_social,
+                    "dados" => $resposta
+                );
+            }
+        }
+        
+        $this->load->View('ambulatorio/impressaorelatorioconsultasagendadas', $data);
+    }
+
     function listaragendamentoweb($args = array()) {
         if (@$_GET['endereco_parceiro'] != '') {
             @$parceiro = $this->parceiro->listarparceiroendereco($_GET['endereco_parceiro']);
             @$endereco = $parceiro[0]->endereco_ip;
         }
+//        var_dump($parceiro);
+//        die;
 
         if (@$endereco != '') {
 
-//            var_dump($parceiro);
-//            die;
             isset($_GET['per_page']) ? $pagina = $_GET['per_page'] : $pagina = 0;
             $limit = 50;
             $data['args'] = $args;
@@ -109,8 +148,6 @@ class Exame extends BaseController {
 //        var_dump($data['lista']); die;
         $this->loadView('ambulatorio/examemultifuncaoconsulta-lista', $data);
     }
-
-
 
     function relatoriomedicoagendaexame() {
         $data['convenio'] = $this->convenio->listardados();

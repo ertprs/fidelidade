@@ -57,6 +57,17 @@ class parceiro_model extends Model {
         return $return->result();
     }
     
+    function listarparceiroenderecotodos($financeiro_parceiro_id = null) {
+        $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id, razao_social');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("ativo", 't');
+        if ($financeiro_parceiro_id != '') {
+            $this->db->where("financeiro_parceiro_id", $financeiro_parceiro_id);
+        }
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
     function listarparceiroenderecoconvenio($financeiro_parceiro_id) {
         $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');

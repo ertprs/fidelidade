@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 
-    <h4>RELATORIO DE DEPENDENTES</h4>
+    <h4>RELATORIO DE VENDEDORES</h4>
     <!--<h4>PERIODO: <?//= $txtdata_inicio; ?> ate <?//= $txtdata_fim; ?></h4>-->
     <hr>
     <?

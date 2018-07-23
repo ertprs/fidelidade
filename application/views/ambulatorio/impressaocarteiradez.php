@@ -78,7 +78,10 @@
             </tr>
             <tr>
                 <td style="text-align: left;font-family: 'Lucida-Sans-Unicode';" colspan="4">
-                    &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-style: italic; font-size: 10pt;"> Emissão : <?=date("d/m/Y");?></span>
+                    &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-style: italic; font-size: 10pt;"> Emissão : <?=date("d/m/Y");?></span><BR>
+                    <? if(isset($adesao)){ ?>
+                        &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-style: italic; font-size: 10pt;"> Adesão : <?=date("d/m/Y", strtotime($adesao));?></span>
+                    <? } ?>
                 </td>  
             </tr>
         </tbody>

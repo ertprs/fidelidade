@@ -180,7 +180,11 @@
             <fieldset>
                 <legend>Documentos</legend>
                 <div>
-                    <label>CPF</label>
+                    <? if($paciente['0']->cpf_responsavel_flag == 't' ){ ?>
+                        <label>CPF do Resposável</label>
+                    <? } else { ?>
+                        <label>CPF</label>
+                    <? } ?>
 
                     <?if(strlen($paciente['0']->cpf) <= 11){?>
                      <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   

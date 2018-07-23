@@ -3272,7 +3272,23 @@ class exametemp_model extends Model {
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('paciente_id', $paciente_id);
             $this->db->update('tb_paciente_contrato');
-
+            
+            // Traz todos os contratos que este paciente era titular
+            $this->db->select('paciente_contrato_id');
+            $this->db->from('tb_paciente_contrato');
+            $this->db->where("paciente_id", $paciente_id);
+            $query = $this->db->get()->result();            
+            if(count($query) != 0){
+                // Exclui os contratos (liberando portanto, os dependentes)
+                foreach ($query as $value) {
+                    $this->db->set('ativo', 'f');
+                    $this->db->set('data_atualizacao', $horario);
+                    $this->db->set('operador_atualizacao', $operador_id);
+                    $this->db->where('paciente_contrato_id', $value->paciente_contrato_id);
+                    $this->db->update('tb_paciente_contrato_dependente');
+                }
+            }
+            
             $this->db->set('ativo', 'f');
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);

@@ -1,7 +1,8 @@
 <meta charset="utf-8">
 
-    <h4>RELATORIO DE CONTRATOS INATIVOS</h4>
+    <h4>RELATORIO DE CONTRATOS</h4>
     <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
+    <h4>BUSCANDO POR: <?= ($_POST['tipobusca'] == "I") ? "INATIVOS" : "ATIVOS"; ?></h4>
     <hr>
     <?
     if (count($relatorio) > 0) {
@@ -12,9 +13,10 @@
                     <th class="tabela_header">Nome</th>
                     <th class="tabela_header">Número</th>
                     <th class="tabela_header">Plano</th>
-                   
                     <th class="tabela_header">Data</th>
-                    <th class="tabela_header">Operador Exclusão</th>
+                    <? if($_POST['tipobusca'] == 'I'){ ?>
+                        <th class="tabela_header">Operador Exclusão</th>
+                    <? } ?>
                 </tr>
             </thead>
             <tbody>
@@ -29,11 +31,18 @@
                         <td ><?= $item->plano; ?></td>
                        
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
-                         <td ><?= $item->operador; ?></td>
+                        
+                        <? if($_POST['tipobusca'] == 'I'){ ?>
+                            <td><?= $item->operador; ?></td>
+                        <? } ?>
                     </tr>
                 <? endforeach; ?>
                 <tr>
-                    <td colspan="4"><b>TOTAL</b></td>
+                    <? if($_POST['tipobusca'] == 'I'){ ?>
+                        <td colspan="4"><b>TOTAL</b></td>
+                    <? } else { ?>
+                        <td colspan="3"><b>TOTAL</b></td>
+                    <? } ?>
                     <td colspan="1"><b><?= $total; ?></b></td>
                 </tr>
             </tbody>

@@ -79,6 +79,7 @@
                 </fieldset>
 
             </form>
+            
             <fieldset>
                 <legend>Parcelas</legend>
                 <? if (count($listarpagamentoscontrato) > 0) { ?>
@@ -301,9 +302,8 @@
                                 <th width="70px;" class="tabela_header">Data</th>
                                 <th width="70px;" class="tabela_header">Valor</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
-    <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
+                                <th width="70px;" class="tabela_header">Observações</th>
                                 <th width="70px;" colspan="6" class="tabela_header"></th>
-        <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
                             </tr>
                         </thead>
                         <?
@@ -354,40 +354,42 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                                        <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                                         <? if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
-
+                                                <div class="bt_link">
+                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
+                                                    </a>
+                                                </div>
                                             </td>
 
                                         <? }
-                                        ?>
-                                        <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
-                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;">
+                                        if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;"><div style="width: 160px;" class="bt_link">
+                                                    <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiuguconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>/EXTRA">Gerar Pagamento Iugu
+                                                    </a></div>
                                             </td>  
                                         <? } else { ?>
                                             <td class="<?php echo $estilo_linha; ?>" colspan="1">
-
-                                            </td>
-
-                                                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                                                                                                                    <div class="bt_link">
-                                                                                                                                                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
-                                                                                                                                                        </a>
-                                                                                                                                                    </div>
-                                                                                                                                                </td>-->
+                                                <div style="width: 160px;" class="bt_link">
+                                                    <a target="_blank" href="<?= $item->url ?>">Pagamento Iugu
+                                                    </a>
+                                                </div>
+                                            </td>                                                                                                
                                         <? }
-                                        ?>
-                                        <? if ($operador_id == 1) { ?>
+                                        if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>">
-
+                                                <div class="bt_link">
+                                                    <a href="<?= base_url() ?>ambulatorio/guia/excluirconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Excluir
+                                                    </a>
+                                                </div>
                                             </td>
-
                                         <? }
                                         ?>
 
                                     <? } else { ?>
-                                        <td colspan="4" class="<?php echo $estilo_linha; ?>">PAGA</td>
-
+                                        <td colspan="" class="<?php echo $estilo_linha; ?>">PAGA</td>
+                                        <td colspan="5" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                                     <? } ?>
                                 </tr>
                             </tbody>
@@ -407,6 +409,7 @@
 
 
             </fieldset>
+            
             <fieldset>
                 <legend>Consulta Coparticipação</legend>
                 <? if (count($listarpagamentosconsultacoop) > 0) { ?>
@@ -418,6 +421,7 @@
                                 <th width="70px;" class="tabela_header">Data</th>
                                 <th width="70px;" class="tabela_header">Valor</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
+                                <th width="70px;" class="tabela_header">Observações</th>
     <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
                                 <th width="70px;" colspan="6" class="tabela_header"></th>
         <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
@@ -469,43 +473,113 @@
                                     <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
                                     <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ',', '.') ?></td>
 
-        <? if ($item->ativo == 't') { ?>
+                                    <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                                        <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                                         <? if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
-
+                                                <div class="bt_link">
+                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
+                                                    </a>
+                                                </div>
                                             </td>
-
-            <? }
-            ?>
-                                        <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
-                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;">
-                                            </td>  
-            <? } else { ?>
+                                        <? }
+                                        if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;"><div style="width: 160px;" class="bt_link">
+                                                <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiuguconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>/COOP">Gerar Pagamento Iugu
+                                                </a></div>
+                                            </td>   
+                                        <? } else { ?>
                                             <td class="<?php echo $estilo_linha; ?>" colspan="1">
-
-                                            </td>
-
-                                                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                                                                                                                    <div class="bt_link">
-                                                                                                                                                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
-                                                                                                                                                        </a>
-                                                                                                                                                    </div>
-                                                                                                                                                </td>-->
-            <? }
-            ?>
-                                        <? if ($operador_id == 1) { ?>
+                                                <div style="width: 160px;" class="bt_link">
+                                                    <a target="_blank" href="<?= $item->url ?>">Pagamento Iugu
+                                                    </a>
+                                                </div>
+                                            </td>                                                                                                  </td>-->
+                                        <? }
+                                        if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>">
-
+                                                <div class="bt_link">
+                                                    <a href="<?= base_url() ?>ambulatorio/guia/excluirconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Excluir
+                                                    </a>
+                                                </div>
                                             </td>
 
-            <? }
-            ?>
+                                        <? }
+                                        } else { ?>
+                                            <td class="<?php echo $estilo_linha; ?>">PAGA</td>
+                                            <td colspan="4" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
+                                        <? } ?>
+                                </tr>
+                            </tbody>
+        <?
+    }
+    ?>
+                        <tfoot>
 
-                                    <? } else { ?>
-                                        <td colspan="4" class="<?php echo $estilo_linha; ?>">PAGA</td>
+                        </tfoot>
+                    </table> 
+                    <br/>
+    <?
+}
+?>
+                </table> 
+                <br/>
 
-        <? } ?>
+
+            </fieldset>
+            
+            <fieldset>
+                <legend>Historico de Consultas Realizadas</legend>
+                <? if (count($historicoconsultasrealizadas) > 0) { ?>
+                    <table id="table_justa">
+                        <thead>
+                            <tr>                                
+                                <th width="70px;" class="tabela_header">Nome</th>
+                                <th width="70px;" class="tabela_header">Parceiro</th>
+                                <th width="70px;" class="tabela_header">Grupo</th>
+                                <th width="70px;" class="tabela_header">Data</th>
+                                <th width="70px;" class="tabela_header">Situação</th>
+                            </tr>
+                        </thead>
+                        <?
+                        $contador = 0;
+                        foreach ($historicoconsultasrealizadas as $item) {
+                            $estilo_linha = "tabela_content01";
+                            ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                            
+                            $situacao = '';
+                            $cor = '';
+                            if ($item->carencia_liberada == 't') {
+                                if ($item->consulta_avulsa == 't') {
+                                    $situacao = "Consulta $item->consulta_tipo";
+                                    $cor = 'green';
+                                } else {
+                                    $situacao = 'Carência Utilizada';
+                                    $cor = 'green';
+                                }
+                                $pagamento = 'ok';
+                            } else {
+                                if ($item->pagamento_confirmado == 'f') {
+                                    $situacao = "Pagamento Pendente R$: " . number_format($item->valor, 2, ",", ".");
+                                    $cor = 'red';
+                                    $pagamento = 'pendente';
+                                } else {
+                                    $situacao = "Pagamento Confirmado R$: " . number_format($item->valor, 2, ",", ".");
+                                    $cor = 'green';
+                                    $pagamento = 'ok';
+                                }
+                            }
+                            ?>
+
+                            <tbody>
+                                <tr>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente; ?></td> <!--nome-->
+                                    <td class="<?php echo $estilo_linha; ?>"><?= $item->parceiro; ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= $item->grupo; ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
+                                    
+                                    <td class="<?php echo $estilo_linha; ?>" style="color: <?= $cor ?>;"><?= $situacao; ?></td>
                                 </tr>
                             </tbody>
         <?

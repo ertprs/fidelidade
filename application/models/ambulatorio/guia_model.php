@@ -95,10 +95,32 @@ class guia_model extends Model {
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = pc.operador_atualizacao', 'left');
         $this->db->where('p.ativo', 'true');
-        $this->db->where('pc.ativo', 'false');
+        if($_POST['tipobusca'] == "I"){
+            $this->db->where('pc.ativo', 'f');
+        }
+        if($_POST['tipobusca'] == "A"){
+            $this->db->where('pc.ativo', 't');
+        }
         $this->db->where('pc.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
         $this->db->where('pc.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
         $this->db->orderby('pc.paciente_contrato_id');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function relatoriotitularesexcluidos() {
+        $this->db->select('p.nome,
+                           p.cpf,
+                           p.sexo,
+                           p.celular,
+                           p.telefone,
+                           p.nascimento,
+                           p.data_exclusao,
+                           o.nome as operador');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_operador o', 'o.operador_id = p.operador_exclusao', 'left');
+        $this->db->where('p.ativo', 'false');
+        $this->db->orderby('p.nome');
         $return = $this->db->get();
         return $return->result();
     }
@@ -131,9 +153,10 @@ class guia_model extends Model {
 
     function relatoriodependentes() {
         $this->db->select('p.nome,
-                            p2.nome as dependente,
-                            pc.paciente_contrato_id,
-                            fp.nome as plano');
+                           p2.situacao,
+                           p2.nome as dependente,
+                           pc.paciente_contrato_id,
+                           fp.nome as plano');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_contrato_id = pc.paciente_contrato_id', 'left');
@@ -237,6 +260,7 @@ class guia_model extends Model {
                             p.telefone,
                             pcp.parcela,
                             pcp.data,
+                            pcp.taxa_adesao,
                             m.nome as municipio,
                             pcp.valor,
                             p.nome as paciente,
@@ -264,6 +288,15 @@ class guia_model extends Model {
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
         $this->db->orderby('pcp.parcela');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarconsultaavulsaobservacao($consulta_avulsa_id) {
+
+        $this->db->select('ca.observacao');
+        $this->db->from('tb_consultas_avulsas ca');
+        $this->db->where("ca.consultas_avulsas_id", $consulta_avulsa_id);
         $return = $this->db->get();
         return $return->result();
     }
@@ -5489,11 +5522,14 @@ AND data <= '$data_fim'";
             $this->db->from('tb_paciente_contrato_parcelas cp');
             $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
             $this->db->where("cp.paciente_contrato_id", $contrato_id);
-            $this->db->where("cpi.paciente_contrato_parcelas_id is null");
+            $this->db->where("cpi.paciente_contrato_parcelas_id is null"); // Pega apenas os que ainda não estão no IUGU
             $this->db->where("cp.ativo", 't');
             $this->db->where("cp.excluido", 'f');
             $return = $this->db->get()->result();
+//            
+//            echo "<pre>";
 //            var_dump($return); die;
+            
             foreach ($return as $item) {
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                     SET data_cartao_iugu = data
@@ -5707,6 +5743,25 @@ AND data <= '$data_fim'";
             $this->db->set('observacao', $_POST['observacao']);
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravaralterarobservacaoavulsa($consulta_avulsa_id) {
+        try {
+
+            $horario = date("Y-m-d H:i:s");
+            $hora = date("H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->set('observacao', $_POST['observacao']);
+            $this->db->where('consultas_avulsas_id', $consulta_avulsa_id);
+            $this->db->update('tb_consultas_avulsas');
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
@@ -7975,6 +8030,9 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->where("pcp.taxa_adesao", 'f');
             $this->db->orderby('pcp.paciente_contrato_parcelas_id desc');
             $return_parcelas = $this->db->get()->result();
+            
+//            echo '<pre>';
+//            var_dump($return_parcelas); die;
 
             $this->db->set('paciente_id', $return[0]->paciente_id);
             $this->db->set('plano_id', $return[0]->plano_id);

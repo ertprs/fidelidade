@@ -47,12 +47,14 @@ class Guia extends BaseController {
 //        echo '<pre>';
 //        var_dump($contrato_ativo); die;
         if (count($contrato_ativo) > 0) {
-            $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
-            $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
-            $data_atual = date("Y-m-d");
-//            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
-            if ($data_atual > $data_contrato) {
-                $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
+            if ($contrato_ativo[count($contrato_ativo) - 1]->data != ""){
+                $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
+                $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
+                $data_atual = date("Y-m-d");
+    //            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
+                if ($data_atual > $data_contrato) {
+                    $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
+                }
             }
         }
 //        var_dump($data['contrato_ativo']); die;
@@ -91,12 +93,25 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriocontratosinativos');
     }
 
+    function relatoriotitularesexcluidos() {
+//        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriotitularesexcluidos');
+    }
+
     function gerarelatoriocontratosinativos() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatoriocontratosinativos();
 
         $this->load->View('ambulatorio/impressaorelatoriocontratosinativos', $data);
+    }
+
+    function gerarelatoriotitularesexcluidos() {
+//        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+//        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatoriotitularesexcluidos();
+
+        $this->load->View('ambulatorio/impressaorelatoriotitularesexcluidos', $data);
     }
 
     function relatoriodependentes() {
@@ -309,13 +324,16 @@ class Guia extends BaseController {
 
     function impressaoficha($paciente_contrato_id) {
         $this->load->plugin('mpdf');
-        $data['emissao'] = date("d-m-Y");
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['exame'] = $this->guia->listarparcelas($paciente_contrato_id);
         $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
-//        echo '<pre>';
-//        var_dump($data['dependente']); die;
+        
+        $data['emissao'] = date("d-m-Y");
+        foreach($data['exame'] as $value){
+            if($value->taxa_adesao == 't') $data['adesao'] = $value->data;
+        }
+        
         if ($data['empresa'][0]->modelo_carteira == 1) {
             $this->load->View('ambulatorio/impressaoficharonaldo', $data);
         } elseif ($data['empresa'][0]->modelo_carteira == 2) {
@@ -670,6 +688,16 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/alterarobservacaopagamento-form', $data);
     }
 
+    function alterarobservacaoavulso($paciente_id, $contrato_id, $consulta_avulsa_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['consulta_avulsa_id'] = $consulta_avulsa_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarconsultaavulsaobservacao($consulta_avulsa_id);
+//        var_dump($data['pagamento']); die;
+        $this->load->View('ambulatorio/alterarobservacaopagamentoavulso-form', $data);
+    }
+
     function reenviaremail($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 //        var_dump($paciente_contrato_parcelas_id); die;
         $empresa = $this->guia->listarempresa();
@@ -726,6 +754,14 @@ class Guia extends BaseController {
     function gravaralterarobservacao($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
 
         $this->guia->gravaralterarobservacao($paciente_contrato_parcelas_id);
+//        $alert = "Observacao";
+//        $this->session->set_flashdata('message', $alert);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function gravaralterarobservacaoavulsa($consulta_avulsa_id, $paciente_id, $contrato_id) {
+
+        $this->guia->gravaralterarobservacaoavulsa($consulta_avulsa_id);
 //        $alert = "Observacao";
 //        $this->session->set_flashdata('message', $alert);
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
@@ -1384,11 +1420,13 @@ class Guia extends BaseController {
 //        var_dump($pagamento_iugu);
 //        die;
         if ($key != '' && count($pagamento_iugu) > 0) {
-            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
-
-            $retorno = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
-            $retorno->cancel();
+            if($pagamento_iugu[0]->invoice_id != ''){
+                Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+                $retorno = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+                $retorno->cancel();
+            }
         }
+//        die('morreu');
         $ambulatorio_guia_id = $this->guia->excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id);
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao excluir parcela';
@@ -1739,6 +1777,8 @@ class Guia extends BaseController {
         $data['paciente_id'] = $paciente_id;
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['lista'] = $this->paciente->listardependentes();
+//        echo "<pre>";
+//        var_dump($data['lista']); die;
         $data['listacadastro'] = $this->paciente->listardependentescontrato($contrato_id);
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guia-form', $data);
@@ -1752,6 +1792,9 @@ class Guia extends BaseController {
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontrato($contrato_id);
         $data['listarpagamentosconsultaextra'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
         $data['listarpagamentosconsultacoop'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
+        $data['historicoconsultasrealizadas'] = $this->paciente->listarhistoricoconsultasrealizadas($contrato_id);
+//        echo "<pre>";
+//        var_dump($data['historicoconsultasrealizadas']); die;
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }

@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar Relatório Contratos Inativos</a></h3>
+        <h3><a href="#">Gerar Relatório Contratos</a></h3>
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatoriocontratosinativos">
                 <dl>
@@ -16,6 +16,15 @@
                     </dt>
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
+                    </dd>
+                    <dt>
+                        <label>BUSCAR POR</label>
+                    </dt>
+                    <dd>
+                        <select name="tipobusca" id="tipobusca" class="size2">
+                            <option value="I">Inativos</option>
+                            <option value="A">Ativos</option>
+                        </select>
                     </dd>
                     
                 </dl>

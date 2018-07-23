@@ -282,3 +282,9 @@ ALTER TABLE ponto.tb_exames_fidelidade ADD COLUMN pagamento_confirmado boolean D
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN manual boolean DEFAULT false;
 
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN manual boolean DEFAULT false;
+
+-- 20/07/2018
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN observacao text;
+
+-- Dia 23/07/2018
+ALTER TABLE ponto.tb_paciente ADD COLUMN cpf_responsavel_flag boolean DEFAULT false;

@@ -130,6 +130,38 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
+    function listarhistoricoconsultasrealizadas($contrato_id) {
+        $this->db->select('cp.data');
+        $this->db->from('tb_paciente_contrato_parcelas cp');
+        $this->db->where("cp.paciente_contrato_id", $contrato_id);
+        $this->db->where("cp.excluido", 'f');
+        $this->db->orderby("data");
+        $return = $this->db->get()->result();
+        if(count($return) > 0){
+            // Traz o período em que este contrato vai estar em vigor
+            $dt_inicio = $return[0]->data;
+            $dt_fim = $return[count($return)-1]->data;
+
+            $this->db->select('ae.*,p.telefone,p.celular, p.nome as paciente, fp.fantasia as parceiro');
+            $this->db->from('tb_exames_fidelidade ae');
+            $this->db->join('tb_paciente p', 'p.paciente_id = ae.paciente_fidelidade_id', 'left');
+            $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = ae.parceiro_id', 'left');
+            // Busca as consultas dos pacientes que pertencem a esse contrato no periodo em que o contrato está em vigor
+            $this->db->where("ae.paciente_fidelidade_id IN (
+                SELECT paciente_id FROM ponto.tb_paciente_contrato_dependente pcd WHERE ativo = 't' AND paciente_contrato_id = {$contrato_id}
+            )");
+            $this->db->where("ae.data >=", $dt_inicio);
+            $this->db->where("ae.data <=", $dt_fim);
+
+            $return = $this->db->get();
+            return $return->result();
+            
+        }
+        else {
+            return array();
+        }
+    }
+
     function listardadoscpf($paciente_id) {
         $this->db->select('p.cpf');
         $this->db->from('tb_paciente p');
@@ -153,27 +185,29 @@ class paciente_model extends BaseModel {
                             cp.data, 
                             cp.ativo, 
                             cp.manual, 
-                            cp.paciente_contrato_parcelas_id,
                             pc.paciente_id,
                             cp.observacao,
-                            cp.paciente_contrato_id, 
-                            paciente_contrato_parcelas_iugu_id,
                             pdf, 
                             url, 
                             invoice_id, 
                             cp.taxa_adesao,
                             cp.data_cartao_iugu, 
                             cp.pago_cartao, 
-                            cpi.status,cpi.codigo_lr
+                            cpi.status,cpi.codigo_lr,
+                            cp.paciente_contrato_id, 
+                            cp.paciente_contrato_parcelas_id,
+                            paciente_contrato_parcelas_iugu_id
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->where("cp.paciente_contrato_id", $contrato_id);
-        $this->db->orderby("data");
         $this->db->where("cp.excluido", 'f');
-        $return = $this->db->get();
-        return $return->result();
+        $this->db->orderby("data");
+        $return = $this->db->get()->result();
+//        echo "<pre>";
+//        var_dump($return); die;
+        return $return;
     }
 
     function listarpagamentoscontratoparcela($paciente_contrato_parcelas_id) {
@@ -240,6 +274,7 @@ class paciente_model extends BaseModel {
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("cp.data_cartao_iugu <=", $data);
+        $this->db->where("cp.paciente_contrato_id", 584);
         $this->db->where("cp.ativo", 't');
         $this->db->where("cp.excluido", 'f');
 //        $this->db->where("invoice_id is null");
@@ -396,7 +431,10 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente');
         $this->db->where("situacao", "Dependente");
         $this->db->where("ativo", "t");
-        $this->db->where("status", "t");
+//        $this->db->where("status", "t");
+        $this->db->where("paciente_id NOT IN (
+            SELECT paciente_id FROM ponto.tb_paciente_contrato_dependente WHERE ativo = 't'
+        )");
         $this->db->orderby("nome");
         $return = $this->db->get();
         return $return->result();
@@ -480,6 +518,7 @@ class paciente_model extends BaseModel {
             $this->_cpfresp = $return[0]->cpfresp;
             $this->_plano_id = $return[0]->plano_id;
             $this->_vendedor = $return[0]->vendedor;
+            $this->_cpf_responsavel_flag = $return[0]->cpf_responsavel_flag;
         }
     }
 
@@ -802,6 +841,14 @@ class paciente_model extends BaseModel {
             if ($_POST['cpf'] != '') {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
             }
+            
+            if(isset($_POST['cpf_responsavel'])){
+                $this->db->set('cpf_responsavel_flag', 't');
+            }
+            else{
+                $this->db->set('cpf_responsavel_flag', 'f');
+            }
+            
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('grau_parentesco', $_POST['grau_parentesco']);
 //            $nascimento = $_POST['nascimento'];
@@ -856,6 +903,14 @@ class paciente_model extends BaseModel {
             if ($_POST['cpf'] != '') {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
             }
+            
+            if(isset($_POST['cpf_responsavel'])){
+                $this->db->set('cpf_responsavel_flag', 't');
+            }
+            else{
+                $this->db->set('cpf_responsavel_flag', 'f');
+            }
+            
             if ($_POST['data_emissao'] != '') {
                 $this->db->set('data_emissao', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_emissao']))));
             }

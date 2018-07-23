@@ -210,6 +210,7 @@ class Autocomplete extends Controller {
         //LISTANDO AS INFORMAÇÕES DE CARÊNCIA E PARCELAS PAGAS PELO PACIENTE
         //VERIFICA SE É DEPENDENTE. CASO SIM, ELE VAI PEGAR O ID DO TITULAR E FAZER AS BUSCAS ABAIXO UTILIZANDO ESSE ID
         $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+//        echo "<pre>";
 //        var_dump($paciente_informacoes); die;
         if (count($paciente_informacoes) > 0) {
 
@@ -258,7 +259,7 @@ class Autocomplete extends Controller {
                 $carencia_mensal = $carencia_especialidade_mensal;
             }
 
-//        var_dump($carencia_mensal); die;
+//            var_dump($carencia_mensal); die;
             $parcelas_mensal = $this->guia->listarparcelaspacientemensal($paciente_titular_id);
             if ($carencia_mensal == 't') {
                 $listaratendimentomensal = $this->guia->listaratendimentoparceiromensal($paciente_titular_id, $grupo);
@@ -271,7 +272,7 @@ class Autocomplete extends Controller {
                     $carencia_mensal_liberada = 'f';
                 }
             }
-            $dias_parcela = 30 * count($parcelas);
+            $dias_parcela = 30 * count($parcelas); 
             $dias_atendimento = $carencia * count($listaratendimento);
             $carencia_necessaria = $carencia * $numero_consultas_aut;
             // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
@@ -291,7 +292,7 @@ class Autocomplete extends Controller {
             // o sistema vai gravar. 
             //
         //
-        if ($carencia_mensal == 't') {
+            if ($carencia_mensal == 't') {
                 if ($carencia_mensal_liberada == 't') {
                     $carencia_liberada = 't';
                 } else {
@@ -300,7 +301,7 @@ class Autocomplete extends Controller {
             } else {
                 if ((($dias_parcela - $dias_atendimento) >= $carencia_necessaria) && $dias_parcela > 0) {
                     // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
-                    // Assim ele vai ter que pagar, porem, com um descontro cadastrado já como o valor do procedimento na clinica
+                    // Assim ele vai ter que pagar, porem, com um desconto cadastrado já como o valor do procedimento na clinica
                     $carencia_liberada = 't';
                 } else {
                     $carencia_liberada = 'f';
@@ -491,9 +492,10 @@ class Autocomplete extends Controller {
         ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
 
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
+        
 //        echo '<pre>';
 //        var_dump($pagamento);
-//          die;
+//        die;
 
         $retorno = 'false';
 
@@ -518,17 +520,18 @@ class Autocomplete extends Controller {
 
             $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
 
-            $payment_token = Iugu_PaymentToken::create(Array(
-                        'method' => 'credit_card',
-                        'data' => Array(
-                            'number' => $cartao_cliente[0]->card_number,
-                            'verification_value' => $cartao_cliente[0]->card_csv,
-                            'first_name' => $cartao_cliente[0]->first_name,
-                            'last_name' => $cartao_cliente[0]->last_name,
-                            'month' => $cartao_cliente[0]->mes,
-                            'year' => $cartao_cliente[0]->ano,
-                        ),
-                            )
+            $payment_token = Iugu_PaymentToken::create(
+                Array(
+                    'method' => 'credit_card',
+                    'data' => Array(
+                        'number' => $cartao_cliente[0]->card_number,
+                        'verification_value' => $cartao_cliente[0]->card_csv,
+                        'first_name' => $cartao_cliente[0]->first_name,
+                        'last_name' => $cartao_cliente[0]->last_name,
+                        'month' => $cartao_cliente[0]->mes,
+                        'year' => $cartao_cliente[0]->ano,
+                    ),
+                )
             );
 //            echo '<pre>';
 //            var_dump($payment_token);
@@ -536,7 +539,7 @@ class Autocomplete extends Controller {
             if ($payment_token['errors'] == 0) {
 
                 $gerar = Iugu_Charge::create(
-                                Array(
+                                Array (
                                     'token' => $payment_token,
                                     "email" => $cliente[0]->cns,
                                     'items' => Array(
@@ -571,10 +574,10 @@ class Autocomplete extends Controller {
                 $gerar["message"] = 'Cartão de Crédito Inválido';
                 $gerar["LR"] = '14';
             }
-//            echo '<pre>';
-//            var_dump($payment_token);
-//            var_dump($gerar);
-//            die;
+            echo '<pre>';
+            var_dump($payment_token);
+            var_dump($gerar);
+            die;
 
             $retorno = 'true';
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);

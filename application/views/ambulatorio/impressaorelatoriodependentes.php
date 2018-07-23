@@ -9,7 +9,8 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th class="tabela_header">Dependente</th>
+                    <th class="tabela_header">Nome</th>
+                    <th class="tabela_header">Situação</th>
                     <th class="tabela_header">Titular</th>
                     <th class="tabela_header">Número</th>
                     <th class="tabela_header">Plano</th>
@@ -24,7 +25,8 @@
                     ?>
                     <tr>
                         <td ><?= $item->dependente; ?></td>
-                        <td ><?= $item->nome; ?></td>
+                        <td ><?= $item->situacao; ?></td>
+                        <td ><?if($item->situacao != 'Titular') echo $item->nome; ?></td>
                         <td ><?= $item->paciente_contrato_id; ?></td>
                         <td ><?= $item->plano; ?></td>
                     </tr>

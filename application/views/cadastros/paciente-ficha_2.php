@@ -225,10 +225,8 @@
             </div>
             <div>
                 <label>CPF/CNPJ</label>
-
-
                 <input type="text" name="cpf" id ="cpfcnpj" maxlength="18"  class="texto03" value="<?= @$obj->_cpf; ?>" required/>
-
+                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if(@$obj->_cpf_responsavel_flag == 't') echo "checked";?>> CPF do resposável
             </div>
             <div>
                 <label>RG</label>

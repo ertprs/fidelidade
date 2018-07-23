@@ -925,7 +925,7 @@ class Exametemp extends BaseController {
             redirect(base_url() . "ambulatorio/exametemp/novopacienteencaixegeral");
         } else {
             $pacientetemp_id = $this->exametemp->gravarexameencaixegeral();
-            $this->carregarpacientetempgeral($pacientetemp_id);
+            redirect(base_url() . "ambulatorio/exametemp/carregarpacientetempgeral/$pacientetemp_id");
         }
     }
 

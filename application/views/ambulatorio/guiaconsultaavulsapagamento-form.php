@@ -76,7 +76,7 @@
                                 <th width="70px;" class="tabela_header">Data</th>
                                 <th width="70px;" class="tabela_header">Valor</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
-    <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
+                                <th width="70px;" class="tabela_header">Observações</th>
                                 <th width="70px;" colspan="6" class="tabela_header"></th>
         <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
                             </tr>
@@ -142,6 +142,7 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                                        <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                                         <? if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                 <div class="bt_link">
@@ -151,8 +152,7 @@
                                             </td>
 
                                         <? }
-                                        ?>
-                                        <? if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
+                                        if ($item->invoice_id == '' && $empresa[0]->iugu_token != '') { ?>
                                             <td colspan="1" class="<?php echo $estilo_linha; ?>" width="60px;"><div style="width: 160px;" class="bt_link">
                                                     <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiuguconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>/EXTRA">Gerar Pagamento Iugu
                                                     </a></div>
@@ -163,17 +163,9 @@
                                                     <a target="_blank" href="<?= $item->url ?>">Pagamento Iugu
                                                     </a>
                                                 </div>
-                                            </td>
-
-                                                                                                                                <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                                                                                                    <div class="bt_link">
-                                                                                                                                        <a target="_blank" href="<?= base_url() ?>ambulatorio/guia/apagarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Apagar Iugu
-                                                                                                                                        </a>
-                                                                                                                                    </div>
-                                                                                                                                </td>-->
+                                            </td>                                                                                
                                         <? }
-                                        ?>
-                                        <? if ($operador_id == 1) { ?>
+                                        if ($perfil_id == 1) { ?>
                                             <td class="<?php echo $estilo_linha; ?>">
                                                 <div class="bt_link">
                                                     <a href="<?= base_url() ?>ambulatorio/guia/excluirconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Excluir
@@ -182,10 +174,11 @@
                                             </td>
 
                                         <? }
-                                        ?>
-
-                                    <? } else { ?>
-                                        <td colspan="4" class="<?php echo $estilo_linha; ?>">PAGA</td>
+                                        } 
+                                    else { ?>
+                                        <td class="<?php echo $estilo_linha; ?>">PAGA</td>
+                                        
+                                        <td  colspan="4" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
             <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                                 <a href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pagamento Iugu
                                                 </a></div>

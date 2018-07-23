@@ -3,7 +3,7 @@
 
     <div id="accordion">
 
-        <h3 class="singular"><a href="#">Multifuncao Fisioterapia Recep&ccedil;&atilde;o</a></h3>
+        <h3 class="singular"><a href="#">Agendamentos Autorizados</a></h3>
         <div>
             <?
             $medico = $this->exame->listarmedico();

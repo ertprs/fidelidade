@@ -236,10 +236,12 @@ function debug($object) {
                                     <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
-                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocontratosinativos">Relatorio Contratos Inativos</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocontratosinativos">Relatorio Contratos</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriotitularesexcluidos">Relatorio Titulares Excluídos</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriodependentes">Relatorio Dependentes</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriovendedores">Relatorio Vendedor</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocadastro">Relatorio Cadastro</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/relatorioconsultasagendadas">Relatorio Consultas Agendadas</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/listaragendamentoweb" target="_blank">Agendamento Web </a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/listaragendamentosautorizados" target="_blank">Agendamentos Autorizados </a></span></li>
                                     <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
