@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3 class="singular"><a href="#">Cadastro Forma de Pagamento</a></h3>
+        <h3 class="singular"><a href="#">Cadastro de Carência</a></h3>
         <div>
             <form name="form_formapagamento" id="form_formapagamento" action="<?= base_url() ?>cadastros/formapagamento/gravarcarencia" method="post">
 

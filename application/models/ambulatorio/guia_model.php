@@ -489,6 +489,30 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function listarparcelaspacienteprevistas($paciente_contrato_id) {
+
+        $this->db->select('
+                            pcp.situacao,
+                            pcp.ativo,
+                            pcp.data,
+                            pcp.parcela,
+                            pcp.valor,
+                            fp.nome as plano,
+                            pc.data_cadastro');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+        $this->db->where("pc.paciente_id", $paciente_contrato_id);
+        $this->db->where("pcp.data <=", date("Y-m-d"));
+        $this->db->where("pc.ativo", 't');
+        $this->db->where("pcp.excluido", 'f');
+        $this->db->orderby('pcp.data');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarparcelaspacientemensal($paciente_contrato_id) {
         $data = date("m");
         $data_year = date("Y");
