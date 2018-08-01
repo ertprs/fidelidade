@@ -288,3 +288,8 @@ ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN observacao text;
 
 -- Dia 23/07/2018
 ALTER TABLE ponto.tb_paciente ADD COLUMN cpf_responsavel_flag boolean DEFAULT false;
+
+-- Dia 31/07/2018
+ALTER TABLE ponto.tb_paciente ADD COLUMN codigo_paciente character varying(100);
+ALTER TABLE ponto.tb_paciente ADD COLUMN parceiro_id integer;
+

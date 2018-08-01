@@ -192,6 +192,22 @@
                     ?>>Outros</option>
                 </select>
             </div>
+
+            <div>
+                <label>Parceiro</label>
+                <select name="parceiro_id" id="parceiro_id" class="size2">
+                    <option value="">Selecione</option>
+                    <? foreach($parceiros as $item){ ?>
+                        <option value="<?=$item->financeiro_parceiro_id?>"> <?=$item->razao_social?> </option>
+                    <? } ?>
+                </select>
+            </div>
+            
+            
+            <div>
+                <label>Cód. Paciente</label>
+                <input type="text" id="cod_pac" class="texto02" name="cod_pac"/>
+            </div>
         </fieldset>
         <button type="submit">Enviar</button>
         <button type="reset">Limpar</button>

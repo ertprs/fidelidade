@@ -44,8 +44,6 @@ class Guia extends BaseController {
     function pesquisar($paciente_id) {
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
-//        echo '<pre>';
-//        var_dump($contrato_ativo); die;
         if (count($contrato_ativo) > 0) {
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != ""){
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;

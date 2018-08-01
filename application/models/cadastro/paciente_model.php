@@ -274,7 +274,7 @@ class paciente_model extends BaseModel {
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("cp.data_cartao_iugu <=", $data);
-        $this->db->where("cp.paciente_contrato_id", 584);
+//        $this->db->where("cp.paciente_contrato_id", 584);
         $this->db->where("cp.ativo", 't');
         $this->db->where("cp.excluido", 'f');
 //        $this->db->where("invoice_id is null");
@@ -456,7 +456,8 @@ class paciente_model extends BaseModel {
         if ($paciente_id != 0) {
 
             $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, p.vendedor, c.nome as cidade_desc,c.municipio_id as cidade_cod,
-                pcd.pessoa_juridica
+                pcd.pessoa_juridica,
+                fp.razao_social as parceiro
 
                 ');
             $this->db->from('tb_paciente p');
@@ -466,6 +467,7 @@ class paciente_model extends BaseModel {
             $this->db->join('tb_cbo_ocupacao cbo', 'cbo.cbo_ocupacao_id = p.profissao', 'left');
             $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
             $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
+            $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = p.parceiro_id', 'left');
             $this->db->where("p.paciente_id", $paciente_id);
 //            $this->db->where("pc.ativo", 't');
             $query = $this->db->get();
@@ -519,6 +521,8 @@ class paciente_model extends BaseModel {
             $this->_plano_id = $return[0]->plano_id;
             $this->_vendedor = $return[0]->vendedor;
             $this->_cpf_responsavel_flag = $return[0]->cpf_responsavel_flag;
+            $this->_codigo_paciente = $return[0]->codigo_paciente;
+            $this->_parceiro = $return[0]->parceiro;
         }
     }
 
@@ -644,7 +648,7 @@ class paciente_model extends BaseModel {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
             }
             if ($_POST['data_emissao'] != '') {
-                $this->db->set('data_emissao', $_POST['data_emissao']);
+                $this->db->set('data_emissao', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_emissao']))));
             }
             $this->db->set('cns', $_POST['cns']);
             if (isset($_POST['cpfresp'])) {
@@ -743,7 +747,12 @@ class paciente_model extends BaseModel {
             }
 
             $this->db->set('nome', $_POST['nome']);
-//            $nascimento = $_POST['nascimento'];
+            
+            $this->db->set('codigo_paciente', $_POST['cod_pac']);
+            if ($_POST['parceiro_id'] != '') {
+                $this->db->set('parceiro_id', $_POST['parceiro_id']);
+            }
+            
             if ($_POST['nascimento'] != '') {
                 $this->db->set('nascimento', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['nascimento']))));
             }

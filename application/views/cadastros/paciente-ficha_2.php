@@ -206,6 +206,16 @@
                     ?>>Outros</option>
                 </select>
             </div>
+            
+            <div>
+                <label>Parceiro</label>
+                <input type="text" id="parceiro" class="texto03" name="parceiro" value="<?= @$obj->_parceiro; ?>" readonly/>
+            </div>
+            
+            <div>
+                <label>Cod. Paciente</label>
+                <input type="text" id="codigo_paciente" class="texto03" name="codigo_paciente" value="<?= @$obj->_codigo_paciente; ?>" readonly/>
+            </div>
         </fieldset>
         <fieldset>
             <legend>Documentos / Contatos</legend>
