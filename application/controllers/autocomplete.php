@@ -542,7 +542,7 @@ class Autocomplete extends Controller {
                 )
             );
 //            echo '<pre>';
-//            var_dump($payment_token);
+//            var_dump($cartao_cliente);
 //            die;
             if ($payment_token['errors'] == 0) {
 
@@ -582,10 +582,10 @@ class Autocomplete extends Controller {
                 $gerar["message"] = 'Cartão de Crédito Inválido';
                 $gerar["LR"] = '14';
             }
-            echo '<pre>';
-            var_dump($payment_token);
-            var_dump($gerar);
-            die;
+//            echo '<pre>';
+//            var_dump($payment_token);
+//            var_dump($gerar);
+//            die;
 
             $retorno = 'true';
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
