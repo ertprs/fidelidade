@@ -199,13 +199,37 @@
                     ?>>Outros</option>
                 </select>
             </div>
+            <div>
+                <label>Parceiro</label>
+
+                <?$listarparceiro = $this->paciente->listarparceiros();?>
+                <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
+                    <option value='' >selecione</option>
+                    <?php
+                    
+                    foreach ($listarparceiro as $item) {
+                        ?>
+
+                        <option   value =<?php echo $item->financeiro_parceiro_id; ?> <?
+                        if (@$obj->_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
+                        endif;
+                        ?>><?php echo $item->fantasia; ?></option>
+                                  <?php
+                              }
+                              ?> 
+                </select>
+            </div>
+            <div>
+                <label>Cód. Paciente</label>
+                <input type="text" id="cod_pac" class="texto02" value="<?=@$obj->_codigo_paciente?>" name="cod_pac"/>
+            </div>
         </fieldset>
         <fieldset>
             <legend>Documentos / Contatos</legend>
             <div>
                 <label>CPF/CNPJ</label>
                 <? if (strlen(@$obj->_cpf) <= 11) { ?>
-                <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF" checked=""/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF" checked=""/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
                 <? } elseif (strlen(@$obj->_cpf) > 11) { ?>
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF

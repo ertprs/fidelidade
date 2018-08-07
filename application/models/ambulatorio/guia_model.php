@@ -200,6 +200,31 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function relatoriocadastroparceiro() {
+        $this->db->select('p.nome,
+                            p.paciente_id,
+                            p.cpf,
+                            p.nascimento,
+                            p.logradouro,
+                            p.situacao,
+                            p.numero,
+                            fp.nome as convenio,
+                            p.data_cadastro,
+                            p.convenio_id,
+                            m.nome as municipio,
+                            p.rg');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = p.convenio_id', 'left');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+        $this->db->where('p.ativo', 'true');
+        $this->db->where('p.parceiro_id ', $_POST['parceiro_id']);
+//        $this->db->where('p.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->orderby('p.nome');
+        $this->db->orderby('fp.nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarexames($paciente_id) {
 
         $this->db->select('pc.paciente_contrato_id,
@@ -247,6 +272,14 @@ class guia_model extends Model {
         $this->db->where("pcd.paciente_id", $paciente_id);
         $return = $this->db->get();
         return $return->result();
+    }
+
+    function listarparceirorelatorio() {
+        $this->db->select('fantasia, financeiro_parceiro_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("financeiro_parceiro_id", $_POST['parceiro_id']);
+        $return = $this->db->get()->result();
+        return $return[0]->fantasia;
     }
 
     function listarparcelas($paciente_contrato_id) {

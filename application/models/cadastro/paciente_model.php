@@ -137,10 +137,10 @@ class paciente_model extends BaseModel {
         $this->db->where("cp.excluido", 'f');
         $this->db->orderby("data");
         $return = $this->db->get()->result();
-        if(count($return) > 0){
+        if (count($return) > 0) {
             // Traz o período em que este contrato vai estar em vigor
             $dt_inicio = $return[0]->data;
-            $dt_fim = $return[count($return)-1]->data;
+            $dt_fim = $return[count($return) - 1]->data;
 
             $this->db->select('ae.*,p.telefone,p.celular, p.nome as paciente, fp.fantasia as parceiro');
             $this->db->from('tb_exames_fidelidade ae');
@@ -155,9 +155,7 @@ class paciente_model extends BaseModel {
 
             $return = $this->db->get();
             return $return->result();
-            
-        }
-        else {
+        } else {
             return array();
         }
     }
@@ -319,7 +317,7 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function listarparcelaiugupendentesconsultaavulsa() {
         $data = date("Y-m-t");
 
@@ -404,7 +402,15 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
+    function listarparceiros() {
+        $this->db->select('fantasia, financeiro_parceiro_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("ativo", 't');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarpagamentosconsultacoop($paciente_id) {
         $this->db->select('*');
         $this->db->from('tb_consultas_avulsas cp');
@@ -492,6 +498,9 @@ class paciente_model extends BaseModel {
             $this->_nomepai = $return[0]->nome_pai;
             $this->_nomemae = $return[0]->nome_mae;
             $this->_celular = $return[0]->celular;
+            $this->_financeiro_parceiro_id = $return[0]->financeiro_parceiro_id;
+            $this->_parceiro_id = $return[0]->parceiro_id;
+            $this->_codigo_paciente = $return[0]->codigo_paciente;
             $this->_telefone = $return[0]->telefone;
             $this->_telefoneresp = $return[0]->telefoneresp;
             $this->_nomeresp = $return[0]->nomeresp;
@@ -636,6 +645,10 @@ class paciente_model extends BaseModel {
             if ($_POST['municipio_id'] != '') {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
             }
+            if ($_POST['financeiro_parceiro_id'] != '') {
+                $this->db->set('parceiro_id', $_POST['financeiro_parceiro_id']);
+            }
+            $this->db->set('codigo_paciente', $_POST['cod_pac']);
 
 
 
@@ -747,15 +760,18 @@ class paciente_model extends BaseModel {
             }
 
             $this->db->set('nome', $_POST['nome']);
-            
+
             $this->db->set('codigo_paciente', $_POST['cod_pac']);
             if ($_POST['parceiro_id'] != '') {
                 $this->db->set('parceiro_id', $_POST['parceiro_id']);
             }
-            
+
             if ($_POST['nascimento'] != '') {
                 $this->db->set('nascimento', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['nascimento']))));
             }
+//            if ($_POST['financeiro_parceiro_id'] != '') {
+//                $this->db->set('financeiro_parceiro_id', $_POST['financeiro_parceiro_id']);
+//            }
             if (count($consulta_avulsa) > 0) {
                 $this->db->set('consulta_avulsa', $consulta_avulsa[0]->consulta_avulsa);
                 $this->db->set('consulta_coop', $consulta_avulsa[0]->consulta_coop);
@@ -850,14 +866,17 @@ class paciente_model extends BaseModel {
             if ($_POST['cpf'] != '') {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
             }
-            
-            if(isset($_POST['cpf_responsavel'])){
-                $this->db->set('cpf_responsavel_flag', 't');
+            if ($_POST['financeiro_parceiro_id'] != '') {
+                $this->db->set('parceiro_id', $_POST['financeiro_parceiro_id']);
             }
-            else{
+
+            if (isset($_POST['cpf_responsavel'])) {
+                $this->db->set('cpf_responsavel_flag', 't');
+            } else {
                 $this->db->set('cpf_responsavel_flag', 'f');
             }
-            
+            $this->db->set('codigo_paciente', $_POST['cod_pac']);
+
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('grau_parentesco', $_POST['grau_parentesco']);
 //            $nascimento = $_POST['nascimento'];
@@ -912,14 +931,13 @@ class paciente_model extends BaseModel {
             if ($_POST['cpf'] != '') {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
             }
-            
-            if(isset($_POST['cpf_responsavel'])){
+
+            if (isset($_POST['cpf_responsavel'])) {
                 $this->db->set('cpf_responsavel_flag', 't');
-            }
-            else{
+            } else {
                 $this->db->set('cpf_responsavel_flag', 'f');
             }
-            
+
             if ($_POST['data_emissao'] != '') {
                 $this->db->set('data_emissao', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_emissao']))));
             }

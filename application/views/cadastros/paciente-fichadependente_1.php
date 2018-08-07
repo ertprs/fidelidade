@@ -18,7 +18,7 @@
             <div>
                 <label>CPF</label>
                 <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" required/>
-                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if(@$obj->_cpf_responsavel_flag == 't') echo "checked";?>> CPF do resposável
+                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
             </div>
             <div>
                 <label>Grau de Parentesco</label>
@@ -40,6 +40,29 @@
                     endif;
                     ?>>Feminino</option>
                 </select>
+            </div>
+            <div>
+                <label>Parceiro</label>
+
+                <? $listarparceiro = $this->paciente->listarparceiros(); ?>
+                <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
+                    <option value='' >selecione</option>
+                    <?php
+                    foreach ($listarparceiro as $item) {
+                        ?>
+
+                        <option   value =<?php echo $item->financeiro_parceiro_id; ?> <?
+                        if (@$obj->_financeiro_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
+                        endif;
+                        ?>><?php echo $item->fantasia; ?></option>
+                                  <?php
+                              }
+                              ?> 
+                </select>
+            </div>
+            <div>
+                <label>Cód. Paciente</label>
+                <input type="text" id="cod_pac" class="texto02" name="cod_pac"/>
             </div>
 
             <fieldset>

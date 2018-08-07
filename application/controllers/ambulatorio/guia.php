@@ -144,6 +144,21 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriocadastro');
     }
 
+    function relatoriocadastroparceiro() {
+//        $data['empresa'] = $this->guia->listarempresas();
+        $data['listarparceiro'] = $this->paciente->listarparceiros();
+        $this->loadView('ambulatorio/relatoriocadastroparceiro', $data);
+    }
+
+    function gerarelatoriocadastroparceiro() {
+//        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+//        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['parceiro'] = $this->guia->listarparceirorelatorio();
+        $data['relatorio'] = $this->guia->relatoriocadastroparceiro();
+
+        $this->load->View('ambulatorio/impressaorelatoriocadastroparceiro', $data);
+    }
+
     function gerarelatoriocadastro() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];

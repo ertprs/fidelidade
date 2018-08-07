@@ -258,10 +258,10 @@
                                         <? } ?>
                                     <? } else { ?>
                                         <td style="width: 130px" class="<?php echo $estilo_linha; ?>">PAGA (<?
-                                            if ($item->data_cartao_iugu != '') {
-                                                echo 'Cartão';
-                                            } elseif ($item->manual == 't') {
+                                            if ($item->manual == 't') {
                                                 echo 'Manual';
+                                            } elseif ($item->data_cartao_iugu != '') {
+                                                echo 'Cartão';
                                             } else {
                                                 echo 'Boleto';
                                             }

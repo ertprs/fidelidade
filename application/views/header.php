@@ -241,6 +241,7 @@ function debug($object) {
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriodependentes">Relatorio Dependentes</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriovendedores">Relatorio Vendedor</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocadastro">Relatorio Cadastro</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocadastroparceiro">Relatorio Cliente Parceiro</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/relatorioconsultasagendadas">Relatorio Consultas Agendadas</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/listaragendamentoweb" target="_blank">Agendamento Web </a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/listaragendamentosautorizados" target="_blank">Agendamentos Autorizados </a></span></li>

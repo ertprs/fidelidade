@@ -296,3 +296,4 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN parceiro_id integer;
 -- Dia 07/08/2018
 ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN ativo_admin boolean DEFAULT true;
 
+ALTER TABLE ponto.tb_paciente ADD COLUMN financeiro_parceiro_id integer;
