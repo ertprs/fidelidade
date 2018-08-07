@@ -23,7 +23,7 @@ class Login extends Controller {
         $teste1 = count($browserPC);
         $teste2 = count($browserIOS);
 
-        if ($teste1 > 0 || $teste2 > 0) {
+        if ($teste1 > 0 || $teste2 > 0 || true) {
             //Pegando somente o numero da versao.
             preg_match('/[0-9].+/', $browserPC[0], $verificanavegador['versao']);
 

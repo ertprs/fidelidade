@@ -119,35 +119,47 @@ if (count($exames) > 0) {
                                         </a>
                                     </div>
                                 </td>
-                                <?if($perfil_id == 1 && $item->ativo == 't'){?>
-                                 <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                    <div class="bt_link_new">
-                                        <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente[0]->paciente_id . "/" . $item->paciente_contrato_id ?>">
-                                            Excluir
-                                        </a>
-                                    </div>
-                                </td>   
-                                <?}
-                                else{?>
-                                         <td class="<?php echo $estilo_linha; ?>" width="50px;"> 
-                                            <? if ($ativo == 'f') { ?>
-                                                 <div class="bt_link_new">
-                                                    <a onclick="javascript: return confirm('Deseja realmente re-ativar o contrato?');"   href="<?= base_url() . "ambulatorio/guia/ativarcontrato/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?>">
-                                                        Re-Ativar
-                                                    </a>
-                                                </div>
-                                            <? } ?>
-                                         </td>      
+                                <? if ($perfil_id == 1 && $item->ativo == 't') { ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                        <div class="bt_link_new">
+                                            <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente[0]->paciente_id . "/" . $item->paciente_contrato_id ?>">
+                                                Excluir
+                                            </a>
+                                        </div>
+                                    </td>   
+                                <? } else {
+                                    ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;"> 
+                                        <? if ($ativo == 'f') { ?>
+                                            <div class="bt_link_new">
+                                                <a onclick="javascript: return confirm('Deseja realmente re-ativar o contrato?');"   href="<?= base_url() . "ambulatorio/guia/ativarcontrato/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?>">
+                                                    Re-Ativar
+                                                </a>
+                                            </div>
+                                        <? } ?>
+                                    </td>      
                                 <? } ?>
-                                
-                                
-        <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                    <div class="bt_link_new">
-                                        <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
-                                            Pagamento Iugu
-                                        </a>
-                                    </div>
-                                </td>-->
+                                <?
+                                if ($operador_id == 1) {
+                                    ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                        <div class="bt_link_new">
+                                            <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas. Excluir por esse botão fará o contrato sumir');"   href="<?= base_url() . "ambulatorio/guia/excluircontratoadmin/" . $paciente[0]->paciente_id . "/" . $item->paciente_contrato_id ?>">
+                                                Excluir (Admin)
+                                            </a>
+                                        </div>
+                                    </td> 
+                                    <?
+                                }
+                                ?>
+
+                                        <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                            <div class="bt_link_new">
+                                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
+                                                    Pagamento Iugu
+                                                </a>
+                                            </div>
+                                        </td>-->
 
 
 

@@ -293,3 +293,6 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN cpf_responsavel_flag boolean DEFAULT fa
 ALTER TABLE ponto.tb_paciente ADD COLUMN codigo_paciente character varying(100);
 ALTER TABLE ponto.tb_paciente ADD COLUMN parceiro_id integer;
 
+-- Dia 07/08/2018
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN ativo_admin boolean DEFAULT true;
+

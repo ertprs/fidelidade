@@ -45,18 +45,19 @@ class Guia extends BaseController {
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
         if (count($contrato_ativo) > 0) {
-            if ($contrato_ativo[count($contrato_ativo) - 1]->data != ""){
+            if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                 $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
                 $data_atual = date("Y-m-d");
-    //            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
+                //            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
                 if ($data_atual > $data_contrato) {
                     $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
                 }
             }
         }
-//        var_dump($data['contrato_ativo']); die;
+//       
         $data['titular'] = $this->guia->listartitular($paciente_id);
+//        var_dump($data['titular'] ); die;
         $data['guia'] = $this->guia->listar($paciente_id);
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $this->loadView('ambulatorio/guia-lista', $data);
@@ -326,12 +327,13 @@ class Guia extends BaseController {
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['exame'] = $this->guia->listarparcelas($paciente_contrato_id);
         $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
-        
+
         $data['emissao'] = date("d-m-Y");
-        foreach($data['exame'] as $value){
-            if($value->taxa_adesao == 't') $data['adesao'] = $value->data;
+        foreach ($data['exame'] as $value) {
+            if ($value->taxa_adesao == 't')
+                $data['adesao'] = $value->data;
         }
-        
+
         if ($data['empresa'][0]->modelo_carteira == 1) {
             $this->load->View('ambulatorio/impressaoficharonaldo', $data);
         } elseif ($data['empresa'][0]->modelo_carteira == 2) {
@@ -1401,6 +1403,33 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
     }
 
+    function excluircontratoadmin($paciente_id, $contrato_id) {
+//        var_dump($contrato_id); die;
+        $pagamento = $this->paciente->listarparcelaiuguexclusaocontrato($contrato_id);
+//        var_dump($pagamento); die;
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+
+        foreach ($pagamento as $item) {
+
+
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
+            $invoice_id = $item->invoice_id;
+
+            $retorno = Iugu_Invoice::fetch($invoice_id);
+            $retorno->cancel();
+//            echo '<pre>';
+//            var_dump($retorno);
+//            die;
+            $this->guia->cancelarpagamentoiugu($item->paciente_contrato_parcelas_id);
+        }
+
+        $ambulatorio_guia_id = $this->guia->excluircontratoadmin($paciente_id, $contrato_id);
+
+        redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
+    }
+
     function ativarcontrato($paciente_id, $contrato_id) {
 //        var_dump($contrato_id); die;
         $ambulatorio_guia_id = $this->guia->ativarcontrato($paciente_id, $contrato_id);
@@ -1418,7 +1447,7 @@ class Guia extends BaseController {
 //        var_dump($pagamento_iugu);
 //        die;
         if ($key != '' && count($pagamento_iugu) > 0) {
-            if($pagamento_iugu[0]->invoice_id != ''){
+            if ($pagamento_iugu[0]->invoice_id != '') {
                 Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
                 $retorno = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
                 $retorno->cancel();
