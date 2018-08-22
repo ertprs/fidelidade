@@ -194,7 +194,7 @@ class Caixa extends BaseController {
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriosaida', $data);
     }
-    
+
 //    function relatoriovendedorcomissao() {
 //        $data['conta'] = $this->forma->listarforma();
 //        $data['credordevedor'] = $this->caixa->listarcredordevedor();
@@ -228,8 +228,8 @@ class Caixa extends BaseController {
         $empresa_id = $this->session->userdata('empresa_id');
         $data['grupo'] = $_POST['grupo'];
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
-        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['relatoriosaida'] = $this->caixa->relatoriosaidaacompanhamentodecontas();
 //        echo '<pre>';
 //        var_dump($data['relatoriosaida']);
@@ -240,8 +240,8 @@ class Caixa extends BaseController {
     }
 
     function gerarelatoriosaida() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
-        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
@@ -389,8 +389,8 @@ class Caixa extends BaseController {
     }
 
     function gerarelatoriosaidagrupo() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
-        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
@@ -527,8 +527,8 @@ class Caixa extends BaseController {
     }
 
     function gerarelatorioentrada() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
-        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
@@ -636,8 +636,8 @@ class Caixa extends BaseController {
     }
 
     function gerarelatorioentradagrupo() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
-        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartiporelatorio($_POST['tipo']);
         $data['classe'] = $this->tipo->buscartiporelatorio($_POST['classe']);
@@ -773,8 +773,8 @@ class Caixa extends BaseController {
     }
 
     function gerarelatoriomovitamentacao() {
-        $data['txtdata_inicio'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) );
-        $data['txtdata_fim'] = date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) );
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
@@ -1010,7 +1010,7 @@ class Caixa extends BaseController {
     }
 
     function ecluirimagemsaida($saidas_id, $value) {
-       
+
         unlink("./upload/saida/$saidas_id/$value");
         $this->anexarimagemsaida($saidas_id);
     }

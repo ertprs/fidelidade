@@ -349,6 +349,18 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function listaralterardataconsultaavulsa($consultas_avulsas_id) {
+
+        $this->db->select('pcp.consultas_avulsas_id,
+                            pcp.data,
+                            pcp.data_cadastro');
+        $this->db->from('tb_consultas_avulsas pcp');
+        $this->db->where("pcp.consultas_avulsas_id", $consultas_avulsas_id);
+//        $this->db->orderby('pcp.parcela');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarparcelareenviaremail($paciente_contrato_parcelas_id) {
 
         $this->db->select('pc.paciente_contrato_id,
@@ -4658,6 +4670,7 @@ ORDER BY p.nome";
     }
 
     function confirmarpagamento($paciente_contrato_parcelas_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
 
         $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
 //        var_dump($parcela); die;
@@ -4684,6 +4697,7 @@ ORDER BY p.nome";
         $this->db->set('operador_cadastro', $operador_id);
         $this->db->insert('tb_entradas');
         $entradas_id = $this->db->insert_id();
+//        var_dump($entradas_id); die;
         $erro = $this->db->_error_message();
         if (trim($erro) != "") // erro de banco
             return -1;
@@ -4765,6 +4779,20 @@ ORDER BY p.nome";
         $this->db->set('operador_atualizacao', $operador_id);
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_paciente_contrato_parcelas');
+        $erro = $this->db->_error_message();
+        if (trim($erro) != "") // erro de banco
+            return false;
+        else
+            return true;
+    }
+
+    function excluirpagamentoautomaticoiugu($paciente_contrato_parcelas_id) {
+
+
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+        $this->db->delete('tb_paciente_contrato_parcelas_iugu');
         $erro = $this->db->_error_message();
         if (trim($erro) != "") // erro de banco
             return false;
@@ -5201,6 +5229,31 @@ AND data <= '$data_fim'";
 
 
             return $ambulatorio_guia_id;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravarintegracaoiuguconsultaavulsaalterardata($url, $invoice_id, $consulta_avulsa_id) {
+        try {
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+
+
+            $this->db->set('url', $url);
+            $this->db->set('invoice_id', $invoice_id);
+//            $this->db->set('data_vencimento', null);
+            $this->db->where('consultas_avulsas_id', $consulta_avulsa_id);
+            $this->db->update('tb_consultas_avulsas');
+
+            /* inicia o mapeamento no banco */
+
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+            else
+//                $ambulatorio_guia_id = $this->db->insert_id();
+                return $ambulatorio_guia_id;
         } catch (Exception $exc) {
             return -1;
         }
@@ -5871,6 +5924,28 @@ AND data <= '$data_fim'";
             }
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravaralterardataconsultaavulsa($consulta_avulsa_id) {
+        try {
+
+
+            /* inicia o mapeamento no banco */
+            $horario = date("Y-m-d H:i:s");
+            $hora = date("H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+
+            $this->db->where('consultas_avulsas_id', $consulta_avulsa_id);
+            $this->db->update('tb_consultas_avulsas');
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;

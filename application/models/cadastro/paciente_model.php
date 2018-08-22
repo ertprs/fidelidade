@@ -218,6 +218,16 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
+    
+    function listarpagamentosconsultaavulsaalterardata($consulta_avulsa_id) {
+        
+        $this->db->select('valor, data, cp.ativo, consultas_avulsas_id, observacao, invoice_id, tipo');
+        $this->db->from('tb_consultas_avulsas cp');
+        $this->db->where("consultas_avulsas_id", $consulta_avulsa_id);
+        $this->db->orderby("data");
+        $return = $this->db->get();
+        return $return->result();
+    }
 
     function listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id) {
         $this->db->select('*');
@@ -310,6 +320,7 @@ class paciente_model extends BaseModel {
         $this->db->where("cp.data <=", $data);
         $this->db->where("cp.ativo", 't');
         $this->db->where("cp.excluido", 'f');
+        $this->db->where("cp.data_cartao_iugu is null");
         $this->db->where("pc.ativo", 't');
         $this->db->where("p.ativo", 't');
         $this->db->where("cpi.invoice_id is not null");
@@ -327,6 +338,7 @@ class paciente_model extends BaseModel {
 //        $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->where("cp.data <=", $data);
         $this->db->where("cp.excluido", 'f');
+        $this->db->where("cp.ativo", 't');
         $this->db->where("p.ativo", 't');
         $this->db->where("cp.invoice_id is not null");
         $this->db->orderby("cp.data");

@@ -133,8 +133,8 @@ class caixa_model extends Model {
         $this->db->join('tb_operador o', 'o.operador_id = s.operador_cadastro', 'left');
         $this->db->join('tb_operador op', 'op.operador_id = s.operador_caixa', 'left');
         $this->db->where('s.ativo', 't');
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $return = $this->db->get();
         return $return->result();
     }
@@ -165,8 +165,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('s.data');
         $this->db->orderby('fcd.razao_social');
         $return = $this->db->get();
@@ -196,8 +196,8 @@ class caixa_model extends Model {
         if ($_POST['grupo'] != "0" && $_POST['grupo'] != "1") {
             $this->db->where('pt.grupo', $_POST['grupo']);
         }
-        $this->db->where("ae.data >=", date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where("ae.data <=", date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where("ae.data >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where("ae.data <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->groupby('pt.procedimento_tuss_id');
         $this->db->groupby('pt.nome');
         $this->db->groupby('cg.nome');
@@ -212,8 +212,8 @@ class caixa_model extends Model {
                             s.tipo');
         $this->db->from('tb_saidas s');
         $this->db->where('s.ativo', 'true');
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->groupby('s.tipo');
         $this->db->orderby('s.tipo');
         $return = $this->db->get();
@@ -246,8 +246,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('s.tipo');
         $this->db->orderby('fcd.razao_social');
         $return = $this->db->get();
@@ -272,8 +272,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $return = $this->db->count_all_results();
         return $return;
     }
@@ -317,8 +317,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('s.data');
         $this->db->orderby('s.conta');
         $this->db->orderby('fcd.razao_social');
@@ -341,8 +341,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $return = $this->db->count_all_results();
         return $return;
     }
@@ -373,8 +373,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('s.conta');
         $this->db->orderby('s.data');
         $this->db->orderby('fcd.razao_social');
@@ -387,8 +387,8 @@ class caixa_model extends Model {
                             s.tipo');
         $this->db->from('tb_entradas s');
         $this->db->where('s.ativo', 'true');
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->groupby('s.tipo');
         $this->db->orderby('s.tipo');
         $return = $this->db->get();
@@ -406,6 +406,7 @@ class caixa_model extends Model {
                             e.observacao as observacaoentrada,
                             fe.descricao as contanome,
                             s.conta,
+                            s.saldo_id,
                             sa.classe as classesaida,
                             e.classe as classeentrada');
         $this->db->from('tb_saldo s');
@@ -413,7 +414,7 @@ class caixa_model extends Model {
         $this->db->join('tb_entradas e', 'e.entradas_id = s.entrada_id', 'left');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
-        $this->db->join('tb_financeiro_classe fc', 'fc.descricao = sa.classe AND fc.descricao = e.classe' ,'left');
+//        $this->db->join('tb_financeiro_classe fc', 'fc.descricao = sa.classe AND fc.descricao = e.classe', 'left');
         if (($_POST['tipo'] != 0) && ($_POST['classe'] == '')) {
             $this->db->where('tipo_id', $_POST['tipo']);
 //            $this->db->orwhere('e.tipo', $_POST['tipo']);
@@ -429,8 +430,8 @@ class caixa_model extends Model {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
         }
         $this->db->where('s.ativo', 'true');
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ) . ' ' . '00:00:00');
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ) . ' ' . '23:59:59');
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . ' ' . '00:00:00');
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . ' ' . '23:59:59');
         $this->db->orderby('s.data');
         $this->db->orderby('fcd.razao_social');
         $return = $this->db->get();
@@ -444,7 +445,7 @@ class caixa_model extends Model {
         $this->db->join('tb_entradas e', 'e.entradas_id = s.entrada_id', 'left');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
-        $this->db->join('tb_financeiro_classe fc', 'fc.descricao = sa.classe AND fc.descricao = e.classe' ,'left');
+//        $this->db->join('tb_financeiro_classe fc', 'fc.descricao = sa.classe AND fc.descricao = e.classe', 'left');
         $this->db->where('s.ativo', 'true');
         if ($_POST['credordevedor'] != 0) {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
@@ -455,7 +456,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data <', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ) . ' ' . '00:00:00');
+        
+        $this->db->where('s.data <', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $return = $this->db->get();
         return $return->result();
     }
@@ -475,8 +477,8 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        $this->db->where('s.data >=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_inicio']) ) ));
-        $this->db->where('s.data <=', date("Y-m-d", strtotime ( str_replace('/','-', $_POST['txtdata_fim']) ) ));
+        $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $return = $this->db->count_all_results();
         return $return;
     }
@@ -828,7 +830,7 @@ class caixa_model extends Model {
         $this->db->from('tb_financeiro_email');
         $this->db->where('financeiro_email_id', $email_id);
         $return = $this->db->get();
-        $result=$return->result();
+        $result = $return->result();
         return $result[0]->mensagem;
     }
 

@@ -1,3 +1,4 @@
+<meta charset="UTF-8">
 <div class="content"> <!-- Inicio da DIV content -->
     <? if (count($tipo) > 0) { ?>
         <h4>TIPO: <?= $tipo[0]->descricao; ?></h4>
@@ -30,6 +31,7 @@
         <table border="1">
             <thead>
                 <tr>
+                    <th width="100px;" class="tabela_header">Número</th>
                     <th width="100px;" class="tabela_header">Conta</th>
                     <th class="tabela_header">Data</th>
                     <th class="tabela_header">Nome</th>
@@ -52,24 +54,25 @@
                     ?>
 
                     <tr>
-                        <td ><?= utf8_decode($item->contanome); ?></td>
+                        <td ><?= $item->saldo_id; ?></td>
+                        <td ><?=$item->contanome; ?></td>
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
-                        <td ><?= utf8_decode($item->razao_social); ?></td>
+                        <td ><?= $item->razao_social; ?></td>
                         <? if ($item->tiposaida != null) { ?>
-                            <td ><?= utf8_decode($item->tiposaida); ?></td>
-                            <td ><?= utf8_decode($item->classesaida); ?></td>
+                            <td ><?= $item->tiposaida; ?></td>
+                            <td ><?= $item->classesaida; ?></td>
                             <td ><font color="red"><?= number_format($item->valor, 2, ",", "."); ?></td>
                         <? } else { ?>
-                            <td ><?= utf8_decode($item->tipoentrada); ?></td>
-                             <td ><?= utf8_decode($item->classeentrada); ?></td>                      
+                            <td ><?= $item->tipoentrada; ?></td>
+                             <td ><?= $item->classeentrada; ?></td>                      
                             <td ><font color="blue"><?= number_format($item->valor, 2, ",", "."); ?></td>
                         <? } ?>
 
 
                         <? if ($item->observacaosaida != null) { ?>
-                            <td ><?= utf8_decode($item->observacaosaida); ?></td>
+                            <td ><?= $item->observacaosaida; ?></td>
                         <? } else { ?>
-                            <td ><?= utf8_decode($item->observacaoentrada); ?></td>
+                            <td ><?= $item->observacaoentrada; ?></td>
                         <? } ?>
                         <td colspan="2"><b><?= number_format($total, 2, ",", "."); ?></b></td>
                     </tr>

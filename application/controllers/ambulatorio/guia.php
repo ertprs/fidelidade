@@ -693,6 +693,16 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/alterardatapagamento-form', $data);
     }
 
+    function alterardatapagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['consultas_avulsas_id'] = $consultas_avulsas_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listaralterardataconsultaavulsa($consultas_avulsas_id);
+//        var_dump($data['pagamento']); die;
+        $this->load->View('ambulatorio/alterardatapagamentoconsultaavulsa-form', $data);
+    }
+
     function alterarobservacao($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 //        var_dump($paciente_contrato_parcelas_id); die;
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
@@ -886,6 +896,85 @@ class Guia extends BaseController {
                 } else {
 
                     $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
+                    $mensagem = 'Data alterada com sucesso';
+                }
+            }
+        }
+
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function gravaralterardatapagamentoconsultaavulsa($consulta_avulsa_id, $paciente_id, $contrato_id) {
+
+        $this->guia->gravaralterardataconsultaavulsa($consulta_avulsa_id);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        if ($key != '') {
+            $cliente = $this->paciente->listardados($paciente_id);
+
+            $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+            $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+            $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+
+
+            $pagamento_iugu = $this->paciente->listarpagamentosconsultaavulsaalterardata($consulta_avulsa_id);
+            $data = date('d/m/Y', strtotime($pagamento_iugu[0]->data));
+
+            $valor = $pagamento_iugu[0]->valor * 100;
+
+            $description = $empresa[0]->nome . " - CONSULTA " . $pagamento_iugu[0]->tipo;
+
+//            var_dump($pagamento_iugu);
+//            die;
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+            if ($pagamento_iugu[0]->invoice_id != '') {
+                $invoice = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+                $invoice->cancel();
+
+                $gerar = Iugu_Invoice::create(Array(
+                            "email" => $cliente[0]->cns,
+                            "due_date" => $data,
+                            "items" => Array(
+                                Array(
+                                    "description" => $description,
+                                    "quantity" => "1",
+                                    "price_cents" => $valor
+                                )
+                            ),
+                            "payer" => Array(
+                                "cpf_cnpj" => $cliente[0]->cpf,
+                                "name" => $cliente[0]->nome,
+                                "phone_prefix" => $prefixo,
+                                "phone" => $celular_s_prefixo,
+                                "email" => $cliente[0]->cns,
+                                "address" => Array(
+                                    "street" => $cliente[0]->logradouro,
+                                    "number" => $cliente[0]->numero,
+                                    "city" => $cliente[0]->cidade_desc,
+                                    "state" => $codigoUF,
+                                    "district" => $cliente[0]->bairro,
+                                    "country" => "Brasil",
+                                    "zip_code" => $cliente[0]->cep,
+                                    "complement" => $cliente[0]->complemento
+                                )
+                            )
+                ));
+
+                if (count($gerar["errors"]) > 0) {
+                    $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
+//            foreach ($gerar["errors"] as $item) {
+////                echo $item;
+//                
+//            }
+//                echo '<pre>';
+//                var_dump($gerar);
+//                die;
+                } else {
+
+                    $gravar = $this->guia->gravarintegracaoiuguconsultaavulsaalterardata($gerar["secure_url"], $gerar["id"], $consulta_avulsa_id);
                     $mensagem = 'Data alterada com sucesso';
                 }
             }
