@@ -16,7 +16,8 @@
                         <th class="tabela_title">Parceiro</th>
                         <!--<th class="tabela_title">Medicos</th>-->
                         <!--<th class="tabela_title">SITUA&Ccedil;&Atilde;O</th>-->
-                        <th class="tabela_title">Data</th>
+                        <th class="tabela_title">Data Inicio</th>
+                        <th class="tabela_title">Data Fim</th>
                         <th class="tabela_title">Nome</th>
                         <th  class="tabela_title">Titular</th>
                     </tr>
@@ -37,7 +38,10 @@
                             </select>
                         </th>
                         <th class="tabela_title">
-                            <input type="text"  id="data" alt="date" name="data" class="size1"  value="<?php echo @$_GET['data']; ?>" />
+                            <input type="text"  id="data_inicio" alt="date" name="data_inicio" class="size1"  value="<?php echo @$_GET['data_inicio']; ?>" />
+                        </th>
+                        <th class="tabela_title">
+                            <input type="text"  id="data_fim" alt="date" name="data_fim" class="size1"  value="<?php echo @$_GET['data_fim']; ?>" />
                         </th>
                         <th  class="tabela_title">
                             <input type="text" name="nome" class="texto06 bestupper" value="<?php echo @$_GET['nome']; ?>" />
@@ -246,7 +250,19 @@
 
 
         $(function () {
-            $("#data").datepicker({
+            $("#data_inicio").datepicker({
+                autosize: true,
+                changeYear: true,
+                changeMonth: true,
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                buttonImage: '<?= base_url() ?>img/form/date.png',
+                dateFormat: 'dd/mm/yy'
+            });
+        });
+
+        $(function () {
+            $("#data_fim").datepicker({
                 autosize: true,
                 changeYear: true,
                 changeMonth: true,

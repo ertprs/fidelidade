@@ -1532,7 +1532,9 @@ class exame_model extends Model {
         $this->db->join('tb_paciente p', 'p.paciente_id = ae.paciente_fidelidade_id', 'left');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = ae.parceiro_id', 'left');
         $this->db->join('tb_paciente p2', 'p2.paciente_id = ae.paciente_titular_id', 'left');
-
+        if (!isset($args['data_inicio']) && !isset($args['fim'])) {
+            $this->db->where('ae.data >=', $data);
+        }
 
 //        $this->db->where('ae.confirmado', 'true');
 //        $this->db->where('ae.ativo', 'false');
@@ -1544,11 +1546,15 @@ class exame_model extends Model {
         if (isset($args['nometitular']) && strlen($args['nometitular']) > 0) {
             $this->db->where('p2.nome ilike', "%" . $args['nometitular'] . "%");
         }
-        if (isset($args['data']) && strlen($args['data']) > 0) {
-            $this->db->where('ae.data', $args['data']);
-        } else {
-            $this->db->where('ae.data >=', $data);
+        
+        if (isset($args['data_inicio']) && strlen($args['data_inicio']) > 0) {
+            $this->db->where('ae.data >=', $args['data_inicio']);
         }
+        
+        if (isset($args['data_fim']) && strlen($args['data_fim']) > 0) {
+            $this->db->where('ae.data <=', $args['data_fim']);
+        }
+        
         if (isset($args['parceiro']) && strlen($args['parceiro']) > 0) {
             $this->db->where('ae.parceiro_id', $args['parceiro']);
         }
