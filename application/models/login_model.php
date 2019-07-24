@@ -24,7 +24,8 @@ class login_model extends Model {
         
         $this->db->select('empresa_id,
                             nome,
-                            internacao
+                            internacao,
+                            cadastro
                             ');
         $this->db->from('tb_empresa');
         $this->db->where('empresa_id', $empresa);
@@ -33,9 +34,11 @@ class login_model extends Model {
         if(count($retorno) > 0){
             $empresanome = $retorno[0]->nome;
             $internacao = $retorno[0]->internacao;
+            $cadastro = $retorno[0]->cadastro;
         }else{
             $empresanome = "";
             $internacao = false;
+            $cadastro="";
         }
         
         if (isset($return) && count($return) > 0) {
@@ -54,6 +57,7 @@ class login_model extends Model {
                 'modulo' => $modulo,
                 'internacao' => $internacao,
                 'empresa_id' => $empresa,
+                'cadastro' => $cadastro,
                 'empresa' => $empresanome
                 
             );
@@ -70,10 +74,16 @@ class login_model extends Model {
         $this->db->select('empresa_id,
                             nome');
         $this->db->from('tb_empresa');
+        $this->db->where('ativo','t');
+        $this->db->where('cadastroempresa',null);
         $this->db->orderby('empresa_id');
         $return = $this->db->get();
         return $return->result();
     }
+    
+    
+    
+    
 
 }
 

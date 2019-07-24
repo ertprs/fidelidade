@@ -144,10 +144,37 @@
                     ?> 
                 </select>
             </div>
+
+            <div>
+                <label>Forma Pagamento *</label>
+
+                <select name="forma_rendimento_id" id="forma_rendimento_id" class="size2" >
+                    <option value='' >Selecione</option>
+                    <?php
+                    $forma = $this->formapagamento->listarformaRendimentoPaciente();
+                    foreach ($forma as $itens) {
+                        ?>
+                        <option   value =<?php echo $itens->forma_rendimento_id; ?> <?
+                        if (@$obj->_forma_rendimento_id == $itens->forma_rendimento_id):echo 'selected';
+                        endif;
+                        ?>><?php echo $itens->nome; ?></option>
+
+                        <?php
+                    }
+                    ?> 
+                </select>
+            </div>
+
             <div>
                 <label>Situacao</label>
-                <input  name="situacao" id="situacao" class="texto03" readonly value="<?= @$obj->_situacao ?>">
-
+                <select name="situacao"> 
+                            
+                    <option  <? if(@$obj->_situacao == "Titular"): echo "selected"; endif;?> >Titular</option>
+                    <option  <? if(@$obj->_situacao == "Dependente"): echo "selected"; endif;?> >Dependente</option>
+                         
+                </select> 
+                <!--<input  name="situacao" id="situacao" class="texto03" readonly value="<?= @$obj->_situacao ?>">-->
+             
             </div>
             <div>
                 <label>Pessoa Jurídica</label>

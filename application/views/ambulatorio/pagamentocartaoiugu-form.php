@@ -1,7 +1,7 @@
 
 <div class="content ficha_ceatox">
 
-    <div >
+    <div>
         <?
         $operador_id = $this->session->userdata('operador_id');
         $empresa_id = $this->session->userdata('empresa');
@@ -87,11 +87,11 @@
                         <legend>Vencimento</legend>
                         <div>
                             <label>Mês de Vencimento (Ex: 04)</label>                      
-                            <input type="text" id="mes" name="mes" alt="" class="texto02" value="<?=@$cartao[0]->mes?>" required/>
+                            <input type="text" id="mes" name="mes" minlength="2"  maxlength="2" alt="" class="texto02" value="<?=@$cartao[0]->mes?>" required/>
                         </div>
                         <div>
                             <label>Ano de Vencimento (Ex: 2018)</label>                      
-                            <input type="text" id="ano" name="ano"  class="texto02" value="<?=@$cartao[0]->ano?>" required/>
+                            <input type="text" id="ano" name="ano" minlength="4"  maxlength="4" class="texto02" value="<?=@$cartao[0]->ano?>" required/>
                         </div>
                         <!--<br>-->
                         <!--                        <div>
@@ -110,6 +110,20 @@
                             <label>Sobrenome</label>                      
                             <input type="text" id="last_name" name="last_name"  class="texto02" value="<?=@$cartao[0]->last_name?>" required/>
                         </div>
+                        <!--<br>-->
+                        <!--                        <div>
+                                                    <label>Código de Segurança</label>                      
+                                                    <input type="text" id="card_csv" name="card_csv"  class="texto02" value="" required/>
+                                                </div>-->
+
+                    </fieldset>
+                    <fieldset>
+                        <legend>Cancelar Boletos Futuros? (Marcar irá cancelar os boletos futuros e associar o cartão aos pagamentos)</legend>
+                        <div>
+                            <!--<label>Primeiro Nome</label>-->                      
+                            <input type="checkbox" id="deletarBoleto" name="deletarBoleto" alt="" class="texto02"/>
+                        </div>
+                        
                         <!--<br>-->
                         <!--                        <div>
                                                     <label>Código de Segurança</label>                      

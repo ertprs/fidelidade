@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <th class="tabela_header">Nome</th>
-                        <th class="tabela_header" width="70px;" colspan="4"><center>Detalhes</center></th>
+                        <th class="tabela_header" width="70px;" colspan="5"><center>Detalhes</center></th>
                     </tr>
                 </thead>
                 <?php
@@ -39,7 +39,7 @@
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
                      ?>
-                            <tr >
+                        <tr >
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
 
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
@@ -47,6 +47,12 @@
                                 </td>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
                                     <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamentocarencia/<?= $item->forma_pagamento_id ?>">Carência</a>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                    <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamentocomissao/<?= $item->forma_pagamento_id ?>">Comissão</a>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                    <a href="<?= base_url() ?>cadastros/formapagamento/anexararquivos/<?= $item->forma_pagamento_id ?>">Arquivos</a>
                                 </td>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Forma?');" href="<?= base_url() ?>cadastros/formapagamento/excluir/<?= $item->forma_pagamento_id ?>">Excluir</a>
@@ -61,7 +67,7 @@
                         ?>
                         <tfoot>
                             <tr>
-                                <th class="tabela_footer" colspan="4">
+                                <th class="tabela_footer" colspan="6">
                                    <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
                                 </th>

@@ -18,9 +18,13 @@ class formapagamento_model extends Model {
     var $_valor6 = null;
     var $_valor10 = null;
     var $_valor12 = null;
+    var $_valor_carteira = null;
+    var $_valor_carteira_titular = null;
     var $_valoradcional = null;
     var $_parcelas = null;
     var $_comissao = null;
+    var $_qtd_dias = null;
+    var $_nome_impressao = null;
 
     function Formapagamento_model($forma_pagamento_id = null) {
         parent::Model();
@@ -41,6 +45,29 @@ class formapagamento_model extends Model {
         return $this->db;
     }
 
+    function listarformarendimento($args = array()) {
+        $this->db->select('forma_rendimento_id,
+                            nome, 
+                            ');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('ativo', 'true');
+        if (isset($args['nome']) && strlen($args['nome']) > 0) {
+            $this->db->where('nome ilike', "%" . $args['nome'] . "%");
+        }
+        return $this->db;
+    }
+
+    function carregarformarendimento($formarendimento_id) {
+        $this->db->select('forma_rendimento_id,
+                            nome, 
+                            ');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('forma_rendimento_id', $formarendimento_id);
+
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listargrupo($args = array()) {
         $this->db->select('financeiro_grupo_id,
                             nome 
@@ -58,6 +85,36 @@ class formapagamento_model extends Model {
                             nome');
         $this->db->from('tb_forma_pagamento');
         $this->db->where("ativo", 't');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarformaRendimentoPaciente() {
+        $this->db->select('forma_rendimento_id,
+                            nome, 
+                            ');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where("ativo", 't');
+
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarformaRendimentoPlanoComissao($plano_id) {
+        $this->db->select(' frc.forma_rendimento_id,
+                            fr.nome as forma, 
+                            frc.forma_rendimento_comissao_id,
+                            frc.inicio_parcelas,
+                            frc.fim_parcelas,
+                            frc.plano_id,
+                            frc.valor_comissao
+                            ');
+        $this->db->from('tb_forma_rendimento_comissao frc');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = frc.forma_rendimento_id', 'left');
+        $this->db->where("frc.ativo", 't');
+        $this->db->where("frc.plano_id", $plano_id);
+        $this->db->orderby("forma_rendimento_id, inicio_parcelas");
+
         $return = $this->db->get();
         return $return->result();
     }
@@ -142,6 +199,38 @@ class formapagamento_model extends Model {
             return 0;
     }
 
+    function excluirFormaRendimento($forma_pagamento_id) {
+
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->set('ativo', 'f');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->where('forma_rendimento_id', $forma_pagamento_id);
+        $this->db->update('tb_forma_rendimento');
+        $erro = $this->db->_error_message();
+        if (trim($erro) != "") // erro de banco
+            return -1;
+        else
+            return 0;
+    }
+
+    function excluirFormaRendimentoComissao($forma_rendimento_comissao_id) {
+
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->set('ativo', 'f');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->where('forma_rendimento_comissao_id', $forma_rendimento_comissao_id);
+        $this->db->update('tb_forma_rendimento_comissao');
+        $erro = $this->db->_error_message();
+        if (trim($erro) != "") // erro de banco
+            return -1;
+        else
+            return 0;
+    }
+
     function excluirparcela($parcela_id) {
 
         $horario = date("Y-m-d H:i:s");
@@ -203,6 +292,62 @@ class formapagamento_model extends Model {
         $this->db->set('parcelas_inicio', $_POST['parcela_inicio']);
         $this->db->set('parcelas_fim', $_POST['parcela_fim']);
         $this->db->insert('tb_formapagamento_pacela_juros');
+    }
+
+    function gravarFormaRendimentoComissao() {
+
+        $this->db->select('forma_rendimento_comissao_id, inicio_parcelas, fim_parcelas');
+        $this->db->from('tb_forma_rendimento_comissao');
+        $this->db->where('ativo', 'true');
+        $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+        $this->db->where('plano_id', $_POST['plano_id']);
+        $this->db->where('inicio_parcelas <=', $_POST['inicio_parcelas']);
+        $inicio_parcelas = $_POST['inicio_parcelas'];
+        $this->db->where("(fim_parcelas >= $inicio_parcelas or fim_parcelas is null)");
+        $this->db->orderby('fim_parcelas');
+        $return = $this->db->get()->result();
+
+        $this->db->select('forma_rendimento_comissao_id, inicio_parcelas, fim_parcelas');
+        $this->db->from('tb_forma_rendimento_comissao');
+        $this->db->where('ativo', 'true');
+        $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+        $this->db->where('plano_id', $_POST['plano_id']);
+        $fim_parcelas = $_POST['fim_parcelas'];
+        $this->db->where('inicio_parcelas <=', $fim_parcelas);
+        $this->db->where("(fim_parcelas >= $fim_parcelas or fim_parcelas is null)");
+        $this->db->orderby('fim_parcelas');
+        $return2 = $this->db->get()->result();
+        // echo '<pre>';
+        // var_dump($return2); die;
+        // $return;
+        if (count($return) > 0) {
+            return -10;
+        }
+        if ($_POST['inicio_parcelas'] > $_POST['fim_parcelas'] && $_POST['fim_parcelas'] > 0) {
+            return -11;
+        }
+        if (count($return2) > 0) {
+            return -12;
+        }
+
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+
+        $this->db->set('data_cadastro', $horario);
+        $this->db->set('operador_cadastro', $operador_id);
+
+        $this->db->set('plano_id', $_POST['plano_id']);
+        $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
+        $this->db->set('valor_comissao', str_replace(",", ".", str_replace(".", "", $_POST['valor_comissao'])));
+        if ($_POST['inicio_parcelas'] > 0) {
+            $this->db->set('inicio_parcelas', $_POST['inicio_parcelas']);
+        }
+        if ($_POST['fim_parcelas'] > 0) {
+            $this->db->set('fim_parcelas', $_POST['fim_parcelas']);
+        }
+
+        // $this->db->set('fim_parcelas', $_POST['fim_parcelas']);
+        $this->db->insert('tb_forma_rendimento_comissao');
     }
 
     function gravargruponome() {
@@ -268,6 +413,7 @@ class formapagamento_model extends Model {
             /* inicia o mapeamento no banco */
             $forma_pagamento_id = $_POST['txtcadastrosformapagamentoid'];
             $this->db->set('nome', $_POST['txtNome']);
+            $this->db->set('nome_impressao', $_POST['txtNomeimpressao']);
 
 
             $parcelas = $_POST['parcelas'];
@@ -277,13 +423,25 @@ class formapagamento_model extends Model {
 //            var_dump($_POST); die;
 
 
+
+            if ($_POST['qtd_dias'] == "") {
+                $this->db->set('qtd_dias', null);
+            } else {
+                $this->db->set('qtd_dias', $_POST['qtd_dias']);
+            }
             $this->db->set('valor1', str_replace(",", ".", str_replace(".", "", $_POST['valor1'])));
             $this->db->set('valor5', str_replace(",", ".", str_replace(".", "", $_POST['valor5'])));
             $this->db->set('valor6', str_replace(",", ".", str_replace(".", "", $_POST['valor6'])));
             $this->db->set('valor10', str_replace(",", ".", str_replace(".", "", $_POST['valor10'])));
+            $this->db->set('valor11', str_replace(",", ".", str_replace(".", "", $_POST['valor11'])));
             $this->db->set('valor12', str_replace(",", ".", str_replace(".", "", $_POST['valor12'])));
+            $this->db->set('valor23', str_replace(",", ".", str_replace(".", "", $_POST['valor23'])));
+            $this->db->set('valor24', str_replace(",", ".", str_replace(".", "", $_POST['valor24'])));
             $this->db->set('juros', str_replace(",", ".", str_replace(".", "", $_POST['juros'])));
             $this->db->set('multa_atraso', str_replace(",", ".", str_replace(".", "", $_POST['multa_atraso'])));
+            $this->db->set('valor_adesao', str_replace(",", ".", str_replace(".", "", $_POST['valor_adesao'])));
+            $this->db->set('valor_carteira', str_replace(",", ".", str_replace(".", "", $_POST['valor_carteira'])));
+            $this->db->set('valor_carteira_titular', str_replace(",", ".", str_replace(".", "", $_POST['valor_carteira_titular'])));
 
             if (isset($_POST['taxa_adesao'])) {
                 $this->db->set('taxa_adesao', 't');
@@ -324,6 +482,35 @@ class formapagamento_model extends Model {
                 $this->db->update('tb_forma_pagamento');
             }
             return $forma_pagamento_id;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravarformarendimento() {
+        try {
+            /* inicia o mapeamento no banco */
+            $forma_rendimento_id = $_POST['txtcadastrosformarendimentoid'];
+            $this->db->set('nome', $_POST['txtNome']);
+
+            if ($_POST['txtcadastrosformarendimentoid'] == "") {// insert
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->insert('tb_forma_rendimento');
+                $erro = $this->db->_error_message();
+                if (trim($erro) != "") // erro de banco
+                    return -1;
+                else
+                    $forma_rendimento_id = $this->db->insert_id();
+            }
+            else { // update
+                $this->db->set('data_atualizacao', $horario);
+                $this->db->set('operador_atualizacao', $operador_id);
+//                $forma_rendimento_id = $_POST['txtcadastrosformarendimentoid'];
+                $this->db->where('forma_rendimento_id', $forma_rendimento_id);
+                $this->db->update('tb_forma_rendimento');
+            }
+            return $forma_rendimento_id;
         } catch (Exception $exc) {
             return -1;
         }
@@ -374,7 +561,10 @@ class formapagamento_model extends Model {
                                valor5, 
                                valor6, 
                                valor10, 
+                               valor11, 
                                valor12,
+                               valor23,
+                               valor24,
                                comissao,
                                taxa_adesao,
                                consulta_avulsa,
@@ -386,15 +576,20 @@ class formapagamento_model extends Model {
                                carencia_exame_mensal,
                                carencia_consulta_mensal,
                                carencia_especialidade_mensal,
-                               carencia_exame, 
+                               carencia_exame,
+                               valor_carteira,
+                               valor_carteira_titular,
                                multa_atraso, 
+                               valor_adesao, 
                                juros, 
                                carencia_consulta, 
                                consulta_coop, 
                                conta_id, 
                                carencia_especialidade, 
                                valoradcional,
-                               parcelas');
+                               parcelas,
+                               qtd_dias,
+                               nome_impressao');
             $this->db->from('tb_forma_pagamento');
             $this->db->where("forma_pagamento_id", $forma_pagamento_id);
             $query = $this->db->get();
@@ -406,6 +601,7 @@ class formapagamento_model extends Model {
             $this->_consulta_coop = $return[0]->consulta_coop;
             $this->_multa_atraso = $return[0]->multa_atraso;
             $this->_juros = $return[0]->juros;
+            $this->_valor_adesao = $return[0]->valor_adesao;
             $this->_carencia_exame = $return[0]->carencia_exame;
             $this->_carencia_consulta = $return[0]->carencia_consulta;
             $this->_carencia_especialidade = $return[0]->carencia_especialidade;
@@ -417,7 +613,12 @@ class formapagamento_model extends Model {
             $this->_valor5 = $return[0]->valor5;
             $this->_valor6 = $return[0]->valor6;
             $this->_valor10 = $return[0]->valor10;
+            $this->_valor11 = $return[0]->valor11;
             $this->_valor12 = $return[0]->valor12;
+            $this->_valor23 = $return[0]->valor23;
+            $this->_valor24 = $return[0]->valor24;
+            $this->_valor_carteira = $return[0]->valor_carteira;
+            $this->_valor_carteira_titular = $return[0]->valor_carteira_titular;
             $this->_valoradcional = $return[0]->valoradcional;
             $this->_parcelas = $return[0]->parcelas;
             $this->_comissao = $return[0]->comissao;
@@ -426,9 +627,21 @@ class formapagamento_model extends Model {
             $this->_comissao_gerente_mensal = $return[0]->comissao_gerente_mensal;
             $this->_comissao_gerente = $return[0]->comissao_gerente;
             $this->_comissao_seguradora = $return[0]->comissao_seguradora;
+            $this->_qtd_dias = $return[0]->qtd_dias;
+            $this->_nome_impressao = $return[0]->nome_impressao;
         } else {
             $this->_forma_pagamento_id = null;
         }
+    }
+
+    function listarformapagamentos() {
+        $this->db->select('forma_rendimento_id,
+                            nome, 
+                            ');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('ativo', 'true');
+
+        return $this->db->get()->result();
     }
 
 }

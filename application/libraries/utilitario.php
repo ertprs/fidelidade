@@ -13,10 +13,159 @@ class Utilitario {
         }
     }
 
+    function validateDate($date, $format = 'd-m-Y') {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
+
+    function retornarNomeMes($mes_number) {
+        if ($mes_number == '01') {
+            $mes = 'Janeiro';
+        } elseif ($mes_number == '02') {
+            $mes = 'Fevereiro';
+        } elseif ($mes_number == '03') {
+            $mes = 'Março';
+        } elseif ($mes_number == '05') {
+            $mes = 'Abril';
+        } elseif ($mes_number == '06') {
+            $mes = 'Junho';
+        } elseif ($mes_number == '07') {
+            $mes = 'Julho';
+        } elseif ($mes_number == '08') {
+            $mes = 'Agosto';
+        } elseif ($mes_number == '09') {
+            $mes = 'Setembro';
+        } elseif ($mes_number == '10') {
+            $mes = 'Outubro';
+        } elseif ($mes_number == '11') {
+            $mes = 'Novembro';
+        } elseif ($mes_number == '12') {
+            $mes = 'Dezembro';
+        } else {
+            $mes = '';
+        }
+
+        return $mes;
+    }
+
+    function removerCaracter($string) {
+        $string = preg_replace("/[áàâãä]/", "a", $string);
+        $string = preg_replace("/[ÁÀÂÃÄ]/", "A", $string);
+        $string = preg_replace("/[éèê]/", "e", $string);
+        $string = preg_replace("/[ÉÈÊ]/", "E", $string);
+        $string = preg_replace("/[íì]/", "i", $string);
+        $string = preg_replace("/[ÍÌ]/", "I", $string);
+        $string = preg_replace("/[óòôõö]/", "o", $string);
+        $string = preg_replace("/[ÓÒÔÕÖ]/", "O", $string);
+        $string = preg_replace("/[úùü]/", "u", $string);
+        $string = preg_replace("/[ÚÙÜ]/", "U", $string);
+        $string = preg_replace("/ç/", "c", $string);
+        $string = preg_replace("/Ç/", "C", $string);
+        $string = preg_replace("/[][><}{)(:;,!?*%~^`@\.-]/", "", $string);
+        $string = str_replace(" ", "", $string);
+        $string = str_replace("+", "", $string);
+        return $string;
+    }
+
+    function validaCPF($cpf = null) {
+
+        // Verifica se um número foi informado
+        if (empty($cpf)) {
+            return false;
+        }
+
+        // Elimina possivel mascara
+        $cpf = preg_replace('/[^0-9]/', '', (string) $cpf);
+        $cpf = str_pad($cpf, 11, '0', STR_PAD_LEFT);
+
+        // Verifica se o numero de digitos informados é igual a 11 
+        if (strlen($cpf) != 11) {
+            return false;
+        }
+        // Verifica se nenhuma das sequências invalidas abaixo 
+        // foi digitada. Caso afirmativo, retorna falso
+        else if ($cpf == '00000000000' ||
+                $cpf == '11111111111' ||
+                $cpf == '22222222222' ||
+                $cpf == '33333333333' ||
+                $cpf == '44444444444' ||
+                $cpf == '55555555555' ||
+                $cpf == '66666666666' ||
+                $cpf == '77777777777' ||
+                $cpf == '88888888888' ||
+                $cpf == '99999999999') {
+            return false;
+            // Calcula os digitos verificadores para verificar se o
+            // CPF é válido
+        } else {
+
+            for ($t = 9; $t < 11; $t++) {
+
+                for ($d = 0, $c = 0; $c < $t; $c++) {
+                    $d += $cpf{$c} * (($t + 1) - $c);
+                }
+                $d = ((10 * $d) % 11) % 10;
+                if ($cpf{$c} != $d) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    function validaExternoEndereco($endereco) {
+        if (substr($endereco, 0, 4) != "http") {
+            $endereco = "http://" . $endereco;
+        }
+
+        if (substr($endereco, -1, 1) != "/") {
+            $endereco = $endereco . "/";
+        }
+
+        return $endereco;
+    }
+
+    function validaTelefone($telefone) {
+        /* Essa função irá retornar se o numero é um telefone valido. 
+         * As verificações feitas aqui serão: 
+         *      -- A quantidade de caracteres no numero   
+         *      -- Caso o numero esteja correto, porem sem o digito 9 na frente, ele adcionará
+         *      -- Se possui um DDD válido */
+
+        $numFor = $this->removerCaracter($telefone);
+        $result = false;
+
+        if (strlen($numFor) > 9) {
+            if (strlen($numFor) == 10) { // Possui o DDD mas não possui o digito 9
+                $ddd = substr($numFor, 0, 2);
+                $num = "9" . substr($numFor, 2);
+                $result = true;
+            } elseif (strlen($numFor) == 11) { // Possui o DDD e o digito 9
+                $ddd = substr($numFor, 0, 2);
+                $num = substr($numFor, 2);
+                $result = true;
+            }
+
+            if (in_array((int) substr($num, 1, 1), array(9, 8, 7, 6))) { // Verificando se o numero é de telefonia movel             
+                $result = true;
+            }
+
+            $numFor = "+55" . $ddd . $num;
+        }
+        // Caso o numero de digtos seja <= 9, ele não possui DDD
+
+        $retorno = array(
+            "numFor" => $numFor,
+            "valido" => $result
+        );
+
+        return $retorno;
+    }
+
     function preencherDireita($valor, $tamanho, $caractere = "") {
         $i = strlen($valor);
-
-
+                
         if ($i < $tamanho) {
 
             for ($i; $i < $tamanho; $i++) {
@@ -43,13 +192,12 @@ class Utilitario {
 
         return $retorno;
     }
-    
+
     function codigo_uf($codMunIbge, $retorno = 'sigla') {
         $codUF = substr($codMunIbge, 0, 2);
-        if($retorno != 'sigla'){
+        if ($retorno != 'sigla') {
             return $codUF;
-        }
-        else{
+        } else {
             switch ($codUF) {
                 case '11':
                     return 'RO';
@@ -175,7 +323,7 @@ class Utilitario {
         }
     }
 
-    function barcode($text = "0", $filepath = "",  $size = "20", $orientation = "horizontal", $code_type = "code128", $print = false, $SizeFactor = 1) {
+    function barcode($text = "0", $filepath = "", $size = "20", $orientation = "horizontal", $code_type = "code128", $print = false, $SizeFactor = 1) {
 //        var_dump($text, $filepath , $print);die;
         $code_string = "";
         // Translate the $text into barcode the correct $code_type
@@ -223,7 +371,7 @@ class Utilitario {
                         $temp[$X] = $code_array2[$Y];
                 }
             }
-            for ($X = 1; $X <= strlen($text); $X+=2) {
+            for ($X = 1; $X <= strlen($text); $X += 2) {
                 if (isset($temp[$X]) && isset($temp[($X + 1)])) {
                     $temp1 = explode("-", $temp[$X]);
                     $temp2 = explode("-", $temp[($X + 1)]);
@@ -290,11 +438,13 @@ class Utilitario {
             imagepng($image, $filepath);
             imagedestroy($image);
         }
-        
+
         return $filepath;
-        
+
         // necessita instalar gd-library no ubuntu -> sudo apt-get install php5-gd
-        
     }
+    
+    
+    
 
 }

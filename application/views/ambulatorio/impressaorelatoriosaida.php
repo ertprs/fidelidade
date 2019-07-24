@@ -5,7 +5,7 @@
         <h4>TODOS OS TIPOS</h4>
     <? } ?>
     <? if (count($classe) > 0) { ?>
-         <? $texto = strtr(strtoupper($classe[0]->descricao), "àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß"); ?>
+        <? $texto = strtr(strtoupper($classe[0]->descricao), "àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß"); ?>
         <h4>CLASSE: <?= $texto; ?></h4>
     <? } else { ?>
         <h4>TODAS AS CLASSES</h4>
@@ -35,7 +35,9 @@
                     <th class="tabela_header">Classe</th>
                     <th class="tabela_header">Dt saida</th>
                     <th class="tabela_header">Valor</th>
-
+                    <? if ($operador != 0) { ?>
+                        <th class="tabela_header">Operador</th>
+                    <? } ?>
                     <th class="tabela_header">Observacao</th>
                 </tr>
             </thead>
@@ -52,6 +54,9 @@
                         <td ><?= utf8_decode($item->classe); ?></td>
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                         <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
+                        <? if ($operador != 0) { ?>
+                            <td ><?= $item->operador; ?></td>
+                        <? } ?>
                         <td ><?= utf8_decode($item->observacao); ?></td>
                     </tr>
                 <? endforeach; ?>
@@ -63,8 +68,7 @@
 
 
             <?
-        }
-        else {
+        } else {
             ?>
             <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
             <?

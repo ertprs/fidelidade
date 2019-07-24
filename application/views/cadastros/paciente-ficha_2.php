@@ -6,6 +6,7 @@
                 <label>Nome *</label>                      
                 <input type ="hidden" name ="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
                 <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$obj->_nome; ?>" readonly/>
+                <input type="hidden" id="empresa_cadastro_id" name="empresa_cadastro_id" class="texto10"  value="<?= @$empresa_id; ?>" readonly/>
             </div>
             <div>
                 <label>Nascimento *</label>
@@ -137,6 +138,18 @@
                 </select>
             </div>
             <div>
+                <label>Responsavel financeiro</label>
+                <input type="text" id="financeiro" class="texto10"  name="financeiro" value="<?= @$obj->_codigo_paciente; ?>" readonly/>
+            </div>
+            <div>
+                <label>Cód. cliente</label>
+                <input type="text" id="cod_pac" class="texto04" name="cod_pac" value="<?= @$obj->_codigo_paciente; ?>" readonly/>
+            </div>
+            <div>
+                <label>Protocolo liga&ccedil;&atilde;o</label>
+                <input type="text" id="ligacao" class="texto04" name="ligacao" value="<?= @$obj->_codigo_paciente; ?>" readonly/>
+            </div>
+            <div>
                 <label>Plano *</label>
 
                 <select name="plano" id="plano" class="size2" >
@@ -206,12 +219,12 @@
                     ?>>Outros</option>
                 </select>
             </div>
-            
+
             <div>
                 <label>Parceiro</label>
                 <input type="text" id="parceiro" class="texto03" name="parceiro" value="<?= @$obj->_parceiro; ?>" readonly/>
             </div>
-            
+
             <div>
                 <label>Cod. Paciente</label>
                 <input type="text" id="codigo_paciente" class="texto03" name="codigo_paciente" value="<?= @$obj->_codigo_paciente; ?>" readonly/>
@@ -236,7 +249,7 @@
             <div>
                 <label>CPF/CNPJ</label>
                 <input type="text" name="cpf" id ="cpfcnpj" maxlength="18"  class="texto03" value="<?= @$obj->_cpf; ?>" required/>
-                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if(@$obj->_cpf_responsavel_flag == 't') echo "checked";?>> CPF do resposável
+                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
             </div>
             <div>
                 <label>RG</label>

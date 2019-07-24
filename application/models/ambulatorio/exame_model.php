@@ -66,19 +66,38 @@ class exame_model extends Model {
     }
 
     function listarautocompletepacientetitular($parametro = null) {
-        $this->db->select('paciente_id,
-                            nome,
-                            telefone,
-                            nascimento,
-                            cpf,
-                            logradouro,
-                            numero');
-        $this->db->from('tb_paciente');
-        $this->db->where('situacao', 'Titular');
-        $this->db->where('ativo', 'true');
-
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->select('p.paciente_id,
+                            p.nome,
+                            p.telefone,
+                            p.nascimento,
+                            p.cpf,
+                            p.logradouro,
+                            p.numero');
+        $this->db->from('tb_paciente p');
+        $this->db->where('p.situacao', 'Titular');
+        $this->db->where('p.ativo', 'true');
+        if($perfil_id == 6){
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
+            $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+        }
+        if($perfil_id == 5){
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
+            // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+        }
         if ($parametro != null) {
-            $this->db->where('nome ilike', "%" . $parametro . "%");
+            $this->db->where('p.nome ilike', "%" . $parametro . "%");
+        }
+        if($perfil_id == 6){
+            $this->db->where('go.ativo', 'true');
+            $this->db->where('ro.ativo', 'true');
+            $this->db->where('ro.representante_id', $operador_id);
+        }
+        if($perfil_id == 5){
+            $this->db->where('go.ativo', 'true');
+            // $this->db->whe]re('ro.ativo', 'true');
+            $this->db->where('go.gerente_id', $operador_id);
         }
         $return = $this->db->get();
         return $return->result();

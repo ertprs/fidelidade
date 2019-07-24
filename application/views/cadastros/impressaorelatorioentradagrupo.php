@@ -1,3 +1,5 @@
+ 
+<title>Relat&oacute;rio Entrada Conta</title>
 <div class="content"> <!-- Inicio da DIV content -->
     <? if (count($tipo) > 0) { ?>
         <h4>TIPO<?= $tipo[0]->descricao; ?></h4>
@@ -99,8 +101,11 @@
         ?>
 
 </div> <!-- Final da DIV content -->
+
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
+
 <script type="text/javascript">
 
 

@@ -130,8 +130,13 @@
 //                $('.carregando').show();
 //alert('asd');
                 $.getJSON('<?= base_url() ?>autocomplete/procedimentoconsultarcarencia', {procedimento: $(this).val(), paciente: $('#txtNomeid').val(), parceiro_id: <?=$parceiro_ip?>, ajax: true}, function (j) {
-
-                      $('#botaoenviar').show();
+                      if(j){
+                        $('#botaoenviar').show();
+                      }else{
+                        $('#botaoenviar').hide();
+                        alert('Cliente inadimplente');
+                      }
+                      
 
 
                 });

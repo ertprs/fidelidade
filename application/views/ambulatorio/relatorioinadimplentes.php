@@ -17,7 +17,52 @@
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
                     </dd>
-                    
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Bairro </label>
+                        </dt>
+                        <dd>
+                            <select name="bairro" id="bairro" class="size2" tabindex="1">
+                                <option value='' >TODOS</option>
+                                <? foreach ($bairros as $value) : ?>
+                                    <option value="<?= $value->bairro; ?>"><?= $value->bairro; ?></option>
+                                <? endforeach; ?>
+                            </select>
+                        </dd>
+                    </div>
+
+
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Forma de Pagamento</label>
+                        </dt>
+                        <dd>
+                            <select name="forma_pagamento" id="forma_pagamento" class="size2" tabindex="1">
+                                <option value='' >TODOS</option>
+
+                                <option value='manual' >Manual</option>
+                                <option value='cartao' >Cartão</option>
+                                <option value='debito' >Débito</option>
+                                <option value='boleto' >Boleto</option>
+                                <option value='boleto_emp' >Boleto Empresa</option>
+
+
+                            </select>
+                        </dd>
+                    </div>
+
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Ordenar Por</label>
+                        </dt>
+                        <dd>
+                            <select name="ordenar" id="bairro" class="size2" tabindex="1">
+                                <option value='order_nome' >Nome</option>
+                                <option value='order_bairro' >Bairro</option> 
+                            </select>
+                        </dd>
+                    </div>
+
                 </dl>
                 <button type="submit" >Pesquisar</button>
 

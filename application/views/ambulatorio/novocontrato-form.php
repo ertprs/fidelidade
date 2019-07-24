@@ -15,6 +15,7 @@
                         <label>Nome *</label>                      
                         <input type ="hidden" name ="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
                         <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$obj->_nome; ?>" readonly/>
+
                     </div>
                     <div>
                         <label>Nascimento *</label>
@@ -48,9 +49,7 @@
 
 
                     <div>
-                        <label>T. logradouro *</label>
-
-
+                        <label>T. logradouro *</label> 
                         <select name="tipo_logradouro" id="txtTipoLogradouro" class="size2" >
                             <option value='' >selecione</option>
                             <?php
@@ -78,23 +77,16 @@
                         <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" readonly/>
                     </div>
                     <div>
-                        <label>Complemento</label>
-
-
+                        <label>Complemento</label> 
                         <input type="text" id="txtComplemento" class="texto04" name="complemento" value="<?= @$obj->_complemento; ?>" readonly/>
                     </div>
                     <div>
-                        <label>Bairro *</label>
-
-
+                        <label>Bairro *</label> 
                         <input type="text" id="txtBairro" class="texto03" name="bairro" value="<?= @$obj->_bairro; ?>" readonly/>
-                    </div>
-
+                    </div> 
 
                     <div>
-                        <label>Município *</label>
-
-
+                        <label>Município *</label>  
                         <input type="hidden" id="txtCidadeID" class="texto_id" name="municipio_id" value="<?= @$obj->_cidade; ?>" readonly="true" />
                         <input type="text" id="txtCidade" class="texto04" name="txtCidade" value="<?= @$obj->_cidade_nome; ?>" readonly/>
                     </div>
@@ -143,7 +135,7 @@
 
                         </select>
                     </div>
-                  
+
 
                     <div>
                         <label>Vendedor</label>
@@ -274,7 +266,7 @@
                 </fieldset>
             </div>
             <fieldset>
-                <legend>Dados do Pacienete</legend>
+                <legend>Dados do Paciente</legend>
                 <div>
                     <label>Nome</label>                      
                     <input type="text" id="txtNome" name="nome"  class="texto09" value="<?= $paciente['0']->nome; ?>" readonly/>
@@ -291,13 +283,14 @@
                         <option value='' >Selecione</option>
                         <?php
                         foreach ($planos as $item) {
-                            ?>
-
+                            ?> 
                             <option   value =<?php echo $item->forma_pagamento_id; ?>><?php echo $item->nome; ?></option>
                             <?php
                         }
                         ?> 
                     </select>
+                    <input type="hidden" id="empresa_cadastro_id" name="empresa_cadastro_id" class="texto10"  value="<?= @$empresa_cadastro_id; ?>"  />
+
                 </div>
                 <div id="pagamento">
 <!--                    <input required="" type="radio" name="checkboxvalor1" value="01 - "/>1 x <br>
@@ -336,6 +329,40 @@
 
                     <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
                 </div>
+
+                <div>
+                    <label>Forma de pagamento</label> 
+                    <select name="forma_pagamento">
+                        <option value="" >Escolha</option>
+                        <?
+                        foreach ($forma_pagamentos as $item) {
+                            ?>
+                            <option value="<?= $item->forma_rendimento_id; ?>" ><?= $item->nome; ?></option>   
+                            <?
+                        }
+                        ?>
+                    </select> 
+                </div>
+
+
+                <div>
+                    <label>Vendedor</label> 
+                    <select name="vendedor_baixo" id="vendedor_baixo" class="size2" >
+                        <option value="" >selecione</option>
+                        <?php
+                        $listarvendedor = $this->paciente->listarvendedor();
+                        foreach ($listarvendedor as $item) {
+                            ?>
+                            <option  value =<?php echo $item->operador_id; ?> ><?php echo $item->nome; ?></option>
+                            <?php
+                        }
+                        ?> 
+                    </select>
+                </div>
+
+
+
+
             </fieldset>
             <button type="submit">Enviar</button>
         </form>
@@ -349,43 +376,46 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 
-                        $(function () {
-                            $("#adesao").datepicker({
-                                autosize: true,
-                                changeYear: true,
-                                changeMonth: true,
-                                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                                dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-                                buttonImage: '<?= base_url() ?>img/form/date.png',
-                                dateFormat: 'dd/mm/yy'
-                            });
-                        });
-
-                        $(function () {
-                            $("#accordion").accordion();
-                        });
-
-
-                        $(function () {
-                            $('#plano').change(function () {
-                                if ($(this).val()) {
-//                $('.carregando').show();
-                                    $.getJSON('<?= base_url() ?>autocomplete/parcelascontratojson', {plano: $(this).val(), ajax: true}, function (j) {
-                                        options = '<input required="" type="radio" name="checkboxvalor1" value="01-' + j[0].valor1 + ' "/>1 x  ' + j[0].valor1 + '<br>';
-                                        options += '<input required type="radio" name="checkboxvalor1"  value="05-' + j[0].valor5 + '  "/>5 x ' + j[0].valor5 + '<br>';
-                                        options += '<input required type="radio" name="checkboxvalor1"  value="06-' + j[0].valor6 + '  "/>6 x ' + j[0].valor6 + '<br>';
-                                        options += '<input required type="radio" name="checkboxvalor1"  value="10-' + j[0].valor10 + '  "/>10 x ' + j[0].valor10 + ' <br>';
-                                        options += '<input required type="radio" name="checkboxvalor1"  value="12-' + j[0].valor12 + '  "/>12 x ' + j[0].valor12 + '<br>';
-
-                                        $('#pagamento').html(options).show();
-//                    $('.carregando').hide();
+                                $(function () {
+                                    $("#adesao").datepicker({
+                                        autosize: true,
+                                        changeYear: true,
+                                        changeMonth: true,
+                                        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                                        dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                                        buttonImage: '<?= base_url() ?>img/form/date.png',
+                                        dateFormat: 'dd/mm/yy'
                                     });
-                                } else {
-                                    options = '';
-                                    $('#pagamento').html(options).show();
-                                }
-                            });
-                        });
+                                });
+
+                                $(function () {
+                                    $("#accordion").accordion();
+                                });
+
+
+                                $(function () {
+                                    $('#plano').change(function () {
+                                        if ($(this).val()) {
+//                $('.carregando').show();
+                                            $.getJSON('<?= base_url() ?>autocomplete/parcelascontratojson', {plano: $(this).val(), ajax: true}, function (j) {
+                                                options = '<input required="" type="radio" name="checkboxvalor1" value="01-' + j[0].valor1 + ' "/>1 x  ' + j[0].valor1 + '<br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="05-' + j[0].valor5 + '  "/>5 x ' + j[0].valor5 + '<br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="06-' + j[0].valor6 + '  "/>6 x ' + j[0].valor6 + '<br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="10-' + j[0].valor10 + '  "/>10 x ' + j[0].valor10 + ' <br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="11-' + j[0].valor11 + '  "/>11 x ' + j[0].valor11 + '<br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="12-' + j[0].valor12 + '  "/>12 x ' + j[0].valor12 + '<br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="23-' + j[0].valor23 + '  "/>23 x ' + j[0].valor23 + '<br>';
+                                                options += '<input required type="radio" name="checkboxvalor1"  value="24-' + j[0].valor24 + '  "/>24 x ' + j[0].valor24 + '<br>';
+
+                                                $('#pagamento').html(options).show();
+//                    $('.carregando').hide();
+                                            });
+                                        } else {
+                                            options = '';
+                                            $('#pagamento').html(options).show();
+                                        }
+                                    });
+                                });
 
 
 </script>

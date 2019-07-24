@@ -5,6 +5,7 @@ class Home extends BaseController {
 	function Home() {
             parent::Controller();
             $this->load->library('mensagem');
+ 
 	}
 	
 	function index($mensagem=null) {
@@ -12,7 +13,7 @@ class Home extends BaseController {
             { $data['mensagem'] = $this->mensagem->getMensagem($mensagem); }
             else
             { $data['mensagem'] = null; }
-            
+             
             $this->load->view('header', $data);
             $this->load->view('home');
             $this->load->view('footer');

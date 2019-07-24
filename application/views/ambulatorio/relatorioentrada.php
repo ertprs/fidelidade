@@ -27,6 +27,17 @@
                         </select>
                     </dd>
                     <dt>
+                        <label>Operador</label>
+                    </dt>
+                    <dd>
+                        <select name="operador" id="operador" class="size2">
+                            <option value= 0>TODOS</option>
+                            <? foreach ($operador as $value) : ?>
+                                <option value="<?= $value->operador_id; ?>" ><?php echo $value->nome; ?></option>
+                            <? endforeach; ?>
+                        </select>
+                    </dd>
+                    <dt>
                         <label>Tipo</label>
                     </dt>
                     <dd>
@@ -42,7 +53,9 @@
                     </dt>
                     <dd>
                         <select name="classe" id="classe" class="size2">
-                            <option value="">TODOS</option>                           
+                            <option value="">TODOS</option>    
+                            <option value="PARCELA">PARCELA</option>
+                            <option value="CARTEIRA">CARTEIRA</option>
                         </select>
                     </dd>
                     <dt>
@@ -63,7 +76,7 @@
                                         <dd>
                                             <select name="empresa" id="empresa" class="size2">
                     <? foreach ($empresa as $value) : ?>
-                                                                <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
+                                                                        <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
                     <? endforeach; ?>
                                                 <option value="0">TODOS</option>
                                             </select>
@@ -76,7 +89,37 @@
                             <option value="NAO">NÃO</option>
                             <option value="SIM">SIM</option>                           
                         </select> 
+                    </dd>
+                    <dt>
+                        <label>Mostrar Fr. de Pagamento?</label>
+                    </dt>
+                    <dd>
+                        <select name="mostrar_forma_pagamento" id="mostrar_forma_pagamento" class="size2">
+                            <option value="NAO">NÃO</option>
+                            <option value="SIM">SIM</option>                           
+                        </select> 
+                    </dd>
+                    <dt>
+                        <label>Forma de Pagamento?</label>
+                    </dt>
+                    <dd>
+                        <select name="forma_pagamento" id="forma_pagamento" class="size2">
+                            <option value="">TODAS</option>
+                            <? foreach ($forma_rendimento as $item) {
+                                ?>
+                                <option value="<?= $item->forma_rendimento_id; ?>" ><?= @$item->nome; ?></option>
+
+
+                                <?
+                            }
+                            ?>
+                        </select> 
+                    </dd>
+
+
                 </dl>
+
+
                 <button type="submit" >Pesquisar</button>
 
             </form>
@@ -125,6 +168,9 @@
                 $('.carregando').show();
                 $.getJSON('<?= base_url() ?>autocomplete/classeportiposaida', {tipo: $(this).val(), ajax: true}, function (j) {
                     options = '<option value="">TODOS</option>';
+                    options += '<option value="PARCELA">PARCELA</option>';
+                    options += '<option value="CARTEIRA">CARTEIRA</option>';
+
                     for (var c = 0; c < j.length; c++) {
                         options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
                     }

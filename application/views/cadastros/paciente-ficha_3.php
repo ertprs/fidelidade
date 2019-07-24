@@ -6,6 +6,7 @@
                 <label>Nome *</label>                      
                 <input type ="hidden" name ="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
                 <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$obj->_nome; ?>" readonly/>
+                <input type="hidden" id="empresa_cadastro_id" name="empresa_cadastro_id" class="texto10"  value="<?= @$empresa_id; ?>"  />
             </div>
             <div>
                 <label>Nascimento *</label>
@@ -281,46 +282,64 @@
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>
         </fieldset>
-        <fieldset>
-            <legend>Forma de pagamento</legend>
-            <div>
-                <input required="" type="radio" name="checkboxvalor1" value="<?= "01" . "-" . $forma_pagamento[0]->valor1; ?>"/>1 x <?= $forma_pagamento[0]->valor1; ?><br>
-                <input required type="radio" name="checkboxvalor1"  value="<?= "05" . "-" . $forma_pagamento[0]->valor5; ?>"/>5 x <?= $forma_pagamento[0]->valor5; ?><br>
-                <input required type="radio" name="checkboxvalor1"  value="<?= "06" . "-" . $forma_pagamento[0]->valor6; ?>"/>6 x <?= $forma_pagamento[0]->valor6; ?><br>
-                <input required type="radio" name="checkboxvalor1"  value="<?= "10" . "-" . $forma_pagamento[0]->valor10; ?>"/>10 x <?= $forma_pagamento[0]->valor10; ?><br>
-                <input required type="radio" name="checkboxvalor1"  value="<?= "12" . "-" . $forma_pagamento[0]->valor12; ?>"/>12 x <?= $forma_pagamento[0]->valor12; ?><br>
-            </div>
-            <div>
-                <label>Data Ades&atilde;o</label>
-                <input type="text" name="adesao" id="adesao" required class="texto02" alt="date" required/>
-            </div>
-            <div>
-                <label>Dia Vencimento Parcela</label>
-                <input type="number" name="vencimentoparcela" id="vencimentoparcela" required max="30" min="1" class="texto02" required />
-            </div>
-            <div>
-                <label>Pessoa Jurídica</label>
 
-                <select name="pessoajuridica" id="pessoajuridica" class="size2" required="true">
-                    <option value="NAO" <?
-                    if (@$obj->_pessoa_juridica == 'f') {
-                        echo 'selected';
-                    }
-                    ?>>NÃO</option>
-                    <option value="SIM" <?
-                    if (@$obj->_pessoa_juridica == 't') {
-                        echo 'selected';
-                    }
-                    ?>>SIM</option>
+        <?
+        if (@$empresa_id != "") {
+            
+        } else {
+            ?>
+            <fieldset>
+                <legend>Forma de pagamento</legend>
+                <div>
+                    <input required="" type="radio" name="checkboxvalor1" value="<?= "01" . "-" . $forma_pagamento[0]->valor1; ?>"/>1 x <?= $forma_pagamento[0]->valor1; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "05" . "-" . $forma_pagamento[0]->valor5; ?>"/>5 x <?= $forma_pagamento[0]->valor5; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "06" . "-" . $forma_pagamento[0]->valor6; ?>"/>6 x <?= $forma_pagamento[0]->valor6; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "10" . "-" . $forma_pagamento[0]->valor10; ?>"/>10 x <?= $forma_pagamento[0]->valor10; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "11" . "-" . $forma_pagamento[0]->valor11; ?>"/>11 x <?= $forma_pagamento[0]->valor11; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "12" . "-" . $forma_pagamento[0]->valor12; ?>"/>12 x <?= $forma_pagamento[0]->valor12; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "23" . "-" . $forma_pagamento[0]->valor23; ?>"/>23 x <?= $forma_pagamento[0]->valor23; ?><br>
+                    <input required type="radio" name="checkboxvalor1"  value="<?= "24" . "-" . $forma_pagamento[0]->valor24; ?>"/>24 x <?= $forma_pagamento[0]->valor24; ?><br>
+                </div>
+                <div>
+                    <label>Data Ades&atilde;o</label>
+                    <input type="text" name="adesao" id="adesao" required class="texto02" alt="date" required/>
+                </div>
+                <div>
+                    <label>Valor Ades&atilde;o</label>
+                    <input type="text" name="valor_adesao" id="valor_adesao" required class="texto02" alt="decimal" value="<?= number_format($forma_pagamento[0]->valor_adesao, 2, ',', '.') ?>"/>
+                </div>
+                <div>
+                    <label>Dia Vencimento Parcela</label>
+                    <input type="number" name="vencimentoparcela" id="vencimentoparcela" required max="30" min="1" class="texto02" required />
+                </div>
+                <div>
+                    <label>Pessoa Jurídica</label>
 
-                </select>
-            </div>
-            <div>
-                <label>Pular Meses</label>
+                    <select name="pessoajuridica" id="pessoajuridica" class="size2" required="true">
+                        <option value="NAO" <?
+                        if (@$obj->_pessoa_juridica == 'f') {
+                            echo 'selected';
+                        }
+                        ?>>NÃO</option>
+                        <option value="SIM" <?
+                        if (@$obj->_pessoa_juridica == 't') {
+                            echo 'selected';
+                        }
+                        ?>>SIM</option>
 
-                <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
-            </div>
-        </fieldset>
+                    </select>
+                </div>
+                <div>
+                    <label>Pular Meses</label>
+
+                    <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
+                </div>
+            </fieldset>
+
+        <? } ?>
+
+
+
         <button type="submit">Fechamento</button>
         <button type="reset">Limpar</button>
 

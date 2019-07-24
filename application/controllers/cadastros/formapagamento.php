@@ -34,6 +34,13 @@ class Formapagamento extends BaseController {
 //            $this->carregarView($data);
     }
 
+    function listarformarendimento($args = array()) {
+
+        $this->loadView('cadastros/formarendimento-lista', $args);
+
+//            $this->carregarView($data);
+    }
+
     function grupospagamento($args = array()) {
 
         $this->loadView('cadastros/grupopagamento-lista', $args);
@@ -55,6 +62,14 @@ class Formapagamento extends BaseController {
         //$this->carregarView($data, 'giah/servidor-form');
         $this->loadView('cadastros/formapagamento-form', $data);
     }
+
+    function carregarformarendimento($formarendimento_id) {
+        $data['conta'] = $this->forma->listarforma();
+        $data['lista'] = $this->formapagamento->carregarformarendimento($formarendimento_id);
+        $data['credor_devedor'] = $this->formapagamento->listarcredordevedor();
+        //$this->carregarView($data, 'giah/servidor-form');
+        $this->loadView('cadastros/formarendimento-form', $data);
+    }
     
     function carregarformapagamentocarencia($formapagamento_id) {
         $obj_formapagamento = new formapagamento_model($formapagamento_id);
@@ -65,6 +80,16 @@ class Formapagamento extends BaseController {
         $this->loadView('cadastros/formapagamentocarencia-form', $data);
     }
 
+    function carregarformapagamentocomissao($formapagamento_id) {
+        $obj_formapagamento = new formapagamento_model($formapagamento_id);
+        $data['obj'] = $obj_formapagamento;
+        $data['conta'] = $this->forma->listarforma();
+        $data['credor_devedor'] = $this->formapagamento->listarcredordevedor();
+        $data['forma_rendimento'] = $this->formapagamento->listarformaRendimentoPaciente();
+        $data['forma_comissao'] = $this->formapagamento->listarformaRendimentoPlanoComissao($formapagamento_id);
+        //$this->carregarView($data, 'giah/servidor-form');
+        $this->loadView('cadastros/formapagamentocomissao-form', $data);
+    }
 
     function formapagamentoparcelas($formapagamento_id) {
         $data['formapagamento_id'] = $formapagamento_id;
@@ -110,9 +135,129 @@ class Formapagamento extends BaseController {
         redirect(base_url() . "cadastros/formapagamento");
     }
     
+    function excluirFormaRendimento($formarendimento_id) {
+        $valida = $this->formapagamento->excluirFormaRendimento($formarendimento_id);
+        if ($valida == 0) {
+            $data['mensagem'] = 'Sucesso ao excluir a Forma';
+        } else {
+            $data['mensagem'] = 'Erro ao excluir a formapagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "cadastros/formapagamento/listarformarendimento");
+    }
+    
+    function excluirFormaRendimentoComissao($forma_rendimento_comissao_id, $plano_id) {
+        // var_dump($forma_rendimento_comissao_id); die;
+        $valida = $this->formapagamento->excluirFormaRendimentoComissao($forma_rendimento_comissao_id);
+        if ($valida == 0) {
+            $data['mensagem'] = 'Sucesso ao excluir a Forma';
+        } else {
+            $data['mensagem'] = 'Erro ao excluir a formapagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "cadastros/formapagamento/carregarformapagamentocomissao/$plano_id");
+    }
+    
     function excluirparcela($parcela_id, $formapagamento_id) {
         $this->formapagamento->excluirparcela($parcela_id);
         $this->formapagamentoparcelas($formapagamento_id);
+    }
+
+    function anexararquivos($plano_id) {
+
+        $this->load->helper('directory');
+
+        if (!is_dir("./upload/planos")) {
+            mkdir("./upload/planos");
+            $destino = "./upload/planos";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/planos/$plano_id")) {
+            mkdir("./upload/planos/$plano_id");
+            $destino = "./upload/planos/$plano_id";
+            chmod($destino, 0777);
+        }
+
+        $data['arquivo_pasta'] = directory_map("./upload/planos/$plano_id");
+//        $data['arquivo_pasta'] = directory_map("/home/vivi/projetos/clinica/upload/consulta/$paciente_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        }
+        $data['plano_id'] = $plano_id;
+        $this->loadView('cadastros/enviararquivosplano', $data);
+    }
+
+    function importararquivos($plano_id) {
+        // var_dump($_FILES['userfile']); die;
+
+        // $this->load->helper('directory');
+        // $plano_id = $_POST['plano_id'];
+//        $_FILES['userfile']['name'] = $operador_id . ".jpg";
+//        $_FILES['userfile']['type'] = "image/png";
+    //    var_dump($_FILES['arquivos']); die;
+        // $_FILES['userfile']['name'] = $_FILES['arquivos']['name'];
+        // $_FILES['userfile']['type'] = $_FILES['arquivos']['type'];
+        // $_FILES['userfile']['tmp_name'] = $_FILES['arquivos']['tmp_name'];
+        // $_FILES['userfile']['error'] = $_FILES['arquivos']['error'];
+        // $_FILES['userfile']['size'] = $_FILES['arquivos']['size'];
+
+        if (!is_dir("./upload/planos")) {
+            mkdir("./upload/planos");
+            $destino = "./upload/planos";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/planos/$plano_id")) {
+            mkdir("./upload/planos/$plano_id");
+            $destino = "./upload/planos/$plano_id";
+            chmod($destino, 0777);
+        }
+
+        // if (!$arquivo_existe) {
+//             var_dump($arquivo_existe); die;
+            //        $config['upload_path'] = "/home/vivi/projetos/clinica/upload/consulta/" . $paciente_id . "/";
+        $config['upload_path'] = "./upload/planos/" . $plano_id . "/";
+        $config['allowed_types'] = 'gif|jpg|BMP|bmp|png|jpeg|pdf|doc|docx|xls|xlsx|ppt|zip|rar|xml|txt';
+        $config['max_size'] = '0';
+        $config['overwrite'] = false;
+        $config['encrypt_name'] = false;
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload()) {
+            $error = array('error' => $this->upload->display_errors());
+        } else {
+            $error = null;
+            $data = array('upload_data' => $this->upload->data());
+        }
+        $data['plano_id'] = $plano_id;
+
+
+        // var_dump($error);
+        // die;
+        // }
+
+        redirect(base_url() . "cadastros/formapagamento/anexararquivos/$plano_id");
+    }
+
+
+    function excluirimagem($plano_id, $nome) {
+
+        // if (!is_dir("./uploadopm/planos/$plano_id")) {
+        //     mkdir("./uploadopm/planos");
+        //     mkdir("./uploadopm/planos/$plano_id");
+        //     $destino = "./uploadopm/planos/$plano_id";
+        //     chmod($destino, 0777);
+        // }
+
+        $origem = "./upload/planos/$plano_id/$nome";
+        // $destino = "./uploadopm/paciente/$plano_id/$nome";
+        // copy($origem, $destino);
+        unlink($origem);
+
+        redirect(base_url() . "cadastros/formapagamento/anexararquivos/$plano_id");
+
+//        $this->anexarimagem($paciente_id);
     }
 
     function excluirgrupo($grupo_id) {
@@ -147,7 +292,34 @@ class Formapagamento extends BaseController {
 //        $this->session->set_flashdata('message', $data['mensagem']);
         redirect(base_url() . "cadastros/formapagamento");
     }
+
+    function gravarformarendimento() {
+        $exame_formarendimento_id = $this->formapagamento->gravarformarendimento();
+        if ($exame_formarendimento_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar a Forma. Opera&ccedil;&atilde;o cancelada.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar a Forma.';
+        }
+//        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "cadastros/formapagamento/listarformarendimento");
+    }
     
+    function gravarFormaRendimentoComissao($plano_id) {
+        $exame_formapagamento_id = $this->formapagamento->gravarFormaRendimentoComissao();
+        if ($exame_formapagamento_id == -11) {
+            $data['mensagem'] = 'O campo "Até:" deve ser igual ou superior ao "De:" ao cadastrar uma comissão.';
+        } elseif ($exame_formapagamento_id == -12) {
+            $data['mensagem'] = 'O campo "Até:" deve ser superior ao "Até:" de uma comissão já cadastrada ou inferior ao "De:".';
+        } elseif ($exame_formapagamento_id == -10) {
+            $data['mensagem'] = 'O campo "De:" deve ser superior ao "Até:" de uma comissão já cadastrada.';
+        } elseif ($exame_formapagamento_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar a Forma. Opera&ccedil;&atilde;o cancelada.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar a Forma.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "cadastros/formapagamento/carregarformapagamentocomissao/$plano_id");
+    }
     function gravarcarencia() {
         $exame_formapagamento_id = $this->formapagamento->gravarcarencia();
         if ($exame_formapagamento_id == "-1") {

@@ -146,10 +146,25 @@
                 </select>
             </div>
             <div>
+                <label>Forma Pagamento </label>
+
+                <select name="forma_rendimento_id" id="forma_rendimento_id" class="size2">
+                    <option value="" >Selecione</option>
+                    <?php
+                    $forma = $this->formapagamento->listarformaRendimentoPaciente();
+                    foreach ($forma as $item) {
+                        ?>
+                        <option   value =<?php echo $item->forma_rendimento_id; ?>><?php echo $item->nome; ?></option>
+                        <?php
+                    }
+                    ?> 
+                </select>
+            </div>
+            <div>
                 <label>Vendedor</label>
 
-                <select name="vendedor" id="vendedor" class="size2" >
-                    <option value="" >selecione</option>
+                <select name="vendedor" id="vendedor" class="size2" required>
+                    <option value="">Selecione</option>
                     <?php
                     foreach ($listarvendedor as $item) {
                         ?>

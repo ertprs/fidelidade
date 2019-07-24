@@ -27,6 +27,17 @@
                         </select>
                     </dd>
                     <dt>
+                        <label>Operador</label>
+                    </dt>
+                    <dd>
+                        <select name="operador" id="operador" class="size2">
+                            <option value= 0>TODOS</option>
+                            <? foreach ($operador as $value) : ?>
+                                <option value="<?= $value->operador_id; ?>" ><?php echo $value->nome; ?></option>
+                            <? endforeach; ?>
+                        </select>
+                    </dd>
+                    <dt>
                         <label>Tipo</label>
                     </dt>
                     <dd>
@@ -63,7 +74,7 @@
                                         <dd>
                                             <select name="empresa" id="empresa" class="size2">
                     <? foreach ($empresa as $value) : ?>
-                                                            <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
+                                                                <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
                     <? endforeach; ?>
                                                 <option value="0">TODOS</option>
                                             </select>

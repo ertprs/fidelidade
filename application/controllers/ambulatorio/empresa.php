@@ -59,12 +59,18 @@ class Empresa extends BaseController {
             $data['mensagem'] = 'Sucesso ao gravar a Empresa.';
         }
         $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "ambulatorio/empresa");
+
+        if (@$_POST['empresacadastro'] == 'sim') {
+            
+            redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
+        } else {
+            redirect(base_url() . "ambulatorio/empresa");
+        }
     }
 
     function ativar($exame_empresa_id) {
         $this->empresa->ativar($exame_empresa_id);
-            $data['mensagem'] = 'Sucesso ao ativar a Empresa.';
+        $data['mensagem'] = 'Sucesso ao ativar a Empresa.';
         $this->session->set_flashdata('message', $data['mensagem']);
         redirect(base_url() . "ambulatorio/empresa");
     }
@@ -87,6 +93,17 @@ class Empresa extends BaseController {
             $this->load->view('home');
         }
         $this->load->view('footer');
+    }
+
+    function empresacadastrolista($args = array()) {
+        $this->loadView('ambulatorio/empresacadastro-lista', $args);
+    }
+
+    function carregarempresacadastro($empresa_id = NULL) {
+
+        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
+        //$this->carregarView($data, 'giah/servidor-form');
+        $this->loadView('ambulatorio/empresacadastro-form', $data);
     }
 
 }

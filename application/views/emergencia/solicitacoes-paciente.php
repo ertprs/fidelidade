@@ -6,6 +6,7 @@
     </div>
     <?
     $args['paciente'] = $paciente_id;
+    $empresa_p = $this->guia->listarempresa();
     $perfil_id = $this->session->userdata('perfil_id');
     $internacao = $this->session->userdata('internacao');
     ?>
@@ -37,59 +38,127 @@
     $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id);
     $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
 
-    $listaratendimentoexame = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'EXAME');
-    $listaratendimentoconsulta = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'CONSULTA');
-    $listaratendimentoespecialidade = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'ESPECIALIDADE');
-    @$carencia_exame = $carencia[0]->carencia_exame;
-    @$carencia_consulta = $carencia[0]->carencia_consulta;
-    @$carencia_especialidade = $carencia[0]->carencia_especialidade;
 
-    $dias_parcela = 30 * count($parcelas);
-    $dias_atendimentoexame = $carencia_exame * count($listaratendimentoexame);
-    $dias_atendimentoconsulta = $carencia_consulta * count($listaratendimentoconsulta);
-    $dias_atendimentoespecialidade = $carencia_especialidade * count($listaratendimentoespecialidade);
-    // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
-// Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
-// 
-//        echo '<pre>';
-//        var_dump($parcelas);
-//        var_dump($atendimento_parcela);
-//        var_dump($dias_parcela);
-//        var_dump($carencia);
-//        var_dump($dias_atendimentoexame);
-//        var_dump($listaratendimento);
-//        die;
-    // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
-    // o sistema vai gravar. 
-    //
-  
-    if (($dias_parcela - $dias_atendimentoexame) >= $carencia_exame) {
-        $exame_liberado = 'Liberado';
+    if ($empresa_p[0]->tipo_carencia == "SOUDEZ") {
+
+        $listaratendimentoexame = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'EXAME');
+        $listaratendimentoconsulta = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'CONSULTA');
+        $listaratendimentoespecialidade = $this->guia->listaratendimentoparceiro($paciente_titular_id, 'ESPECIALIDADE');
+        @$carencia_exame = $carencia[0]->carencia_exame;
+        @$carencia_consulta = $carencia[0]->carencia_consulta;
+        @$carencia_especialidade = $carencia[0]->carencia_especialidade;
+
+        $dias_parcela = 30 * count($parcelas);
+        $dias_atendimentoexame = $carencia_exame * count($listaratendimentoexame);
+        $dias_atendimentoconsulta = $carencia_consulta * count($listaratendimentoconsulta);
+        $dias_atendimentoespecialidade = $carencia_especialidade * count($listaratendimentoespecialidade);
+        // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
+        // Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
+        // 
+        //        echo '<pre>';
+        //        var_dump($parcelas);
+        //        var_dump($atendimento_parcela);
+        //        var_dump($dias_parcela);
+        //        var_dump($carencia);
+        //        var_dump($dias_atendimentoexame);
+        //        var_dump($listaratendimento);
+        //        die;
+        // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
+        // o sistema vai gravar. 
+        //
+      
+        if (($dias_parcela - $dias_atendimentoexame) >= $carencia_exame) {
+            $exame_liberado = 'Liberado';
+        } else {
+            $exame_liberado = 'Pendência';
+        }
+        if (($dias_parcela - $dias_atendimentoconsulta) >= $carencia_consulta) {
+            $consulta_liberado = 'Liberado';
+        } else {
+            $consulta_liberado = 'Pendência';
+        }
+        if (($dias_parcela - $dias_atendimentoespecialidade) >= $carencia_especialidade) {
+            $especialidade_liberado = 'Liberado';
+        } else {
+            $especialidade_liberado = 'Pendência';
+        }
     } else {
+        $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id);
+        $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
+        $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id);
+        $quantidade_parcelas_pagas = $this->guia->listarparcelaspagas($paciente_titular_id);
+
+
         $exame_liberado = 'Pendência';
-    }
-    if (($dias_parcela - $dias_atendimentoconsulta) >= $carencia_consulta) {
-        $consulta_liberado = 'Liberado';
-    } else {
         $consulta_liberado = 'Pendência';
-    }
-    if (($dias_parcela - $dias_atendimentoespecialidade) >= $carencia_especialidade) {
-        $especialidade_liberado = 'Liberado';
-    } else {
         $especialidade_liberado = 'Pendência';
+
+
+        $liberado = false;
+        $carencia_exame = @$carencia[0]->carencia_exame;
+        $carencia_consulta = @$carencia[0]->carencia_consulta;
+        $carencia_especialidade = @$carencia[0]->carencia_especialidade;
+        // Se alguma das parcelas não tiver sido paga, o sistema não vai retornar true pra carencia
+        foreach ($parcelas as $item) {
+            $liberado = true;
+            if ($item->ativo == 't') {
+                break;
+            }
+        }
+
+ 
+        if (count($parcelas) == 0 && count($quantidade_parcelas) > 0 && count($quantidade_parcelas_pagas) == count($quantidade_parcelas)) {
+
+            $exame_liberado = 'Liberado';
+            $consulta_liberado = 'Liberado';
+            $especialidade_liberado = 'Liberado';
+            $liberado = true; 
+            
+        } else {
+            // Se tiverem parcelas, vai pegar a ultima parcela do foreach acima e usa a data abaixo.
+            if (count($parcelas) > 0 && $liberado) {
+                $data_atual = date("Y-m-d");
+
+                $data_exame = date('Y-m-d', strtotime("+$carencia_exame days", strtotime($item->data)));
+                $data_consulta = date('Y-m-d', strtotime("+$carencia_consulta days", strtotime($item->data)));
+                $data_especialidade = date('Y-m-d', strtotime("+$carencia_especialidade days", strtotime($item->data)));
+//                                var_dump($parcelas);
+//                                echo '-------------';
+//                                var_dump(strtotime($data_atual));
+//                die;
+                if (strtotime($data_atual) <= strtotime($data_exame)) {
+                    $exame_liberado = 'Liberado';
+                }
+                if (strtotime($data_atual) <= strtotime($data_consulta)) {
+                    $consulta_liberado = 'Liberado';
+                }
+                if (strtotime($data_atual) <= strtotime($data_especialidade)) {
+                    $especialidade_liberado = 'Liberado';
+                }
+            } else {
+                $exame_liberado = 'Pendência';
+                $consulta_liberado = 'Pendência';
+                $especialidade_liberado = 'Pendência';
+            }
+        }
+
+        // echo '<pre>';
+        // // var_dump($parcelas); 
+        // var_dump($liberado); 
+        // var_dump($item->data); 
+        // die;
     }
-    ?>
-
-
+    ?> 
     <fieldset>
         <legend>Solicita&ccedil;&otilde;es do Cliente</legend>
         <div>
             <table>
                 <tr><td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Contrato</a></div></td>
-                    <? if ($perfil_id == 1) { ?>
-
-
+                    <? if ($perfil_id == 1) { ?> 
                         <td width="100px;"><div class="bt_linkm"><a onclick="javascript: return confirm('Deseja realmente excluir o cliente?');" href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">Excluir</a></div></td>
+                        <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
+                                VENDEDOR : <?= @$paciente[0]->vendedor_nome; ?> 
+                            </div></td>
                     <? }
                     ?>
                 </tr>
@@ -180,18 +249,18 @@
             <fieldset>
                 <legend>Documentos</legend>
                 <div>
-                    <? if($paciente['0']->cpf_responsavel_flag == 't' ){ ?>
+                    <? if ($paciente['0']->cpf_responsavel_flag == 't') { ?>
                         <label>CPF do Resposável</label>
                     <? } else { ?>
                         <label>CPF</label>
                     <? } ?>
 
-                    <?if(strlen($paciente['0']->cpf) <= 11){?>
-                     <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
-                    <?}else{?>
-                     <input type="text" name="cpf" id ="txtCpf"  alt="cnpj" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
-                    <?}?>
-                    
+                    <? if (strlen($paciente['0']->cpf) <= 11) { ?>
+                        <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
+                    <? } else { ?>
+                        <input type="text" name="cpf" id ="txtCpf"  alt="cnpj" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
+                    <? } ?>
+
                 </div>
                 <div>
                     <label>RG</label>

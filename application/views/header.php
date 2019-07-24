@@ -15,6 +15,13 @@ function alerta($valor) {
 function debug($object) {
     
 }
+
+$empresa_id = $this->session->userdata('empresa_id');
+$this->db->select('ep.*');
+$this->db->from('tb_empresa ep');
+
+$this->db->where('ep.empresa_id', $empresa_id);
+$data['permissao'] = $this->db->get()->result();
 ?>
 <!DOCTYPE html PUBLIC "-//carreW3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="pt-BR" >
@@ -231,11 +238,26 @@ function debug($object) {
                     <ul>
                         <li><span class="folder">Cadastro</span>
                             <ul>
-                                <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 ) { ?>
-                                    <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
-                                    <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
-                                    <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
+                                <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 6 || $perfil_id == 5) { ?>
+                                    <? if ($this->session->userdata('cadastro') == 1) { ?>
+
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novoalternativo">Novo Titular</a></span></li>
+                                        <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {   ?>        
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentealternativo">Novo Dependente</a></span></li>
+                                        <? // }  ?>
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
+                                    <? } else { ?>
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
+                                        <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {  ?>        
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
+                                        <? // }  ?>
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
+                                    <? } ?>
+                                <? } ?>
+                                <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) { ?>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioadimplentes">Relatorio Adimplentes</a></span></li>
+
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocontratosinativos">Relatorio Contratos</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriotitularesexcluidos">Relatorio Titulares Excluídos</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriodependentes">Relatorio Dependentes</a></span></li>
@@ -245,7 +267,11 @@ function debug($object) {
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/relatorioconsultasagendadas">Relatorio Consultas Agendadas</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/listaragendamentoweb" target="_blank">Agendamento Web </a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/exame/listaragendamentosautorizados" target="_blank">Agendamentos Autorizados </a></span></li>
-                                    <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicov">Gerar SICOV</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicovoptante">Gerar Arquivo Optante</a></span></li>
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/importararquivoretorno">Importar Arquivo Retorno debito</a></span></li>
+                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
+                                     <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
                                 <? } ?>
                             </ul>
                         </li>
@@ -257,95 +283,110 @@ function debug($object) {
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>
                                 <? } ?>
                             </ul>
-                        </li>
+                        </li> 
+                        <? if ($data['permissao'][0]->cadastro_empresa_flag == 't' || $this->session->userdata('perfil_id') == 1): ?>
+                            <li><span class="folder">Empresa</span>
+                                <ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/empresacadastrolista">Cadastro de Empresa</a></span></ul>
+                                </ul>
+                            </li>
+                        <? endif; ?>
                     </ul>
                 </li>
 
                 <li><span class="folder">Financeiro</span>
                     <ul>
-                        <li><span class="folder">Rotinas</span>
-                            <? if ($perfil_id == 1) { ?>
+                        <? if ($perfil_id == 1 || ($data['permissao'][0]->excluir_entrada_saida == 't')) { ?>
+                            <li><span class="folder">Rotinas</span> 
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa">Manter Entrada</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/pesquisar2">Manter Saida</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/contaspagar">Manter Contas a pagar</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/contasreceber">Manter Contas a Receber</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/pesquisar3">Manter Sangria</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/fornecedor">Manter Credor/Devedor</a></span></ul>
-                            <? }
-                            ?>
-                        </li> 
+                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/pesquisar2">Manter Saida</a></span></ul>                                
+                                <? if ($perfil_id == 1): ?>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/contaspagar">Manter Contas a pagar</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/contasreceber">Manter Contas a Receber</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/pesquisar3">Manter Sangria</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/fornecedor">Manter Credor/Devedor</a></span></ul>
+                                <? endif; ?>
+
+                            </li> 
+                        <? }
+                        ?>
                         <li><span class="folder">Relatorios</span>
-                            <?
-                            if ($perfil_id == 1) {
-                                ?>
-                                
+
+                            <? if ($perfil_id == 1) { ?>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriosaida">Relatorio Saida</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriosaidagrupo">Relatorio Saida Tipo</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatorioentrada">Relatorio Entrada</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatorioentradagrupo">Relatorio Entrada Conta</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/contaspagar/relatoriocontaspagar">Relatorio Contas a pagar</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>cadastros/contasreceber/relatoriocontasreceber">Relatorio Contas a Receber</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriomovitamentacao">Relatorio Moviten&ccedil;&atilde;o</a></span></ul>
+                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriomovitamentacao">Relatorio Movimentação</a></span></ul>
+                            <? } ?>
+                            <? if ($perfil_id == 6 || $perfil_id == 5 || $perfil_id == 1) { ?>
                                 <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissao">Relatorio Comiss&atilde;o</a></span></ul>
                                 <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaovendedor">Relatorio Comissão Mensal</a></span></ul>
-                                <!--<ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>-->
+                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaorepresentante">Relatorio Representante Comercial</a></span></ul>
+                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>
                                 <!--<ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoseguradora">Relatorio Comissão Seguradora</a></span></ul>-->
-                                <?
-                            }
-                            ?>
+                            <? } ?>    
+
+
 
                         </li> 
 
                     </ul>
                 </li>
+                <? if ($perfil_id == 1) { ?>                
+                    <li><span class="folder">Configura&ccedil;&atilde;o</span>
+                        <ul>
+                            <li><span class="folder">Recep&ccedil;&atilde;o</span>
+                                <? if ($perfil_id == 1) { ?>
+                                    <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador">Listar Profissionais</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisargerentevendas">Listar Gerente de Vendas</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisarRepresentante">Listar Representante Comercial</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/motivocancelamento">Motivo cancelamento</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Manter indica&ccedil;&atilde;o</a></span></ul>
+                                <? } ?>
 
-                <li><span class="folder">Configura&ccedil;&atilde;o</span>
-                    <ul>
-                        <li><span class="folder">Recep&ccedil;&atilde;o</span>
-                            <? if ($perfil_id == 1) { ?>
-                                <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador">Listar Profissionais</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisargerentevendas">Listar Gerente de Vendas</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/motivocancelamento">Motivo cancelamento</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Manter indica&ccedil;&atilde;o</a></span></ul>
-                            <? } ?>
-  
-                        </li>
+                            </li>
 
-                        <li><span class="folder">Financeiro</span>
-                            <? if ($perfil_id == 1) { ?>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/tipo">Manter Tipo</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/classe">Manter Classe</a></span></ul>
-    <!--                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/subclasse">Manter Sub-Classe</a></span></ul>-->
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/forma">Manter Conta</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/formapagamento">Manter Planos</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/parceiro">Manter Parceiros</a></span></ul>
+                            <li><span class="folder">Financeiro</span>
+                                <? if ($perfil_id == 1) { ?>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/tipo">Manter Tipo</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/classe">Manter Classe</a></span></ul>
+        <!--                                <ul><span class="file"><a href="<?= base_url() ?>cadastros/subclasse">Manter Sub-Classe</a></span></ul>-->
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/forma">Manter Conta</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/formapagamento">Manter Planos</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/formapagamento/listarformarendimento">Manter Forma Pagamento</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/parceiro">Manter Parceiros</a></span></ul>
+                                <? } ?>
+                            </li> 
+                            <li><span class="folder">Administrativas</span>
+                                <? if ($perfil_id == 1) { ?>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa">Manter Empresa</a></span></ul>
+
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/versao">Vers&atilde;o</a></span></ul>
+                                <? } ?>
+                            </li> 
+                        </ul>
+                    </li>
+                    <li><span class="file"><a onclick="javascript: return confirm('Deseja realmente sair da aplicação?');"
+                                              href="<?= base_url() ?>login/sair">Sair</a></span>
+                        <ul>
+                            <? if ($perfil_id == 12) { ?>
+                                <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo</a></span></li>
+                                <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
+                                <li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>
                             <? } ?>
-                        </li> 
-                        <li><span class="folder">Administrativas</span>
-                            <? if ($perfil_id == 1 ) { ?>
-                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa">Manter Empresa</a></span></ul>
-                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/versao">Vers&atilde;o</a></span></ul>
-                            <? } ?>
-                        </li> 
-                    </ul>
-                </li>
-                <li><span class="file"><a onclick="javascript: return confirm('Deseja realmente sair da aplicação?');"
-                                          href="<?= base_url() ?>login/sair">Sair</a></span>
-                    <ul>
-                        <? if ($perfil_id == 12) { ?>
-                            <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo</a></span></li>
-                            <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
-                            <li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>
-                        <? } ?>
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                <? } ?>
             </ul>                       
             <!-- Fim da Barra Lateral -->
         </div>
         <div class="mensagem"><?
-                        if (isset($mensagem)): echo $mensagem;
-                        endif;
-                        ?></div>
+            if (isset($mensagem)): echo $mensagem;
+            endif;
+            ?></div>
         <script type="text/javascript">
             $("#menu").treeview({
                 animated: "normal",

@@ -81,6 +81,7 @@
     </div>
 </div> <!-- Final da DIV content -->
 <script type="text/javascript">
+    
 window.close();
 
     $(function() {

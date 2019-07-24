@@ -2,6 +2,11 @@
 
 require_once APPPATH . 'controllers/base/BaseController.php';
 require_once("./iugu/lib/Iugu.php");
+require_once('./gerencianet/vendor/autoload.php');
+
+use Gerencianet\Exception\GerencianetException;
+use Gerencianet\Gerencianet;
+
 //require_once("./iugu/test/Iugu.php");
 
 /**
@@ -31,6 +36,7 @@ class Guia extends BaseController {
         $this->load->model('cadastro/grupoconvenio_model', 'grupoconvenio');
         $this->load->model('seguranca/operador_model', 'operador_m');
         $this->load->model('ambulatorio/GExtenso', 'GExtenso');
+        $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -41,29 +47,149 @@ class Guia extends BaseController {
         $this->pesquisar();
     }
 
+    function anexararquivoscontrato($contrato_id) {
+
+        $this->load->helper('directory');
+
+        if (!is_dir("./upload/contratos")) {
+            mkdir("./upload/contratos");
+            $destino = "./upload/contratos";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/contratos/$contrato_id")) {
+            mkdir("./upload/contratos/$contrato_id");
+            $destino = "./upload/contratos/$contrato_id";
+            chmod($destino, 0777);
+        }
+
+        $data['arquivo_pasta'] = directory_map("./upload/contratos/$contrato_id");
+//        $data['arquivo_pasta'] = directory_map("/home/vivi/projetos/clinica/upload/consulta/$paciente_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        }
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/enviararquivoscontrato', $data);
+    }
+
+    function importararquivoscontrato($contrato_id) {
+        // var_dump($_FILES['userfile']); die;
+        // $this->load->helper('directory');
+        // $plano_id = $_POST['plano_id'];
+//        $_FILES['userfile']['name'] = $operador_id . ".jpg";
+//        $_FILES['userfile']['type'] = "image/png";
+        //    var_dump($_FILES['arquivos']); die;
+        // $_FILES['userfile']['name'] = $_FILES['arquivos']['name'];
+        // $_FILES['userfile']['type'] = $_FILES['arquivos']['type'];
+        // $_FILES['userfile']['tmp_name'] = $_FILES['arquivos']['tmp_name'];
+        // $_FILES['userfile']['error'] = $_FILES['arquivos']['error'];
+        // $_FILES['userfile']['size'] = $_FILES['arquivos']['size'];
+
+        if (!is_dir("./upload/contratos")) {
+            mkdir("./upload/contratos");
+            $destino = "./upload/contratos";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/contratos/$contrato_id")) {
+            mkdir("./upload/contratos/$contrato_id");
+            $destino = "./upload/contratos/$contrato_id";
+            chmod($destino, 0777);
+        }
+
+        // if (!$arquivo_existe) {
+//             var_dump($arquivo_existe); die;
+        //        $config['upload_path'] = "/home/vivi/projetos/clinica/upload/consulta/" . $paciente_id . "/";
+        $config['upload_path'] = "./upload/contratos/" . $contrato_id . "/";
+        $config['allowed_types'] = 'gif|jpg|BMP|bmp|png|jpeg|pdf|doc|docx|xls|xlsx|ppt|zip|rar|xml|txt';
+        $config['max_size'] = '0';
+        $config['overwrite'] = false;
+        $config['encrypt_name'] = false;
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload()) {
+            $error = array('error' => $this->upload->display_errors());
+        } else {
+            $error = null;
+            $data = array('upload_data' => $this->upload->data());
+        }
+        $data['contrato_id'] = $contrato_id;
+
+
+        // var_dump($error);
+        // die;
+        // }
+
+        redirect(base_url() . "ambulatorio/guia/anexararquivoscontrato/$contrato_id");
+    }
+
+    function excluirarquivoscontrato($contrato_id, $nome) {
+
+        // if (!is_dir("./uploadopm/planos/$plano_id")) {
+        //     mkdir("./uploadopm/planos");
+        //     mkdir("./uploadopm/planos/$plano_id");
+        //     $destino = "./uploadopm/planos/$plano_id";
+        //     chmod($destino, 0777);
+        // }
+
+        $origem = "./upload/contratos/$contrato_id/$nome";
+        // $destino = "./uploadopm/paciente/$plano_id/$nome";
+        // copy($origem, $destino);
+        unlink($origem);
+
+        redirect(base_url() . "ambulatorio/guia/anexararquivoscontrato/$contrato_id");
+
+//        $this->anexarimagem($paciente_id);
+    }
+
     function pesquisar($paciente_id) {
+
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
+        $data['permissao'] = $this->empresa->listarpermissoes();
+
         if (count($contrato_ativo) > 0) {
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                 $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
+                $data_cadastro = $contrato_ativo[count($contrato_ativo) - 1]->data_cadastro;
+                $qtd_dias = $contrato_ativo[count($contrato_ativo) - 1]->qtd_dias;
+                if ($qtd_dias == "") {
+                    $qtd_dias = 0;
+                } else {
+                    
+                }
+                // $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
+                //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
+                $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro)));
                 $data_atual = date("Y-m-d");
-                //            $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
-                if ($data_atual > $data_contrato) {
-                    $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
+//               var_dump($data_tot_contrato);die;
+//            print_r($data_tot_contrato);
+//                echo "***********";
+//                  print_r($data_atual);
+//                echo "***********";
+//                  print_r($qtd_dias);
+//                echo "***********";
+                //verificando se a data atual for maior que a data do (contrato+dias do plano) se for maior vai criar um novo contrato.
+                if ($data_atual > $data_tot_contrato) {
+
+                    if ($data['permissao'][0]->renovar_contrato_automatico == 't') {
+                        $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
+                    } else {
+                        $contrato_ativo = $this->guia->gravarnovocontratoanualdesativar($paciente_contrato_id);
+                    }
                 }
             }
         }
 //       
         $data['titular'] = $this->guia->listartitular($paciente_id);
-//        var_dump($data['titular'] ); die;
+//      var_dump($data['titular'] ); die;
         $data['guia'] = $this->guia->listar($paciente_id);
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $this->loadView('ambulatorio/guia-lista', $data);
     }
 
-    function novocontrato($paciente_id) {
+    function novocontrato($paciente_id, $empresa_id = NULL) {
         $obj_paciente = new paciente_model($paciente_id);
         $data['obj'] = $obj_paciente;
         $data['planos'] = $this->formapagamento->listarforma();
@@ -71,25 +197,198 @@ class Guia extends BaseController {
         $data['paciente_id'] = $paciente_id;
         $plano_id = $data['paciente'][0]->plano_id;
         $data['forma_pagamento'] = $this->paciente->listaforma_pagamento($plano_id);
+        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+        @$data['empresa_cadastro_id'] = @$empresa_id;
         $this->loadView('ambulatorio/novocontrato-form', $data);
+    }
+
+    function relatoriosicov() {
+        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriosicov', $data);
+    }
+
+    function gerarsicov() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $relatorio = $this->guia->gerarsicov();
+
+//        echo "<pre>";
+//        print_r($relatorio);
+//        die;
+
+        $empresa = $this->guia->listarempresassicov();
+        // Definições de variaveis com informação do banco e afins.  
+        $codigo_convenio_banco = $empresa[0]->codigo_convenio_banco;
+        $nome_empresa = substr($empresa[0]->razao_social, 0, 20);
+        $data_geracao = date("Ymd");
+        $sequencial_NSA = $this->guia->gerarnumeroNSA(); // Incrementa um numero a cada arquivo gerado.
+        // Definições das variaveis do header
+        // Variavel / Tamanho da string
+        // Obs: Gerais.
+        // Os campos numericos são preenchidos com zero a esquerda e os alfa-numericos com espaço em branco a direita.
+        $A = array();
+        $A[0] = ''; // Iniciando o indice zero do array;
+        $A[1] = 'A'; // string(1); Codigo do Registro, sempre "A"
+        $A[2] = '1'; // string(1); Código da Remessa: No caso da gente é Envio, então é 1
+        $A[3] = $this->utilitario->preencherDireita($codigo_convenio_banco, 20, ' '); // string(20); Código do convênio (Informado pelo banco e no sistema em Manter Empresa) 
+        $A[4] = $this->utilitario->preencherDireita($nome_empresa, 20, ' '); // string(20); Nome da empresa
+        $A[5] = '104'; // string(03); Código do Banco. Caixa = 104
+        $A[6] = $this->utilitario->preencherDireita('CAIXA', 20, ' '); // string(20); Nome do banco.
+        $A[7] = $data_geracao; // string(08);
+        $A[8] = $this->utilitario->preencherEsquerda($sequencial_NSA, 6, '0'); // string(06); Numero de Sequencia do arquivo NSA
+        $A[9] = '05'; // string(02); Versao do Layout: 04 ou 05. No caso esse é o 05, pois é o E com validação de CPF/CNPJ
+        $A[10] = 'DEBITO AUTOMATICO'; // string(17); Tipo de atendimento
+        $A[11] = $this->utilitario->preencherDireita('', 52, ' '); // string(52); String vazia
+
+        $header_A = implode($A);
+        $body_E = array();
+
+        // echo '<pre>';
+        // var_dump($relatorio);
+        // die;
+        $contador = 0;
+        $body_E_con = '';
+        $valor_total = 0;
+        foreach ($relatorio as $item) {
+
+            $data_vencimento = date("Ymd", strtotime($item->data));
+            $valor_debito = number_format($item->valor, 2, '', '');
+            $valor_total = $valor_total + $item->valor;
+
+            if (strlen($item->cpf) > 11) {
+                $tipo_iden = 1;
+                $cnpj = str_replace('-', '', str_replace('.', '', str_replace('/', '', $item->cpf)));
+
+                $cpf_cnpj = "9" . $cnpj;
+            } else {
+                $cpf = str_replace('-', '', str_replace('.', '', str_replace('/', '', $item->cpf)));
+                $tipo_iden = 2;
+                $cpf_cnpj = "0000" . $cpf;
+            }
+
+            $E = array();
+            $E[0] = ''; // Iniciando o Array;
+            $E[1] = 'E'; // string(01); Código do registro = "E"
+            $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
+            $E[3] = substr($item->conta_agencia, 0, 4); // string(04); Agência para débito/crédito
+            $conta = $item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  "; // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
+            $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
+            $E[5] = $data_vencimento; // string(08); Data do vencimento
+            $E[6] = $this->utilitario->preencherEsquerda($valor_debito, 15, '0'); // string(15); Valor do débito
+            $E[7] = '03'; // string(02); Código da moeda  Real = 03
+            $E[8] = $this->utilitario->preencherDireita('Pagamento por debito automatico sistema Fidelidade', 60, ' '); // string(60);  String pra usar a vontade limitando o tamanho, essa informação é só uma observação que apenas retorna para a clinica. O banco não utiliza
+            $E[9] = $tipo_iden; // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
+            $E[10] = $cpf_cnpj; // string(15); // CPF ou CNPJ
+            $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
+            $E[12] = '0'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
+            $body_con = implode($E); // Corpo concatenado
+
+            $body_E[] = $body_con; // Adiciona no array. (interessante essa variável pra verificar possiveis problemas nas linhas)
+            $body_E_con .= $body_con . "\n"; // Corpo concatenado
+            $contador++;
+
+            // echo '<pre>';
+            // var_dump($E); 
+            // var_dump($body_con); 
+            // die;
+        }
+        $valor_total = number_format($valor_total, 2, '', '');
+        $Z = array(); // Footer chamado de Trailler
+        $Z[0] = ''; // Iniciando indice zero;
+        $Z[1] = 'Z'; // ; string(1) Indicação do que é a linha;
+        $contador = $contador + 2; // Tem que contar o Header e o Footer
+        $Z[2] = $this->utilitario->preencherEsquerda($contador, 6, '0'); // ;
+        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;
+        $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;
+        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
+        ; // ;
+        $footer_Z = implode($Z);
+
+        $string_geral = '';
+        $string_geral = $header_A . "\n" . $body_E_con . $footer_Z;
+        // echo '<pre>';
+        // var_dump($body_E); 
+        // die;
+        if (!is_dir("./upload/SICOV")) {
+            mkdir("./upload/SICOV");
+            $destino = "./upload/SICOV";
+            chmod($destino, 0777);
+        }
+        $data_Mes = date("m"); // Definindo a variavel pro nome do arquivo
+        if (count($relatorio) > 0) {
+            $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
+        }
+        $nome_arquivo = "COV" . $data_Mes . $contador;
+        $fp = fopen("./upload/SICOV/$nome_arquivo.txt", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
+        $escreve = fwrite($fp, $string_geral);
+
+        unlink("./upload/SICOV/$nome_arquivo.zip");
+        // Apagar o arquivo primeiro
+        $zip = new ZipArchive;
+        $this->load->helper('directory');
+        $zip->open("./upload/SICOV/$nome_arquivo.zip", ZipArchive::CREATE);
+        $zip->addFile("./upload/SICOV/$nome_arquivo.txt", "$nome_arquivo.txt");
+        $zip->close();
+        unlink("./upload/SICOV/$nome_arquivo.txt");
+
+        if (count($relatorio) > 0) {
+            $messagem = "Arquivo gerado com sucesso";
+        } else {
+            $messagem = "Não foram encontradas cobranças para gerar o arquivo";
+        }
+
+        $this->session->set_flashdata('message', $messagem);
+        redirect(base_url() . "ambulatorio/guia/relatoriosicov");
+        // $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data);
+    }
+
+    function downloadTXT($nome_arquivo) {
+
+        $arquivo = file_get_contents("./upload/SICOV/$nome_arquivo");
+
+        // $string = 'Test download string';
+
+        header('Content-type: text/plain');
+        header('Content-Length: ' . strlen($arquivo));
+        header("Content-Disposition: attachment; filename=$nome_arquivo");
+
+        echo $arquivo;
     }
 
     function relatorioinadimplentes() {
 //        $data['empresa'] = $this->guia->listarempresas();
-        $this->loadView('ambulatorio/relatorioinadimplentes');
+        $data['bairros'] = $this->paciente->listarbairros();
+        $this->loadView('ambulatorio/relatorioinadimplentes', $data);
     }
 
     function gerarelatorioinadimplentes() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
+        $data['ordenar'] = $_POST['ordenar'];
 
         $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data);
     }
 
+    function relatorioadimplentes() {
+        $data['bairros'] = $this->paciente->listarbairros();
+        $this->loadView('ambulatorio/relatorioadimplentes', $data);
+    }
+
+    function gerarelatorioadimplentes() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatorioadimplentes();
+
+        $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data);
+    }
+
     function relatoriocontratosinativos() {
 //        $data['empresa'] = $this->guia->listarempresas();
-        $this->loadView('ambulatorio/relatoriocontratosinativos');
+        $data['planos'] = $this->formapagamento->listarforma();
+        $data['vencedor'] = $this->operador_m->listarvendedor(1);
+
+        $this->loadView('ambulatorio/relatoriocontratosinativos', $data);
     }
 
     function relatoriotitularesexcluidos() {
@@ -336,12 +635,14 @@ class Guia extends BaseController {
 //        $this->load->view('ambulatorio/impressaoficharm-verso');
     }
 
-    function impressaoficha($paciente_contrato_id) {
+    function impressaoficha($paciente_contrato_id = NULL) {
         $this->load->plugin('mpdf');
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['exame'] = $this->guia->listarparcelas($paciente_contrato_id);
+        $data['paciente'] = $this->guia->listarinformacoesContrato($paciente_contrato_id);
         $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
+        $data['titular_id'] = @$data['paciente'][0]->paciente_id;
 
         $data['emissao'] = date("d-m-Y");
         foreach ($data['exame'] as $value) {
@@ -358,7 +659,48 @@ class Guia extends BaseController {
 //            $html = $this->load->View('ambulatorio/impressaocarteiradez', $data, true);
             $this->load->View('ambulatorio/impressaocarteiradez', $data);
 //            pdf($html, $filename, $cabecalho, $rodape);
+        } else {
+            
         }
+
+///////////////////////////////////////////////////////////////////////////////////////////////        
+        // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
+    }
+
+    function impressaocarteira($paciente_id, $contrato_id, $paciente_contrato_dependente_id = NULL, $paciente_titular = NULL) {
+
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $data['permissao'] = $this->empresa->listarpermissoes();
+        $data['dependente'] = $this->guia->listardependentes($contrato_id);
+
+        if ($data['permissao'][0]->carteira_padao_2 == 't') {
+            $data['paciente'] = $this->guia->listarpacientecarteirapadrao2($paciente_id);
+        } elseif ($data['permissao'][0]->carteira_padao_3 == 't' || $data['permissao'][0]->carteira_padao_4 == 't') {
+            $data['paciente'] = $this->guia->listarpacientecarteirapadrao3($paciente_id);
+        } else {
+            $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
+        }
+
+        $data['contrato'] = $this->guia->listarinformacoesContrato($contrato_id);
+        $this->guia->addimpressao($contrato_id, $paciente_id, $paciente_contrato_dependente_id);
+        // var_dump($data['contrato']); die;
+        $data['titular_id'] = $data['contrato'][0]->paciente_id;
+        $paciente_id = @$data['paciente'][0]->paciente_id;
+
+
+//        echo $paciente_titular;
+//        die;
+        if (@$data['paciente'][0]->situacao == 'Titular') {
+            $this->guia->confirmarpagamentocarteira($paciente_id, $contrato_id, $paciente_id);
+        } else {
+            $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+            $paciente_dependete_id = @$retorno[0]->paciente_id;
+            $titular_id = @$retorno[0]->titular_id;
+            $this->guia->confirmarpagamentocarteira($paciente_dependete_id, $contrato_id, $paciente_titular);
+        }
+
+        $this->load->View('ambulatorio/impressaoficharonaldo', $data);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////        
         // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
@@ -647,12 +989,11 @@ class Guia extends BaseController {
     function confirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 
 //        var_dump($valor); die;
-        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id)) {
+        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
         }
-
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
@@ -660,14 +1001,20 @@ class Guia extends BaseController {
     function confirmarpagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
 
 //        var_dump($valor); die;
-        if ($this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $contrato_id)) {
+        $tipo = $this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id);
+        // var_dump($tipo); die;
+        if ($tipo != '') {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
         }
 
         $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+        if ($tipo == 'CONSULTA EXTRA') {
+            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+        } else {
+            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");
+        }
     }
 
     function cancelaragendamentocartao($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
@@ -711,6 +1058,17 @@ class Guia extends BaseController {
         $data['pagamento'] = $this->guia->listarparcelaobservacao($paciente_contrato_parcelas_id);
 //        var_dump($data['pagamento']); die;
         $this->load->View('ambulatorio/alterarobservacaopagamento-form', $data);
+    }
+
+    function auditoriaparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarparcelaauditoria($paciente_contrato_parcelas_id);
+//        var_dump($data['pagamento']); die;
+        $this->load->View('ambulatorio/auditoriaparcela', $data);
     }
 
     function alterarobservacaoavulso($paciente_id, $contrato_id, $consulta_avulsa_id) {
@@ -987,6 +1345,8 @@ class Guia extends BaseController {
 
     function gerartodosiugu($paciente_id, $contrato_id) {
 
+
+        $gerado_todos_iugu = $this->paciente->salvargravadotodosiugu($contrato_id);
         $cliente = $this->paciente->listardados($paciente_id);
         $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
         $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
@@ -996,7 +1356,6 @@ class Guia extends BaseController {
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-
 
         $pagamento = $this->paciente->listarpagamentoscontratoparcelaiugutodos($contrato_id);
 
@@ -1099,7 +1458,6 @@ class Guia extends BaseController {
         $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
 //        var_dump($cpfcnpj); 
 //        die;
-
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
 //        die;
         //GERANDO A COBRANÇA
@@ -1133,6 +1491,7 @@ class Guia extends BaseController {
                             )
                         )
             ));
+
 
 //        echo '<pre>';
 //        var_dump($gerar);
@@ -1462,13 +1821,20 @@ class Guia extends BaseController {
 //        echo '<pre>';
 //        var_dump($_POST);
 //        die;
+        if (isset($_POST['deletarBoleto'])) {
+            // Deleta os boletos futuros para na função seguinte as parcelas serem associadas ao cartão
+
+            $pagamentos_cancelar = $this->guia->listarcancelarparcelaiugu($paciente_id, $contrato_id);
+            $empresa = $this->guia->listarempresa();
+            $key = $empresa[0]->iugu_token;
+            Iugu::setApiKey($key);
+            foreach ($pagamentos_cancelar as $item) {
+                $invoice = Iugu_Invoice::fetch($item->invoice_id);
+                $invoice->cancel();
+            }
+        }
+
         $ambulatorio_guia_id = $this->guia->gravarcartaoclienteiugu($paciente_id, $contrato_id);
-
-//        $empresa = $this->guia->listarempresa();
-//        $key = $empresa[0]->iugu_token;
-//        Iugu::setApiKey($key);
-
-
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar cartão.';
         } else {
@@ -1480,27 +1846,34 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
 
-    function excluircontrato($paciente_id, $contrato_id) {
-//        var_dump($contrato_id); die;
-        $pagamento = $this->paciente->listarparcelaiuguexclusaocontrato($contrato_id);
-//        var_dump($pagamento); die;
-        $empresa = $this->guia->listarempresa();
-        $key = $empresa[0]->iugu_token;
+    function gravardebitoconta($paciente_id, $contrato_id) {
 
 
-        foreach ($pagamento as $item) {
-
-
-            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-            $invoice_id = $item->invoice_id;
-
-            $retorno = Iugu_Invoice::fetch($invoice_id);
-            $retorno->cancel();
-//            echo '<pre>';
-//            var_dump($retorno);
-//            die;
-            $this->guia->cancelarpagamentoiugu($item->paciente_contrato_parcelas_id);
+        if (isset($_POST['deletarBoleto'])) {
+            // Deleta os boletos futuros para na função seguinte as parcelas serem associadas ao cartão
+            $pagamentos_cancelar = $this->guia->listarcancelarparcelaiugu($paciente_id, $contrato_id);
+            $empresa = $this->guia->listarempresa();
+            $key = $empresa[0]->iugu_token;
+            Iugu::setApiKey($key);
+            foreach ($pagamentos_cancelar as $item) {
+                $invoice = Iugu_Invoice::fetch($item->invoice_id);
+                $invoice->cancel();
+            }
         }
+
+        $ambulatorio_guia_id = $this->guia->gravardebitoconta($paciente_id, $contrato_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar conta.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar conta.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function excluircontrato($paciente_id, $contrato_id) {
+//   
 
         $ambulatorio_guia_id = $this->guia->excluircontrato($paciente_id, $contrato_id);
 
@@ -1509,25 +1882,7 @@ class Guia extends BaseController {
 
     function excluircontratoadmin($paciente_id, $contrato_id) {
 //        var_dump($contrato_id); die;
-        $pagamento = $this->paciente->listarparcelaiuguexclusaocontrato($contrato_id);
-//        var_dump($pagamento); die;
-        $empresa = $this->guia->listarempresa();
-        $key = $empresa[0]->iugu_token;
 
-
-        foreach ($pagamento as $item) {
-
-
-            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-            $invoice_id = $item->invoice_id;
-
-            $retorno = Iugu_Invoice::fetch($invoice_id);
-            $retorno->cancel();
-//            echo '<pre>';
-//            var_dump($retorno);
-//            die;
-            $this->guia->cancelarpagamentoiugu($item->paciente_contrato_parcelas_id);
-        }
 
         $ambulatorio_guia_id = $this->guia->excluircontratoadmin($paciente_id, $contrato_id);
 
@@ -1544,10 +1899,13 @@ class Guia extends BaseController {
     function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id) {
 
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
-
+        $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoparcelagerencianet($parcela_id);
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
 
+
+        $client_id = $empresa[0]->client_id; //ache a o seu client_id no site em API e selecione sua Aplicação
+        $client_secret = $empresa[0]->client_secret; //ache a o seu client_secret no site em API e selecione sua Aplicação
 //        var_dump($pagamento_iugu);
 //        die;
         if ($key != '' && count($pagamento_iugu) > 0) {
@@ -1557,7 +1915,33 @@ class Guia extends BaseController {
                 $retorno->cancel();
             }
         }
-//        die('morreu');
+
+        if ($client_id != "" && $client_secret != "" && count($pagamento_gerencianet) > 0) {
+
+            $options = [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+
+            $params = [
+                'id' => $pagamento_gerencianet[0]->charge_id
+            ];
+
+            try {
+                $api = new Gerencianet($options);
+                $charge = $api->cancelCharge($params, []);
+                print_r($charge);
+            } catch (GerencianetException $e) {
+                print_r($e->code);
+                print_r($e->error);
+                print_r($e->errorDescription);
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+
         $ambulatorio_guia_id = $this->guia->excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id);
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao excluir parcela';
@@ -1571,7 +1955,45 @@ class Guia extends BaseController {
     }
 
     function excluirconsultaavulsa($paciente_id, $contrato_id, $consulta_id) {
+
+        $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoconsultaavulsaGN($consulta_id);
+        $empresa = $this->guia->listarempresa();
+
+
+//        var_dump($pagamento_gerencianet);die;
+
+        $client_id = $empresa[0]->client_id; //ache a o seu client_id no site em API e selecione sua Aplicação
+        $client_secret = $empresa[0]->client_secret; //ache a o seu client_secret no site em API e selecione sua Aplicação
+//        var_dump($pagamento_iugu);
+//        die;
+
+        if ($client_id != "" && $client_secret != "" && count($pagamento_gerencianet) > 0) {
+
+            $options = [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+
+            $params = [
+                'id' => $pagamento_gerencianet[0]->charge_id_GN
+            ];
+
+            try {
+                $api = new Gerencianet($options);
+                $charge = $api->cancelCharge($params, []);
+                print_r($charge);
+            } catch (GerencianetException $e) {
+                print_r($e->code);
+                print_r($e->error);
+                print_r($e->errorDescription);
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
         $ambulatorio_guia_id = $this->guia->excluirconsultaavulsa($consulta_id);
+
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
         } else {
@@ -1581,6 +2003,54 @@ class Guia extends BaseController {
         $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
         $data['procedimento'] = $this->procedimento->listarprocedimentos();
         redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+    }
+
+    function excluirconsultaavulsaguia($paciente_id, $contrato_id, $consulta_id) {
+
+        $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoconsultaavulsaGN($consulta_id);
+        $empresa = $this->guia->listarempresa();
+//        var_dump($pagamento_gerencianet);die;
+
+        $client_id = $empresa[0]->client_id; //ache a o seu client_id no site em API e selecione sua Aplicação
+        $client_secret = $empresa[0]->client_secret; //ache a o seu client_secret no site em API e selecione sua Aplicação
+//        var_dump($pagamento_iugu);
+//        die;
+
+        if ($client_id != "" && $client_secret != "" && count($pagamento_gerencianet) > 0) {
+            $options = [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+
+            $params = [
+                'id' => $pagamento_gerencianet[0]->charge_id_GN
+            ];
+
+            try {
+                $api = new Gerencianet($options);
+                $charge = $api->cancelCharge($params, []);
+                print_r($charge);
+            } catch (GerencianetException $e) {
+                print_r($e->code);
+                print_r($e->error);
+                print_r($e->errorDescription);
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+
+        $ambulatorio_guia_id = $this->guia->excluirconsultaavulsa($consulta_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
 
     function gravar($paciente_id) {
@@ -1598,9 +2068,12 @@ class Guia extends BaseController {
 
     function gravarplano() {
         $paciente_id = $_POST['txtpaciente'];
-        $paciente = $this->guia->gravarplano($paciente_id);
+        @$empresa_cadastro_id = @$_POST['empresa_cadastro_id'];
+        $paciente = $this->guia->gravarplano($paciente_id, $empresa_cadastro_id);
         $paciente_contrato_id = $this->guia->gravarplanoparcelas($paciente_id);
-        redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id/$paciente_contrato_id");
+
+//        redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id/$paciente_contrato_id");
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
     function novocontratovalor($paciente_id, $paciente_contrato_id) {
@@ -1905,6 +2378,8 @@ class Guia extends BaseController {
     }
 
     function listardependentes($paciente_id, $contrato_id) {
+
+
         $data['paciente_id'] = $paciente_id;
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['lista'] = $this->paciente->listardependentes();
@@ -1912,20 +2387,24 @@ class Guia extends BaseController {
 //        var_dump($data['lista']); die;
         $data['listacadastro'] = $this->paciente->listardependentescontrato($contrato_id);
         $data['contrato_id'] = $contrato_id;
+        $data['empresa_permissao'] = $this->empresa->listarpermissoes();
         $this->loadView('ambulatorio/guia-form', $data);
     }
 
     function listarpagamentos($paciente_id, $contrato_id) {
+
         $data['paciente_id'] = $paciente_id;
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['lista'] = $this->paciente->listardependentes();
         $data['empresa'] = $this->guia->listarempresa();
+        $data['verificarsepagouemiugu'] = $this->paciente->verificarsepagouemiugu($contrato_id);
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontrato($contrato_id);
         $data['listarpagamentosconsultaextra'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
         $data['listarpagamentosconsultacoop'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
         $data['historicoconsultasrealizadas'] = $this->paciente->listarhistoricoconsultasrealizadas($contrato_id);
 //        echo "<pre>";
-//        var_dump($data['historicoconsultasrealizadas']); die;
+//        var_dump($data['historicoconsultasrealizadas']); die; 
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }
@@ -1938,6 +2417,7 @@ class Guia extends BaseController {
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
 //        var_dump($data['listarpagamentoscontrato']); die;
         $data['contrato_id'] = $contrato_id;
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $this->loadView('ambulatorio/guiaconsultaavulsapagamento-form', $data);
     }
 
@@ -1949,6 +2429,7 @@ class Guia extends BaseController {
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
 //        var_dump($data['listarpagamentoscontrato']); die;
         $data['contrato_id'] = $contrato_id;
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $this->loadView('ambulatorio/guiaconsultacooppagamento-form', $data);
     }
 
@@ -1994,6 +2475,17 @@ class Guia extends BaseController {
 //        var_dump($data['listarpagamentoscontrato']); die;
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/pagamentocartaoiugu-form', $data);
+    }
+
+    function pagamentodebitoconta($paciente_id, $contrato_id) {
+        $data['paciente_id'] = $paciente_id;
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['lista'] = $this->paciente->listardependentes();
+        $data['empresa'] = $this->guia->listarempresa();
+        $data['conta'] = $this->paciente->listarcontadebitocliente($paciente_id);
+//        var_dump($data['listarpagamentoscontrato']); die;
+        $data['contrato_id'] = $contrato_id;
+        $this->loadView('ambulatorio/pagamentodebitoconta-form', $data);
     }
 
     function integracaoiugu($paciente_id, $contrato_id) {
@@ -2741,6 +3233,11 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriocomissao', $data);
     }
 
+    function relatoriocomissaorepresentante() {
+        $data['listarvendedor'] = $this->operador_m->listarRepresentantevendasrelatorio();
+        $this->loadView('ambulatorio/relatoriocomissaorepresentante', $data);
+    }
+
     function relatoriocomissaovendedor() {
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $this->loadView('ambulatorio/relatoriocomissaovendedor', $data);
@@ -2813,7 +3310,21 @@ class Guia extends BaseController {
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
         $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
         $data['relatorio'] = $this->guia->relatoriocomissao();
+        $data['relatorio_forma'] = $this->guia->relatoriocomissaoContadorForma();
+        // echo '<pre>';
+        // var_dump($data['relatorio_forma']); die;
         $this->load->View('ambulatorio/impressaorelatoriocomissao', $data);
+    }
+
+    function gerarelatoriocomissaorepresentante() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
+        $data['relatorio'] = $this->guia->relatoriocomissaorepresentante();
+        // $data['relatorio_forma'] = $this->guia->relatoriocomissaoContadorForma();
+        // echo '<pre>';
+        // var_dump($data['relatorio']); die;
+        $this->load->View('ambulatorio/impressaorelatoriocomissaorepresentante', $data);
     }
 
     function gerarelatoriocomissaoseguradora() {
@@ -2830,6 +3341,10 @@ class Guia extends BaseController {
 //        var_dump($_POST); die;
         $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
         $data['relatorio'] = $this->guia->relatoriocomissaovendedor();
+        // $data['relatorio_forma'] = $this->guia->relatoriocomissaovendedorFormaRend();
+        // echo '<pre>'; 
+        // var_dump($data['relatorio_forma']);
+        // die;
         $this->load->View('ambulatorio/impressaorelatoriocomissaovendedor', $data);
     }
 
@@ -2997,9 +3512,9 @@ class Guia extends BaseController {
     }
 
     function gerarelatorioaniversariantes() {
-        if (!($_POST["txtdata_inicio"] == "")) {
-            $data['empresa'] = $this->guia->listarempresa($_POST['empresa']);
 
+        if (!($_POST["txtdata_inicio"] == "")) {
+            $data['empresa'] = $this->guia->listarempresaporid($_POST['empresa']);
             $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
             $data['relatorio'] = $this->guia->relatorioaniversariantes();
             $this->load->View('ambulatorio/impressaorelatorioaniversariantes', $data);
@@ -3073,28 +3588,18 @@ class Guia extends BaseController {
         }
     }
 
-    function impressaorecibo($paciente_id, $guia_id, $exames_id) {
+    function impressaorecibo($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 
         $data['emissao'] = date("d-m-Y");
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
-        $data['exame'] = $this->guia->listarexame($exames_id);
-        $grupo = $data['exame'][0]->grupo;
-        $convenioid = $data['exame'][0]->convenio_id;
-        $dinheiro = $data['exame'][0]->dinheiro;
-        $data['exames'] = $this->guia->listarexamesguiaconvenio($guia_id, $convenioid);
-        $exames = $data['exames'];
+        $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $data['pagamento'] = $pagamento;
+        // var_dump($pagamento); die;
         $valor_total = 0;
 
-        foreach ($exames as $item) :
-            if ($dinheiro == "t") {
-                $valor_total = $valor_total + ($item->valor_total);
-            }
-        endforeach;
-
-        $data['guia'] = $this->guia->listar($paciente_id);
         $data['paciente'] = $this->paciente->listardados($paciente_id);
-        $valor = number_format($valor_total, 2, ',', '.');
+        $valor = number_format($pagamento[0]->valor, 2, ',', '.');
 
         $data['valor'] = $valor;
 
@@ -3102,9 +3607,9 @@ class Guia extends BaseController {
             $data['extenso'] = 'ZERO';
         } else {
             $valoreditado = str_replace(",", "", str_replace(".", "", $valor));
-            if ($dinheiro == "t") {
-                $data['extenso'] = GExtenso::moeda($valoreditado);
-            }
+            // if ($dinheiro == "t") {
+            $data['extenso'] = GExtenso::moeda($valoreditado);
+            // }
         }
 
         $dataFuturo = date("Y-m-d");
@@ -3450,6 +3955,1609 @@ class Guia extends BaseController {
         $data['nascimento'] = str_replace("-", "", $exame[0]->nascimento);
         $data['sexo'] = $exame[0]->sexo;
         $this->exame->gravardicom($data);
+    }
+
+    function relatoriosicovoptante() {
+
+        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriosicovoptante', $data);
+    }
+
+    function gerarsicovoptante() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $relatorio = $this->guia->gerarsicovoptante();
+        $origem_ind = "./upload/SICOVoptante";
+        if ($_POST['apagar'] == 1) {
+            delete_files($origem_ind);
+        } else {
+            
+        }
+        $empresa = $this->guia->listarempresassicov();
+        // Definições de variaveis com informação do banco e afins.  
+        $codigo_convenio_banco = $empresa[0]->codigo_convenio_banco;
+        $nome_empresa = substr($empresa[0]->razao_social, 0, 20);
+        $data_geracao = date("Ymd");
+        $sequencial_NSA = $this->guia->gerarnumeroNSA(); // Incrementa um numero a cada arquivo gerado.
+        // Definições das variaveis do header
+        // Variavel / Tamanho da string
+        // Obs: Gerais.
+        // Os campos numericos são preenchidos com zero a esquerda e os alfa-numericos com espaço em branco a direita.
+        $A = array();
+        $A[0] = ''; // Iniciando o indice zero do array;
+        $A[1] = 'A'; // string(1); Codigo do Registro, sempre "A"
+        $A[2] = '1'; // string(1); Código da Remessa: No caso da gente é Envio, então é 1
+        $A[3] = $this->utilitario->preencherDireita($codigo_convenio_banco, 20, ' '); // string(20); Código do convênio (Informado pelo banco e no sistema em Manter Empresa) 
+        $A[4] = $this->utilitario->preencherDireita($nome_empresa, 20, ' '); // string(20); Nome da empresa
+        $A[5] = '104'; // string(03); Código do Banco. Caixa = 104
+        $A[6] = $this->utilitario->preencherDireita('CAIXA', 20, ' '); // string(20); Nome do banco.
+        $A[7] = $data_geracao; // string(08);
+        $A[8] = $this->utilitario->preencherEsquerda($sequencial_NSA, 6, '0'); // string(06); Numero de Sequencia do arquivo NSA
+        $A[9] = '05'; // string(02); Versao do Layout: 04 ou 05. No caso esse é o 05, pois é o E com validação de CPF/CNPJ
+        $A[10] = 'DEBITO AUTOMATICO'; // string(17); Tipo de atendimento
+        $A[11] = $this->utilitario->preencherDireita('', 52, ' '); // string(52); String vazia
+
+        $header_A = implode($A);
+        $body_E = array();
+        $contador = 0;
+        $body_E_con = '';
+        $valor_total = 0;
+        foreach ($relatorio as $item) {
+            if (strlen($item->cpf) > 11) {
+                $tipo_iden = 1;
+                $cnpj = str_replace('-', '', str_replace('.', '', str_replace('/', '', $item->cpf)));
+
+                $cpf_cnpj = "9" . $cnpj;
+            } else {
+                $cpf = str_replace('-', '', str_replace('.', '', str_replace('/', '', $item->cpf)));
+                $tipo_iden = 2;
+                $cpf_cnpj = "0000" . $cpf;
+            }
+            $E = array();
+            $E[0] = ''; // Iniciando o Array;
+            $E[1] = 'E'; // string(01); Código do registro = "E"
+            $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
+            $E[3] = substr($item->conta_agencia, 0, 4); // string(04); Agência para débito/crédito
+            $conta = $item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  "; // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
+            $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
+            $E[5] = $this->utilitario->preencherDireita('', 8, ' '); // string(08); Data do vencimento
+            $E[6] = $this->utilitario->preencherDireita('', 15, ' '); // string(15); Valor do débito
+            $E[7] = $this->utilitario->preencherDireita('', 2, ' '); // string(02); Código da moeda  Real = 03
+            $E[8] = $this->utilitario->preencherDireita('', 60, ' '); // string(60);  String pra usar a vontade limitando o tamanho, essa informação é só uma observação que apenas retorna para a clinica. O banco não utiliza
+            $E[9] = $this->utilitario->preencherDireita('', 1, ' '); // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
+            $E[10] = $this->utilitario->preencherDireita($cpf_cnpj, 15, ' ');  // string(15); // CPF ou CNPJ
+            $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
+            $E[12] = '5'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
+            $body_con = implode($E); // Corpo concatenado
+
+            $body_E[] = $body_con; // Adiciona no array. (interessante essa variável pra verificar possiveis problemas nas linhas)
+            $body_E_con .= $body_con . "\n"; // Corpo concatenado
+            $contador++;
+        }
+        $valor_total = number_format($valor_total, 2, '', '');
+        $Z = array(); // Footer chamado de Trailler
+        $Z[0] = ''; // Iniciando indice zero;
+        $Z[1] = 'Z'; // ; string(1) Indicação do que é a linha;
+        $contador = $contador + 2; // Tem que contar o Header e o Footer
+        $Z[2] = $this->utilitario->preencherEsquerda($contador, 6, '0'); // ;
+        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;
+        $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;
+        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
+        ; // ;
+        $footer_Z = implode($Z);
+        $string_geral = '';
+        $string_geral = $header_A . "\n" . $body_E_con . $footer_Z;
+        if (!is_dir("./upload/SICOVoptante")) {
+            mkdir("./upload/SICOVoptante");
+            $destino = "./upload/SICOVoptante";
+            chmod($destino, 0777);
+        }
+        $data_Mes = date("m"); // Definindo a variavel pro nome do arquivo
+        if (count($relatorio) > 0) {
+            $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
+        }
+        $nome_arquivo = "ArqOptante" . $data_Mes . $contador;
+        $fp = fopen("./upload/SICOVoptante/$nome_arquivo.txt", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
+        $escreve = fwrite($fp, $string_geral);
+
+        unlink("./upload/SICOVoptante/$nome_arquivo.zip");
+        // Apagar o arquivo primeiro
+        $zip = new ZipArchive;
+        $this->load->helper('directory');
+        $zip->open("./upload/SICOVoptante/$nome_arquivo.zip", ZipArchive::CREATE);
+        $zip->addFile("./upload/SICOVoptante/$nome_arquivo.txt", "$nome_arquivo.txt");
+        $zip->close();
+        unlink("./upload/SICOVoptante/$nome_arquivo.txt");
+
+        if (count($relatorio) > 0) {
+            $messagem = "Arquivo gerado com sucesso";
+        } else {
+            $messagem = "Não foram encontradas cobranças para gerar o arquivo";
+        }
+
+        $this->session->set_flashdata('message', $messagem);
+        redirect(base_url() . "ambulatorio/guia/relatoriosicovoptante");
+    }
+
+    function downloadTXToptante($nome_arquivo) {
+
+        $arquivo = file_get_contents("./upload/SICOVoptante/$nome_arquivo");
+        header('Content-type: text/plain');
+        header('Content-Length: ' . strlen($arquivo));
+        header("Content-Disposition: attachment; filename=$nome_arquivo");
+        echo $arquivo;
+    }
+
+    function editarnumerocontrato($paciente_contrato_id) {
+
+        $data['contrato'] = $this->guia->listarcontrato($paciente_contrato_id);
+        $this->loadView('ambulatorio/contrato-form', $data);
+    }
+
+    function atualizarnumerocontrato($paciente_id, $paciente_contrato_id) {
+
+        $verificar = $this->guia->atualizarcontrato($paciente_id, $paciente_contrato_id);
+        $data_contrato = $_POST['data_contrato'];
+
+
+        if ($verificar != -1) {
+            $messagem = "Contrato alterado com sucesso!";
+        } else {
+
+            $messagem = "Erro ao alterar contrato.!";
+        }
+
+        $this->session->set_flashdata('message', $messagem);
+        redirect(base_url() . "ambulatorio/guia/listardependentes/$paciente_id/$paciente_contrato_id");
+
+
+//        else {
+//
+//            $messagem2 = "Não foi possível alterar numero, número já existente";
+//            $this->session->set_flashdata('message', $messagem2);
+//            redirect(base_url() . "ambulatorio/guia/editarnumerocontrato/$paciente_id");
+//        }
+    }
+
+    function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+        $data['contas'] = $this->guia->listarcontas();
+        $this->load->View('ambulatorio/alterarpagamento-form', $data);
+    }
+
+    function gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+
+
+        $pagamento_iugu_old = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $data_antiga = $pagamento_iugu_old[0]->data;
+        $observacao = $pagamento_iugu_old[0]->observacao;
+
+        $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
+
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        if ($key != '') {
+            $cliente = $this->paciente->listardados($paciente_id);
+//            $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+            $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+            $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+            $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+
+            $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+            $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
+            $data_nova = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['data'])));
+            $data = date('d/m/Y', strtotime($pagamento[0]->data));
+            if (strtotime($data_nova) > strtotime($data_antiga) && isset($_POST['juros'])) {
+                $data1 = new DateTime($data_nova);
+                $data2 = new DateTime($data_antiga);
+                $intervalo = $data1->diff($data2);
+                $dias = $intervalo->days;
+                $juros_dia = ($pagamento[0]->juros / 100) * $pagamento[0]->valor;
+
+                $multa_atraso = $pagamento[0]->multa_atraso;
+
+                $valor = round($pagamento[0]->valor + $multa_atraso + ($juros_dia * $dias), 2) * 100;
+            } else {
+                $valor = $pagamento[0]->valor * 100;
+            }
+            $valor_gravar = $valor / 100;
+
+//            echo '<pre>';
+//            var_dump($data_nova);
+//            var_dump($data_antiga);
+//            var_dump($juros_dia);
+//            var_dump($_POST['juros']);
+//            var_dump($valor_gravar);
+//            die;
+            $observacao = $observacao . " Multa Atraso: " . number_format($multa_atraso, 2, ',', '.') . " Juros: "
+                    . number_format($juros_dia * $dias, 2, ',', '.') . " $dias Dias ";
+            $this->guia->gravarnovovalorparcela($paciente_contrato_parcelas_id, $valor_gravar, $observacao);
+            $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
+
+//            var_dump($pagamento_iugu);
+//            die;
+            $this->guia->cancelarpagamentoiugu($paciente_contrato_parcelas_id);
+            Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+            if ($pagamento_iugu[0]->invoice_id != '') {
+                $invoice = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+                $invoice->cancel();
+
+                $gerar = Iugu_Invoice::create(Array(
+                            "email" => $cliente[0]->cns,
+                            "due_date" => $data,
+                            "items" => Array(
+                                Array(
+                                    "description" => $description,
+                                    "quantity" => "1",
+                                    "price_cents" => $valor
+                                )
+                            ),
+                            "payer" => Array(
+                                "cpf_cnpj" => $cliente[0]->cpf,
+                                "name" => $cliente[0]->nome,
+                                "phone_prefix" => $prefixo,
+                                "phone" => $celular_s_prefixo,
+                                "email" => $cliente[0]->cns,
+                                "address" => Array(
+                                    "street" => $cliente[0]->logradouro,
+                                    "number" => $cliente[0]->numero,
+                                    "city" => $cliente[0]->cidade_desc,
+                                    "state" => $codigoUF,
+                                    "district" => $cliente[0]->bairro,
+                                    "country" => "Brasil",
+                                    "zip_code" => $cliente[0]->cep,
+                                    "complement" => $cliente[0]->complemento
+                                )
+                            )
+                ));
+
+                if (count($gerar["errors"]) > 0) {
+                    $mensagem = 'Erro ao gerar cobrança. Verifique as informações no cadastro do paciente';
+//            foreach ($gerar["errors"] as $item) {
+////                echo $item;
+//                
+//            }
+//                echo '<pre>';
+//                var_dump($gerar);
+//                die;
+                } else {
+
+                    $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
+                    $mensagem = 'Data alterada com sucesso';
+                }
+            }
+        }
+    }
+
+    function gravaralterarpagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+// chamando na propria tela  a função alterando a data 
+        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
+// chamando uma função existente confirmando o pagamento;
+        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id)) {
+            $mensagem = 'Sucesso ao confirmar pagamento';
+        } else {
+            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function alterarpagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
+        $data['consultas_avulsas_id'] = $consultas_avulsas_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
+        $data['contas'] = $this->guia->listarcontas();
+        $this->load->View('ambulatorio/alterarpagamentoavulsas-form', $data);
+    }
+
+    function gravaralterarpagamentoavulsas($consultas_avulsas_id, $paciente_id, $contrato_id) {
+        $this->guia->alterardatapagamentoavulsa($consultas_avulsas_id);
+        if ($this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id)) {
+            $mensagem = 'Sucesso ao confirmar pagamento';
+        } else {
+            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function importararquivoretorno() {
+
+        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/importararquivoretorno', $data);
+    }
+
+    function importararquivoretornoenviar() {
+        $chave_pasta = $this->session->userdata('empresa_id');
+
+        $nome = $_FILES['arquivo']['name'];
+        $nome_arq = $_FILES['arquivo'];
+
+
+
+        if (!is_dir("./upload/retornoimportados")) {
+            mkdir("./upload/retornoimportados");
+            $destino = "./upload/retornoimportados";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/retornoimportados/$chave_pasta")) {
+            mkdir("./upload/retornoimportados/$chave_pasta");
+            $destino = "./upload/retornoimportados/$chave_pasta";
+            chmod($destino, 0777);
+        }
+
+
+
+
+
+        $configuracao = array(
+            'upload_path' => './upload/retornoimportados/' . $chave_pasta . '',
+            'allowed_types' => 'txt',
+            'file_name' => $nome,
+            'max_size' => '0'
+        );
+
+        $this->load->library('upload');
+        $this->upload->initialize($configuracao);
+
+        if ($this->upload->do_upload('arquivo'))
+            $data['mensagem'] = 'Arquivo salvo com sucesso.';
+        else
+            $erro = $this->upload->display_errors();
+        $data['mensagem'] = 'Erro';
+
+
+
+
+        if (!is_dir("./upload/retornoimportados/todos")) {
+            mkdir("./upload/retornoimportados/todos");
+            $destino_todos = "./upload/retornoimportados/todos";
+            chmod($destino_todos, 0777);
+        }
+
+        if (!is_dir("./upload/retornoimportados/todos/$chave_pasta")) {
+            mkdir("./upload/retornoimportados/todos/$chave_pasta");
+            $destino_todos = "./upload/retornoimportados/todos/$chave_pasta";
+            chmod($destino_todos, 0777);
+        }
+
+
+        $configuracao2 = array(
+            'upload_path' => './upload/retornoimportados/todos/' . $chave_pasta . '',
+            'allowed_types' => 'txt',
+            'file_name' => $nome,
+            'max_size' => '0'
+        );
+
+
+        $this->upload->initialize($configuracao2);
+
+        if ($this->upload->do_upload('arquivo'))
+            $data['mensagem'] = 'Arquivo salvo com sucesso.';
+        else
+            $erro = $this->upload->display_errors();
+        $data['mensagem'] = 'Erro';
+
+
+
+        $this->session->set_flashdata('message', $data['mensagem']);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+    }
+
+    function lerarquivoretornoimportado($nome_arquivo = NULL) {
+
+        $chave_pasta = $this->session->userdata('empresa_id');
+
+
+        $arquivo6 = fopen('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+        // Lê o conteúdo do arquivo  
+        //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
+        while (!feof($arquivo6)) {
+            //Mostra uma linha do arquivo 
+            $linha = fgets($arquivo6, 1024);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+                //pegando uma coluna especifica com o substr
+                $paciente_id = substr($linha, 1, 25);
+                @$contador_parcelas{$paciente_id} ++;
+            }
+        }
+
+        fclose($arquivo6);
+
+
+
+        // Abre o Arquvio no Modo r (para leitura)
+        $arquivo = fopen('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+        // Lê o conteúdo do arquivo 
+        // 
+        //criando a tabela onde vai mostrar as informações
+        while (!feof($arquivo)) {
+            //Mostra uma linha do arquivo 
+            $linha = fgets($arquivo, 1024);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+                //pegando uma coluna especifica com o substr
+                $paciente_id = substr($linha, 1, 25);
+                //fazendo a consulta de acordo com o numero do paciente do arquivo 
+                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);
+                //aqui é para não ficar duplicando 
+//                if (@$verificar6{$data['lista_paciente'][0]->paciente_id} == 1) {
+//                } else {  
+                $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
+//                    @$verificar6{$data['lista_paciente'][0]->paciente_id}++;  
+//                }
+            }
+        }
+
+        fclose($arquivo);
+
+
+
+        if (!unlink('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '')) {
+            
+        }
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function downloadTXToptanteimportado($nome_arquivo = NULL) {
+        $chave_pasta = $this->session->userdata('empresa_id');
+        $arquivo = file_get_contents("./upload/retornoimportados/todos/$chave_pasta/$nome_arquivo");
+        header('Content-type: text/plain');
+        header('Content-Length: ' . strlen($arquivo));
+        header("Content-Disposition: attachment; filename=$nome_arquivo");
+        echo $arquivo;
+    }
+
+    function gerarpagamentoiuguempresacadastro($empresa_id = NULL, $contrato_id) {
+
+//        $retorno_parcelas = $this->paciente->listarparcelaspacienteempresacadastro($empresa_id);
+        $retorno_parcelas = $this->paciente->listarpagamentoscontratoiuguempresa($contrato_id);
+
+//        foreach ($retorno_parcelas as $item) {
+//        @$pagamento = $this->paciente->listarpagamentoscontratoparcelaiuguempresa($item->paciente_contrato_parcelas_id);
+
+        @$pagamento = $this->paciente->listarpagamentoscontratoiuguempresa($contrato_id);
+
+        @$valor += $pagamento[0]->valor;
+//        }
+
+
+        $valor = $valor * 100;
+
+//        echo "<pre>";
+//        print_r($retorno_parcelas);
+//        die;
+
+        $empresa1 = $this->paciente->listardadosempresa($empresa_id);
+
+//  echo "<pre>";
+//  print_r($empresa1);
+//        $celular = preg_replace('/[^\d]+/', '', $empresa[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 2, 50);
+        @$prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($empresa1[0]->codigo_ibge);
+//
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+//
+//        $pagamento = $this->paciente->listarpagamentoscontratoparcela($item->paciente_contrato_parcelas_id);
+//        
+//        
+//        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($item->paciente_contrato_parcelas_id);
+//        $valor = $pagamento[0]->valor * 100;
+        $data = date('d/m/Y', strtotime($pagamento[0]->data));
+////        var_dump($prefixo); 
+////        var_dump($celular_s_prefixo); 
+        $description = $empresa[0]->nome;
+////        echo '<pre>';
+        $cpfcnpj = str_replace('/', '', $empresa1[0]->cnpj);
+////        var_dump($cpfcnpj); 
+////        die;
+//
+        Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+////        die;
+//        //GERANDO A COBRANÇA
+//        if (count($pagamento_iugu) == 0) {
+//
+        $gerar = Iugu_Invoice::create(Array(
+                    "email" => $empresa1[0]->email,
+                    "due_date" => $data,
+                    "items" => Array(
+                        Array(
+                            "description" => $description,
+                            "quantity" => "1",
+                            "price_cents" => $valor
+                        )
+                    ),
+                    "payer" => Array(
+                        "cpf_cnpj" => $cpfcnpj,
+                        "name" => $empresa1[0]->nome,
+                        "phone_prefix" => @$prefixo,
+                        "phone" => $celular_s_prefixo,
+                        "email" => $empresa1[0]->email,
+                        "address" => Array(
+                            "street" => $empresa1[0]->logradouro,
+                            "number" => $empresa1[0]->numero,
+                            "city" => $empresa1[0]->municipio_id,
+                            "state" => $codigoUF,
+                            "district" => $empresa1[0]->bairro,
+                            "country" => "Brasil",
+                            "zip_code" => $empresa1[0]->cep,
+                            "complement" => $empresa1[0]->complemento
+                        )
+                    )
+        ));
+
+//        echo '<pre>';
+//        var_dump($gerar);
+//        die;
+        if (count($gerar["errors"]) > 0) {
+
+            $mensagem = 'Erro ao gerar pagamento: \n';
+//                   
+//                
+            foreach ($gerar["errors"] as $key => $item) {
+////                var_dump($item[0]);
+////                if(){
+////                    
+////                }
+//                    $mensagem .= $empresa1[0]->nome.'\n';
+
+                $mensagem = $mensagem . "$key $item[0]" . '\n';
+            }
+////                echo '<pre>';
+////                var_dump($gerar);
+////                die;
+        } else {
+//            echo "<pre>";
+//            print_r($retorno_parcelas);    
+//            foreach ($retorno_parcelas as $item) {
+            $gravar = $this->guia->gravarintegracaoiuguempresacadastro($gerar["secure_url"], $gerar["id"], $retorno_parcelas[0]->paciente_contrato_parcelas_id, $empresa_id);
+            $this->guia->pagamentoiuguempresa($retorno_parcelas[0]->paciente_contrato_parcelas_id, $empresa_id);
+//            }
+
+
+            $mensagem = 'Cobrança gerada com sucesso';
+        }
+//        } else {
+//            
+////            $mensagem = 'Cobrança já gerada';
+//            
+//        }
+//
+////        echo $mensagem;
+////        die;
+//        $this->session->set_flashdata('message', $mensagem);
+//        
+//        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
+//        
+
+        $this->session->set_flashdata('message', $mensagem);
+
+        redirect(base_url() . "cadastros/pacientes/novofuncionario/" . $empresa_id);
+
+
+//        $this->session->set_flashdata('message', $mensagem);
+//        
+//          redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
+    }
+
+    function excluirparcelacontratoempresa($paciente_id, $contrato_id, $parcela_id, $empresa_id = NULL) {
+
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+//        var_dump($pagamento_iugu);
+//        die;
+        if ($key != '' && count($pagamento_iugu) > 0) {
+            if ($pagamento_iugu[0]->invoice_id != '') {
+                Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+                $retorno = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+                $retorno->cancel();
+            }
+        }
+//        die('morreu');
+        $ambulatorio_guia_id = $this->guia->excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $mensagem = 'Erro ao excluir parcela';
+        } else {
+            $mensagem = 'Sucesso ao excluir parcela.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+        $this->session->set_flashdata('message', $mensagem);
+//        redirect(base_url() . "seguranca/operador/pesquisarrecepcao"); 
+        redirect(base_url() . "cadastros/pacientes/novofuncionario/" . $empresa_id);
+    }
+
+    function gerarpagamentoiuguempresa($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $empresa_id = NULL) {
+
+        $cliente = $this->paciente->listardados($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+        $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
+        $valor = $pagamento[0]->valor * 100;
+        $data = date('d/m/Y', strtotime($pagamento[0]->data));
+//        var_dump($prefixo); 
+//        var_dump($celular_s_prefixo); 
+        $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
+//        echo '<pre>';
+        $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
+//        var_dump($cpfcnpj); 
+//        die;
+
+        Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+//        die;
+        //GERANDO A COBRANÇA
+        if (count($pagamento_iugu) == 0) {
+
+            $gerar = Iugu_Invoice::create(Array(
+                        "email" => $cliente[0]->cns,
+                        "due_date" => $data,
+                        "items" => Array(
+                            Array(
+                                "description" => $description,
+                                "quantity" => "1",
+                                "price_cents" => $valor
+                            )
+                        ),
+                        "payer" => Array(
+                            "cpf_cnpj" => $cpfcnpj,
+                            "name" => $cliente[0]->nome,
+                            "phone_prefix" => $prefixo,
+                            "phone" => $celular_s_prefixo,
+                            "email" => $cliente[0]->cns,
+                            "address" => Array(
+                                "street" => $cliente[0]->logradouro,
+                                "number" => $cliente[0]->numero,
+                                "city" => $cliente[0]->cidade_desc,
+                                "state" => $codigoUF,
+                                "district" => $cliente[0]->bairro,
+                                "country" => "Brasil",
+                                "zip_code" => $cliente[0]->cep,
+                                "complement" => $cliente[0]->complemento
+                            )
+                        )
+            ));
+
+
+//        echo '<pre>';
+//        var_dump($gerar);
+//        die;
+
+            if (count($gerar["errors"]) > 0) {
+                $mensagem = 'Erro ao gerar pagamento: \n';
+                foreach ($gerar["errors"] as $key => $item) {
+//                var_dump($item[0]);
+//                if(){
+//                    
+//                }
+                    $mensagem = $mensagem . "$key $item[0]" . '\n';
+                }
+//                echo '<pre>';
+//                var_dump($gerar);
+//                die;
+            } else {
+
+                $gravar = $this->guia->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $paciente_contrato_parcelas_id);
+                $mensagem = 'Cobrança gerada com sucesso';
+            }
+        } else {
+            $mensagem = 'Cobrança já gerada';
+        }
+
+//        echo $mensagem;
+//        die;
+//        $this->session->set_flashdata('message', $mensagem);
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "cadastros/pacientes/novofuncionario/" . $empresa_id);
+    }
+
+    function novocontratocadastro($paciente_id, $empresa_id = NULL, $plano_id = NULL) {
+        $obj_paciente = new paciente_model($paciente_id);
+        $data['obj'] = $obj_paciente;
+        $data['planos'] = $this->formapagamento->listarforma();
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['paciente_id'] = $paciente_id;
+        $data['plano_id'] = @$plano_id;
+//        $plano_id = $data['paciente'][0]->plano_id;
+//        $data['forma_pagamento'] = $this->paciente->listaforma_pagamento($plano_id);
+//        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+        @$data['empresa_cadastro_id'] = @$empresa_id;
+
+        $this->load->View('ambulatorio/novocontratoempresa-form', $data);
+    }
+
+    function verarquivoimportado($nome_arquivo = NULL) {
+        $chave_pasta = $this->session->userdata('empresa_id');
+
+        $arquivo6 = fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+        // Lê o conteúdo do arquivo  
+        //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
+        while (!feof($arquivo6)) {
+            //Mostra uma linha do arquivo 
+            $linha = fgets($arquivo6, 1024);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+                //pegando uma coluna especifica com o substr
+                $paciente_id = substr($linha, 1, 25);
+                @$contador_parcelas{$paciente_id} ++;
+            }
+        }
+
+        fclose($arquivo6);
+
+//abrindo novamente
+        $arquivo2 = fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+        echo "<style>tr:nth-child(2n+2) {
+    background: #ecf0f1;
+}tr{
+font-family:arial;
+}
+table tr:hover td{
+	background-color:#2f3542;
+        
+ } 
+ 
+#naoachado{
+color:red;
+}
+
+table tr:hover  #naoachado{
+ color:white; 
+}
+
+#achado{
+color:green;
+}
+table tr:hover  #achado{
+ color:white; 
+}
+
+</style><meta charset='utf-8'>"
+        . "<table  border=1 cellspacing=0 cellpadding=2 bordercolor='666633' width=100%>  "
+        . "<tr><th>Matrícula</th><th>Nome</th><th>Quantidade de Parcelas Pagas</th></tr>";
+        @$teste = 1;
+        $totalparcelas = 0;
+        while (!feof($arquivo2)) {
+            //Mostra uma linha do arquivo 
+            $linha = fgets($arquivo2, 1024);
+
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+                //pegando uma coluna especifica com o substr
+                $paciente_id = substr($linha, 1, 25);
+//////////////////fazendo a consulta de acordo com o numero do paciente do arquivo
+                $data['lista_paciente2'] = $this->guia->listarpacienteimportadopagos($paciente_id);
+
+////////////////para não dublicar os pacientes achados
+
+                if (@$verificar2{$data['lista_paciente2'][0]->paciente_id} == 1) {
+                    
+                } else {
+                    if (@$data['lista_paciente2'][0]->paciente_id != "") {
+                        echo "<tr><td><b  id='achado' >" . @$data['lista_paciente2'][0]->paciente_id . "</b></td>"
+                        . "<td><b id='achado'  >" . @$data['lista_paciente2'][0]->paciente . "</b></td>"
+                        . "<td><b id='achado'  >" . @$contador_parcelas{$paciente_id} . " </b></td></tr>";
+
+                        @$verificar2{$data['lista_paciente2'][0]->paciente_id} ++;
+                        @$totalpacientes++;
+                        @$totalparcelas += @$contador_parcelas{$paciente_id};
+                    } else {
+                        
+                    }
+                }
+            }
+        }
+        echo " <tr><th colspan='2'>Quantidade de Pacientes:" . @$totalpacientes . "</th><th>Total Parcelas:" . @$totalparcelas . "</th></tr></table>";
+        // Fecha arquivo aberto
+        fclose($arquivo2);
+
+//abrindo novamente
+        $arquivo3 = fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+        echo " <meta charset='utf-8'>"
+        . "<table  border=1 cellspacing=0 cellpadding=2 bordercolor='666633' width=100%>  "
+        . " ";
+        while (!feof($arquivo3)) {
+            //Mostra uma linha do arquivo 
+            $linha = fgets($arquivo3, 1024);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+                //pegando uma coluna especifica com o substr
+                $paciente_id = substr($linha, 1, 25);
+                //fazendo a consulta de acordo com o numero do paciente do arquivo
+                $data['lista_paciente3'] = $this->guia->listarpacienteimportadopagos($paciente_id);
+
+                if (@$verificar3{$data['lista_paciente3'][0]->paciente_id} == 1) {
+                    
+                } else {
+                    if (@$data['lista_paciente3'][0]->paciente_id != "") {
+                        
+                    } else {
+                        echo "<tr><td><b  id='naoachado' style='' >" . @ $paciente_id = substr($linha, 1, 25) . "</b></td><td><b  id='naoachado' >Matrícula Não Encontrada</b></td></tr>";
+                    }
+                }
+            }
+        }
+        echo " </table>";
+        // Fecha arquivo aberto
+        fclose($arquivo3);
+    }
+
+    function cancelarparcela($paciente_id = NULL, $contrato_id = NULL, $paciente_contrato_parcelas_id = NULL) {
+
+
+        $this->guia->cancelarparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function excluircontratoempresaadmin($contrato_id) {
+
+        $ambulatorio_guia_id = $this->guia->excluircontratoempresaadmin($contrato_id);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function excluircontratoempresa($contrato_id) {
+//   
+
+        $ambulatorio_guia_id = $this->guia->excluircontratoempresa($contrato_id);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function ativarcontratoempresa($contrato_id) {
+//        var_dump($contrato_id); die;
+        $ambulatorio_guia_id = $this->guia->ativarcontratoempresa($contrato_id);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function listarpagamentosempresa($paciente_contrato_id = NULL, $empresa_cadastro_id = NULL) {
+
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontratoempresacontrato($paciente_contrato_id);
+        $data['empresa_cadastro_id'] = $empresa_cadastro_id;
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
+        $data['contrato_id'] = $paciente_contrato_id;
+        $this->loadView('ambulatorio/guiapagamentoempresacadastro-form', $data);
+    }
+
+    function alterardatapagamentoempresacadastro($contrato_id, $paciente_contrato_parcelas_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+//        var_dump($data['pagamento']); die;
+        $this->load->View('ambulatorio/alterardatapagamento-form', $data);
+    }
+
+    function excluirparcelacontratoempresacadastro($parcela_id, $empresa_cadastro_id) {
+
+
+
+
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
+
+
+        $empresa = $this->guia->listarempresa();
+        $key = $empresa[0]->iugu_token;
+
+//        var_dump($pagamento_iugu);
+//        die;
+        if ($key != '' && count($pagamento_iugu) > 0) {
+            if ($pagamento_iugu[0]->invoice_id != '') {
+                Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
+                $retorno = Iugu_Invoice::fetch($pagamento_iugu[0]->invoice_id);
+                $retorno->cancel();
+            }
+        }
+//        die('morreu');
+
+        $ambulatorio_guia_id = $this->guia->excluirparcelacontratoempresacadastro($parcela_id);
+
+//        echo  "<pre>";
+//         
+//        echo $parcela_id;
+//        print_r($pagamento_iugu);die;
+
+
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao excluir parcela';
+        } else {
+            $data['mensagem'] = 'Sucesso ao excluir parcela.';
+        }
+
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+//        $data['procedimento'] = $this->procedimento->listarprocedimentos();
+
+        redirect(base_url() . "ambulatorio/guia/listarpagamentosempresa/$contrato_id/$empresa_cadastro_id");
+    }
+
+    function listarimpressoescarteria($paciente_contrato_dependente_id) {
+
+        $data['impressoes'] = $this->guia->listarimpressoescarteira($paciente_contrato_dependente_id);
+        $this->load->View('ambulatorio/impressoescarteira', $data);
+    }
+
+    function alterarplano() {
+        $paciente_id = $_POST['paciente_id'];
+        @$empresa_cadastro_id = @$_POST['empresa_cadastro_id'];
+        $plano_id = $_POST['plano'];
+
+        $verificar = $this->guia->verificarempresaplano($empresa_cadastro_id, $plano_id);
+
+
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function cancelarparcelaempresa($paciente_contrato_parcelas_id = NULL) {
+        $this->guia->cancelarparcelaempresa($paciente_contrato_parcelas_id);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function confirmarpagamentoempresa($paciente_contrato_parcelas_id, $empresa_cadastro_id) {
+
+        $res = $this->guia->funcionariosempresa($empresa_cadastro_id);
+
+        foreach ($res as $item) {
+            $this->guia->confirmarparcelaverificadora($item->paciente_contrato_id);
+        }
+
+
+        if ($this->guia->confirmarpagamentoautomaticoiuguempresa($paciente_contrato_parcelas_id)) {
+            $mensagem = 'Sucesso ao confirmar pagamento';
+        } else {
+            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    public function gerarpagamentogerencianet($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+
+        $cliente = $this->paciente->listardados($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+        $email = $cliente[0]->cns;
+
+
+//        print_r($cliente);;
+
+        $empresa = $this->guia->listarempresa();
+        $empresa[0]->client_id;
+
+        $empresa[0]->client_secret;
+        
+
+        if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
+            $mensagem = "Client ID ou Client Secret não cadastradas.";
+            $this->session->set_flashdata('message', $mensagem);
+            redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+            return;
+        }
+
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelaGN($paciente_contrato_parcelas_id);
+        
+       
+
+        $data_vencimento = $pagamento[0]->data;
+        $paciente = $cliente[0]->nome;
+        $cpf = $cliente[0]->cpf;
+//        $cpf = "2121";
+//        echo "<pre>";
+//        print_r($pagamento);
+//        die;
+
+
+        if ($cliente[0]->celular != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        } elseif ($cliente[0]->telefone != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->telefone);
+        } else {
+            $telefone = "";
+        }
+
+        $nome_produto = "Parcela";
+        $quantidade = '1';
+        $valor = $pagamento[0]->valor * 100;
+
+
+        $data_nascimento = $cliente[0]->nascimento;
+
+        if ($telefone == "") {
+            $mensagem = "Erro, Telefone ou Celular do cliente não cadastrados.";
+        } elseif ($data_nascimento == "") {
+            $mensagem .= "Data de nascimento,";
+        } elseif ($cpf == "") {
+            $mensagem .= "Erro, CPF do cliente não cadastrado.";
+        } elseif ($paciente == "") {
+            $mensagem .= "Erro, Nome do paciente não cadastrado";
+        } elseif ($pagamento[0]->valor < 5 || $pagamento[0]->valor == "") {
+            $mensagem .= "Erro, Valor tem que ser Maior ou Igual a R$ 5,00";
+        } elseif (@$data_vencimento < date('Y-m-d')) {
+            $mensagem .= "Erro, Data de vencimento é inferior a data de hoje!";
+        } else {
+
+
+            $options = [
+                'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
+                'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+            $item_1 = [
+                'name' => 'Parcela', // nome do item, produto ou serviço
+                'amount' => 1, // quantidade
+                'value' => $valor, // valor (1000 = R$ 10,00) (Obs: É possível a criação de itens com valores negativos. Porém, o valor total da fatura deve ser superior ao valor mínimo para geração de transações.)
+            ];
+//        $item_2 = [
+//            'name' => 'Item 2', // nome do item, produto ou serviço
+//            'amount' => 2, // quantidade
+//            'value' => 500 // valor (2000 = R$ 20,00)
+//        ];
+
+            $items = [
+                $item_1
+            ];
+
+//        $metadata = ['notification_url' => ''];
+
+            $body = [
+                'items' => $items
+//                ,
+//            'metadata' => $metadata
+            ];
+
+            if ($pagamento[0]->charge_id == "" || $pagamento[0]->charge_id == 0 || $pagamento[0]->charge_id == null) {
+
+                try {
+                    $api = new Gerencianet($options);
+                    $charge = $api->createCharge([], $body);
+                    echo "<pre>";
+                    print_r($charge);
+                   
+                    $gravar = $this->guia->gravarintegracaogerencianet($charge['data']['charge_id'], $paciente_contrato_parcelas_id, $charge['data']['link'], $charge['data']['pdf']['charge'], $charge['data']['status']);
+                } catch (GerencianetException $e) {
+                    print_r($e->code);
+                    print_r($e->error);
+                    print_r($e->errorDescription); 
+                    $mensagem = "Erro, entre em contato com Suporte!";
+                } catch (Exception $e) {
+                    print_r($e->getMessage());
+                }
+            }
+
+
+            if ($pagamento[0]->charge_id == "" || $pagamento[0]->charge_id == 0 || $pagamento[0]->charge_id == null) {
+                $charge_id = $charge['data']['charge_id'];
+            } else {
+                $charge_id = $pagamento[0]->charge_id;
+            }
+
+
+            $params = [
+                'id' => $charge_id
+            ];
+
+            $customer = [
+                'name' => $paciente, // nome do cliente
+                'cpf' => $cpf, // cpf válido do cliente
+                'phone_number' => $telefone, // telefone do cliente
+                'birth' => $data_nascimento, // data de aniversario do cliente
+                'email' => $email
+            ];
+
+            $bankingBillet = [
+                'expire_at' => $data_vencimento, // data de vencimento do boleto (formato: YYYY-MM-DD)
+                'customer' => $customer
+            ];
+
+            $payment = [
+                'banking_billet' => $bankingBillet // forma de pagamento (banking_billet = boleto)
+            ];
+
+            $body = [
+                'payment' => $payment
+            ];
+
+
+            try {
+                $api = new Gerencianet($options);
+                $charge = $api->payCharge($params, $body);
+//                 echo "<pre>";
+//                 print_r($charge); 
+//                 die;
+                $mensagem = 'Cobrança gerada com sucesso!';
+                $this->guia->atualizarintegracaogerencianet($charge['data']['charge_id'], $paciente_contrato_parcelas_id, $charge['data']['link'], $charge['data']['pdf']['charge'], $charge['data']['status']);
+            } catch (GerencianetException $e) {
+                print_r($e->code);
+                print_r($e->error);
+                print_r($e->errorDescription);
+
+
+                if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
+                    $erro = ", Telefone inválido!";
+                } elseif ($e->errorDescription == ", Cpf (11111111111) inválido") {
+
+                    $erro = $e->errorDescription;
+                } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/email") {
+                    $erro = ", Email inválido!";
+                } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/cpf") {
+                    $erro = ", CPF inválido!";
+                } else {
+                    $erro = "";
+                }
+
+                $mensagem = "Erro" . @$erro;
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    public function reenviaremailgerencianet($paciente_id, $contrato_id, $charge_id) {
+        $cliente = $this->paciente->listardados($paciente_id);
+
+        $email = $cliente[0]->cns;
+
+
+        $empresa = $this->guia->listarempresa();
+        $empresa[0]->client_id;
+
+
+
+        if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
+            
+        } else {
+
+
+            $clientId = $empresa[0]->client_id; // insira seu Client_Id, conforme o ambiente (Des ou Prod)
+            $clientSecret = $empresa[0]->client_secret;
+            ; // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
+
+            $options = [
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+
+// $charge_id refere-se ao ID da transação ("charge_id")
+            $params = [
+                'id' => $charge_id
+            ];
+
+            $body = [
+                'email' => $email
+            ];
+
+            try {
+                $api = new Gerencianet($options);
+                $response = $api->resendBillet($params, $body);
+
+                $mensagem = "Sucesso ao Re-enviar Email Gerencianet";
+            } catch (GerencianetException $e) {
+                print_r($e->code);
+                print_r($e->error);
+                print_r($e->errorDescription);
+
+                $mensagem = "Erro ao Re-enviar Email Gerencianet";
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function gerartodosgerencianet($paciente_id, $contrato_id) {
+
+        $cliente = $this->paciente->listardados($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+        $email = $cliente[0]->cns;
+
+
+        $empresa = $this->guia->listarempresa();
+
+
+        $empresa[0]->client_id;
+
+        $empresa[0]->client_secret;
+
+        if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
+            $mensagem = "Client ID ou Client Secret não cadastradas.";
+            $this->session->set_flashdata('message', $mensagem);
+            redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+            return;
+        }
+
+
+        $paciente = $cliente[0]->nome;
+        $cpf = $cliente[0]->cpf;
+
+
+        if ($cliente[0]->celular != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        } elseif ($cliente[0]->telefone != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->telefone);
+        } else {
+            $telefone = "";
+        }
+
+
+
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelagerencianettodos($contrato_id);
+
+//        echo "<pre>";
+//        print_r($pagamento);die;
+
+        $data_nascimento = $cliente[0]->nascimento;
+
+        if ($telefone == "") {
+            $mensagem = "Erro, Telefone ou Celular do cliente não cadastrados.";
+        } elseif ($data_nascimento == "") {
+            $mensagem .= "Data de nascimento,";
+        } elseif ($cpf == "") {
+            $mensagem .= "Erro, CPF do cliente não cadastrado.";
+        } elseif ($paciente == "") {
+            $mensagem .= "Erro, Nome do paciente não cadastrado";
+        } else {
+
+            foreach ($pagamento as $value) {
+
+                $data_vencimento = $value->data;
+
+                if ($value->valor < 5 || $value->valor == "") {
+                    $mensagem = "Erro, Valor tem que ser Maior ou Igual a R$ 5,00";
+                } elseif ($data_vencimento < date('Y-m-d')) {
+                    $mensagem = "Erro, Data de vencimento é inferior a data de hoje!";
+                } else {
+                    $nome_produto = "Parcela";
+                    $quantidade = '1';
+                    $valor = $value->valor * 100;
+
+                    $options = [
+                        'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
+                        'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
+                        'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                    ];
+                    $item_1 = [
+                        'name' => 'Parcela', // nome do item, produto ou serviço
+                        'amount' => 1, // quantidade
+                        'value' => $valor, // valor (1000 = R$ 10,00) (Obs: É possível a criação de itens com valores negativos. Porém, o valor total da fatura deve ser superior ao valor mínimo para geração de transações.)
+                    ];
+//        $item_2 = [
+//            'name' => 'Item 2', // nome do item, produto ou serviço
+//            'amount' => 2, // quantidade
+//            'value' => 500 // valor (2000 = R$ 20,00)
+//        ];
+
+                    $items = [
+                        $item_1
+                    ];
+
+//        $metadata = ['notification_url' => ''];
+
+                    $body = [
+                        'items' => $items
+//                ,
+//            'metadata' => $metadata
+                    ];
+
+                    if ($value->charge_id == "" || $value->charge_id == 0 || $value->charge_id == null) {
+
+                        try {
+                            $api = new Gerencianet($options);
+                            $charge = $api->createCharge([], $body);
+                            echo "<pre>";
+                            print_r($charge);
+
+                            $gravar = $this->guia->gravarintegracaogerencianet($charge['data']['charge_id'], $value->paciente_contrato_parcelas_id);
+                        } catch (GerencianetException $e) {
+                            print_r($e->code);
+                            print_r($e->error);
+                            print_r($e->errorDescription);
+                            $mensagem = "Erro, entre em contato com Suporte!";
+                        } catch (Exception $e) {
+                            print_r($e->getMessage());
+                        }
+                    }
+                    if ($value->charge_id == "" || $value->charge_id == 0 || $value->charge_id == null) {
+                        $charge_id = $charge['data']['charge_id'];
+                    } else {
+                        $charge_id = $value->charge_id;
+                    }
+
+                    $params = [
+                        'id' => $charge_id
+                    ];
+
+
+                    $customer = [
+                        'name' => $paciente, // nome do cliente
+                        'cpf' => $cpf, // cpf válido do cliente
+                        'phone_number' => $telefone, // telefone do cliente
+//                        'birth' => $data_nascimento, // data de aniversario do cliente
+                        'email' => $email
+                    ];
+
+                    $bankingBillet = [
+                        'expire_at' => $data_vencimento, // data de vencimento do boleto (formato: YYYY-MM-DD)
+                        'customer' => $customer
+                    ];
+
+                    $payment = [
+                        'banking_billet' => $bankingBillet // forma de pagamento (banking_billet = boleto)
+                    ];
+
+                    $body = [
+                        'payment' => $payment
+                    ];
+
+                    try {
+                        $api = new Gerencianet($options);
+                        $charge = $api->payCharge($params, $body);
+//                 echo "<pre>";
+//                 print_r($charge); die;
+                        $gravar = $this->guia->atualizarintegracaogerencianet($charge['data']['charge_id'], $value->paciente_contrato_parcelas_id, $charge['data']['link'], $charge['data']['pdf']['charge']);
+                        $mensagem = 'Cobrança gerada com sucesso';
+                    } catch (GerencianetException $e) {
+//                        print_r($e->code);
+//                        print_r($e->error);
+                        print_r($e->errorDescription);
+
+                        if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
+                            $erro = ", Telefone inválido!";
+                        } elseif ($e->errorDescription == ", Cpf (11111111111) inválido") {
+
+                            $erro = $e->errorDescription;
+                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/email") {
+                            $erro = ", Email inválido!";
+                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/cpf") {
+                            $erro = ", CPF inválido!";
+                        } else {
+                            $erro = "";
+                        }
+
+                        $mensagem = "Erro" . @$erro;
+
+
+//                        die;
+                    } catch (Exception $e) {
+                        print_r($e->getMessage());
+                    }
+                }
+            }
+        }
+
+//        echo '<pre>';
+//        die;
+        //GERANDO A COBRANÇA
+//        echo '<pre>';
+//        var_dump($gerar);
+//        die;
+//        echo $mensagem;
+//        die;
+//        $this->session->set_flashdata('message', $mensagem);
+        $this->session->set_flashdata('message', $mensagem);
+//        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    function gerarpagamentogerencianetconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id, $tipo = NULL) {
+
+        $cliente = $this->paciente->listardados($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+        $email = $cliente[0]->cns;
+
+
+//        print_r($cliente);;
+
+        $empresa = $this->guia->listarempresa();
+        $empresa[0]->client_id;
+
+        $empresa[0]->client_secret;
+
+        if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
+            $mensagem = "Client ID ou Client Secret não cadastradas.";
+            $this->session->set_flashdata('message', $mensagem);
+            redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+            return;
+        }
+
+        $pagamento = $this->paciente->listarpagamentoscontratoconsultaavulsaGN($consultas_avulsas_id);
+
+        $data_vencimento = $pagamento[0]->data;
+        $paciente = $cliente[0]->nome;
+        $cpf = $cliente[0]->cpf;
+
+//        echo "<pre>";
+//        print_r($pagamento);die;
+
+
+        if ($cliente[0]->celular != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        } elseif ($cliente[0]->telefone != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->telefone);
+        } else {
+            $telefone = "";
+        }
+
+        $nome_produto = "Parcela";
+        $quantidade = '1';
+        $valor = $pagamento[0]->valor * 100;
+
+        $data_nascimento = $cliente[0]->nascimento;
+
+        if ($telefone == "") {
+            $mensagem = "Erro, Telefone ou Celular do cliente não cadastrados.";
+        } elseif ($data_nascimento == "") {
+            $mensagem .= "Data de nascimento,";
+        } elseif ($cpf == "") {
+            $mensagem .= "Erro, CPF do cliente não cadastrado.";
+        } elseif ($paciente == "") {
+            $mensagem .= "Erro, Nome do paciente não cadastrado";
+        } elseif ($pagamento[0]->valor < 5 || $pagamento[0]->valor == "") {
+            $mensagem .= "Erro, Valor tem que ser Maior ou Igual a R$ 5,00";
+        } elseif (@$data_vencimento < date('Y-m-d')) {
+            $mensagem .= "Erro, Data de vencimento é inferior a data de hoje!";
+        } else {
+
+
+            $options = [
+                'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
+                'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+            $item_1 = [
+                'name' => 'Parcela', // nome do item, produto ou serviço
+                'amount' => 1, // quantidade
+                'value' => $valor, // valor (1000 = R$ 10,00) (Obs: É possível a criação de itens com valores negativos. Porém, o valor total da fatura deve ser superior ao valor mínimo para geração de transações.)
+            ];
+//        $item_2 = [
+//            'name' => 'Item 2', // nome do item, produto ou serviço
+//            'amount' => 2, // quantidade
+//            'value' => 500 // valor (2000 = R$ 20,00)
+//        ];
+
+            $items = [
+                $item_1
+            ];
+
+//        $metadata = ['notification_url' => ''];
+
+            $body = [
+                'items' => $items
+//                ,
+//            'metadata' => $metadata
+            ];
+
+            if ($pagamento[0]->charge_id_GN == "" || $pagamento[0]->charge_id_GN == 0 || $pagamento[0]->charge_id_GN == null) {
+
+                try {
+                    $api = new Gerencianet($options);
+                    $charge = $api->createCharge([], $body);
+                    echo "<pre>";
+                    print_r($charge);
+
+
+                    $gravar = $this->guia->gravarintegracaogerencianetconsultaavulsaalterardata($charge['data']['charge_id'], $consultas_avulsas_id, $charge['data']['link'], $charge['data']['pdf']['charge'], $charge['data']['status']);
+                } catch (GerencianetException $e) {
+                    print_r($e->code);
+                    print_r($e->error);
+                    print_r($e->errorDescription);
+                    $mensagem = "Erro, entre em contato com Suporte!";
+                } catch (Exception $e) {
+                    print_r($e->getMessage());
+                }
+            }
+
+
+            if ($pagamento[0]->charge_id_GN == "" || $pagamento[0]->charge_id_GN == 0 || $pagamento[0]->charge_id_GN == null) {
+                $charge_id = $charge['data']['charge_id'];
+            } else {
+                $charge_id = $pagamento[0]->charge_id_GN;
+            }
+
+
+            $params = [
+                'id' => $charge_id
+            ];
+
+            $customer = [
+                'name' => $paciente, // nome do cliente
+                'cpf' => $cpf, // cpf válido do cliente
+                'phone_number' => $telefone, // telefone do cliente
+                'birth' => $data_nascimento, // data de aniversario do cliente
+                'email' => $email
+            ];
+
+            $bankingBillet = [
+                'expire_at' => $data_vencimento, // data de vencimento do boleto (formato: YYYY-MM-DD)
+                'customer' => $customer
+            ];
+
+            $payment = [
+                'banking_billet' => $bankingBillet // forma de pagamento (banking_billet = boleto)
+            ];
+
+            $body = [
+                'payment' => $payment
+            ];
+
+            try {
+                $api = new Gerencianet($options);
+                $charge = $api->payCharge($params, $body);
+                echo "<pre>";
+                print_r($charge);
+
+                $mensagem = 'Cobrança gerada com sucesso!';
+                echo$charge['data']['charge_id'];
+                $this->guia->gravarintegracaogerencianetconsultaavulsaalterardata($charge['data']['charge_id'], $consultas_avulsas_id, $charge['data']['link'], $charge['data']['pdf']['charge'], $charge['data']['status']);
+//                die;
+            } catch (GerencianetException $e) {
+                print_r($e->code);
+                print_r($e->error);
+                print_r($e->errorDescription);
+
+
+                if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
+                    $erro = ", Telefone inválido!";
+                } elseif ($e->errorDescription == ", Cpf (11111111111) inválido") {
+
+                    $erro = $e->errorDescription;
+                } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/email") {
+                    $erro = ", Email inválido!";
+                } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/cpf") {
+                    $erro = ", CPF inválido!";
+                } else {
+                    $erro = "";
+                }
+
+                $mensagem = "Erro" . @$erro;
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
 
 }

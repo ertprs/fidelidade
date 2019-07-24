@@ -1,7 +1,8 @@
 
 <div class="content"> <!-- Inicio da DIV content -->
     <table>
-        <tr>
+        <tr> 
+ <? if ($this->session->userdata('perfil_id') == 1): ?>
             <td>
                 <div class="bt_link_new">
                     <a href="<?php echo base_url() ?>cadastros/caixa/novasaida">
@@ -10,6 +11,7 @@
                 </div>
 
             </td>
+       
             <td>
                 <div class="bt_link_new">
                     <a href="<?php echo base_url() ?>cadastros/caixa/transferencia">
@@ -18,10 +20,9 @@
                 </div>
 
             </td>
+                 <?endif;?>
         </tr>
-    </table>
-
-
+    </table> 
     <?
     $saldo = $this->caixa->saldo();
     $empresa = $this->caixa->empresa();
@@ -142,8 +143,9 @@
                     ?>
                     <tbody>
                         <?php
+                        $data['permissao'] = $this->empresa->listarpermissoes();
                         $totaldalista = 0;
-                        $lista = $this->caixa->listarsaida($_GET)->orderby('data desc')->limit($limit, $pagina)->get()->result();
+                        $lista = $this->caixa->listarsaida($_GET)->orderby('data desc')->orderby('razao_social')->limit($limit, $pagina)->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
@@ -158,16 +160,24 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->conta; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->observacao; ?></td>
 
-
-                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/caixa/carregar/<?= $item->saidas_id ?>">Editar</a></div>
-                                </td>
+                                <? if ($this->session->userdata('perfil_id') == 1): ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
+                                            <a href="<?= base_url() ?>cadastros/caixa/carregar/<?= $item->saidas_id ?>">Editar</a></div>
+                                    </td>
+                                <? endif; ?>
+                                    
+                                    
+                                <? if ($this->session->userdata('perfil_id') == 1 || $data['permissao'][0]->excluir_entrada_saida == 't'): ?>      
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/caixa/excluirsaida/<?= $item->saidas_id ?>">Excluir</a></div>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/caixa/anexarimagemsaida/<?= $item->saidas_id ?>">Arquivos</a></div>
-                                </td>
+                                   <? endif; ?>
+                                
+                                <? if ($this->session->userdata('perfil_id') == 1): ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                                            <a href="<?= base_url() ?>cadastros/caixa/anexarimagemsaida/<?= $item->saidas_id ?>">Arquivos</a></div>
+                                    </td>
+                                <? endif; ?>
                             </tr>
 
                         </tbody>

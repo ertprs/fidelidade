@@ -87,6 +87,22 @@ class Operador_model extends BaseModel {
         }
         return $this->db;
     }
+    function listarRepresentanteComercial($args = array()) {
+        $this->db->from('tb_operador')
+                ->join('tb_perfil', 'tb_perfil.perfil_id = tb_operador.perfil_id', 'left')
+                ->select('"tb_operador".*, tb_perfil.nome as nomeperfil');
+        $this->db->where('tb_operador.ativo', "t");
+        $this->db->where('tb_operador.perfil_id', 6);
+
+        if ($args) {
+            if (isset($args['nome']) && strlen($args['nome']) > 0) {
+                // $this->db->like('tb_operador.nome', $args['nome'], 'left');
+                $this->db->where('tb_operador.nome ilike', "%" . $args['nome'] . "%");
+                $this->db->orwhere('tb_operador.usuario ilike', "%" . $args['nome'] . "%");
+            }
+        }
+        return $this->db;
+    }
 
     function listarmedicosolicitante($args = array()) {
         $this->db->select('operador_id, nome, conselho');
@@ -135,6 +151,28 @@ class Operador_model extends BaseModel {
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_ambulatorio_gerente_operador');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+            else
+                $estoque_menu_produtos_id = $this->db->insert_id();
+
+            return $estoque_menu_produtos_id;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravaroperadorRepresentanteGerente($operador_id) {
+        try {
+            /* inicia o mapeamento no banco */
+            $this->db->set('gerente_id', $_POST['gerente_id']);
+            $this->db->set('representante_id', $operador_id);
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_ambulatorio_representante_operador');
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
@@ -202,6 +240,22 @@ class Operador_model extends BaseModel {
             return 0;
     }
 
+    function excluirRepresentanteGerente($ambulatorio_representante_operador_id) {
+
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->set('ativo', 'f');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->where('ambulatorio_representante_operador_id', $ambulatorio_representante_operador_id);
+        $this->db->update('tb_ambulatorio_representante_operador');
+        $erro = $this->db->_error_message();
+        if (trim($erro) != "") // erro de banco
+            return -1;
+        else
+            return 0;
+    }
+
     function excluiroperadorconvenioprocedimento($convenio_operador_procedimento_id) {
 
         $horario = date("Y-m-d H:i:s");
@@ -251,6 +305,17 @@ class Operador_model extends BaseModel {
         return $return->result();
     }
 
+    function listarOperadorRepresentanteGerente() {
+        $this->db->select('o.gerente_id');
+        $this->db->from('tb_ambulatorio_representante_operador o');
+//        $this->db->join('tb_perfil p', 'p.perfil_id = o.perfil_id');
+        $this->db->where('o.ativo', 't');
+        $this->db->where('o.gerente_id', $_POST["gerente_id"]);
+//        $this->db->where('o.gerente_id !=', $_POST["txtoperador_id"]);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarvendedoroperador($operador_id) {
         $this->db->select('o.operador_id,
                                o.usuario,
@@ -294,6 +359,32 @@ class Operador_model extends BaseModel {
         $this->db->join('tb_perfil p', 'p.perfil_id = o.perfil_id');
         $this->db->where('o.ativo', 't');
         $this->db->where('o.perfil_id', 4);
+         $this->db->orderby("o.nome");
+        
+//        $this->db->where('o.operador_id',$operador_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listargerenteRepresentante($operador_id) {
+        $this->db->select('o.operador_id,
+                               o.usuario,
+                               o.perfil_id,
+                               o.nome,
+                               o.credor_devedor_id,
+                               o.ir,
+                               o.pis,
+                               o.cofins,
+                               o.conta_id,
+                               o.tipo_id,
+                               o.csll,
+                               o.iss,
+                               o.valor_base,
+                               o.nome as operador');
+        $this->db->from('tb_operador o');
+        $this->db->join('tb_perfil p', 'p.perfil_id = o.perfil_id');
+        $this->db->where('o.ativo', 't');
+        $this->db->where('o.perfil_id', 5);
 //        $this->db->where('o.operador_id',$operador_id);
         $return = $this->db->get();
         return $return->result();
@@ -323,6 +414,30 @@ class Operador_model extends BaseModel {
         return $return->result();
     }
 
+    function listarRepresentantevendasrelatorio() {
+        $this->db->select('o.operador_id,
+                               o.usuario,
+                               o.perfil_id,
+                               o.nome,
+                               o.credor_devedor_id,
+                               o.ir,
+                               o.pis,
+                               o.cofins,
+                               o.conta_id,
+                               o.tipo_id,
+                               o.csll,
+                               o.iss,
+                               o.valor_base,
+                               o.nome as operador');
+        $this->db->from('tb_operador o');
+        $this->db->join('tb_perfil p', 'p.perfil_id = o.perfil_id');
+        $this->db->where('o.ativo', 't');
+        $this->db->where('o.perfil_id', 6);
+//        $this->db->where('o.operador_id',$operador_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarconveniooperador($operador_id) {
         $this->db->select('co.convenio_id,
                             c.nome,
@@ -345,6 +460,20 @@ class Operador_model extends BaseModel {
         $this->db->from('tb_ambulatorio_gerente_operador co');
         $this->db->join('tb_operador o', 'co.operador_id = o.operador_id', 'left');
         $this->db->where('co.gerente_id', $operador_id);
+        $this->db->where('co.ativo', 't');
+        $this->db->orderby("o.nome");
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarRepresentanteGerente($operador_id) {
+        $this->db->select('co.gerente_id,
+                            o.nome,
+                            co.gerente_id,
+                            co.ambulatorio_representante_operador_id');
+        $this->db->from('tb_ambulatorio_representante_operador co');
+        $this->db->join('tb_operador o', 'co.gerente_id = o.operador_id', 'left');
+        $this->db->where('co.representante_id', $operador_id);
         $this->db->where('co.ativo', 't');
         $this->db->orderby("o.nome");
         $return = $this->db->get();

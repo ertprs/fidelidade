@@ -22,6 +22,7 @@ class Verificar extends Controller {
         $this->load->model('cadastro/grupoconvenio_model', 'grupoconvenio');
         $this->load->model('seguranca/operador_model', 'operador_m');
         $this->load->model('ambulatorio/GExtenso', 'GExtenso');
+        $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -32,25 +33,39 @@ class Verificar extends Controller {
         redirect(base_url() . "verificar/verificarcpf");
     }
 
-    function verificarcpf($data = null) {
+    function verificarcpf($data = null, $paciente_nome_titular = null, $listadependentes = NULL) {
 
-        $this->carregarView($data);
+        $this->carregarView($data, $paciente_nome_titular, $listadependentes);
     }
 
-    private function carregarView($param = null, $view = null) {
+    private function carregarView($param = null, $paciente_nome_titular = NULL, $listadependentes = NULL, $view = null) {
+
+        @$listarempresalogada = $this->empresa->listarempresalogada();
+
         if (!isset($param)) {
             $data['mensagem'] = '';
         } else {
             if ($param == 'true') {
-                $data['mensagem'] = 'Carência liberada';
+                for($i = 0; $i < 3 ; $i++){
+                $data['mensagem'] = 'Carência liberada.<br>Titular:<b title="' . $paciente_nome_titular . '">' . mb_strimwidth($paciente_nome_titular, 0, 37, "...") . "</b><br>";
+              }
+                foreach ($listadependentes as $dependente) {
+
+                    if ($paciente_nome_titular != $dependente->nome) {
+
+                        $data['mensagem'] .= 'Dependente: <b title="' . $dependente->nome . '" >' . mb_strimwidth($dependente->nome, 0, 32, "...") . "</b><br>";
+                    }
+                }
+               
             } elseif ($param == 'false') {
-                $data['mensagem'] = 'Carência não-liberada';
+                $data['mensagem'] = 'Carência não-liberada ';
             } elseif ($param == 'pending') {
-                $data['mensagem'] = 'Cliente com pendências';
-            }else{
-                $data['mensagem'] = 'CPF nao encontrado';
+                $data['mensagem'] = 'Pendência<br>Favor verificar junto a empresa <br>' . @$listarempresalogada[0]->nome;
+            } else {
+                $data['mensagem'] = 'Cliente não Cadastrado<br>Favor verificar junto a empresa <br>' . @$listarempresalogada[0]->nome;
             }
         }
+
 //        $data['empresa'] = $this->login->listar();
         $this->load->view('verificarcpf', $data);
     }
@@ -58,20 +73,37 @@ class Verificar extends Controller {
     function validarcpf() {
         header('Access-Control-Allow-Origin: *');
 
+        if (@$_POST['cpf'] == "") {
+            $cpf = "";
+        } else {
+            $cpf = @$_POST['cpf'];
+        }
 
-        $cpf = $_POST['cpf'];
-        $numero_consultas_aut = 1;
 
+        if (@$_POST['paciente_id'] == "") {
+            $paciente_id = "";
+        } else {
+            $paciente_id = @$_POST['paciente_id'];
+        }
+        
+        
+       if (@$_POST['nome'] == "") {
+            $nome = "";
+        
 
-//        var_dump($grupo); die;
-
-
-        $data = date("Y-m-d");
-
-        $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+        $numero_consultas_aut = 1; 
+//        var_dump($grupo); die; 
+        $data = date("Y-m-d"); 
+        $paciente_informacoes = $this->guia->listarpacientecpf($cpf, $paciente_id,$nome); 
+        $listadependentes = $this->paciente->listardependentescontrato(@$paciente_informacoes[0]->paciente_contrato_id);
+    
+        
+        
         if (count($paciente_informacoes) > 0) {
-
             $paciente_id = $paciente_informacoes[0]->paciente_id;
+            @$paciente_nome_titular = $paciente_informacoes[0]->nome;
+
+
 //        var_dump($paciente_informacoes); die;
 //        $paciente_informacoes = $this->paciente_m->listardados($_POST['txtNomeid']);
             if ($paciente_informacoes[0]->situacao == 'Dependente') {
@@ -83,7 +115,7 @@ class Verificar extends Controller {
             if ($dependente) {
                 $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
 //                $paciente_id = $retorno[0]->paciente_id;
-                $paciente_titular_id = $retorno[0]->paciente_id;
+                @$paciente_titular_id = $retorno[0]->paciente_id;
 //            $paciente_dependente_id = $paciente_informacoes[0]->paciente_id;
             } else {
 //            $paciente_id = $_POST['txtNomeid'];
@@ -94,52 +126,62 @@ class Verificar extends Controller {
             $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id); // Traz as paarcelas que ja estão pagas
             $parcelasPrevistas = $this->guia->listarparcelaspacienteprevistas($paciente_titular_id); // Traz as parcelas anteriores a data atual
 
-            if (count($parcelas) >= count($parcelasPrevistas)) { // Verifica se as parcelas estão em dia
-                $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
-                $grupo = 'CONSULTA';
 
-                $listaratendimento = $this->guia->listaratendimentoparceiro($paciente_titular_id, $grupo);
+            $parcelas_nao_paga = $this->guia->listarparcelaspacientetotal($paciente_titular_id);
+            $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id);
+            $quantidade_parcelas_pagas = $this->guia->listarparcelaspagas($paciente_titular_id);
+           //verificando se tem parcelas não pagas  com o $parcelas_nao_paga, depois verifica a quantidade de parcelas que esse paciente tem, depois verifica se a quantidade de parcelas pagas é igual a quantidade de parcelas que o paciente posssui.
+            if (count($parcelas_nao_paga) == 0 && count($quantidade_parcelas) > 0 && count($quantidade_parcelas_pagas) == count($quantidade_parcelas)) {
+             //caso entre aqui ele está liberado;
+                $this->verificarcpf('true', $paciente_nome_titular, $listadependentes);
+                
+            } else {
+
+                if (count($parcelas) >= count($parcelasPrevistas)) { // Verifica se as parcelas estão em dia
+                    $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
+                    $grupo = 'CONSULTA';
+
+                    $listaratendimento = $this->guia->listaratendimentoparceiro($paciente_titular_id, $grupo);
 //                $listaragendamentocriado = array();
+                    // So quem pode usar da carencia são procedimentos do grupo consulta.
+                    $carencia_exame = 0; /* $carencia[0]->carencia_exame; */
+                    $carencia_exame_mensal = 0; /* $carencia[0]->carencia_exame_mensal; */
+                    $carencia_especialidade = 0; /* $carencia[0]->carencia_especialidade; */
+                    $carencia_especialidade_mensal = 0; /* $carencia[0]->carencia_especialidade_mensal; */
+                    @$carencia_consulta = $carencia[0]->carencia_consulta;
+                    @$carencia_consulta_mensal = $carencia[0]->carencia_consulta_mensal;
 
-                // So quem pode usar da carencia são procedimentos do grupo consulta.
-                $carencia_exame = 0; /* $carencia[0]->carencia_exame; */
-                $carencia_exame_mensal = 0; /* $carencia[0]->carencia_exame_mensal; */
-                $carencia_especialidade = 0; /* $carencia[0]->carencia_especialidade; */
-                $carencia_especialidade_mensal = 0; /* $carencia[0]->carencia_especialidade_mensal; */
-                $carencia_consulta = $carencia[0]->carencia_consulta;
-                $carencia_consulta_mensal = $carencia[0]->carencia_consulta_mensal;
-
-                // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
-                if ($grupo == 'EXAME') {
-                    $carencia = (int) $carencia_exame;
-                    $carencia_mensal = $carencia_exame_mensal;
-                } elseif ($grupo == 'CONSULTA') {
-                    $carencia = (int) $carencia_consulta;
-                    $carencia_mensal = $carencia_consulta_mensal;
-                } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
-                    $carencia = (int) $carencia_especialidade;
-                    $carencia_mensal = $carencia_especialidade_mensal;
-                }
-
-                //            var_dump($carencia_mensal); die;
-                $parcelas_mensal = $this->guia->listarparcelaspacientemensal($paciente_titular_id);
-                if ($carencia_mensal == 't') {
-                    $listaratendimentomensal = $this->guia->listaratendimentoparceiromensal($paciente_titular_id, $grupo);
-                    //            var_dump($listaratendimentomensal);
-                    //            die;
-
-                    if (count($listaratendimentomensal) == 0 && count($parcelas_mensal) > 0) {
-                        $carencia_mensal_liberada = 't';
-                    } else {
-                        $carencia_mensal_liberada = 'f';
+                    // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
+                    if ($grupo == 'EXAME') {
+                        $carencia = (int) $carencia_exame;
+                        $carencia_mensal = $carencia_exame_mensal;
+                    } elseif ($grupo == 'CONSULTA') {
+                        $carencia = (int) $carencia_consulta;
+                        $carencia_mensal = $carencia_consulta_mensal;
+                    } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
+                        $carencia = (int) $carencia_especialidade;
+                        $carencia_mensal = $carencia_especialidade_mensal;
                     }
-                }
-                $dias_parcela = 30 * count($parcelas);
-                $dias_atendimento = $carencia * count($listaratendimento);
-                $carencia_necessaria = $carencia * $numero_consultas_aut;
-                // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
-                // Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
-                // 
+
+                    //            var_dump($carencia_mensal); die;
+                    $parcelas_mensal = $this->guia->listarparcelaspacientemensal($paciente_titular_id);
+                    if ($carencia_mensal == 't') {
+                        $listaratendimentomensal = $this->guia->listaratendimentoparceiromensal($paciente_titular_id, $grupo);
+                        //            var_dump($listaratendimentomensal);
+                        //            die;
+
+                        if (count($listaratendimentomensal) == 0 && count($parcelas_mensal) > 0) {
+                            $carencia_mensal_liberada = 't';
+                        } else {
+                            $carencia_mensal_liberada = 'f';
+                        }
+                    }
+                    $dias_parcela = 30 * count($parcelas);
+                    $dias_atendimento = $carencia * count($listaratendimento);
+                    $carencia_necessaria = $carencia * $numero_consultas_aut;
+                    // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
+                    // Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
+                    // 
 //                        echo '<pre>';
 //                        var_dump($paciente_titular_id);
 //                        var_dump($grupo);
@@ -150,66 +192,82 @@ class Verificar extends Controller {
 //                        var_dump($parcelas_mensal);
 //                        var_dump($listaratendimento);
 //                        die;
-                // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
-                // o sistema vai gravar. 
-                //
+                    // Nesse caso, se o número de dias de parcela que ele tem menos o número de dias de atendimento (carência x numero de atendimentos) que ele tem for maior que a carência
+                    // o sistema vai gravar. 
+                    //
             //
                 if ($carencia_mensal == 't') {
-                    if ($carencia_mensal_liberada == 't') {
-                        $carencia_liberada = 't';
+                        if ($carencia_mensal_liberada == 't') {
+                            $carencia_liberada = 't';
+                        } else {
+                            $carencia_liberada = 'f';
+                        }
                     } else {
-                        $carencia_liberada = 'f';
+                        if ((($dias_parcela - $dias_atendimento) >= $carencia_necessaria) && $dias_parcela > 0) {
+                            // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
+                            // Assim ele vai ter que pagar, porem, com um desconto cadastrado já como o valor do procedimento na clinica
+                            $carencia_liberada = 't';
+                        } else {
+                            $carencia_liberada = 'f';
+                        }
                     }
-                } else {
-                    if ((($dias_parcela - $dias_atendimento) >= $carencia_necessaria) && $dias_parcela > 0) {
-                        // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
-                        // Assim ele vai ter que pagar, porem, com um desconto cadastrado já como o valor do procedimento na clinica
-                        $carencia_liberada = 't';
-                    } else {
-                        $carencia_liberada = 'f';
-                    }
-                }
 //                var_dump($carencia_mensal); die;
+                    //        $carencia_liberada = 'f';
+                    // Caso o cliente não tenha carência, o sistema vai buscar consultas avulsas
+                    if ($carencia_liberada == 'f') {
 
-
-                //        $carencia_liberada = 'f';
-                // Caso o cliente não tenha carência, o sistema vai buscar consultas avulsas
-                if ($carencia_liberada == 'f') {
-
-                    $listarconsultaavulsa = $this->guia->listarconsultaavulsaliberada($paciente_titular_id);
-                    //                var_dump($listarconsultaavulsa); die;
-                    if (count($listarconsultaavulsa) > 0) {
-                        $consulta_avulsa_id = $listarconsultaavulsa[0]->consultas_avulsas_id;
-                        $tipo_consulta = $listarconsultaavulsa[0]->tipo;
-                        $carencia_liberada = 't';
+                        $listarconsultaavulsa = $this->guia->listarconsultaavulsaliberada($paciente_titular_id);
+                        //                var_dump($listarconsultaavulsa); die;
+                        if (count($listarconsultaavulsa) > 0) {
+                            $consulta_avulsa_id = $listarconsultaavulsa[0]->consultas_avulsas_id;
+                            $tipo_consulta = $listarconsultaavulsa[0]->tipo;
+                            $carencia_liberada = 't';
+                        } else {
+                            $tipo_consulta = '';
+                        }
                     } else {
+                        $listarconsultaavulsa = array();
                         $tipo_consulta = '';
                     }
-                } else {
-                    $listarconsultaavulsa = array();
-                    $tipo_consulta = '';
-                }
 
+                    /* Se no fim das contas se tudo der errado, a variável carencia_liberada vai conter a informacao 'f'que irá ser salva na linha da consulta
+                      no banco, para dessa forma o sistema cobrar o valor do exame ao invés de utilizar da carência */
 
-
-                /* Se no fim das contas se tudo der errado, a variável carencia_liberada vai conter a informacao 'f'que irá ser salva na linha da consulta
-                  no banco, para dessa forma o sistema cobrar o valor do exame ao invés de utilizar da carência */
-
-                if ($carencia_liberada == 't') {
+                    if ($carencia_liberada == 't') {
 //                    echo json_encode('true');
-                    $this->verificarcpf('true');
-                } else {
+                        
+                        
+                        $this->verificarcpf('true', $paciente_nome_titular, $listadependentes);
+                        
+                        
+                    } else {
 //                    echo json_encode('false');
-                    $this->verificarcpf('false');
-                }
-            } else {
+                        $this->verificarcpf('false');
+                    }
+                } else {
 //                echo json_encode('pending');
-                $this->verificarcpf('pending');
+                    $this->verificarcpf('pending');
+                }
             }
+            
+            
+            
         } else {
 //            echo json_encode('no_exists');
             $this->verificarcpf('no_exists');
         }
+        
+        
+        } else {
+            
+            $nome = @$_POST['nome'];
+             $data['titulares'] = $this->guia->listarpacientecpf($cpf, $paciente_id,$nome); 
+               
+            $this->load->view('verificarcpf', $data);
+            
+        }
+
+        
         // Realiza a gravação da consulta caso o teste seja verdadeiro 
     }
 
@@ -258,39 +316,222 @@ class Verificar extends Controller {
 //        var_dump($paciente_titular_id);
 //        die;
 //        $paciente_id = $_POST['txtNomeid'];
+        $empresa_p = $this->guia->listarempresa();
 
-        $parcelas = $this->guia->listarparcelaspaciente($paciente_id);
-        $carencia = $this->guia->listarparcelaspacientecarencia($paciente_id);
+        if ($empresa_p[0]->tipo_carencia == "SOUDEZ") {
+            $parcelas = $this->guia->listarparcelaspaciente($paciente_id);
+            $carencia = $this->guia->listarparcelaspacientecarencia($paciente_id);
 
-        $listaratendimento = $this->guia->listaratendimentoparceiro($paciente_titular_id, $grupo);
-        $carencia_exame = $carencia[0]->carencia_exame;
-        $carencia_consulta = $carencia[0]->carencia_consulta;
-        $carencia_especialidade = $carencia[0]->carencia_especialidade;
+            $listaratendimento = $this->guia->listaratendimentoparceiro($paciente_titular_id, $grupo);
+            $carencia_exame = $carencia[0]->carencia_exame;
+            $carencia_consulta = $carencia[0]->carencia_consulta;
+            $carencia_especialidade = $carencia[0]->carencia_especialidade;
 
-        // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
-        if ($grupo == 'EXAME') {
-            $carencia = (int) $carencia_exame;
-        } elseif ($grupo == 'CONSULTA') {
-            $carencia = (int) $carencia_consulta;
-        } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
-            $carencia = (int) $carencia_especialidade;
+            // COMPARANDO O GRUPO E ESCOLHENDO O VALOR DE CARÊNCIA PARA O GRUPO DESEJADO
+            if ($grupo == 'EXAME') {
+                $carencia = (int) $carencia_exame;
+            } elseif ($grupo == 'CONSULTA') {
+                $carencia = (int) $carencia_consulta;
+            } elseif ($grupo == 'FISIOTERAPIA' || $grupo == 'ESPECIALIDADE') {
+                $carencia = (int) $carencia_especialidade;
+            } else {
+                $carencia = 0;
+            }
+            //        var_dump($grupo); die;
+            // 
+            $dias_parcela = 30 * count($parcelas);
+            $dias_atendimento = $carencia * count($listaratendimento);
+
+            //        var_dump($dias_parcela);
+            //        var_dump($dias_atendimento);
+            //        var_dump($carencia);
+            //        die;
+            if (($dias_parcela - $dias_atendimento) >= $carencia) {
+                echo json_encode(true);
+            } else {
+                echo json_encode(false);
+            }
         } else {
-            $carencia = 0;
-        }
-//        var_dump($grupo); die;
-        // 
-        $dias_parcela = 30 * count($parcelas);
-        $dias_atendimento = $carencia * count($listaratendimento);
+            $liberada = false;
+            $parcelas = $this->guia->listarparcelaspacientetotal($paciente_id);
+            $carencia = $this->guia->listarparcelaspacientecarencia($paciente_id);
 
-//        var_dump($dias_parcela);
-//        var_dump($dias_atendimento);
-//        var_dump($carencia);
+            $exame_liberado = 'Pendência';
+            $consulta_liberado = 'Pendência';
+            $especialidade_liberado = 'Pendência';
+
+            $liberado = false;
+
+            $carencia_exame = @$carencia[0]->carencia_exame;
+            $carencia_consulta = @$carencia[0]->carencia_consulta;
+            $carencia_especialidade = @$carencia[0]->carencia_especialidade;
+            // Se alguma das parcelas não tiver sido paga, o sistema não vai retornar true pra carencia
+            foreach ($parcelas as $item) {
+                // as variaveis acima já tão definidas, então nessa parte eu deixei esse foreach que só roda uma vez
+                // e atribui valor ao objeto item
+                $liberado = true;
+                if ($item->ativo == 't') {
+                    break;
+                }
+            }
+            // Se tiverem parcelas, vai pegar a ultima parcela do foreach acima e usa a data abaixo.
+            if (count($parcelas) > 0 && $liberado) {
+                $data_atual = date("Y-m-d");
+                $data_exame = date('Y-m-d', strtotime("+$carencia_exame days", strtotime($item->data)));
+                $data_consulta = date('Y-m-d', strtotime("+$carencia_consulta days", strtotime($item->data)));
+                $data_especialidade = date('Y-m-d', strtotime("+$carencia_especialidade days", strtotime($item->data)));
+                if (strtotime($data_atual) <= strtotime($data_exame)) {
+                    $exame_liberado = 'Liberado';
+                }
+                if (strtotime($data_atual) <= strtotime($data_consulta)) {
+                    $consulta_liberado = 'Liberado';
+                }
+                if (strtotime($data_atual) <= strtotime($data_especialidade)) {
+                    $especialidade_liberado = 'Liberado';
+                }
+            } else {
+                $exame_liberado = 'Pendência';
+                $consulta_liberado = 'Pendência';
+                $especialidade_liberado = 'Pendência';
+                $liberado = false;
+            }
+
+            // echo '<pre>';
+            // // var_dump($parcelas); 
+            // var_dump($liberado); 
+            // var_dump($item->data); 
+            // die;
+            if ($grupo == 'ESPECIALIDADE' && $especialidade_liberado == 'Liberado') {
+                $liberado = true;
+            } elseif ($grupo == 'CONSULTA' && $consulta_liberado == 'Liberado') {
+                $liberado = true;
+            } elseif ($grupo == 'EXAME' && $exame_liberado == 'Liberado') {
+                $liberado = true;
+            } else {
+                $liberado = false;
+            }
+
+            echo json_encode($liberado);
+        }
+
 //        die;
-        if (($dias_parcela - $dias_atendimento) >= $carencia) {
-            echo json_encode(true);
+    }
+
+    function verificarcarenciaweb() {
+        header('Access-Control-Allow-Origin: *');
+        $parceiro_id = $_GET['parceiro_id'];
+        $paciente_id = $_GET['paciente'];
+//        $paciente_ip = $_GET['paciente_ip'];
+
+        @$parceiro = $this->parceiro->listarparceiroendereco($parceiro_id);
+        @$endereco = $parceiro[0]->endereco_ip;
+//        $parceiro_id = $parceiro[0]->financeiro_parceiro_id;
+        @$convenio_id = $parceiro[0]->convenio_id;
+
+
+
+        $parceiro = $this->parceiro->listarparceiroendereco($parceiro_id);
+        @$endereco = $parceiro[0]->endereco_ip;
+        @$parceiro_gravar_id = $parceiro[0]->financeiro_parceiro_id;
+        // BUSCANDO O GRUPO DO PROCEDIMENTO NA CLINICA
+
+        $grupo_busca = file_get_contents("http://{$endereco}/verificar/listargrupoagendamentoweb?procedimento_convenio_id={$_GET['procedimento']}");
+        $grupo = json_decode($grupo_busca);
+
+        //LISTANDO AS INFORMAÇÕES DE CARÊNCIA E PARCELAS PAGAS PELO PACIENTE
+        //VERIFICA SE É DEPENDENTE. CASO SIM, ELE VAI PEGAR O ID DO TITULAR E FAZER AS BUSCAS ABAIXO UTILIZANDO ESSE ID
+        $paciente_informacoes = $this->paciente_m->listardados($_GET['paciente']);
+        if ($paciente_informacoes[0]->situacao == 'Dependente') {
+            $dependente = true;
         } else {
-            echo json_encode(false);
+            $dependente = false;
         }
+
+        if ($dependente == true) {
+            $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+            $paciente_id = $retorno[0]->paciente_id;
+            $paciente_titular_id = $retorno[0]->paciente_id;
+            $paciente_dependente_id = $_GET['paciente'];
+        } else {
+            $paciente_id = $_GET['paciente'];
+            $paciente_titular_id = $_GET['paciente'];
+            $paciente_dependente_id = null;
+        }
+//        var_dump($_POST['txtNomeid']);
+//        var_dump($paciente_id);
+//        var_dump($paciente_titular_id);
+//        die;
+//        $paciente_id = $_POST['txtNomeid'];
+        $empresa_p = $this->guia->listarempresa();
+
+        if ($empresa_p[0]->tipo_carencia == "SOUDEZ") {
+
+            echo json_encode(true);
+            // Se for no Modelo SouDez, 
+            // o javascript vai apenas liberar o botão independe de qualquer coisa.
+        } else {
+            $liberada = false;
+            $parcelas = $this->guia->listarparcelaspacientetotal($paciente_id);
+            $carencia = $this->guia->listarparcelaspacientecarencia($paciente_id);
+
+            $exame_liberado = 'Pendência';
+            $consulta_liberado = 'Pendência';
+            $especialidade_liberado = 'Pendência';
+
+            $liberado = false;
+
+            $carencia_exame = @$carencia[0]->carencia_exame;
+            $carencia_consulta = @$carencia[0]->carencia_consulta;
+            $carencia_especialidade = @$carencia[0]->carencia_especialidade;
+            // Se alguma das parcelas não tiver sido paga, o sistema não vai retornar true pra carencia
+            foreach ($parcelas as $item) {
+                // as variaveis acima já tão definidas, então nessa parte eu deixei esse foreach que só roda uma vez
+                // e atribui valor ao objeto item
+                $liberado = true;
+                if ($item->ativo == 't') {
+                    break;
+                }
+            }
+            // Se tiverem parcelas, vai pegar a ultima parcela do foreach acima e usa a data abaixo.
+            if (count($parcelas) > 0 && $liberado) {
+                $data_atual = date("Y-m-d");
+                $data_exame = date('Y-m-d', strtotime("+$carencia_exame days", strtotime($item->data)));
+                $data_consulta = date('Y-m-d', strtotime("+$carencia_consulta days", strtotime($item->data)));
+                $data_especialidade = date('Y-m-d', strtotime("+$carencia_especialidade days", strtotime($item->data)));
+                if (strtotime($data_atual) <= strtotime($data_exame)) {
+                    $exame_liberado = 'Liberado';
+                }
+                if (strtotime($data_atual) <= strtotime($data_consulta)) {
+                    $consulta_liberado = 'Liberado';
+                }
+                if (strtotime($data_atual) <= strtotime($data_especialidade)) {
+                    $especialidade_liberado = 'Liberado';
+                }
+            } else {
+                $exame_liberado = 'Pendência';
+                $consulta_liberado = 'Pendência';
+                $especialidade_liberado = 'Pendência';
+                $liberado = false;
+            }
+
+            // echo '<pre>';
+            // // var_dump($parcelas); 
+            // var_dump($liberado); 
+            // var_dump($item->data); 
+            // die;
+            if ($grupo == 'ESPECIALIDADE' && $especialidade_liberado == 'Liberado') {
+                $liberado = true;
+            } elseif ($grupo == 'CONSULTA' && $consulta_liberado == 'Liberado') {
+                $liberado = true;
+            } elseif ($grupo == 'EXAME' && $exame_liberado == 'Liberado') {
+                $liberado = true;
+            } else {
+                $liberado = false;
+            }
+
+            echo json_encode($liberado);
+        }
+
 //        die;
     }
 

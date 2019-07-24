@@ -9,14 +9,41 @@
                         <label>Data inicio</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtdata_inicio" id="txtdata_inicio" alt="date"/>
+                        <input required type="text" name="txtdata_inicio" id="txtdata_inicio" alt="date"/>
                     </dd>
                     <dt>
                         <label>Data fim</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
+                        <input required type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
                     </dd>
+                    <dt>
+                        <label>Plano</label>
+                    </dt>
+                    <dd> 
+                        <select   name="plano[]" id="plano" class="size4 chosen-select "  multiple   data-placeholder="Selecione" >
+                         <!--<option value="">Selecione</option>-->
+                         <option value="0">Todos</option>
+                            <?foreach ($planos as $key => $value) {?>
+                                <option <?if(count($planos) == 1){echo 'selected';}?> value="<?=$value->forma_pagamento_id?>"><?=$value->nome?></option>
+                           <? }?> 
+                        </select>
+                    </dd>
+                    <br><br><br>
+                     <dt>
+                        <label>Vendedor</label>
+                    </dt>
+                    <dd> 
+                        <select   name="vencedor[]" id="vencedor  " multiple class=" chosen-select"    data-placeholder="Selecione">
+                           
+                         <!--<option value="">Selecione</option>-->
+                         <option value="0">Todos</option>
+                            <?foreach ($vencedor as $key => $value) {?>
+                                <option <?if(count($vencedor) == 1){echo 'selected';}?> value="<?=$value->operador_id?>"><?=$value->nome?></option>
+                           <? }?>
+                            
+                        </select>
+                    </dd> <br><br><br>
                     <dt>
                         <label>BUSCAR POR</label>
                     </dt>
@@ -24,6 +51,15 @@
                         <select name="tipobusca" id="tipobusca" class="size2">
                             <option value="I">Inativos</option>
                             <option value="A">Ativos</option>
+                        </select>
+                    </dd>
+                    <dt>
+                        <label>Data tipo</label>
+                    </dt>
+                    <dd>
+                        <select name="tipodata" id="tipodata" class="size2">
+                            <option value="C">Cadastro</option>
+                            <option value="E">Excluido</option>
                         </select>
                     </dd>
                     
@@ -37,6 +73,14 @@
 
 
 </div> <!-- Final da DIV content -->
+
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/chosen.css">
+<!--<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/style.css">-->
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/prism.css">
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/chosen.jquery.js"></script>
+<!--<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/prism.js"></script>-->
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/init.js"></script>
+
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>

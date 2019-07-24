@@ -1,10 +1,13 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>cadastros/caixa/novaentrada">
-            Nova entrada
-        </a>
-    </div>
+
+    <? if ($this->session->userdata('perfil_id') == 1): ?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>cadastros/caixa/novaentrada">
+                Nova entrada
+            </a>
+        </div>
+    <? endif; ?>
     <?
     $saldo = $this->caixa->saldo();
     $empresa = $this->caixa->empresa();
@@ -71,6 +74,8 @@
                         <th class="tabela_title">
                             <select name="nome_classe" id="nome_classe" class="size2">
                                 <option value="">TODOS</option>
+                                <option value="PARCELA">PARCELA</option>
+                                <option value="CARTEIRA">CARTEIRA</option>
                             </select>
                         </th>
                         <th class="tabela_title">
@@ -127,29 +132,45 @@
                     ?>
                     <tbody>
                         <?php
+                        $data['permissao'] = $this->empresa->listarpermissoes();
+//                        print_r( $data['permissao']);
+
                         $totaldalista = 0;
-                        $lista = $this->caixa->listarentrada($_GET)->orderby('data desc')->limit($limit, $pagina)->get()->result();
+                        $lista = $this->caixa->listarentrada($_GET)->orderby('data desc')->orderby('razao_social')->limit($limit, $pagina)->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
                             $totaldalista = $totaldalista + $item->valor;
                             ?>
                             <tr>
-                                <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td>
+                                <td class="<?php echo $estilo_linha; ?>"><?
+                                        if ($item->razao_social == "") {
+                                            echo $item->empresa;
+                                        }else{
+                                            
+                                           echo $item->razao_social;
+                                        }
+                                
+                                
+                                ?></td>
+                                
+                                
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->tipo; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->classe; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><b><?= number_format($item->valor, 2, ",", "."); ?></b></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->conta; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->observacao; ?></td>
-
-
-                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/caixa/excluirentrada/<?= $item->entradas_id ?>">Excluir</a></div>
-                                </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/caixa/anexarimagementrada/<?= $item->entradas_id ?>">Arquivos</a></div>
-                                </td>
+                                <? if ($this->session->userdata('perfil_id') == 1 || $data['permissao'][0]->excluir_entrada_saida == 't'): ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
+                                            <a href="<?= base_url() ?>cadastros/caixa/excluirentrada/<?= $item->entradas_id ?>">Excluir</a></div>
+                                    </td>
+                                <? endif; ?>
+                                <? if ($this->session->userdata('perfil_id') == 1): ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                                            <a href="<?= base_url() ?>cadastros/caixa/anexarimagementrada/<?= $item->entradas_id ?>">Arquivos</a></div>
+                                    </td>
+                                <? endif; ?>
                             </tr>
 
                         </tbody>
@@ -206,13 +227,15 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
-    
-        $(function () {
+
+    $(function () {
         $('#nome').change(function () {
             if ($(this).val()) {
                 $('.carregando').show();
                 $.getJSON('<?= base_url() ?>autocomplete/classeportiposaidalista', {nome: $(this).val(), ajax: true}, function (j) {
                     options = '<option value=""></option>';
+                    options += '<option value="PARCELA">PARCELA</option>';
+                    options += '<option value="CARTEIRA">CARTEIRA</option>';  
                     for (var c = 0; c < j.length; c++) {
                         options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
                     }
@@ -220,11 +243,12 @@
                     $('.carregando').hide();
                 });
             } else {
-                $('#nome_classe').html('<option value="">TODOS</option>');
+                $('#nome_classe').html('<option value="">TODOS</option><option value="PARCELA">PARCELA</option><option value="CARTEIRA">CARTEIRA</option>');
+           
             }
         });
     });
-    
+
     $(function () {
         $("#datainicio").datepicker({
             autosize: true,

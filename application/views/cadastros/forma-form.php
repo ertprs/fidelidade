@@ -24,6 +24,12 @@
                     <dd>
                         <input type="text" name="txtconta" class="texto04" value="<?= @$obj->_conta; ?>" />
                     </dd>
+                    <dt>
+                    <label>Conta Interna</label>
+                    </dt>
+                    <dd>
+                        <input type="checkbox" name="conta_interna" <?=(@$obj->_conta_interna == 't') ? 'checked' : ''?> />
+                    </dd>
                 </dl>    
                 <hr/>
                 <button type="submit" name="btnEnviar">Enviar</button>

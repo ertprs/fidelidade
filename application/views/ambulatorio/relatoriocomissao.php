@@ -21,7 +21,7 @@
                     </dt>
                     <dd>
                         <select name="vendedor" id="vendedor" class="size2" required="true">
-                            <option value="" >selecione</option>
+                            <option value="" >Selecione</option>
                             <?php
                             foreach ($listarvendedor as $item) {
                                 ?>

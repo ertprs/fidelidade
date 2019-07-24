@@ -14,7 +14,9 @@
                     <th class="tabela_header">Número</th>
                     <th class="tabela_header">Plano</th>
                     <th class="tabela_header">Data</th>
+                    <th class="tabela_header">Vendedor</th>
                     <? if($_POST['tipobusca'] == 'I'){ ?>
+                        <th class="tabela_header">Data Exclusão</th>
                         <th class="tabela_header">Operador Exclusão</th>
                     <? } ?>
                 </tr>
@@ -31,17 +33,18 @@
                         <td ><?= $item->plano; ?></td>
                        
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
-                        
+                        <td ><?= $item->vendedor; ?></td>
                         <? if($_POST['tipobusca'] == 'I'){ ?>
+                        <td ><?= substr($item->data_atualizacao, 8, 2) . "/" . substr($item->data_atualizacao, 5, 2) . "/" . substr($item->data_atualizacao, 0, 4); ?></td>
                             <td><?= $item->operador; ?></td>
                         <? } ?>
                     </tr>
                 <? endforeach; ?>
                 <tr>
                     <? if($_POST['tipobusca'] == 'I'){ ?>
-                        <td colspan="4"><b>TOTAL</b></td>
+                        <td colspan="6"><b>TOTAL</b></td>
                     <? } else { ?>
-                        <td colspan="3"><b>TOTAL</b></td>
+                        <td colspan="4"><b>TOTAL</b></td>
                     <? } ?>
                     <td colspan="1"><b><?= $total; ?></b></td>
                 </tr>

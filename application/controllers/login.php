@@ -1,14 +1,16 @@
 <?php
 
 class Login extends Controller {
-
+  
     function Login() {
         parent::Controller();
         $this->load->model('login_model', 'login');
         $this->load->library('mensagem');
+        $this->load->library('utilitario');
     }
 
     function index() {
+
         $this->carregarView();
     }
 

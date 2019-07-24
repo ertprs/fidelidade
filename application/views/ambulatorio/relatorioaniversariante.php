@@ -1,14 +1,14 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar relatorio Aniversariantes</a></h3>
+        <h3><a href="#">Gerar relatorio Aniversáriantes</a></h3>
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatorioaniversariantes">
                 <dl>
                     <dt>
-                    <label>Mes</label>
+                    <label>Mês</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtdata_inicio" id="txtdata_inicio" alt="integer" />
+                        <input type="number" name="txtdata_inicio" id="txtdata_inicio"   min="1" max="12" />
                     </dd>
                     <dt>
                     <label>Empresa</label>

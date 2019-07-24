@@ -86,6 +86,11 @@ class Operador extends BaseController {
         $this->loadView('seguranca/gerentevendas-lista', $data);
     }
 
+    function pesquisarRepresentante($limite = 50) {
+        $data["limite_paginacao"] = $limite;
+        $this->loadView('seguranca/representantecomercial-lista', $data);
+    }
+
     function pesquisarmedicosolicitante($filtro = -1, $inicio = 0) {
         $this->loadView('seguranca/editarmedicosolicitante-lista');
     }
@@ -143,6 +148,18 @@ class Operador extends BaseController {
         $this->loadView('seguranca/operadorvendedor-form', $data);
     }
 
+    function operadorRepresentanteComercial($operador_id) {
+//        var_dump($operador_id);
+        $data['operador'] = $this->operador_m->listarvendedoroperador($operador_id);
+//        var_dump($data['operador']); die;
+        $data['vendedores'] = $this->operador_m->listargerenteRepresentante($operador_id);
+//        $data['convenio'] = $this->convenio->listardados();
+        $data['gerentes'] = $this->operador_m->listarRepresentanteGerente($operador_id);
+//var_dump($data['gerentes']); die;
+        $data['operador_id'] = $operador_id;
+        $this->loadView('seguranca/operadorRepresentanteComercial-form', $data);
+    }
+
     function operadorconvenioprocedimento($convenio_id, $operador_id) {
 
         $data['operador'] = $this->operador_m->listarCada($operador_id);
@@ -174,6 +191,23 @@ class Operador extends BaseController {
         redirect(base_url() . "seguranca/operador/operadorgerentevendas/$operador_id");
     }
 
+    function gravaroperadorRepresentanteGerente($operador_id) {
+//        $operador_id = $_POST['txtoperador_id'];
+//        var_dump($_POST); die;
+        $operador_gerente_id = $_POST['txtoperador_id'];
+        $operador_gravado = $this->operador_m->listarOperadorRepresentanteGerente($_POST['vendedor_id']);
+        
+//        var_dump($operador_gravado); die;
+        if(count($operador_gravado) == 0){
+         $this->operador_m->gravaroperadorRepresentanteGerente($operador_id);
+         $data['mensagem'] = 'Gerente cadastrado com sucesso.';
+        }else{
+         $data['mensagem'] = 'Gerente já associado a um representante.';   
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "seguranca/operador/operadorRepresentanteComercial/$operador_id");
+    }
+
     function gravaroperadorconvenioprocedimento() {
         $operador_id = $_POST['txtoperador_id'];
         $convenio_id = $_POST['txtconvenio_id'];
@@ -192,6 +226,14 @@ class Operador extends BaseController {
 //        var_dump($operador_id);
 //        die;
         redirect(base_url() . "seguranca/operador/operadorgerentevendas/$operador_id");
+    }
+    
+    function excluirRepresentanteGerente($ambulatorio_representante_operador_id, $operador_id) {
+
+        $this->operador_m->excluirRepresentanteGerente($ambulatorio_representante_operador_id);
+//        var_dump($operador_id);
+//        die;
+        redirect(base_url() . "seguranca/operador/operadorRepresentanteComercial/$operador_id");
     }
 
     function excluiroperadorconvenioprocedimento($convenio_operador_procedimento_id, $convenio_id, $operador_id) {

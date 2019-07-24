@@ -108,14 +108,20 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo $item->paciente_id; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo $item->nome; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo $item->nome_mae; ?></td>
+                                <!-- <td class="<?php echo $estilo_linha; ?>"><?php echo $item->representante_id; ?></td> -->
+                                <!-- <td class="<?php echo $estilo_linha; ?>"><?php echo $item->gerente_id; ?></td> -->
+                                <!-- <td class="<?php echo $estilo_linha; ?>"><?php echo $item->vendedor; ?></td> -->
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo substr($item->nascimento, 8, 2) . '/' . substr($item->nascimento, 5, 2) . '/' . substr($item->nascimento, 0, 4); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo $telefone; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= $item->situacao; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;" ><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/pacientes/carregar/<?= $item->paciente_id ?>">
-                                            <b>Editar</b>
-                                        </a></div>
-                                </td>
+                                <?$perfil_id = $this->session->userdata('perfil_id');?>
+                                <?if($perfil_id != 6){?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;" ><div class="bt_link">
+                                            <a href="<?= base_url() ?>cadastros/pacientes/carregar/<?= $item->paciente_id ?>">
+                                                <b>Editar</b>
+                                            </a></div>
+                                    </td>
+                                <?}?>
                                 <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>emergencia/filaacolhimento/novo/<?= $item->paciente_id ?>">
                                             <b>Op&ccedil;&otilde;es</b>

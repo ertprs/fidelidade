@@ -13,6 +13,14 @@
                         <input type="text" name="txtNome" class="texto05" value="<?= @$obj->_nome; ?>" />
                     </dd>
 
+
+                    <dt>
+                        <label>Nome impressão</label>
+                    </dt>
+                    <dd>
+
+                        <input type="text" name="txtNomeimpressao" class="texto05" value="<?= @$obj->_nome_impressao; ?>" />
+                    </dd>
                     <dt>
                         <label>Valor 1 vez</label>
                     </dt>
@@ -39,10 +47,28 @@
                         <input type="text" name="valor10" class="texto02" id="valor10" alt="decimal" value="<?= @$obj->_valor10; ?>" />
                     </dd>
                     <dt>
+                        <label>Valor 11 vezes</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor11" class="texto02" id="valor11" alt="decimal" value="<?= @$obj->_valor11; ?>" />
+                    </dd>
+                    <dt>
                         <label>Valor 12 vezes</label>
                     </dt>
                     <dd>
                         <input type="text" name="valor12" class="texto02" id="valor12" alt="decimal" value="<?= @$obj->_valor12; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Valor 23 vezes</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor23" class="texto02" id="valor23" alt="decimal" value="<?= @$obj->_valor23; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Valor 24 vezes</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor24" class="texto02" id="valor24" alt="decimal" value="<?= @$obj->_valor24; ?>" />
                     </dd>
                     <dt>
                         <label>Multa Por Atraso (R$)</label>
@@ -73,6 +99,24 @@
                         ?>
                     </dd>
                     <dt>
+                        <label>Valor Adesão (R$)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor_adesao" class="texto02" id="valor_adesao" alt="decimal" value="<?= @$obj->_valor_adesao; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Valor Carteira Titular (R$)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor_carteira_titular" class="texto02" id="valor_carteira_titular" alt="decimal" value="<?= @$obj->_valor_carteira_titular; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Valor Carteira Dependente (R$)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor_carteira" class="texto02" id="valor_carteira" alt="decimal" value="<?= @$obj->_valor_carteira; ?>" />
+                    </dd>
+                    <dt>
                         <label>N° Maximo de Clientes</label>
                     </dt>
                     <dd>
@@ -86,13 +130,13 @@
                     </dd>
 
                     <dt>
-                        <label>Consulta Avulsa</label>
+                        <label>Consulta Avulsa Extra</label>
                     </dt>
                     <dd>
                         <input type="text" name="consulta_avulsa" class="texto02" id="consulta_avulsa" alt="decimal" value="<?= @$obj->_consulta_avulsa; ?>" />
                     </dd>
                     <dt>
-                        <label>Consulta Avulsa</label>
+                        <label>Consulta Avulsa Coop</label>
                     </dt>
                     <dd>
                         <input type="text" name="consulta_coop" class="texto02" id="consulta_coop" alt="decimal" value="<?= @$obj->_consulta_coop; ?>" />
@@ -148,6 +192,14 @@
                         </select>
                     </dd>
 
+                    <dt>
+                        <label>Validade</label>
+                    </dt>
+                    <dd> 
+                        &nbsp;<input type="number" id="qtd_dias" name="qtd_dias" class="texto02" min="1" pattern="^[0-9]+"  value="<?= @$obj->_qtd_dias; ?>"  />  
+
+                    </dd>
+
                 </dl>    
                 <hr/>
                 <button type="submit" name="btnEnviar">Enviar</button>
@@ -161,6 +213,21 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript">
+
+
+    document.addEventListener('click', function (e) {
+
+        var self = e.target;
+
+        if (['cpf', 'paciente_id'].indexOf(self.id) !== -1) {
+            var el = document.getElementById(self.id === 'cpf' ? 'paciente_id' : 'cpf');
+
+            self.removeAttribute('disabled');
+
+            el.setAttribute('disabled', '');
+            el.value = "";
+        }
+    })
     $('#btnVoltar').click(function () {
         $(location).attr('href', '<?= base_url(); ?>ponto/cargo');
     });

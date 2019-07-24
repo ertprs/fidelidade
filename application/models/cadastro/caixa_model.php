@@ -23,14 +23,17 @@ class caixa_model extends Model {
                             entradas_id,
                             observacao,
                             fe.descricao as conta,
-                            data,
+                            e.data,
                             fcd.razao_social,
                             tipo,
-                            classe');
+                            classe,
+                            ep.nome as empresa');
         $this->db->from('tb_entradas e');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = e.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = e.nome', 'left');
         $this->db->join('tb_financeiro_classe fc', 'fc.descricao = e.classe', 'left');
+        $this->db->join('tb_empresa ep', 'ep.empresa_id = e.empresa_cadastro_id', 'left');
+
         $this->db->where('e.ativo', 'true');
         if (isset($args['empresa']) && strlen($args['empresa']) > 0) {
             $this->db->where('e.nome', $args['empresa']);
@@ -46,13 +49,13 @@ class caixa_model extends Model {
             $this->db->where('e.conta', $args['conta']);
         }
         if (isset($args['datainicio']) && strlen($args['datainicio']) > 0) {
-            $this->db->where('e.data >=', $args['datainicio']);
+            $this->db->where('e.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $args['datainicio']))));
         }
         if (isset($args['obs']) && strlen($args['obs']) != '') {
             $this->db->where('e.observacao ilike', "%" . $args['obs'] . "%");
         }
         if (isset($args['datafim']) && strlen($args['datafim']) > 0) {
-            $this->db->where('e.data <=', $args['datafim']);
+            $this->db->where('e.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $args['datafim']))));
         }
         return $this->db;
     }
@@ -84,10 +87,10 @@ class caixa_model extends Model {
             $this->db->where('s.conta', $args['conta']);
         }
         if (isset($args['datainicio']) && strlen($args['datainicio']) > 0) {
-            $this->db->where('s.data >=', $args['datainicio']);
+            $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $args['datainicio']))));
         }
         if (isset($args['datafim']) && strlen($args['datafim']) > 0) {
-            $this->db->where('s.data <=', $args['datafim']);
+            $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $args['datafim']))));
         }
         if (isset($args['obs']) && strlen($args['obs']) != '') {
             $this->db->where('s.observacao ilike', "%" . $args['obs'] . "%");
@@ -145,6 +148,7 @@ class caixa_model extends Model {
                             s.observacao,
                             s.data,
                             fcd.razao_social,
+                            o.nome as operador,
                             fe.descricao as conta,
                             s.tipo,
                             s.classe');
@@ -152,12 +156,16 @@ class caixa_model extends Model {
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
         $this->db->join('tb_financeiro_classe fc', 'fc.descricao = s.classe', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = s.operador_cadastro', 'left');
         $this->db->where('s.ativo', 'true');
         if ($_POST['credordevedor'] != 0) {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
         }
         if ($_POST['tipo'] != 0) {
             $this->db->where('tipo_id', $_POST['tipo']);
+        }
+        if ($_POST['operador'] != 0) {
+            $this->db->where('s.operador_cadastro', $_POST['operador']);
         }
         if ($_POST['classe'] != '') {
             $this->db->where('s.classe', $_POST['classe']);
@@ -319,8 +327,8 @@ class caixa_model extends Model {
         }
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
-        $this->db->orderby('s.data');
-        $this->db->orderby('s.conta');
+//        $this->db->orderby('s.data');
+//        $this->db->orderby('s.conta');
         $this->db->orderby('fcd.razao_social');
         $return = $this->db->get();
         return $return->result();
@@ -352,20 +360,34 @@ class caixa_model extends Model {
                             s.entradas_id,
                             s.observacao,
                             s.data,
+                            o.nome as operador,
                             fcd.razao_social,
                             fe.descricao as conta,
                             s.tipo,
-                            s.classe');
+                            s.classe,
+                            fr.nome as forma_rendimento,
+                            p.paciente_id');
         $this->db->from('tb_entradas s');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
         $this->db->join('tb_financeiro_classe fc', 'fc.descricao = s.classe', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = s.operador_cadastro', 'left');
+        $this->db->join('tb_paciente p', 'p.credor_devedor_id = s.nome', 'left');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->where('s.ativo', 'true');
+        $this->db->where('p.ativo', 'true');
+
+        if (@$_POST['forma_pagamento'] != 0) {
+            $this->db->where('p.forma_rendimento_id ', $_POST['forma_pagamento']);
+        }
         if ($_POST['credordevedor'] != 0) {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
         }
         if ($_POST['tipo'] != 0) {
             $this->db->where('tipo_id', $_POST['tipo']);
+        }
+        if ($_POST['operador'] != 0) {
+            $this->db->where('s.operador_cadastro', $_POST['operador']);
         }
         if ($_POST['classe'] != '') {
             $this->db->where('classe', $_POST['classe']);
@@ -375,8 +397,8 @@ class caixa_model extends Model {
         }
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
-        $this->db->orderby('s.conta');
-        $this->db->orderby('s.data');
+//        $this->db->orderby('s.conta'); 
+//        $this->db->orderby('s.data');
         $this->db->orderby('fcd.razao_social');
         $return = $this->db->get();
         return $return->result();
@@ -456,7 +478,7 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
-        
+
         $this->db->where('s.data <', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $return = $this->db->get();
         return $return->result();
@@ -543,12 +565,12 @@ class caixa_model extends Model {
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('valor', str_replace(",", ".", str_replace(".", "", $_POST['valor'])));
-            $inicio = $_POST['inicio'];
+            $inicio = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio'])));
             $dia = substr($inicio, 0, 2);
             $mes = substr($inicio, 3, 2);
             $ano = substr($inicio, 6, 4);
             $datainicio = $ano . '-' . $mes . '-' . $dia;
-            $this->db->set('data', $_POST['inicio']);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio']))));
             $this->db->set('tipo', $tipo);
             $this->db->set('classe', $_POST['classe']);
             $this->db->set('nome', $_POST['devedor']);
@@ -567,7 +589,7 @@ class caixa_model extends Model {
             $this->db->set('conta', $_POST['conta']);
             $this->db->set('nome', $_POST['devedor']);
             $this->db->set('data_cadastro', $horario);
-            $this->db->set('data', $_POST['inicio']);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio']))));
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_saldo');
 
@@ -605,7 +627,7 @@ class caixa_model extends Model {
                 $mes = substr($inicio, 3, 2);
                 $ano = substr($inicio, 6, 4);
                 $datainicio = $ano . '-' . $mes . '-' . $dia;
-                $this->db->set('data', $_POST['inicio']);
+                $this->db->set('data', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio']))));
                 $this->db->set('tipo', $tipo);
                 $this->db->set('classe', $_POST['classe']);
                 $this->db->set('conta', $_POST['conta']);
@@ -625,7 +647,7 @@ class caixa_model extends Model {
                 $this->db->set('nome', $_POST['devedor']);
                 $this->db->set('saida_id', $saida_id);
                 $this->db->set('data_cadastro', $horario);
-                $this->db->set('data', $_POST['inicio']);
+                $this->db->set('data', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio']))));
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->insert('tb_saldo');
             }else {
@@ -639,7 +661,7 @@ class caixa_model extends Model {
                 $mes = substr($inicio, 3, 2);
                 $ano = substr($inicio, 6, 4);
                 $datainicio = $ano . '-' . $mes . '-' . $dia;
-                $this->db->set('data', $_POST['inicio']);
+                $this->db->set('data', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio']))));
                 $this->db->set('tipo', $tipo);
                 $this->db->set('classe', $_POST['classe']);
                 $this->db->set('conta', $_POST['conta']);
@@ -649,7 +671,7 @@ class caixa_model extends Model {
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->where('saidas_id', $_POST['saida_id']);
                 $this->db->update('tb_saidas');
-                $saida_id = $this->db->insert_id();
+                // $saida_id = $this->db->insert_id();
                 $erro = $this->db->_error_message();
                 if (trim($erro) != "") // erro de banco
                     return -1;
@@ -659,7 +681,7 @@ class caixa_model extends Model {
                 $this->db->set('conta', $_POST['conta']);
                 $this->db->set('nome', $_POST['devedor']);
                 $this->db->set('data_cadastro', $horario);
-                $this->db->set('data', $_POST['inicio']);
+                $this->db->set('data', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inicio']))));
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->where('saida_id', $_POST['saida_id']);
                 $this->db->update('tb_saldo');
@@ -835,7 +857,6 @@ class caixa_model extends Model {
     }
 
     function saldo() {
-
         $this->db->select('sum(valor)');
         $this->db->from('tb_saldo');
         $this->db->where('ativo', 'true');
@@ -844,10 +865,10 @@ class caixa_model extends Model {
     }
 
     function empresa() {
-
         $this->db->select('financeiro_credor_devedor_id,
             razao_social');
         $this->db->from('tb_financeiro_credor_devedor');
+        $this->db->where('ativo', 't');
         $this->db->orderby('razao_social');
         $return = $this->db->get();
         return $return->result();
@@ -932,6 +953,14 @@ class caixa_model extends Model {
         } else {
             $this->_estoque_produto_id = null;
         }
+    }
+
+    function listarformarendimento() {
+
+        $this->db->select('');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('ativo', 't');
+        return $this->db->get()->result();
     }
 
 }

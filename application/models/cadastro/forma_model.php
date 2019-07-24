@@ -67,6 +67,12 @@ class forma_model extends Model {
             $this->db->set('descricao', $_POST['txtNome']);
             $this->db->set('agencia', $_POST['txtagencia']);
             $this->db->set('conta', $_POST['txtconta']);
+            if(isset($_POST['conta_interna'])){
+                $this->db->set('conta_interna', 't');
+            }else{
+                $this->db->set('conta_interna', 'f');
+            }
+            
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
@@ -96,7 +102,7 @@ class forma_model extends Model {
     private function instanciar($forma_entradas_saida_id) {
 
         if ($forma_entradas_saida_id != 0) {
-            $this->db->select('forma_entradas_saida_id, descricao, conta, agencia');
+            $this->db->select('forma_entradas_saida_id, descricao, conta, agencia, conta_interna');
             $this->db->from('tb_forma_entradas_saida');
             $this->db->where("forma_entradas_saida_id", $forma_entradas_saida_id);
             $query = $this->db->get();
@@ -105,6 +111,7 @@ class forma_model extends Model {
             $this->_descricao = $return[0]->descricao;
             $this->_agencia = $return[0]->agencia;
             $this->_conta = $return[0]->conta;
+            $this->_conta_interna = $return[0]->conta_interna;
         } else {
             $this->_forma_entradas_saida_id = null;
         }

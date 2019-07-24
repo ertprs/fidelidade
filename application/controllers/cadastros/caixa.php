@@ -22,6 +22,7 @@ class Caixa extends BaseController {
         $this->load->model('cadastro/paciente_model', 'paciente');
         $this->load->model('seguranca/operador_model', 'operador');
         $this->load->model('ambulatorio/guia_model', 'guia');
+        $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -51,6 +52,7 @@ class Caixa extends BaseController {
         $obj_saidas = new caixa_model($saidas_id);
         $data['obj'] = $obj_saidas;
         $data['conta'] = $this->forma->listarforma();
+        $data['classe'] = $this->classe->listarclasse();
         $data['tipo'] = $this->tipo->listartipo();
         $this->loadView('cadastros/saida-form', $data);
     }
@@ -190,6 +192,7 @@ class Caixa extends BaseController {
     function relatoriosaida() {
         $data['conta'] = $this->forma->listarforma();
         $data['credordevedor'] = $this->caixa->listarcredordevedor();
+        $data['operador'] = $this->operador->listaroperadores();
         $data['tipo'] = $this->tipo->listartipo();
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriosaida', $data);
@@ -243,6 +246,7 @@ class Caixa extends BaseController {
         $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
         $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
+        $data['operador'] = $_POST['operador'];
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
         $data['forma'] = $this->forma->buscarforma($_POST['conta']);
@@ -521,7 +525,9 @@ class Caixa extends BaseController {
     function relatorioentrada() {
         $data['conta'] = $this->forma->listarforma();
         $data['credordevedor'] = $this->caixa->listarcredordevedor();
+        $data['operador'] = $this->operador->listaroperadores();
         $data['tipo'] = $this->tipo->listartipo();
+        $data['forma_rendimento'] = $this->caixa->listarformarendimento();
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatorioentrada', $data);
     }
@@ -529,12 +535,15 @@ class Caixa extends BaseController {
     function gerarelatorioentrada() {
         $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
         $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
+        $data['operador'] = $_POST['operador'];
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
         $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
         $data['forma'] = $this->forma->buscarforma($_POST['conta']);
 //        $data['empresa'] = $this->guia->listarempresa($_POST['empresa']);
         $data['relatorioentrada'] = $this->caixa->relatorioentrada();
+        $data['mostrar_form_pagamento'] = $_POST['mostrar_forma_pagamento'];
+
 
         if ($_POST['email'] == "NAO") {
             $this->load->View('cadastros/impressaorelatorioentrada', $data);
@@ -576,7 +585,8 @@ class Caixa extends BaseController {
                 $corpo = '
         <table border="1">
             <thead>
-                <tr>
+                <tr> 
+                  <th width="100px;" class="tabela_header">Numero do Cliente</th>
                     <th width="100px;" class="tabela_header">Conta</th>
                     <th class="tabela_header">Nome</th>
                     <th class="tabela_header">Dt entrada</th>
@@ -595,6 +605,7 @@ class Caixa extends BaseController {
                     $total = $total + $item->valor;
                     $corpo2 = $corpo2 . '
                     <tr>
+                        <td >' . $item->paciente_id . '</td>
                         <td >' . $item->conta . '</td>
                         <td >' . $item->razao_social . '</td>
                         <td >' . $item->tipo . '</td>

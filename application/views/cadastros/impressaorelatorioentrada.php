@@ -1,3 +1,21 @@
+
+<?php 
+//echo "<pre>";
+//print_r($relatorioentrada);
+
+?>
+<meta charset="UTF-8">
+
+<style>
+    th{
+        font-family: arial;
+    }
+
+
+
+</style>
+
+<title>Relatório Entrada</title>
 <div class="content"> <!-- Inicio da DIV content -->
     <? if (count($tipo) > 0) { ?>
         <h4>TIPO<?= $tipo[0]->descricao; ?></h4>
@@ -26,15 +44,22 @@
     <?
     if ($relatorioentrada > 0) {
         ?>
-        <table >
+        <table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
             <thead>
                 <tr>
+                    <th width="100px;" class="tabela_header">Numero do Cliente</th>
                     <th width="100px;" class="tabela_header">Conta</th>
                     <th class="tabela_header">Nome</th>
                     <th class="tabela_header">Dt entrada</th>
                     <th class="tabela_header">Tipo</th>
                     <th class="tabela_header">Classe</th>
                     <th class="tabela_header">Valor</th>
+                    <? if ($mostrar_form_pagamento == 'SIM'): ?>
+                        <th class="tabela_header">Forma de Pagamento</th>
+                    <? endif; ?>
+                    <? if ($operador != 0) { ?>
+                        <th class="tabela_header">Operador</th>
+                    <? } ?>
                     <th class="tabela_header">Observacao</th>
                 </tr>
             </thead>
@@ -45,31 +70,40 @@
                     $total = $total + $item->valor;
                     ?>
                     <tr>
-                        <td ><?= utf8_decode($item->conta); ?></td>
-                        <td ><?= utf8_decode($item->razao_social); ?>&nbsp;</td>
+                        <td ><?= @$item->paciente_id; ?></td>
+                        <td ><?= @$item->conta; ?></td>
+                        <td ><?= @$item->razao_social; ?>&nbsp;</td>
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
-                        <td ><?= utf8_decode($item->tipo); ?>&nbsp;</td>
-                        <td ><?= utf8_decode($item->classe); ?>&nbsp;</td>
+                        <td ><?= $item->tipo; ?>&nbsp;</td>
+                        <td ><?= $item->classe; ?>&nbsp;</td>
                         <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
-                        <td ><?= utf8_decode($item->observacao); ?>&nbsp;</td>
+                        <? if ($operador != 0) { ?>
+                            <td ><?= $item->operador; ?></td>
+                        <? } ?>
+                        <? if ($mostrar_form_pagamento == 'SIM'): ?>
+                            <td ><?= $item->forma_rendimento; ?>&nbsp;</td>
+                        <? endif; ?>
+
+
+                        <td ><?= $item->observacao; ?>&nbsp;</td>
                     </tr>
                 <? endforeach; ?>
                 <tr>
                     <td colspan="4"><b>TOTAL</b></td>
                     <td colspan="2"><b><?= number_format($total, 2, ",", "."); ?></b></td>
                 </tr>
+
             </tbody>
 
 
             <?
-        }
-        else {
+        } else {
             ?>
             <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
             <?
         }
         ?>
-
+    </table>
 </div> <!-- Final da DIV content -->
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">

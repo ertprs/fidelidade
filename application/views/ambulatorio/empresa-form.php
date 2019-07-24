@@ -1,3 +1,8 @@
+<?
+// echo "<pre>";
+// print_r($obj);
+?>
+
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
         <h3 class="singular"><a href="#">Cadastro de Sala</a></h3>
@@ -35,6 +40,12 @@
                     </dt>
                     <dd>
                         <input type="text" name="txtCNES" maxlength="14" class="texto03" value="<?= @$obj->_cnes; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Código Convênio (Banco)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="codigo_convenio_banco" maxlength="6" class="texto03" value="<?= @$obj->_codigo_convenio_banco; ?>" />
                     </dd>
                     <dt>
                         <label>Endere&ccedil;o</label>
@@ -86,24 +97,119 @@
                         <input type="text" id="iugu_token" class="texto07" name="iugu_token" value="<?= @$obj->_iugu_token; ?>" />
                     </dd>
                     <dt>
+                        <label>Client ID Gerencianet</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="client_id" class="texto07" name="client_id" value="<?= @$obj->_client_id; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Client Secret Gerencianet</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="client_secret" class="texto07" name="client_secret" value="<?= @$obj->_client_secret; ?>" />
+                    </dd>
+
+
+                    <dt>
                         <label>Modelo Carteira</label>
                     </dt>
                     <dd>
                         <input type="text" id="modelo_carteira" class="texto07" name="modelo_carteira" value="<?= @$obj->_modelo_carteira; ?>" />
                     </dd>
+
                     <dt>
                         <label>Banco</label>
                     </dt>
                     <dd>
-                        <textarea name="banco" rows="5" cols="30"><?= @$obj->_banco; ?></textarea>
+                        <textarea name="banco" rows="1" cols="50"><?= @$obj->_banco; ?></textarea>
                     </dd>
-                    
+                    <dt>
+                        <label>Titular ao cadastrar na integração</label>
+                    </dt>
+                    <dd>
+                        <input type="checkbox" id="titular_flag" name="titular_flag" <? if (@$obj->_titular_flag == 't') echo "checked"; ?>/>
+                    </dd>
+                    <?
+                    $operador = $this->session->userdata('operador_id');
+                    if ($operador == 1) {
+                        ?>
+                        <dt>
+                            <label>Cadastro</label>
+                        </dt>
+                        <dd>
+                            <select name="cadastro" id="cadastro" class="size2" selected="<?= @$obj->_cadastro; ?>">
+                                <option value=0 <?
+                                if (@$obj->_cadastro == 0):echo 'selected';
+                                endif;
+                                ?>>Normal</option>
+                                <option value=1 <?
+                                if (@$obj->_cadastro == 1):echo 'selected';
+                                endif;
+                                ?>>Alternativo</option>
+
+                            </select>
+                        </dd>
+                        <dt>
+                            <label>Tipo de Carência</label>
+                        </dt>
+                        <dd>
+                            <select name="tipo_carencia" id="tipo_carencia" class="size2" selected="<?= @$obj->_tipo_carencia; ?>">
+                                <option value="SOUDEZ" <?
+                                if (@$obj->_tipo_carencia == "SOUDEZ"):echo 'selected';
+                                endif;
+                                ?>>Sou Dez</option>
+                                <option value="NORMAL" <?
+                                if (@$obj->_tipo_carencia == "NORMAL"):echo 'selected';
+                                endif;
+                                ?>>Normal</option>
+
+                            </select>
+                        </dd>
+                    <? }
+                    ?>
+
                 </dl>  
                 <br>
                 <br>
                 <br>
+                <table>
+                    <tr>
+                        <td><input type="checkbox" name="alterar_contrato"   <? if (@$obj->_alterar_contrato == 't') echo "checked"; ?>> 
+                            <label  title="Ativando essa flag, possibilita alterar o número do contrato." >Alterar contrato</label></td>
+                        <td><input type="checkbox" name="confirm_outra_data"   <? if (@$obj->_confirm_outra_data == 't') echo "checked"; ?>> 
+                            <label  title="Ativando essa flag, possibilita alterar a Data e a Conta." >Confirmar para outra data</label></td>
+                        <td><input type="checkbox" name="financeiro_maior_zero"   <? if (@$obj->_financeiro_maior_zero == 't') echo "checked"; ?>> 
+                            <label  title=" " >Financeiro maior que Zero</label>  </td>
+
+                        <td><input type="checkbox" name="carteira_padao_1"   <? if (@$obj->_carteira_padao_1 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 1</label>  </td>
+                        <td><input type="checkbox" name="carteira_padao_2"   <? if (@$obj->_carteira_padao_2 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 2</label>   </td>
+                    </tr> 
+
+                    <tr>
+                        <td><input type="checkbox" name="cadastro_empresa_flag"   <? if (@$obj->_cadastro_empresa_flag == 't') echo "checked"; ?>> 
+                            <label  title=" " >Cadastro De Empresa</label>   </td>
+                        <td><input type="checkbox" name="excluir_entrada_saida"   <? if (@$obj->_excluir_entrada_saida == 't') echo "checked"; ?>> 
+                            <label  title="Ativando essa flag, além do ADM TOTAL, outros Usuários poderam excluir uma Entrada ou uma Saída" >Liberar Excluir (Entrada/Saída)</label>   </td>
+                        <td><input type="checkbox" name="renovar_contrato_automatico"   <? if (@$obj->_renovar_contrato_automatico == 't') echo "checked"; ?>> 
+                            <label  title="Ativando essa flag, o contrato irá ser renovado ao entrar no Sistema. " >Renovar Contrato Automático</label>   </td>
+                        <td><input type="checkbox" name="carteira_padao_3"   <? if (@$obj->_carteira_padao_3 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 3</label>   </td>
+                        <td><input type="checkbox" name="carteira_padao_4"   <? if (@$obj->_carteira_padao_4 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 4</label>   </td>
+                    </tr>
+                     <tr>
+                        <td><input type="checkbox" name="carteira_padao_5"   <? if (@$obj->_carteira_padao_5 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 5</label>  
+                        </td>
+                       
+                    </tr>
+                </table> 
                 <br>
+                <a href="<?= base_url() ?>cadastros/pacientes/gravartodospacientesexterno" target="_blank">Gravar todos parceiros</a>
                 <hr/>
+
                 <button type="submit" name="btnEnviar">Enviar</button>
                 <button type="reset" name="btnLimpar">Limpar</button>
                 <button type="button" id="btnVoltar" name="btnVoltar">Voltar</button>

@@ -21,6 +21,28 @@
 
         </thead>
     </table>
+    <?
+    
+    // $forma_comissao_v = array();
+    // foreach($relatorio_forma as $item){
+    //     echo '<pre>';
+    //     // var_dump($relatorio); die;
+    //     if($item->contador > 0){
+    //     //    var_dump($item);
+    //        $forma_comissao = $this->guia->vendedorComissaoFormaRend($item->contador, $item->plano_id, $item->forma_rendimento_id);
+    //         var_dump($forma_comissao);
+    //         // $forma_comissao_v =
+    //         if(count($forma_comissao) > 0){
+    //             if(!isset($forma_comissao_v[$item->plano_id])){
+    //                 $forma_comissao_v[$item->plano_id] = array();
+    //             }
+    //             $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id] = $forma_comissao[0]->valor_comissao;
+    //         }
+    //     }
+
+    // }
+    // // var_dump($forma_comissao_v); die;
+    ?>
     <? if (count($relatorio) > 0) {
         ?>
 
@@ -29,6 +51,7 @@
                 <tr>
                     <th class="tabela_teste">Cliente</th>
                     <th class="tabela_teste">Plano</th>
+                    <!-- <th class="tabela_teste">Forma de Pag</th> -->
                     <th class="tabela_teste">Data</th>
                     <th class="tabela_teste">Valor Parcela</th>
                     <th class="tabela_teste">Comissão Vendedor</th>
@@ -42,13 +65,21 @@
                 <?php
                 $valortotal = 0;
                 foreach ($relatorio as $item) :
+
+
+                    // if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
+                        // $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
+                    // }else{
+                        $valor_comissao = $item->comissao_vendedor_mensal;
+                    // }
                     if ($item->ativo == 'f') {
-                        $valortotal = $valortotal + $item->comissao_vendedor_mensal;
+                        $valortotal = $valortotal + $valor_comissao;
                     }
                     ?>                      
                     <tr>
                         <td ><font size="-2"><?= $item->paciente; ?></td>
                         <td ><font size="-2"><?= $item->plano; ?></td>
+                        <!-- <td ><font size="-2"><?= $item->forma_rendimento; ?></td> -->
                         <td ><font size="-2"><?= date("d/m/Y", strtotime($item->data)) ?></td>
                         <td ><font size="-2"><?= number_format($item->valor, 2, ',', '.'); ?></td>
                         <td style='text-align: center;<?
@@ -57,7 +88,7 @@
                         } else {
                             
                         }
-                        ?>' ><font size="-2"><?= number_format($item->comissao_vendedor_mensal, 2, ',', '.'); ?></td>
+                        ?>' ><font size="-2"><?= number_format($valor_comissao, 2, ',', '.'); ?></td>
                         <td style='text-align: center;<?
                         if ($item->ativo != 'f') {
                             echo 'color:red';
