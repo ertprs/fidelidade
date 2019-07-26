@@ -304,3 +304,7 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN financeiro_parceiro_id integer;
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor23 numeric(10,2);
 
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor24 numeric(10,2);
+
+
+--26/07/2019
+ 

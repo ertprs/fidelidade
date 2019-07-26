@@ -270,8 +270,8 @@ $data['permissao'] = $this->db->get()->result();
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicov">Gerar SICOV</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicovoptante">Gerar Arquivo Optante</a></span></li>
                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/importararquivoretorno">Importar Arquivo Retorno debito</a></span></li>
-                                     <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
-                                     <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
+                                    <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
+                                    <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
                                 <? } ?>
                             </ul>
                         </li>
@@ -349,6 +349,13 @@ $data['permissao'] = $this->db->get()->result();
 
                             </li>
 
+                            <li><span class="folder">Procedimento</span>  
+
+
+                                <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/procedimento">Manter Procedimentos</a></span></ul>
+
+                            </li>
+
                             <li><span class="folder">Financeiro</span>
                                 <? if ($perfil_id == 1) { ?>
                                     <ul><span class="file"><a href="<?= base_url() ?>cadastros/tipo">Manter Tipo</a></span></ul>
@@ -369,6 +376,11 @@ $data['permissao'] = $this->db->get()->result();
                             </li> 
                         </ul>
                     </li>
+
+
+
+
+
                     <li><span class="file"><a onclick="javascript: return confirm('Deseja realmente sair da aplicação?');"
                                               href="<?= base_url() ?>login/sair">Sair</a></span>
                         <ul>

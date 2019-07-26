@@ -58,7 +58,7 @@ class Procedimento extends BaseController {
 
     function relatorioprocedimento() {
         $data['grupos'] = $this->procedimento->listargrupos();
-        $this->loadView('ambulatorio/relatorioprocedimento' , $data);
+        $this->loadView('ambulatorio/relatorioprocedimento', $data);
     }
 
     function relatorioprocedimentoconvenio() {
@@ -107,7 +107,8 @@ class Procedimento extends BaseController {
         }
 
         $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "ambulatorio/procedimento");
+//        redirect(base_url() . "ambulatorio/procedimento");
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $mensagem);
     }
 
     function excluirprocedimentotuss($tuss_id) {
@@ -123,9 +124,9 @@ class Procedimento extends BaseController {
 
     function gravar() {
         $procedimento_tuss_id = $this->procedimento->gravar();
-        if($procedimento_tuss_id == "0") {
+        if ($procedimento_tuss_id == "0") {
             $data['mensagem'] = 'Erro ao gravar o Procedimento. Procedimento ja cadastrado.';
-        }elseif ($procedimento_tuss_id == "-1") {
+        } elseif ($procedimento_tuss_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar o Procedimento. Opera&ccedil;&atilde;o cancelada.';
         } else {
             $data['mensagem'] = 'Sucesso ao gravar o Procedimento.';

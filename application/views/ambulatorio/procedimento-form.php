@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_voltar">
-        <a href="<?= base_url() ?>ponto/horariostipo">
+        <a href="<?= base_url() ?>ambulatorio/procedimento">
             Voltar
         </a>
 
@@ -19,15 +19,21 @@
                         <input type="text" name="txtNome" class="texto10" value="<?= @$obj->_nome; ?>" />
                     </dd>
                     <dt>
-                        <label>Procedimento</label>
+                        <label>Código</label>
                     </dt>
-
                     <dd>
-                        <input type="hidden" name="txtprocedimento" id="txtprocedimento" class="size2" value="<?= @$obj->_tuss_id; ?>"  />
-                        <input type="hidden" name="txtcodigo" id="txtcodigo" class="size2" value="<?= @$obj->_codigo; ?>" />
-                        <input type="hidden" name="txtdescricao" id="txtdescricao" class="size2" value="<?= @$obj->_descricao; ?>"  />
-                        <input type="text" name="txtprocedimentolabel" id="txtprocedimentolabel" class="size10" value="<?= @$obj->_descricao; ?>" />
-                    </dd>
+                        <input type="text" name="txtcodigo" class="texto" value="<?= @$obj->_codigo; ?>" />
+                    </dd> 
+                    <!--                    <dt>
+                                            <label>Procedimento</label>
+                                        </dt>
+                    
+                                        <dd>
+                                            <input type="hidden" name="txtprocedimento" id="txtprocedimento" class="size2" value="<?= @$obj->_tuss_id; ?>"  />
+                                            <input type="hidden" name="txtcodigo" id="txtcodigo" class="size2" value="<?= @$obj->_codigo; ?>" />
+                                            <input type="hidden" name="txtdescricao" id="txtdescricao" class="size2" value="<?= @$obj->_descricao; ?>"  />
+                                            <input type="text" name="txtprocedimentolabel" id="txtprocedimentolabel" class="size10" value="<?= @$obj->_descricao; ?>" />
+                                        </dd>-->
                     <dt>
                         <label>Grupo</label>
                     </dt>
@@ -35,13 +41,23 @@
                         <select name="grupo" id="grupo" class="size2" >
                             <option value='' >Selecione</option>
                             <? foreach ($grupos as $grupo) { ?>                                
-                                <option value='<?= $grupo->nome?>' <?
+                                <option value='<?= $grupo->nome ?>' <?
                                 if (@$obj->_grupo == $grupo->nome):echo 'selected';
                                 endif;
-                                ?>><?=$grupo->nome?></option>
+                                ?>><?= $grupo->nome ?></option>
                                     <? } ?>
                         </select>
                     </dd>
+                    <dt>
+                        <label>Descrição</label>
+                    </dt>
+                    <dd>
+                        <textarea style="width:50%; height:260%;  " type="text" name="txtdescricao" class="texto"   /><?= @$obj->_descricaoprocedimento; ?></textarea>
+                    </dd> 
+                    <br> <br> <br>
+
+
+
                     <!--                    <dd>
                                             <select name="grupo" id="grupo" class="size1" >
                                                 <option value='' >Selecione</option>
@@ -112,62 +128,62 @@
                     
                                             </select>
                                         </dd>-->
-                    <dt>
-                        <label>Perc./Valor Medico</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="txtperc_medico" id="txtperc_medico" class="texto" value="<?= @$obj->_perc_medico; ?>" />
-                    </dd>
-                    <dt>
-                        <label>Percentual</label>
-                    </dt>
-                    <dd>
-                        <select name="percentual" id="percentual" class="size2">
-                            <option value="" <?
-                            if (@$obj->_percentual == ""):echo 'selected';
-                            endif;
-                            ?>>Selecione</option>
-                            <option value="1" <?
-                            if (@$obj->_percentual == "t"):echo 'selected';
-                            endif;
-                            ?>>SIM</option>
-                            <option value="0" <?
-                            if (@$obj->_percentual == "f"):echo 'selected';
-                            endif;
-                            ?>>N&Atilde;O</option>
-                        </select>
-                    </dd>
-                    <dt>
-                        <label>Medico</label>
-                    </dt>
-                    <dd>
-                        <select name="medico" id="medico" class="size2">
-                            <option value="" <?
-                            if (@$obj->_medico == ""):echo 'selected';
-                            endif;
-                            ?>>Selecione</option>
-                            <option value="1" <?
-                            if (@$obj->_medico == "t"):echo 'selected';
-                            endif;
-                            ?>>SIM</option>
-                            <option value="0" <?
-                            if (@$obj->_medico == "f"):echo 'selected';
-                            endif;
-                            ?>>N&Atilde;O</option>
-                        </select>
-                    </dd>
-                    <dt>
-                        <label>Qtde de sess&otilde;es</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="txtqtde" class="texto" value="<?= @$obj->_qtde; ?>" />
-                    </dd>
-                    <dt>
-                        <label>Prazo entrega</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="entrega" class="texto" value="<?= @$obj->_entrega; ?>" />
-                    </dd>
+                    <!--                    <dt>
+                                            <label>Perc./Valor Medico</label>
+                                        </dt>-->
+                    <!--                    <dd>
+                                            <input type="text" name="txtperc_medico" id="txtperc_medico" class="texto" value="<?= @$obj->_perc_medico; ?>" />
+                                        </dd>-->
+                    <!--                    <dt>
+                                            <label>Percentual</label>
+                                        </dt>
+                                        <dd>
+                                            <select name="percentual" id="percentual" class="size2">
+                                                <option value="" <?
+                    if (@$obj->_percentual == ""):echo 'selected';
+                    endif;
+                    ?>>Selecione</option>
+                                                <option value="1" <?
+                    if (@$obj->_percentual == "t"):echo 'selected';
+                    endif;
+                    ?>>SIM</option>
+                                                <option value="0" <?
+                    if (@$obj->_percentual == "f"):echo 'selected';
+                    endif;
+                    ?>>N&Atilde;O</option>
+                                            </select>
+                                        </dd>-->
+                    <!--                    <dt>
+                                            <label>Medico</label>
+                                        </dt>-->
+                    <!--                    <dd>
+                                            <select name="medico" id="medico" class="size2">
+                                                <option value="" <?
+                    if (@$obj->_medico == ""):echo 'selected';
+                    endif;
+                    ?>>Selecione</option>
+                                                <option value="1" <?
+                    if (@$obj->_medico == "t"):echo 'selected';
+                    endif;
+                    ?>>SIM</option>
+                                                <option value="0" <?
+                    if (@$obj->_medico == "f"):echo 'selected';
+                    endif;
+                    ?>>N&Atilde;O</option>
+                                            </select>
+                                        </dd>-->
+                    <!--                    <dt>
+                                            <label>Qtde de sess&otilde;es</label>
+                                        </dt>
+                                        <dd>
+                                            <input type="text" name="txtqtde" class="texto" value="<?= @$obj->_qtde; ?>" />
+                                        </dd>-->
+                    <!--                    <dt>
+                                            <label>Prazo entrega</label>
+                                        </dt>
+                                        <dd>
+                                            <input type="text" name="entrega" class="texto" value="<?= @$obj->_entrega; ?>" />
+                                        </dd>-->
                 </dl>    
 
                 <hr/>
@@ -182,7 +198,7 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
     $('#btnVoltar').click(function () {
-        $(location).attr('href', '<?= base_url(); ?>ponto/cargo');
+        $(location).attr('href', '<?= base_url(); ?>ambulatorio/procedimento');
     });
 
     $(function () {

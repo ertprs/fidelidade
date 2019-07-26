@@ -1393,6 +1393,9 @@ class paciente_model extends BaseModel {
 
         $data_post = date("Y-m-d", strtotime(str_replace('/', '-', @$_POST['adesao'])));
         $data_adesao = date("Y-m-d", strtotime(str_replace('/', '-', @$_POST['adesao'])));
+        
+       
+        
         $data_receber = date("Y-m-$dia", strtotime($data_post));
         if (date("d", strtotime($data_receber)) == '31') {
             $data_receber = date("Y-m-30", strtotime($data_receber));
@@ -1404,6 +1407,8 @@ class paciente_model extends BaseModel {
         }
 //        var_dump($dia); die;
 
+    
+        
         if ($data_receber < $data_post) {
             if (date("d", strtotime($data_receber)) == '30' && date("m", strtotime($data_receber)) == '01') {
                 $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
@@ -1436,12 +1441,15 @@ class paciente_model extends BaseModel {
                 $b = 0;
             }
         } else {
+                
             if ((int) $_POST['pularmes'] > 0) {
 
                 $quantidade_meses = (int) $_POST['pularmes'];
 
                 $data_receber = date("Y-m-d", strtotime("+$quantidade_meses month", strtotime($data_receber)));
             }
+            
+              
         }
 
 
@@ -1568,9 +1576,9 @@ class paciente_model extends BaseModel {
             } else {
 
                 $data_receber = date("Y-m-d", strtotime("+$mes month", strtotime($data_receber)));
-                if ($b > 0) {
+                if (@$b > 0) {
                     $data_receber = date("Y-m-d", strtotime("+$b days", strtotime($data_receber)));
-                    $b = 0;
+                    @$b = 0;
                 }
             }
         }

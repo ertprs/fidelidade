@@ -7014,9 +7014,9 @@ AND data <= '$data_fim'";
             } else {
 
                 $data_receber = date("Y-m-d", strtotime("+$mes month", strtotime($data_receber)));
-                if ($b > 0) {
+                if (@$b > 0) {
                     $data_receber = date("Y-m-d", strtotime("+$b days", strtotime($data_receber)));
-                    $b = 0;
+                    @$b = 0;
                 }
             }
         }
@@ -11118,13 +11118,13 @@ ORDER BY ae.agenda_exames_id)";
         try {
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
- 
+
             $this->db->set('charge_id_GN', $charge_id);
             $this->db->set('link_GN', $link);
             $this->db->set('pdf_GN', $pdf);
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
             $this->db->update('tb_consultas_avulsas');
-             
+
             /* inicia o mapeamento no banco */
 
             $erro = $this->db->_error_message();

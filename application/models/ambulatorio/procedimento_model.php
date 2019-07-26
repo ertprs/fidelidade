@@ -269,6 +269,7 @@ class procedimento_model extends Model {
             if ($_POST['txtperc_medico'] != '') {
                 $this->db->set('perc_medico', str_replace(",", ".", $_POST['txtperc_medico']));
             }
+             
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
@@ -353,7 +354,7 @@ class procedimento_model extends Model {
     private function instanciar($procedimento_tuss_id) {
 
         if ($procedimento_tuss_id != 0) {
-            $this->db->select('pt.nome, pt.codigo, pt.grupo, pt.tuss_id, pt.entrega, pt.medico, pt.percentual,  t.descricao, pt.perc_medico, pt.qtde, pt.dencidade_calorica, pt.proteinas, pt.carboidratos, pt.lipidios, pt.kcal');
+            $this->db->select('pt.nome, pt.codigo, pt.grupo, pt.tuss_id, pt.entrega, pt.medico, pt.percentual,  t.descricao, pt.perc_medico, pt.qtde, pt.dencidade_calorica, pt.proteinas, pt.carboidratos, pt.lipidios, pt.kcal,pt.descricao as descricaoprocedimento');
             $this->db->from('tb_procedimento_tuss pt');
             $this->db->join('tb_tuss t', 't.tuss_id = pt.tuss_id', 'left');
             $this->db->where("procedimento_tuss_id", $procedimento_tuss_id);
@@ -374,6 +375,7 @@ class procedimento_model extends Model {
             $this->_percentual = $return[0]->percentual;
             $this->_medico = $return[0]->medico;
             $this->_entrega = $return[0]->entrega;
+            $this->_descricaoprocedimento = $return[0]->descricaoprocedimento;
         } else {
             $this->_procedimento_tuss_id = null;
         }
