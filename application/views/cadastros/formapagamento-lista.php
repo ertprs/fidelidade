@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <th class="tabela_header">Nome</th>
-                        <th class="tabela_header" width="70px;" colspan="5"><center>Detalhes</center></th>
+                        <th class="tabela_header" width="70px;" colspan="6"><center>Detalhes</center></th>
                     </tr>
                 </thead>
                 <?php
@@ -55,8 +55,12 @@
                                     <a href="<?= base_url() ?>cadastros/formapagamento/anexararquivos/<?= $item->forma_pagamento_id ?>">Arquivos</a>
                                 </td>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                    <a   href="<?= base_url() ?>cadastros/formapagamento/cadastrarprocedimentoplano/<?= $item->forma_pagamento_id ?>">Procedimentos </a>
+                                </td> 
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Forma?');" href="<?= base_url() ?>cadastros/formapagamento/excluir/<?= $item->forma_pagamento_id ?>">Excluir</a>
                                 </td>
+                              
          
                         </tr>
 
@@ -67,7 +71,7 @@
                         ?>
                         <tfoot>
                             <tr>
-                                <th class="tabela_footer" colspan="6">
+                                <th class="tabela_footer" colspan="7">
                                    <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
                                 </th>

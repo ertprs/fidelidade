@@ -16,6 +16,7 @@ class procedimentoplano_model extends Model {
     var $_qtdeuco = null;
     var $_valoruco = null;
     var $_valortotal = null;
+    var $_quantidade = null;
 
     function Procedimentoplano_model($procedimento_convenio_id = null) {
         parent::Model();
@@ -57,11 +58,11 @@ class procedimentoplano_model extends Model {
                            nome');
         $this->db->from('tb_forma_pagamento');
         $this->db->where("ativo", 't');
-        
+
         if (isset($args['txtpagamento']) && strlen($args['txtpagamento']) > 0) {
             $this->db->where('nome ilike', "%" . $args['txtpagamento'] . "%");
         }
-        
+
         $return = $this->db->get();
         return $return->result();
     }
@@ -255,8 +256,8 @@ class procedimentoplano_model extends Model {
         $this->db->where('grupo_pagamento_id ', $_POST['grupopagamento']);
         $return = $this->db->get();
         $result = $return->result();
-        
-        if($result != NULL){            
+
+        if ($result != NULL) {
             return 2;
         }
 
@@ -274,8 +275,9 @@ class procedimentoplano_model extends Model {
             } catch (Exception $exc) {
                 return 0;
             }
-        } 
+        }
     }
+
     function gravarnovomedico($procedimento_percentual_medico_id) {
 
         //verifica se esse medico já está cadastrado nesse procedimento 
@@ -285,8 +287,8 @@ class procedimentoplano_model extends Model {
         $this->db->where('procedimento_percentual_medico_id', $procedimento_percentual_medico_id);
         $return = $this->db->get();
         $result = $return->result();
-        
-        if($result != NULL){            
+
+        if ($result != NULL) {
             return 2;
         }
 
@@ -313,7 +315,7 @@ class procedimentoplano_model extends Model {
             } catch (Exception $exc) {
                 return 0;
             }
-        } 
+        }
     }
 
     function gravareditarmedicopercentual($procedimento_percentual_medico_convenio_id) {
@@ -423,20 +425,25 @@ class procedimentoplano_model extends Model {
         try {
 
 
-
             /* inicia o mapeamento no banco */
             $procedimento_convenio_id = $_POST['txtprocedimentoplanoid'];
             $this->db->set('procedimento_tuss_id', $_POST['procedimento']);
             $this->db->set('convenio_id', $_POST['convenio']);
-            $this->db->set('qtdech', $_POST['qtdech']);
-            $this->db->set('valorch', $_POST['valorch']);
-            $this->db->set('qtdefilme', $_POST['qtdefilme']);
-            $this->db->set('valorfilme', $_POST['valorfilme']);
-            $this->db->set('qtdeporte', $_POST['qtdeporte']);
-            $this->db->set('valorporte', $_POST['valorporte']);
-            $this->db->set('qtdeuco', $_POST['qtdeuco']);
-            $this->db->set('valoruco', $_POST['valoruco']);
-            $this->db->set('valortotal', $_POST['valortotal']);
+            $this->db->set('qtdech', @$_POST['qtdech']);
+            $this->db->set('valorch', @$_POST['valorch']);
+            $this->db->set('qtdefilme', @$_POST['qtdefilme']);
+            $this->db->set('valorfilme', @$_POST['valorfilme']);
+            $this->db->set('qtdeporte', @$_POST['qtdeporte']);
+            $this->db->set('valorporte', @$_POST['valorporte']);
+            $this->db->set('qtdeuco', @$_POST['qtdeuco']);
+            $this->db->set('valoruco', @$_POST['valoruco']);
+            $this->db->set('valortotal', @$_POST['valortotal']);
+            $this->db->set('quantidade', @$_POST['txtquantidade']);
+            if (isset($_POST['txtautorizar'])) {
+                $this->db->set('autorizar_manual', "t");
+            } else {
+                $this->db->set('autorizar_manual', "f");
+            }
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
@@ -795,7 +802,9 @@ class procedimentoplano_model extends Model {
                             pc.valorporte,
                             pc.qtdeuco,
                             pc.valoruco,
-                            pc.valortotal');
+                            pc.valortotal,
+                            pc.quantidade,
+                            pc.autorizar_manual');
             $this->db->from('tb_procedimento_convenio pc');
             $this->db->join('tb_convenio c', 'c.convenio_id = pc.convenio_id', 'left');
             $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
@@ -817,6 +826,8 @@ class procedimentoplano_model extends Model {
             $this->_qtdeuco = $return[0]->qtdeuco;
             $this->_valoruco = $return[0]->valoruco;
             $this->_valortotal = $return[0]->valortotal;
+            $this->_quantidade = $return[0]->quantidade;
+            $this->_autorizar_manual = $return[0]->autorizar_manual;
         } else {
             $this->_procedimento_convenio_id = null;
             $this->_qtdech = 0;
@@ -828,6 +839,36 @@ class procedimentoplano_model extends Model {
             $this->_qtdeuco = 0;
             $this->_valoruco = 0;
         }
+    }
+
+    function listarprocedimento4() {
+        $this->db->select('procedimento_tuss_id,
+                            nome,
+                            grupo,
+                            codigo');
+        $this->db->from('tb_procedimento_tuss');
+        $this->db->where("ativo", 't');
+        $this->db->orderby('grupo');
+        $this->db->orderby('nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+   function  listarprocedimentosplano(){
+           $this->db->select('procedimento_convenio_id,
+                            pc.convenio_id,
+                            c.nome as convenio,
+                            pc.procedimento_tuss_id,
+                            pt.nome as procedimento,
+                            pt.codigo,
+                            pc.valortotal,
+                            pt.grupo');
+        $this->db->from('tb_procedimento_convenio pc');
+        $this->db->join('tb_convenio c', 'c.convenio_id = pc.convenio_id', 'left');
+        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
+        $this->db->where("pc.ativo", 't');
+        return $this->db->get()->result();
+        
     }
 
 }

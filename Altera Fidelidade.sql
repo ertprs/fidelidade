@@ -308,3 +308,60 @@ ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor24 numeric(10,2);
 
 --26/07/2019
  
+ALTER TABLE ponto.tb_procedimento_convenio ADD COLUMN quantidade integer;
+ALTER TABLE ponto.tb_procedimento_convenio ADD COLUMN autorizar_manual boolean;
+ALTER TABLE ponto.tb_procedimento_convenio ALTER COLUMN autorizar_manual SET DEFAULT false;
+ALTER TABLE ponto.tb_empresa ADD COLUMN modificar_verificar boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN modificar_verificar SET DEFAULT false;
+ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN usuario text;
+ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN senha character varying(100);
+
+--29/07/2019
+
+
+CREATE TABLE ponto.tb_paciente_verificados
+(
+  paciente_verificados_id serial NOT NULL,
+  procedimento_convenio_id integer,
+  titular_id integer,
+  dependente integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  excluido boolean DEFAULT false,
+  paciente_contrato_id integer,
+  data_autorizacao_manual timestamp without time zone,
+  operador_autorizacao_manual integer,
+  financeiro_parceiro_id integer,
+  CONSTRAINT tb_paciente_verificados_pkey PRIMARY KEY (paciente_verificados_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_paciente_verificados
+  OWNER TO postgres;
+
+--30/07/2019
+
+
+CREATE TABLE ponto.tb_procedimentos_plano
+(
+  procedimentos_plano_id serial NOT NULL,
+  procedimento_convenio_id integer,
+  quantidade integer,
+  tempo character varying(222),
+  operador_cadastro integer,
+  data_cadastro timestamp without time zone,
+  operador_atualizacao integer,
+  data_atualizacao timestamp without time zone,
+  formapagamento_id integer,
+  ativo boolean DEFAULT true,
+  CONSTRAINT tb_procedimentos_plano_pkey PRIMARY KEY (procedimentos_plano_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_procedimentos_plano
+  OWNER TO postgres;

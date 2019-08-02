@@ -20,6 +20,10 @@ class Procedimentoplano extends BaseController {
         $this->load->model('cadastro/convenio_model', 'convenio');
         $this->load->model('seguranca/operador_model', 'operador_m');
         $this->load->model('ponto/Competencia_model', 'competencia');
+        $this->load->model('ambulatorio/guia_model', 'guia');
+        $this->load->model('ambulatorio/procedimento_model', 'procedimento');
+        $this->load->model('cadastro/grupoconvenio_model', 'grupoconvenio');
+        $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -32,7 +36,8 @@ class Procedimentoplano extends BaseController {
 
     function pesquisar($limite = 50) {
         $data["limite_paginacao"] = $limite;
-
+        $data['grupoconvenio'] = $this->grupoconvenio->listargrupoconvenios();
+        $data['procedimento'] = $this->procedimentoplano->listarprocedimento4();
         $this->loadView('ambulatorio/procedimentoplano-lista', $data);
 
 //            $this->carregarView($data);
@@ -56,12 +61,14 @@ class Procedimentoplano extends BaseController {
         $data['procedimento'] = $this->procedimentoplano->listarprocedimento();
         $data['convenio'] = $this->procedimentoplano->listarconvenio();
         //$this->carregarView($data, 'giah/servidor-form');
+        $data['convenio'] = $this->procedimentoplano->listarconvenio();
+        $data['empresa'] = $this->empresa->listarempresasprocedimento();
         $this->loadView('ambulatorio/procedimentoplano-form', $data);
     }
 
     function carregarprocedimentoformapagamento($procedimento_convenio_id) {
         $data["procedimento_convenio_id"] = $procedimento_convenio_id;
-         $data["formapagamento_grupo"] = $this->formapagamento->listargrupos();
+        $data["formapagamento_grupo"] = $this->formapagamento->listargrupos();
         $this->loadView('ambulatorio/procedimentoformapagamento-form', $data);
     }
 
@@ -120,7 +127,8 @@ class Procedimentoplano extends BaseController {
         }
 
         $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "ambulatorio/procedimentoplano");
+//        redirect(base_url() . "ambulatorio/procedimentoplano");
+            redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
     }
 
     function excluirpercentual($procedimento_percentual_medico_id) {

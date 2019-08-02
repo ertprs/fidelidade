@@ -644,6 +644,40 @@ class formapagamento_model extends Model {
         return $this->db->get()->result();
     }
 
+    function gravarprocedimentoplano() {
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id');
+        $this->db->set('procedimento_convenio_id', $_POST['txtProcedimento']);
+        $this->db->set('quantidade', $_POST['qtd']);
+        $this->db->set('tempo', $_POST['tempo']);
+        $this->db->set('operador_cadastro', $operador);
+        $this->db->set('data_cadastro', $horario);
+        $this->db->set('formapagamento_id', $_POST['formapagamento_id']);
+        $this->db->insert('tb_procedimentos_plano');
+    }
+
+    function listarprocedimentosdoplano($formapagamento_id) {
+        $this->db->select('fp.nome as forma_pagamento,pt.nome as procedimento,pp.quantidade,pp.tempo,pp.procedimentos_plano_id');
+        $this->db->from('tb_procedimentos_plano pp');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pp.formapagamento_id', 'left');
+        $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_convenio_id = pp.procedimento_convenio_id', 'left');
+        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
+        $this->db->where('pp.formapagamento_id', $formapagamento_id);
+        $this->db->where('pp.ativo','t');
+
+        return $this->db->get()->result();
+    }
+
+    function excluirprocedimentoplano($procedimentos_plano_id) {
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id');
+        $this->db->set('operador_atualizacao', $operador);
+        $this->db->set('data_atualizacao', $horario);
+          $this->db->set('ativo','f');
+        $this->db->where('procedimentos_plano_id', $procedimentos_plano_id);
+        $this->db->update('tb_procedimentos_plano');
+    }
+
 }
 
 ?>

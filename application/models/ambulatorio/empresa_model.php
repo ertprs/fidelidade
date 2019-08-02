@@ -172,7 +172,7 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('carteira_padao_5', 'f');
             }
- 
+
             if ($_POST['client_id'] != "") {
                 $this->db->set('client_id', $_POST['client_id']);
             } else {
@@ -184,7 +184,7 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('client_secret', null);
             }
- 
+
 
             $this->db->set('iugu_token', $_POST['iugu_token']);
             $this->db->set('email', $_POST['email']);
@@ -192,6 +192,13 @@ class empresa_model extends Model {
             $this->db->set('logradouro', $_POST['endereco']);
             $this->db->set('numero', $_POST['numero']);
             $this->db->set('bairro', $_POST['bairro']);
+
+            if (isset($_POST['modificar_verificar'])) {
+                $this->db->set('modificar_verificar', 't');
+            } else {
+                $this->db->set('modificar_verificar', 'f');
+            }
+
             if (@$_POST['empresacadastro'] == 'sim') {
                 $this->db->set('cadastroempresa', 't');
             } else {
@@ -281,7 +288,8 @@ class empresa_model extends Model {
                                f.carteira_padao_4,
                                f.client_id,
                                f.client_secret,
-                               f.carteira_padao_5');
+                               f.carteira_padao_5,
+                               f.modificar_verificar');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -324,6 +332,7 @@ class empresa_model extends Model {
             $this->_carteira_padao_5 = $return[0]->carteira_padao_5;
             $this->_client_id = $return[0]->client_id;
             $this->_client_secret = $return[0]->client_secret;
+            $this->_modificar_verificar = $return[0]->modificar_verificar;
         } else {
             $this->_empresa_id = null;
         }
@@ -391,6 +400,19 @@ class empresa_model extends Model {
         $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
         $this->db->where('empresa_id', $empresa_id);
         return $this->db->get()->result();
+    }
+
+    function listarempresasprocedimento() {
+
+        $empresa_id = $this->session->userdata('empresa_id');
+        $this->db->select('empresa_id,
+                            nome');
+        $this->db->from('tb_empresa');
+        $this->db->where('ativo', 't');
+        $this->db->orderby('nome');
+
+        $return = $this->db->get();
+        return $return->result();
     }
 
 }

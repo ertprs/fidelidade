@@ -380,7 +380,19 @@ class procedimento_model extends Model {
             $this->_procedimento_tuss_id = null;
         }
     }
-
+    
+    
+ function listargruposprocedimentoplano() {
+        $this->db->select('ambulatorio_grupo_id,
+                            nome,
+                            ');
+        $this->db->from('tb_ambulatorio_grupo');
+        $this->db->orderby("nome");
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+    
 }
 
 ?>

@@ -48,7 +48,7 @@ class parceiro_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function listarparceiroendereco($financeiro_parceiro_id) {
         $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');
@@ -56,7 +56,7 @@ class parceiro_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function listarparceiroenderecotodos($financeiro_parceiro_id = null) {
         $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id, razao_social');
         $this->db->from('tb_financeiro_parceiro');
@@ -67,7 +67,7 @@ class parceiro_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
+
     function listarparceiroenderecoconvenio($financeiro_parceiro_id) {
         $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');
@@ -117,10 +117,12 @@ class parceiro_model extends Model {
             $this->db->set('convenio_id', $_POST['convenio_id']);
             $this->db->set('bairro', $_POST['bairro']);
             $this->db->set('complemento', $_POST['complemento']);
+            $this->db->set('usuario', $_POST['usuario']);
+            $this->db->set('senha', md5($_POST['senha']));
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
-            
+
             if ($_POST['txtcadastrosparceiroid'] == "") {// insert
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
@@ -163,7 +165,9 @@ class parceiro_model extends Model {
                                f.municipio_id,
                                c.nome,
                                c.estado,
-                               cep');
+                               cep,
+                               f.usuario,
+                               f.senha');
             $this->db->from('tb_financeiro_parceiro f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("financeiro_parceiro_id", $financeiro_parceiro_id);
@@ -187,6 +191,8 @@ class parceiro_model extends Model {
             $this->_nome = $return[0]->nome;
             $this->_estado = $return[0]->estado;
             $this->_cep = $return[0]->cep;
+            $this->_usuario = $return[0]->usuario;
+            $this->_senha = $return[0]->senha;
         } else {
             $this->_financeiro_parceiro_id = null;
         }

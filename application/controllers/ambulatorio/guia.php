@@ -5559,6 +5559,36 @@ table tr:hover  #achado{
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
+    
+    function listarinfo($paciente_id=NULL,$addcolum=NULL){
+         $financeiro_parceiro_id = $this->session->userdata('financeiro_parceiro_id');
+         $data['lista']  =  $this->guia->listarinformacoes($paciente_id);
+         $data['parceiro'] = $this->guia->listarparceiro($financeiro_parceiro_id);
+         $data['addcolum'] = @$addcolum;
+         $this->load->View('ambulatorio/informacoesverificar-lista',$data);
+        
+    }
+    
+       function listarautorizacao($args = array()) {
+
+        $this->loadView('ambulatorio/telautorizacao-lista', $args);
+
+//            $this->carregarView($data);
+    }
+    
+    
+    function autorizarprocedimento($paciente_verificados_id){
+        $this->guia->autorizarprocedimento($paciente_verificados_id);
+        
+         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    
+     function excluirautorizarprocedimento($paciente_verificados_id){
+        $this->guia->excluirautorizarprocedimento($paciente_verificados_id);
+        
+         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    
 
 }
 

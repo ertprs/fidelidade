@@ -99,6 +99,19 @@
                         <input type="hidden" id="txtCidadeID" class="texto_id" name="municipio_id" value="<?= @$obj->_municipio_id; ?>" readonly="true" />
                         <input type="text" id="txtCidade" class="texto04" name="txtCidade" value="<?= @$obj->_nome; ?>" />
                     </dd>
+                    
+                    <dt>
+                    <label>Usuário</label>
+                    </dt>
+                    <dd>                      
+                        <input type="text" id="txtCidade" class="texto04" name="usuario" value="<?= @$obj->_usuario; ?>" />
+                    </dd>
+                    <dt>
+                    <label>Senha</label>
+                    </dt>
+                    <dd>                      
+                        <input type="password" id="senhaparce" class="texto04" name="senha" value="<?= @$obj->_senha; ?>" />
+                    </dd>
                    
                 </dl>    
                 <hr/>

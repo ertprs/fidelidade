@@ -48,6 +48,12 @@ class guia_model extends Model {
                 $this->db->where("pc.ativo", 't');
                 $return = $this->db->get()->result();
 
+
+
+
+
+
+
                 return $return;
             }
         } catch (Exception $exc) {
@@ -11136,6 +11142,206 @@ ORDER BY ae.agenda_exames_id)";
         } catch (Exception $exc) {
             return -1;
         }
+    }
+
+    function listarempresapermissoes($empresa_id = null) {
+        if ($empresa_id == null) {
+            $empresa_id = $this->session->userdata('empresa_id');
+        }
+
+        $this->db->select(' ');
+        $this->db->from('tb_empresa e');
+        $this->db->where('e.empresa_id', $empresa_id);
+
+        $this->db->orderby('e.empresa_id');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarprocedimentosverificar() {
+
+        $this->db->select('pc.procedimento_convenio_id,
+            pt.nome');
+        $this->db->from('tb_procedimento_tuss pt');
+        $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_tuss_id = pt.procedimento_tuss_id');
+        $this->db->where('pt.ativo', 't');
+        $this->db->where('pc.ativo', 't');
+        $this->db->orderby('nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function gravarverificados($cpf, $paciente_id, $nome) {
+
+        if ($cpf == "" && $paciente_id == "" && $nome == "") {
+            
+        } else {
+
+            $horario = date('Y-m-d H:i:s');
+            $operador = $this->session->userdata('operador_id');
+
+            $this->db->select('pc.procedimento_convenio_id,
+            pt.nome,pc.autorizar_manual,
+            pc.quantidade');
+            $this->db->from('tb_procedimento_tuss pt');
+            $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_tuss_id = pt.procedimento_tuss_id');
+            $this->db->where('pt.ativo', 't');
+            $this->db->where('pc.ativo', 't');
+            $this->db->where('pc.procedimento_convenio_id', @$_POST['procedimento_convenio_id']);
+            $this->db->orderby('nome');
+            $manual = $this->db->get()->result();
+            if (@$manual[0]->autorizar_manual == 't') {
+                @$manualv = "sim";
+            }
+
+            $this->db->select('pc.paciente_contrato_id,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge');
+            $this->db->from('tb_paciente p');
+            $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
+            $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
+            $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
+            $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+            if ($cpf != "") {
+                $this->db->where("cpf", $cpf);
+            } elseif ($nome != "") {
+                $this->db->where('p.nome ilike', "%" . $nome . "%");
+            } else {
+                $this->db->where("p.paciente_id", $paciente_id);
+            }
+
+            $this->db->where("p.ativo", 't');
+            $this->db->where("pc.ativo", 't');
+            $return = $this->db->get()->result();
+
+
+            foreach ($return as $item) {
+
+                $this->db->select('');
+                $this->db->from('tb_paciente_verificados');
+                $this->db->where("paciente_contrato_id", $item->paciente_contrato_id);
+                $this->db->where('procedimento_convenio_id', @$_POST['procedimento_convenio_id']);
+                $this->db->where('excluido','f');
+                $verificarqtdusados = $this->db->get()->result();
+                if (@count($verificarqtdusados) == @$manual[0]->quantidade) {
+                    continue;
+                }
+
+                $this->db->select('o.nome as operador_ultima_impressao,p.nome, p.nascimento, p.paciente_id, situacao,contador_impressao,data_ultima_impressao,pcd.paciente_contrato_dependente_id');
+                $this->db->from('tb_paciente p');
+                $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
+                $this->db->join('tb_operador o', 'o.operador_id = pcd.ultimo_operador_impressao', 'left');
+                $this->db->where("pcd.paciente_contrato_id", $item->paciente_contrato_id);
+                $this->db->where("pcd.ativo", "t");
+                $this->db->order_by('situacao', 'desc');
+                $return2 = $this->db->get()->result();
+                $cotador = @count($verificarqtdusados);
+//              echo $cotador;
+//              die;
+                foreach ($return2 as $value) {
+                    $value->nome;
+                    if ($value->nome != $item->nome) {
+                        $titular_id = $item->paciente_id;
+                    }
+                    if ($value->nome != $item->nome) {
+
+
+                        if ($manual[0]->quantidade <= $cotador) {
+                            
+                        } else {
+                            //                        echo $value->nome."<br>";
+                            $this->db->set('procedimento_convenio_id', $_POST['procedimento_convenio_id']);
+                            $this->db->set('titular_id', $titular_id);
+                            $this->db->set('dependente', $value->paciente_id);
+                            if (@$manualv == 'sim') {
+                                $this->db->set('ativo', 'f');
+                            } else {
+                                $this->db->set('ativo', 't');
+                            }
+                            $this->db->set('excluido', 'f');
+                            $this->db->set('paciente_contrato_id', $item->paciente_contrato_id);
+                            $this->db->set('dependente', $value->paciente_id);
+                            $this->db->set('financeiro_parceiro_id', $this->session->userdata('financeiro_parceiro_id'));
+                            $this->db->set('data_cadastro', $horario);
+                            $this->db->set('operador_cadastro', $operador);
+                            $this->db->insert('tb_paciente_verificados');
+                            @$cotador++;
+                        }
+
+//                        
+                    }
+                }
+            }
+
+//            die;
+        }
+    }
+
+    function verficarsituacao($paciente_id) {
+        $this->db->select('*');
+        $this->db->from('tb_paciente_verificados');
+        $this->db->where('excluido', null);
+        $this->db->or_where('excluido', 'f');
+        $this->db->where('dependente', $paciente_id);
+        return $this->db->get()->result();
+    }
+
+    function listarinformacoes($paciente_id) {
+        $this->db->select('pt.nome as procedimento,p.nome as paciente,pv.paciente_verificados_id as numero_autorizacao,pv.data_cadastro,fp.razao_social,pv.data_autorizacao_manual,o.nome as operador_autorizacao');
+        $this->db->from('tb_paciente_verificados  pv');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pv.dependente', 'left');
+        $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_convenio_id = pv.procedimento_convenio_id', 'left');
+        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
+        $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = pv.financeiro_parceiro_id', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = pv.operador_autorizacao_manual', 'left');
+        $this->db->where('pv.excluido', 'f');
+        $this->db->where('pv.ativo', 't');
+        $this->db->where('pv.dependente', $paciente_id);
+        return $this->db->get()->result();
+    }
+
+    function listarparceiro($financeiro_parceiro_id) {
+
+        $this->db->select('');
+        $this->db->from('tb_financeiro_parceiro');
+        if ($financeiro_parceiro_id != "") {
+            $this->db->where('financeiro_parceiro_id', $financeiro_parceiro_id);
+        }
+
+        return $this->db->get()->result();
+    }
+
+    function listarautorizacao($args = array()) {
+        $this->db->select('pv.data_cadastro,p.nome as paciente, pt.nome as procedimento,pv.paciente_verificados_id,fp.razao_social');
+        $this->db->from('tb_paciente_verificados pv');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pv.dependente', 'left');
+        $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_convenio_id = pv.procedimento_convenio_id', 'left');
+        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
+        $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = pv.financeiro_parceiro_id', 'left');
+        $this->db->where('pv.ativo', 'f');
+        $this->db->where('pv.excluido', 'f');
+        if (isset($args['nome']) && strlen($args['nome']) > 0) {
+            $this->db->where('p.nome ilike', '%' . $args['nome'] . '%');
+        }
+        return $this->db;
+    }
+
+    function autorizarprocedimento($paciente_verificados_id) {
+        $horario = date('Y-m-d');
+        $operador = $this->session->userdata('operador_id');
+        $this->db->set('ativo', 't');
+        $this->db->set('data_autorizacao_manual', $horario);
+        $this->db->set('operador_autorizacao_manual', $operador);
+        $this->db->where('paciente_verificados_id', $paciente_verificados_id);
+        $this->db->update('tb_paciente_verificados');
+    }
+
+    function excluirautorizarprocedimento($paciente_verificados_id) {
+        $horario = date('Y-m-d');
+        $operador = $this->session->userdata('operador_id');
+        $this->db->set('excluido', 't');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador);
+        $this->db->where('paciente_verificados_id', $paciente_verificados_id);
+        $this->db->update('tb_paciente_verificados');
     }
 
 }

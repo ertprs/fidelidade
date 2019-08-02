@@ -202,8 +202,11 @@
                      <tr>
                         <td><input type="checkbox" name="carteira_padao_5"   <? if (@$obj->_carteira_padao_5 == 't') echo "checked"; ?>> 
                             <label  title=" " >Carteira Padrão 5</label>  
-                        </td>
-                       
+                        </td> 
+                        <td>
+                            <input type="checkbox" name="modificar_verificar"   <? if (@$obj->_modificar_verificar == 't') echo "checked"; ?>> 
+                            <label  title="Ao ativar essa flag, a tela de verificar vai necessitar de senha do parceiro que irá poder" >Modificar Verificar</label>  
+                        </td> 
                     </tr>
                 </table> 
                 <br>

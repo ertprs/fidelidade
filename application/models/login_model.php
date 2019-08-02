@@ -21,7 +21,7 @@ class login_model extends Model {
         $this->db->where('o.ativo = true');
         $this->db->where('p.ativo = true');
         $return = $this->db->get()->result();
-        
+
         $this->db->select('empresa_id,
                             nome,
                             internacao,
@@ -31,16 +31,16 @@ class login_model extends Model {
         $this->db->where('empresa_id', $empresa);
         $retorno = $this->db->get()->result();
 
-        if(count($retorno) > 0){
+        if (count($retorno) > 0) {
             $empresanome = $retorno[0]->nome;
             $internacao = $retorno[0]->internacao;
             $cadastro = $retorno[0]->cadastro;
-        }else{
+        } else {
             $empresanome = "";
             $internacao = false;
-            $cadastro="";
+            $cadastro = "";
         }
-        
+
         if (isset($return) && count($return) > 0) {
             $modulo[] = null;
             foreach ($return as $value) {
@@ -59,7 +59,6 @@ class login_model extends Model {
                 'empresa_id' => $empresa,
                 'cadastro' => $cadastro,
                 'empresa' => $empresanome
-                
             );
             $this->session->set_userdata($p);
             return true;
@@ -74,15 +73,38 @@ class login_model extends Model {
         $this->db->select('empresa_id,
                             nome');
         $this->db->from('tb_empresa');
-        $this->db->where('ativo','t');
-        $this->db->where('cadastroempresa',null);
+        $this->db->where('ativo', 't');
+        $this->db->where('cadastroempresa', null);
         $this->db->orderby('empresa_id');
         $return = $this->db->get();
         return $return->result();
     }
-    
-    
-    
+
+    function autenticarparceiro($usuario, $senha) {
+        $this->db->select('o.financeiro_parceiro_id');
+
+        $this->db->from('tb_financeiro_parceiro o');
+        $this->db->where('o.usuario', $usuario);
+        $this->db->where('o.senha', md5($senha));
+
+        $return = $this->db->get()->result();
+
+        if (isset($return) && count($return) > 0) {
+
+            $p = array(
+                'autenticado_parceiro' => true,
+                'financeiro_parceiro_id' => $return[0]->financeiro_parceiro_id,
+                'login_parceiro' => $usuario
+            );
+
+            $this->session->set_userdata($p);
+            return true;
+        } else {
+//            $this->session->sess_destroy();
+            return false;
+        }
+    }
+
     
 
 }
