@@ -110,7 +110,7 @@
                     <label>Senha</label>
                     </dt>
                     <dd>                      
-                        <input type="password" id="senhaparce" class="texto04" name="senha" value="<?= @$obj->_senha; ?>" />
+                        <input type="password" id="senhaparce" class="texto04" name="senha" value="" />
                     </dd>
                    
                 </dl>    

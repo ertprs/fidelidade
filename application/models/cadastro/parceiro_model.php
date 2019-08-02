@@ -118,7 +118,9 @@ class parceiro_model extends Model {
             $this->db->set('bairro', $_POST['bairro']);
             $this->db->set('complemento', $_POST['complemento']);
             $this->db->set('usuario', $_POST['usuario']);
-            $this->db->set('senha', md5($_POST['senha']));
+            if (@$_POST['senha'] != "") {
+                $this->db->set('senha', md5($_POST['senha']));
+            }
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 

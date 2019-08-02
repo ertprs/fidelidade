@@ -11285,13 +11285,15 @@ ORDER BY ae.agenda_exames_id)";
     }
 
     function listarinformacoes($paciente_id) {
-        $this->db->select('pt.nome as procedimento,p.nome as paciente,pv.paciente_verificados_id as numero_autorizacao,pv.data_cadastro,fp.razao_social,pv.data_autorizacao_manual,o.nome as operador_autorizacao');
+        $this->db->select('pt.nome as procedimento,p.nome as paciente,pv.paciente_verificados_id as numero_autorizacao,pv.data_cadastro,fp.razao_social,pv.data_autorizacao_manual,o.nome as operador_autorizacao,fpa.nome as plano');
         $this->db->from('tb_paciente_verificados  pv');
         $this->db->join('tb_paciente p', 'p.paciente_id = pv.dependente', 'left');
         $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_convenio_id = pv.procedimento_convenio_id', 'left');
         $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = pv.financeiro_parceiro_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = pv.operador_autorizacao_manual', 'left');
+        $this->db->join('tb_paciente_contrato pac','pac.paciente_contrato_id = pv.paciente_contrato_id','left');
+        $this->db->join('tb_forma_pagamento fpa','fpa.forma_pagamento_id = pac.plano_id','left');
         $this->db->where('pv.excluido', 'f');
         $this->db->where('pv.ativo', 't');
         $this->db->where('pv.dependente', $paciente_id);
