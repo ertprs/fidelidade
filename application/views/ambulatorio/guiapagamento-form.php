@@ -103,7 +103,6 @@
                                 <th width="70px;" colspan="2" class="tabela_header">FORMA DE PAGAMETO: <?= $paciente['0']->pagamento; ?></th>
 
                                 <? if (@$listarpagamentoscontrato[0]->contrato == 't') { ?>
-
                                     <?php
                                     if ($empresa[0]->iugu_token == "") {
                                         ?>
