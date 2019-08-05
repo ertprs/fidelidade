@@ -11219,7 +11219,7 @@ ORDER BY ae.agenda_exames_id)";
                 $this->db->from('tb_paciente_verificados');
                 $this->db->where("paciente_contrato_id", $item->paciente_contrato_id);
                 $this->db->where('procedimento_convenio_id', @$_POST['procedimento_convenio_id']);
-                $this->db->where('excluido','f');
+                $this->db->where('excluido', 'f');
                 $verificarqtdusados = $this->db->get()->result();
                 if (@count($verificarqtdusados) == @$manual[0]->quantidade) {
                     continue;
@@ -11292,8 +11292,8 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = pv.financeiro_parceiro_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = pv.operador_autorizacao_manual', 'left');
-        $this->db->join('tb_paciente_contrato pac','pac.paciente_contrato_id = pv.paciente_contrato_id','left');
-        $this->db->join('tb_forma_pagamento fpa','fpa.forma_pagamento_id = pac.plano_id','left');
+        $this->db->join('tb_paciente_contrato pac', 'pac.paciente_contrato_id = pv.paciente_contrato_id', 'left');
+        $this->db->join('tb_forma_pagamento fpa', 'fpa.forma_pagamento_id = pac.plano_id', 'left');
         $this->db->where('pv.excluido', 'f');
         $this->db->where('pv.ativo', 't');
         $this->db->where('pv.dependente', $paciente_id);
@@ -11344,6 +11344,31 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->set('operador_atualizacao', $operador);
         $this->db->where('paciente_verificados_id', $paciente_verificados_id);
         $this->db->update('tb_paciente_verificados');
+    }
+
+    function atualizarintegracaogerencianetcarne($charge_id, $paciente_contrato_parcelas_id, $link = NULL, $pdf = NULL ,$link_carne,$cover_carne,$pdf_carne,$pdf_cover_carne,$carnet_id,$ci) {
+
+        /* inicia o mapeamento no banco */
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->set('link', $link);
+        $this->db->set('pdf', $pdf);
+        $this->db->where('charge_id', "$charge_id");
+//        $this->db->set('status', $status);
+        $this->db->set('carne', 't');
+        $this->db->set('link_carne', $link_carne);
+        $this->db->set('cover_carne', $cover_carne);
+        $this->db->set('pdf_carnet', $pdf_carne);
+        $this->db->set('pdf_cover_carne', $pdf_cover_carne);
+        $this->db->set('carnet_id',$carnet_id);
+          $this->db->set('num_carne',$ci);
+
+
+//            $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+//            $this->db->set('data_cadastro', $horario);
+//            $this->db->set('operador_cadastro', $operador_id);
+
+        $this->db->update('tb_paciente_contrato_parcelas_gerencianet');
     }
 
 }

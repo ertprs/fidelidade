@@ -2753,15 +2753,14 @@ class Autocomplete extends Controller {
         ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
         $pagamento = $this->paciente_m->listarparcelagerncianetpendentes();
 
-    
- 
         $empresa = $this->guia->listarempresa();
 //        echo "<pre>";
-//        print_r($pagamento);die;
+//        print_r($pagamento);
+//        die;
 
         $client_id = $empresa[0]->client_id;
         $client_secret = $empresa[0]->client_secret;
-        
+
 
         $options = [
             'client_id' => $client_id,
@@ -2769,39 +2768,67 @@ class Autocomplete extends Controller {
             'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
         ];
 
-  
- 
+
+
         if ($client_id != "" && $client_secret != "") {
 
             foreach ($pagamento as $item) {
-                
-                
-                $params = [
-                    'id' => $item->charge_id // $charge_id refere-se ao ID da transação ("charge_id")
-                ];
-                try {
-                    $api = new Gerencianet($options);
-                    $charge = $api->detailCharge($params, []);
-                    echo '<pre>';
+                if ($item->carne == "t") {
+                    $params = [
+                        'id' => $item->carnet_id
+                    ];
+
+
+                    try {
+                        $api = new Gerencianet($options);
+                        $carnet = $api->detailCarnet($params, []);
+                        echo '<pre>';
+//                        print_r($carnet);
+
+                        $carnet['data']['charges'];
+                        foreach ($carnet['data']['charges'] as $value) {
+                            if ($item->charge_id == $value['charge_id'] && ($value['status'] == "settled" || $value['status'] == "paid")) {
+                                $this->guia->confirmarpagamentoautomaticogerencianet($item->paciente_contrato_parcelas_id);
+                            } else {
+                                
+                            }
+                        }
+                    } catch (GerencianetException $e) {
+                        print_r($e->code);
+                        print_r($e->error);
+                        print_r($e->errorDescription);
+                    } catch (Exception $e) {
+                        print_r($e->getMessage());
+                    }
+                } else {
+
+                    $params = [
+                        'id' => $item->charge_id // $charge_id refere-se ao ID da transação ("charge_id")
+                    ];
+                    try {
+                        $api = new Gerencianet($options);
+                        $charge = $api->detailCharge($params, []);
+                        echo '<pre>';
 //                    print_r($charge);
-                } catch (GerencianetException $e) {
-                    print_r($e->code);
-                    print_r($e->error);
-                    print_r($e->errorDescription);
-                } catch (Exception $e) {
-                    print_r($e->getMessage());
-                }
-                
-                if ($charge['data']['status'] == "settled" || $charge['data']['status'] == "paid") {
-                    $this->guia->confirmarpagamentoautomaticogerencianet($item->paciente_contrato_parcelas_id);  
+                    } catch (GerencianetException $e) {
+                        print_r($e->code);
+                        print_r($e->error);
+                        print_r($e->errorDescription);
+                    } catch (Exception $e) {
+                        print_r($e->getMessage());
+                    }
+
+                    if ($charge['data']['status'] == "settled" || $charge['data']['status'] == "paid") {
+                        $this->guia->confirmarpagamentoautomaticogerencianet($item->paciente_contrato_parcelas_id);
+                    }
                 }
             }
+
+
             echo 'true';
         } else {
             echo 'false';
         }
-
-      
     }
 
 }

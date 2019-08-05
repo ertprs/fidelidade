@@ -207,10 +207,13 @@
                             <input type="checkbox" name="modificar_verificar"   <? if (@$obj->_modificar_verificar == 't') echo "checked"; ?>> 
                             <label  title="Ao ativar essa flag, a tela de verificar vai necessitar de senha do parceiro que irá poder" >Modificar Verificar</label>  
                         </td> 
+                         
                     </tr>
                 </table> 
                 <br>
-                <a href="<?= base_url() ?>cadastros/pacientes/gravartodospacientesexterno" target="_blank">Gravar todos parceiros</a>
+                
+                <a title="Ao clicar nesse link, irá abrir uma tela branca isso significa que todos os pacientes serão exportados para o sistema clinica,exceto os que já estão cadastrados lá.(Verifica pelo CPF e Prontuário)" href="<?= base_url() ?>cadastros/pacientes/gravartodospacientesexterno" target="_blank">Gravar todos parceiros</a>
+                
                 <hr/>
 
                 <button type="submit" name="btnEnviar">Enviar</button>

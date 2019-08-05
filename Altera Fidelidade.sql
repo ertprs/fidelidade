@@ -365,3 +365,14 @@ WITH (
 );
 ALTER TABLE ponto.tb_procedimentos_plano
   OWNER TO postgres;
+
+--02/08/2019
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN carne boolean;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ALTER COLUMN carne SET DEFAULT false;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN link_carne text;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN cover_carne text;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN pdf_carnet text;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN pdf_cover_carne text;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN carnet_id integer;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN num_carne integer;

@@ -1896,7 +1896,7 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
     }
 
-    function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id) {
+    function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id, $carnet_id = NULL, $num_carne = NULL) {
 
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
         $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoparcelagerencianet($parcela_id);
@@ -1917,27 +1917,47 @@ class Guia extends BaseController {
         }
 
         if ($client_id != "" && $client_secret != "" && count($pagamento_gerencianet) > 0) {
-
             $options = [
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
                 'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
 
-            $params = [
-                'id' => $pagamento_gerencianet[0]->charge_id
-            ];
+            if ($num_carne != "" && $num_carne != NULL) {
+                $params = ['id' => $carnet_id, 'parcel' => $num_carne];
+                try {
+                    $api = new Gerencianet($options);
+                    $response = $api->cancelParcel($params, []);
+//                    print_r($response);
+                    $data['mensagem'] = 'Sucesso ao excluir parcela.';
+                } catch (GerencianetException $e) {
+//                    print_r($e->code);
+//                    print_r($e->error);
+//                    print_r($e->errorDescription);
+                    $data['mensagem'] = 'Erro ao excluir parcela';
+                } catch (Exception $e) {
+                    print_r($e->getMessage());
+                }
+            } else {
 
-            try {
-                $api = new Gerencianet($options);
-                $charge = $api->cancelCharge($params, []);
-                print_r($charge);
-            } catch (GerencianetException $e) {
-                print_r($e->code);
-                print_r($e->error);
-                print_r($e->errorDescription);
-            } catch (Exception $e) {
-                print_r($e->getMessage());
+
+                $params = [
+                    'id' => $pagamento_gerencianet[0]->charge_id
+                ];
+
+                try {
+                    $api = new Gerencianet($options);
+                    $charge = $api->cancelCharge($params, []);
+//                    print_r($charge);
+                    $data['mensagem'] = 'Sucesso ao excluir parcela.';
+                } catch (GerencianetException $e) {
+//                    print_r($e->code);
+//                    print_r($e->error);
+//                    print_r($e->errorDescription);
+                    $data['mensagem'] = 'Erro ao excluir parcela';
+                } catch (Exception $e) {
+                    print_r($e->getMessage());
+                }
             }
         }
 
@@ -4950,7 +4970,7 @@ table tr:hover  #achado{
         $empresa[0]->client_id;
 
         $empresa[0]->client_secret;
-        
+
 
         if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
             $mensagem = "Client ID ou Client Secret não cadastradas.";
@@ -4960,8 +4980,8 @@ table tr:hover  #achado{
         }
 
         $pagamento = $this->paciente->listarpagamentoscontratoparcelaGN($paciente_contrato_parcelas_id);
-        
-       
+
+
 
         $data_vencimento = $pagamento[0]->data;
         $paciente = $cliente[0]->nome;
@@ -5000,8 +5020,7 @@ table tr:hover  #achado{
         } elseif (@$data_vencimento < date('Y-m-d')) {
             $mensagem .= "Erro, Data de vencimento é inferior a data de hoje!";
         } else {
-
-
+ 
             $options = [
                 'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
                 'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
@@ -5037,12 +5056,12 @@ table tr:hover  #achado{
                     $charge = $api->createCharge([], $body);
                     echo "<pre>";
                     print_r($charge);
-                   
+
                     $gravar = $this->guia->gravarintegracaogerencianet($charge['data']['charge_id'], $paciente_contrato_parcelas_id, $charge['data']['link'], $charge['data']['pdf']['charge'], $charge['data']['status']);
                 } catch (GerencianetException $e) {
                     print_r($e->code);
                     print_r($e->error);
-                    print_r($e->errorDescription); 
+                    print_r($e->errorDescription);
                     $mensagem = "Erro, entre em contato com Suporte!";
                 } catch (Exception $e) {
                     print_r($e->getMessage());
@@ -5137,10 +5156,9 @@ table tr:hover  #achado{
             
         } else {
 
-
             $clientId = $empresa[0]->client_id; // insira seu Client_Id, conforme o ambiente (Des ou Prod)
             $clientSecret = $empresa[0]->client_secret;
-            ; // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
+            // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
 
             $options = [
                 'client_id' => $clientId,
@@ -5201,8 +5219,6 @@ table tr:hover  #achado{
             redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
             return;
         }
-
-
         $paciente = $cliente[0]->nome;
         $cpf = $cliente[0]->cpf;
 
@@ -5214,10 +5230,8 @@ table tr:hover  #achado{
         } else {
             $telefone = "";
         }
-
-
-
         $pagamento = $this->paciente->listarpagamentoscontratoparcelagerencianettodos($contrato_id);
+
 
 //        echo "<pre>";
 //        print_r($pagamento);die;
@@ -5335,7 +5349,7 @@ table tr:hover  #achado{
                     } catch (GerencianetException $e) {
 //                        print_r($e->code);
 //                        print_r($e->error);
-                        print_r($e->errorDescription);
+//                        print_r($e->errorDescription);
 
                         if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
                             $erro = ", Telefone inválido!";
@@ -5420,7 +5434,6 @@ table tr:hover  #achado{
         $nome_produto = "Parcela";
         $quantidade = '1';
         $valor = $pagamento[0]->valor * 100;
-
         $data_nascimento = $cliente[0]->nascimento;
 
         if ($telefone == "") {
@@ -5555,40 +5568,276 @@ table tr:hover  #achado{
         }
 
 
-
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
-    
-    function listarinfo($paciente_id=NULL,$addcolum=NULL){
-         $financeiro_parceiro_id = $this->session->userdata('financeiro_parceiro_id');
-         $data['lista']  =  $this->guia->listarinformacoes($paciente_id);
-         $data['parceiro'] = $this->guia->listarparceiro($financeiro_parceiro_id);
-         $data['addcolum'] = @$addcolum;
-         $this->load->View('ambulatorio/informacoesverificar-lista',$data);
-        
+
+    function listarinfo($paciente_id = NULL, $addcolum = NULL) {
+        $financeiro_parceiro_id = $this->session->userdata('financeiro_parceiro_id');
+        $data['lista'] = $this->guia->listarinformacoes($paciente_id);
+        $data['parceiro'] = $this->guia->listarparceiro($financeiro_parceiro_id);
+        $data['addcolum'] = @$addcolum;
+        $this->load->View('ambulatorio/informacoesverificar-lista', $data);
     }
-    
-       function listarautorizacao($args = array()) {
+
+    function listarautorizacao($args = array()) {
 
         $this->loadView('ambulatorio/telautorizacao-lista', $args);
 
 //            $this->carregarView($data);
     }
-    
-    
-    function autorizarprocedimento($paciente_verificados_id){
+
+    function autorizarprocedimento($paciente_verificados_id) {
         $this->guia->autorizarprocedimento($paciente_verificados_id);
-        
-         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
-    
-     function excluirautorizarprocedimento($paciente_verificados_id){
+
+    function excluirautorizarprocedimento($paciente_verificados_id) {
         $this->guia->excluirautorizarprocedimento($paciente_verificados_id);
-        
-         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
-    
+
+    function gerarcarnegerencianet($paciente_id, $contrato_id) {
+
+        $cliente = $this->paciente->listardados($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+        $email = $cliente[0]->cns;
+        $empresa = $this->guia->listarempresa();
+        $empresa[0]->client_id;
+        $empresa[0]->client_secret;
+
+        if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
+            $mensagem = "Client ID ou Client Secret não cadastradas.";
+            $this->session->set_flashdata('message', $mensagem);
+            redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+            return;
+        }
+
+        $clientId = $empresa[0]->client_id;
+        $clientSecret = $empresa[0]->client_secret;
+
+        $paciente = $cliente[0]->nome;
+        $cpf = $cliente[0]->cpf;
+ 
+        if ($cliente[0]->celular != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        } elseif ($cliente[0]->telefone != "") {
+            $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->telefone);
+        } else {
+            $telefone = "";
+        }
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelagerencianetcarne($contrato_id);
+//        echo "<pre>";
+//        print_r($pagamento);
+        foreach ($pagamento as $item) {
+            @$contvalor{$item->valor}++;
+//            echo @$contvalor{$item->valor};
+//            echo '<br>';
+        }
+
+        foreach ($pagamento as $item2) {
+            if (@$contvalor2{$item2->valor} > 0) {
+                
+            } else {
+                @$contvalor{$item2->valor} . " - ";
+                @$contvalor2{$item2->valor} ++;
+                $carnes[] = array('quantidade' => $contvalor{$item2->valor}, 'valor' => $item2->valor, 'data' => $item2->data);
+            }
+        }
+
+//        echo "<pre>";
+//        print_r($carnes);
+//        die;
+
+        $data_nascimento = $cliente[0]->nascimento;
+
+        if ($telefone == "") {
+            $mensagem = "Erro, Telefone ou Celular do cliente não cadastrados.";
+        } elseif ($data_nascimento == "") {
+            $mensagem .= "Data de nascimento,";
+        } elseif ($cpf == "") {
+            $mensagem .= "Erro, CPF do cliente não cadastrado.";
+        } elseif ($paciente == "") {
+            $mensagem .= "Erro, Nome do paciente não cadastrado";
+        } else {
+//            $data_vencimento = $pagamento[0]->data;
+//            $quantidade_parcelas = count($pagamento);
+//            $preco_parcela = $pagamento[0]->valor * 100;
+
+            foreach ($carnes as $value) {
+
+                if ($value['valor'] < 5 || $value['valor'] == "") {
+                    $mensagem = "Erro, Valor tem que ser Maior ou Igual a R$ 5,00";
+                } elseif ($value['data'] < date('Y-m-d')) {
+                    $mensagem = "Erro, Data de vencimento é inferior a data de hoje! Parcela com data:" . $value['data'];
+                } else {
+
+                    $options = [
+                        'client_id' => $clientId,
+                        'client_secret' => $clientSecret,
+                        'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                    ];
+
+                    $item_1 = [
+                        'name' => 'Parcela', // nome do item, produto ou serviço
+                        'amount' => 1, // quantidade
+                        'value' => $value['valor'] * 100 // valor (1000 = R$ 10,00) (Obs: É possível a criação de itens com valores negativos. Porém, o valor total da fatura deve ser superior ao valor mínimo para geração de transações.)
+                    ];
+
+//                   echo $value['valor'];
+
+
+                    $items = [
+                        $item_1
+                            // ,
+                            // $item_2
+                    ];
+
+
+
+                    if ($email == "") {
+                        $customer = [
+                            'name' => $paciente, // nome do cliente
+                            'cpf' => $cpf, // cpf do cliente
+                            'phone_number' => $telefone  // telefone do cliente               
+                        ];
+                    } else {
+                        $customer = [
+                            'name' => $paciente, // nome do cliente
+                            'cpf' => $cpf, // cpf do cliente
+                            'phone_number' => $telefone, // telefone do cliente
+                            'email' => $email
+                        ];
+                    }
+
+                    $body = [
+                        'items' => $items,
+                        'customer' => $customer,
+                        'expire_at' => $value['data'], // data de vencimento da primeira parcela do carnê
+                        'repeats' => $value['quantidade'], // número de parcelas do carnê
+                        'split_items' => false
+                    ];
+
+                    try {
+                        $api = new Gerencianet($options);
+                        $carnet = $api->createCarnet([], $body);
+//                        echo "<pre>";
+//                    print_r($carnet);
+                        @$ci = 0;
+                        foreach ($carnet['data']['charges'] as $item) {
+                            @$ci++;
+                            $url = $item['url'];
+                            $pdf = $item['pdf']['charge'];
+                            $link_carne = $carnet['data']['link'];
+                            $cover_carne = $carnet['data']['cover'];
+                            $pdf_carnet = $carnet['data']['pdf']['carnet'];
+                            $pdf_cover_carne = $carnet['data']['pdf']['cover'];
+                            $carnet_id = $carnet['data']['carnet_id'];
+                            $pagamentoupdate = $this->paciente->listarpagamentoscontratoparcelagerencianetcarneupdate($contrato_id,$value['valor']);
+                            
+//                            print_r($pagamentoupdate);
+//                            die;
+                            $gravar = $this->guia->gravarintegracaogerencianet($item['charge_id'], $pagamentoupdate[0]->paciente_contrato_parcelas_id);
+                            $this->guia->atualizarintegracaogerencianetcarne($item['charge_id'], $pagamentoupdate[0]->paciente_contrato_parcelas_id, $url, $pdf, $link_carne, $cover_carne, $pdf_carnet, $pdf_cover_carne, $carnet_id, $ci);
+                        }
+                    } catch (GerencianetException $e) {
+//                    print_r($e->code);
+//                    print_r($e->error);
+//                    print_r($e->errorDescription);
+
+                        if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
+                            $erro = ", Telefone inválido!";
+                        } elseif ($e->errorDescription == ", Cpf (11111111111) inválido") {
+
+                            $erro = $e->errorDescription;
+                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/email") {
+                            $erro = ", Email inválido!";
+                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/cpf") {
+                            $erro = ", CPF inválido!";
+                        } else {
+                            $erro = "";
+                        }
+                        $mensagem = "Erro" . @$erro;
+                    } catch (Exception $e) {
+                        print_r($e->getMessage());
+                    }
+ 
+                }
+                
+                
+            }
+        }
+
+        if (@$mensagem == "") {
+            @$mensagem = "Sucesso ao gerar Carnês";
+        }
+
+//        die;
+        $this->session->set_flashdata('message', $mensagem);
+//        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
+
+    public function reenviaremailgerencianetcarne($paciente_id, $contrato_id, $carnet_id) {
+        $cliente = $this->paciente->listardados($paciente_id);
+
+        $email = $cliente[0]->cns;
+
+
+        $empresa = $this->guia->listarempresa();
+        $empresa[0]->client_id;
+
+
+
+        if ($empresa[0]->client_id == "" || $empresa[0]->client_secret == "") {
+            
+        } else {
+
+
+            $clientId = $empresa[0]->client_id; // insira seu Client_Id, conforme o ambiente (Des ou Prod)
+            $clientSecret = $empresa[0]->client_secret;
+            // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
+
+            $options = [
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            ];
+
+// $carnet_id refere-se ao ID do carnê desejado
+            $params = [
+                'id' => $carnet_id
+            ];
+
+            $body = [
+                'email' => $email
+            ];
+
+            try {
+                $api = new Gerencianet($options);
+                $response = $api->resendCarnet($params, $body);
+//                print_r($response);
+
+                $mensagem = "Sucesso ao Re-enviar Email Gerencianet";
+            } catch (GerencianetException $e) {
+//                print_r($e->code);
+//                print_r($e->error);
+//                print_r($e->errorDescription);
+                $mensagem = "Erro ao Re-enviar Email Gerencianet";
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+    }
 
 }
 

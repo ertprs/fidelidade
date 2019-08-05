@@ -27,8 +27,26 @@
             margin-top:70px;
 
 
+        }a#login_sair{
+            float: right;
+            float: right;
+            display: block;
+            background: url("../img/login_sair.png") no-repeat;
+            width: 25px;
+            height: 25px;
+            text-indent: 99999px;
+            overflow: hidden;
+        }#login_controles{
+            margin-top: -5%;
+
+            float: right;
+
         }
+
     </style>
+    <?php 
+        $permissao = $this->empresa->listarpermissoes();
+    ?>
     <body> 
 
 
@@ -38,10 +56,27 @@
                      title="Logo" height="70" id="Insert_logo"/>
                 <div id="sis_info">SISTEMA DE GESTAO DE CLINICAS - v1.0</div>
             </div>
+            <?php
+            if (@$permissao[0]->modificar_verificar == 't') {
+                ?>
+
+                <div id="login_controles">
+                    <!--
+                    <a href="#" alt="Alterar senha" id="login_pass">Alterar Senha</a>
+                    -->
+                    <a id="login_sair" title="Sair do Sistema" onclick="javascript: return confirm('Deseja realmente sair da aplicação?');"
+                       href="<?= base_url() ?>login/sair">Sair</a>
+
+
+                </div>
+                <?php
+            }
+            ?>
+
+
         </div>
 
         <?php
-        $permissao = $this->empresa->listarpermissoes();
         if (@$permissao[0]->modificar_verificar == 't' && $this->session->userdata('financeiro_parceiro_id') == "") {
             ?>
             <div id="login">
@@ -73,7 +108,10 @@
                                 ?>
                                 <div id="login">
                                     <div id="login-box">
-                                        <h2>Verificar</h2>
+                                        <h2>Verificar &nbsp; &nbsp;  
+                                        </h2>
+
+
                                         <form name="form_login" id="form_login" action="<?= base_url() ?>verificar/validarcpf"
                                               method="post"> 
 
@@ -116,6 +154,7 @@
                                             <div style="padding-left: 110px; margin-top: -5%; ">
                                                 <button type="submit" name="btnEnviar">Verificar</button>  
                                             </div>
+
 
                                         </form>
 
@@ -319,18 +358,16 @@
                                                             echo " </b>";
                                                             if (@$dadosverificacao[0]->ativo == 't') {
                                                                 if (@$dadosverificacao[0]->operador_autorizacao_manual != "") {
-                                                                  @$addcolum = "sim";  
-                                                                }else{
-                                                                    @$addcolum  ="";
+                                                                    @$addcolum = "sim";
+                                                                } else {
+                                                                    @$addcolum = "";
                                                                 }
                                                                 echo " - <a href='" . base_url() . "ambulatorio/guia/listarinfo/$value->paciente_id/$addcolum' target='_blank'>Documento</a>";
                                                             } else {
 //                                                        echo " - <b style='color:black;'>F. autorizar</b>";
                                                             }
-                                                            
+
                                                             echo "<br>";
-                                                            
-                                                            
                                                         }
                                                     }
                                                     echo " </div>";
@@ -386,13 +423,13 @@
 
 
                             <div id="mensagem_lado">
-                            <?php
-                            if (strlen(@$mensagem)) {
-                                $divMensagem = "<div id='div_mensagem'>" . @$mensagem . "</div>";
-                                echo $divMensagem;
-                                unset($mensagem);
-                            }
-                            ?>
+                                <?php
+                                if (strlen(@$mensagem)) {
+                                    $divMensagem = "<div id='div_mensagem'>" . @$mensagem . "</div>";
+                                    echo $divMensagem;
+                                    unset($mensagem);
+                                }
+                                ?>
 
                             </div>
 
@@ -406,56 +443,56 @@
 
 
 
-                                //    document.addEventListener('click', function (e) {
-                                //
-                                //        var self = e.target;
-                                //
-                                //        if (['cpf', 'paciente_id'].indexOf(self.id) !== -1) {
-                                //            var el = document.getElementById(self.id === 'cpf' ? 'paciente_id' : 'cpf');
-                                //
-                                //            self.removeAttribute('disabled');
-                                //
-                                //            el.setAttribute('disabled', '');
-                                //            el.value = "";
-                                //        }
-                                //    })
+                    //    document.addEventListener('click', function (e) {
+                    //
+                    //        var self = e.target;
+                    //
+                    //        if (['cpf', 'paciente_id'].indexOf(self.id) !== -1) {
+                    //            var el = document.getElementById(self.id === 'cpf' ? 'paciente_id' : 'cpf');
+                    //
+                    //            self.removeAttribute('disabled');
+                    //
+                    //            el.setAttribute('disabled', '');
+                    //            el.value = "";
+                    //        }
+                    //    })
 
 
 
 
 
 
-                                $(document).ready(function () {
-                                    jQuery('#form_login').validate({
-                                        rules: {
-                                            txtLogin: {
-                                                required: true,
-                                                minlength: 3
-                                            },
-                                            txtSenha: {
-                                                required: true,
-                                                minlength: 3
-                                            },
-                                            txtempresa: {
-                                                required: true,
-                                                minlength: 1
-                                            }
-                                        },
-                                        messages: {
-                                            txtLogin: {
-                                                required: "",
-                                                minlength: "!"
-                                            },
-                                            txtSenha: {
-                                                required: "",
-                                                minlength: "!"
-                                            },
-                                            txtempresa: {
-                                                required: "",
-                                                minlength: "!"
-                                            }
-                                        }
-                                    });
-                                });
+                    $(document).ready(function () {
+                        jQuery('#form_login').validate({
+                            rules: {
+                                txtLogin: {
+                                    required: true,
+                                    minlength: 3
+                                },
+                                txtSenha: {
+                                    required: true,
+                                    minlength: 3
+                                },
+                                txtempresa: {
+                                    required: true,
+                                    minlength: 1
+                                }
+                            },
+                            messages: {
+                                txtLogin: {
+                                    required: "",
+                                    minlength: "!"
+                                },
+                                txtSenha: {
+                                    required: "",
+                                    minlength: "!"
+                                },
+                                txtempresa: {
+                                    required: "",
+                                    minlength: "!"
+                                }
+                            }
+                        });
+                    });
 
                             </script>
