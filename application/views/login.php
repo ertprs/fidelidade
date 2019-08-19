@@ -9,7 +9,6 @@
         <link href="<?= base_url() ?>css/form-structure.css" rel="stylesheet" type="text/css" />
         <link href="<?= base_url() ?>css/login.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
-
     </head>
     <body>
 

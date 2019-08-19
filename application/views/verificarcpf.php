@@ -45,7 +45,8 @@
 
     </style>
     <?php 
-        $permissao = $this->empresa->listarpermissoes();
+        $permissao = $this->empresa->listarpermissoesaleatorio();
+    
     ?>
     <body> 
 
@@ -438,7 +439,9 @@
                             </body>
                             </html>
                             <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+                            
                             <script type="text/javascript">
+                                
 
 
 

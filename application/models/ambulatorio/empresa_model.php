@@ -414,6 +414,15 @@ class empresa_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
+    
+     function listarpermissoesaleatorio() {
+        $this->db->select('');
+        $this->db->from('tb_empresa');
+//        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $this->db->limit(1);
+        $this->db->where('ativo','t');
+        return $this->db->get()->result();
+    }
 
 }
 

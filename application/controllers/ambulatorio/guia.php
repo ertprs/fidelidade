@@ -1920,7 +1920,7 @@ class Guia extends BaseController {
             $options = [
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
 
             if ($num_carne != "" && $num_carne != NULL) {
@@ -1992,7 +1992,7 @@ class Guia extends BaseController {
             $options = [
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
 
             $params = [
@@ -2040,7 +2040,7 @@ class Guia extends BaseController {
             $options = [
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
 
             $params = [
@@ -5024,7 +5024,7 @@ table tr:hover  #achado{
             $options = [
                 'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
                 'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
             $item_1 = [
                 'name' => 'Parcela', // nome do item, produto ou serviço
@@ -5163,7 +5163,7 @@ table tr:hover  #achado{
             $options = [
                 'client_id' => $clientId,
                 'client_secret' => $clientSecret,
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
 
 // $charge_id refere-se ao ID da transação ("charge_id")
@@ -5264,7 +5264,7 @@ table tr:hover  #achado{
                     $options = [
                         'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
                         'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
-                        'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                        'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
                     ];
                     $item_1 = [
                         'name' => 'Parcela', // nome do item, produto ou serviço
@@ -5454,7 +5454,7 @@ table tr:hover  #achado{
             $options = [
                 'client_id' => $empresa[0]->client_id, // insira seu Client_Id, conforme o ambiente (Des ou Prod)
                 'client_secret' => $empresa[0]->client_secret, // insira seu Client_Secret, conforme o ambiente (Des ou Prod)
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
             $item_1 = [
                 'name' => 'Parcela', // nome do item, produto ou serviço
@@ -5676,11 +5676,10 @@ table tr:hover  #achado{
                 } elseif ($value['data'] < date('Y-m-d')) {
                     $mensagem = "Erro, Data de vencimento é inferior a data de hoje! Parcela com data:" . $value['data'];
                 } else {
-
                     $options = [
                         'client_id' => $clientId,
                         'client_secret' => $clientSecret,
-                        'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                        'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
                     ];
 
                     $item_1 = [
@@ -5690,8 +5689,7 @@ table tr:hover  #achado{
                     ];
 
 //                   echo $value['valor'];
-
-
+ 
                     $items = [
                         $item_1
                             // ,
@@ -5746,23 +5744,158 @@ table tr:hover  #achado{
                             $this->guia->atualizarintegracaogerencianetcarne($item['charge_id'], $pagamentoupdate[0]->paciente_contrato_parcelas_id, $url, $pdf, $link_carne, $cover_carne, $pdf_carnet, $pdf_cover_carne, $carnet_id, $ci);
                         }
                     } catch (GerencianetException $e) {
-//                    print_r($e->code);
-//                    print_r($e->error);
-//                    print_r($e->errorDescription);
+                        $messageErrorDefault = 'Ocorreu um erro ao tentar realizar a sua requisição. Entre em contato com o proprietário.';                      
+//                        print_r($e->code);echo "<br>";
+//                       print_r($e->error);echo "<br>";
+//                       print_r($e->errorDescription);die;
+                       @$property = $e->errorDescription['message'];
 
-                        if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
-                            $erro = ", Telefone inválido!";
-                        } elseif ($e->errorDescription == ", Cpf (11111111111) inválido") {
-
-                            $erro = $e->errorDescription;
-                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/email") {
-                            $erro = ", Email inválido!";
-                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/cpf") {
-                            $erro = ", CPF inválido!";
-                        } else {
-                            $erro = "";
-                        }
-                        $mensagem = "Erro" . @$erro;
+//                        if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
+//                            $erro = ", Telefone inválido!";
+//                        } elseif ($e->errorDescription == ",Cpf (11111111111) inválido") {
+//
+//                            $erro = $e->errorDescription;
+//                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/email") {
+//                            $erro = ", Email inválido!";
+//                        } elseif (@$e->errorDescription['property'] == "/payment/banking_billet/customer/cpf") {
+//                            $erro = ", CPF inválido!";
+//                        } else {
+//                            $erro = " , ".$e->errorDescription['property'];
+//                        }
+//                        $mensagem = "Erro" . @$erro;
+                        
+                        
+                        switch($e->code) {
+			case 3500000:
+				$message = 'Erro interno do servidor.';
+				break;
+			case 3500001:
+				$message = $messageErrorDefault;
+				break;
+			case 3500002:
+				$message = $messageErrorDefault;
+				break;
+			case 3500007:
+				$message = 'O tipo de pagamento informado não está disponível.';
+				break;
+			case 3500008:
+				$message = 'Requisição não autorizada.';
+				break;
+			case 3500010:
+				$message = $messageErrorDefault;
+				break;
+			case 3500016:
+				$message = 'A transação deve possuir um cliente antes de ser paga.';
+				break;	
+			case 3500021:
+				$message = 'Não é permitido parcelamento para assinaturas.';
+				break;
+			case 3500030:
+				$message = 'Esta transação já possui uma forma de pagamento definida.';
+				break;
+			case 3500034:
+                            $message = $e->errorDescription['message'];
+//				if($property == 'items' || $property == 'customer')
+//				{
+//					$message = $messageErrorDefault;
+//					$messageAdmin = 'O campo ' . $this->getFieldName($property) . ' não está preenchido corretamente: ';
+//				}
+//				elseif(strpos($property, 'instructions/') !== false || strpos($property, 'message') !== false || strpos($property, 'interest') !== false || strpos($property, 'fine') !== false)
+//				{
+//					$message = $messageErrorDefault;
+//					$messageAdmin = $this->getFieldName($property);
+//				}
+//				else{
+//					$message = 'O campo ' . $this->getFieldName($property) . ' não está preenchido corretamente: ';
+//				}
+				break;
+			case 3500036:
+				$message = 'A forma de pagamento da transação não é boleto bancário.';
+				break;
+			case 3500042:
+				$message = $messageErrorDefault;
+				$messageAdmin = 'O parâmetro [data] deve ser um JSON.';
+				break;
+			case 3500044:
+				$message = 'A transação não pode ser paga. Entre em contato com o vendedor.';
+				break;
+			case 4600002:
+				$message = $messageErrorDefault;
+				break;
+			case 4600012:
+				$message = 'Ocorreu um erro ao tentar realizar o pagamento: ' . @$property;
+				break;
+			case 4600022:
+				$message = $messageErrorDefault;
+				break;
+			case 4600026:
+				$message = 'cpf inválido';
+				break;
+			case 4600029:
+				$message = 'pedido já existe';
+				break;
+			case 4600032:
+				$message = $messageErrorDefault;
+				break;
+			case 4600035:
+				$message = 'Serviço indisponível para a conta. Por favor, solicite que o recebedor entre em contato com o suporte Gerencianet.';
+				break;
+			case 4600037:
+				$message = 'O valor da emissão é superior ao limite operacional da conta. Por favor, solicite que o recebedor entre em contato com o suporte Gerencianet.';
+				break;
+			case 4600073:
+				$message = 'O telefone informado não é válido.';
+				break;
+			case 4600111:
+				$message = 'valor de cada parcela deve ser igual ou maior que R$5,00';
+				break;
+			case 4600142:
+				$message = 'Transação não processada por conter incoerência nos dados cadastrais.';
+				break;
+			case 4600148:
+				$message = 'já existe um pagamento cadastrado para este identificador.';
+				break;
+			case 4600196:
+				$message = $messageErrorDefault;
+				break;
+			case 4600204:
+				$message = 'cpf deve ter 11 dígitos';
+				break;
+			case 4600209:
+				$message = 'Limite de emissões diárias excedido. Por favor, solicite que o recebedor entre em contato com o suporte Gerencianet.';
+				break;
+			case 4600210:
+				$message = 'não é possível emitir três emissões idênticas. Por favor, entre em contato com nosso suporte para orientações sobre o uso correto dos serviços Gerencianet.';
+				break;
+			case 4600212:
+				$message = 'Número de telefone já associado a outro CPF. Não é possível cadastrar o mesmo telefone para mais de um CPF.';
+				break;
+			case 4600222:
+				$message = 'Recebedor e cliente não podem ser a mesma pessoa.';
+				break;
+			case 4600219:
+				$message = 'Ocorreu um erro ao validar seus dados: ' . @$property;
+				break;
+			case 4600224:
+				$message = $messageErrorDefault;
+				break;
+			case 4600254:
+				$message = 'identificador da recorrência não foi encontrado';
+				break;
+			case 4600257:
+				$message = 'pagamento recorrente já executado';
+				break;
+			case 4600329:
+				$message = 'código de segurança deve ter três digitos';
+				break;
+			case 4699999:
+				$message = 'falha inesperada';
+				break;
+			default:
+				$message = $messageErrorDefault;
+				break;
+		}
+                        
                     } catch (Exception $e) {
                         print_r($e->getMessage());
                     }
@@ -5773,12 +5906,12 @@ table tr:hover  #achado{
             }
         }
 
-        if (@$mensagem == "") {
-            @$mensagem = "Sucesso ao gerar Carnês";
+        if (@$message == "") {
+            @$message = "Sucesso ao gerar Carnês";
         }
 
 //        die;
-        $this->session->set_flashdata('message', $mensagem);
+        $this->session->set_flashdata('message', $message);
 //        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
         redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
     }
@@ -5806,7 +5939,7 @@ table tr:hover  #achado{
             $options = [
                 'client_id' => $clientId,
                 'client_secret' => $clientSecret,
-                'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
             ];
 
 // $carnet_id refere-se ao ID do carnê desejado

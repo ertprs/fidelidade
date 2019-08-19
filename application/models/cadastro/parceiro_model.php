@@ -199,6 +199,20 @@ class parceiro_model extends Model {
             $this->_financeiro_parceiro_id = null;
         }
     }
+    
+    
+    function listarparceiros(){
+         $this->db->select('financeiro_parceiro_id,
+                            razao_social,
+                            endereco_ip,
+                            cnpj,
+                            cpf,
+                            telefone');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where('ativo', 'true');        
+        return $this->db->get()->result();
+        
+    }
 
 }
 

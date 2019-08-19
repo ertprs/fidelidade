@@ -33,10 +33,12 @@ class procedimentoplano_model extends Model {
                             pt.nome as procedimento,
                             pt.codigo,
                             pc.valortotal,
-                            pt.grupo');
+                            pt.grupo,
+                            fp.razao_social');
         $this->db->from('tb_procedimento_convenio pc');
         $this->db->join('tb_convenio c', 'c.convenio_id = pc.convenio_id', 'left');
         $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
+        $this->db->join('tb_financeiro_parceiro fp','fp.financeiro_parceiro_id = pc.financeiro_parceiro_id','left');
         $this->db->where("pc.ativo", 't');
         if (isset($args['nome']) && strlen($args['nome']) > 0) {
             $this->db->where('c.nome ilike', $args['nome'] . "%");
@@ -428,7 +430,8 @@ class procedimentoplano_model extends Model {
             /* inicia o mapeamento no banco */
             $procedimento_convenio_id = $_POST['txtprocedimentoplanoid'];
             $this->db->set('procedimento_tuss_id', $_POST['procedimento']);
-            $this->db->set('convenio_id', $_POST['convenio']);
+//            $this->db->set('convenio_id', $_POST['convenio']);
+            $this->db->set('financeiro_parceiro_id', $_POST['parceiro']);
             $this->db->set('qtdech', @$_POST['qtdech']);
             $this->db->set('valorch', @$_POST['valorch']);
             $this->db->set('qtdefilme', @$_POST['qtdefilme']);
@@ -804,7 +807,8 @@ class procedimentoplano_model extends Model {
                             pc.valoruco,
                             pc.valortotal,
                             pc.quantidade,
-                            pc.autorizar_manual');
+                            pc.autorizar_manual,
+                            pc.financeiro_parceiro_id');
             $this->db->from('tb_procedimento_convenio pc');
             $this->db->join('tb_convenio c', 'c.convenio_id = pc.convenio_id', 'left');
             $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
@@ -828,6 +832,7 @@ class procedimentoplano_model extends Model {
             $this->_valortotal = $return[0]->valortotal;
             $this->_quantidade = $return[0]->quantidade;
             $this->_autorizar_manual = $return[0]->autorizar_manual;
+            $this->_financeiro_parceiro_id = $return[0]->financeiro_parceiro_id;
         } else {
             $this->_procedimento_convenio_id = null;
             $this->_qtdech = 0;
@@ -853,9 +858,9 @@ class procedimentoplano_model extends Model {
         $return = $this->db->get();
         return $return->result();
     }
-    
-   function  listarprocedimentosplano(){
-           $this->db->select('procedimento_convenio_id,
+
+    function listarprocedimentosplano() {
+        $this->db->select('procedimento_convenio_id,
                             pc.convenio_id,
                             c.nome as convenio,
                             pc.procedimento_tuss_id,
@@ -868,7 +873,6 @@ class procedimentoplano_model extends Model {
         $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
         $this->db->where("pc.ativo", 't');
         return $this->db->get()->result();
-        
     }
 
 }

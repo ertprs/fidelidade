@@ -24,19 +24,19 @@
                 </tr>-->
                 <tr>
                     <td>
-                        <label>Convenio *</label>
+                        <label>Parceiro *</label>
                     </td>
                     <td>
                         <input type="hidden" name="teste_conv_secundario" id="conv_secundario"  value="f" />
                         <!--<input type="hidden" name="conv_principal_id" id="conv_principal_id"/>-->
                         <!--<input type="hidden" name="conv_secundario_perc" id="conv_secundario_perc"/>-->
-                        <select name="convenio" id="convenio" class="size4" required="">
+                        <select name="parceiro" id="parceiro" class="size4" required="">
                             <option value="">Selecione</option>
-                            <? foreach ($convenio as $value) : ?>
-                                <option value="<?= $value->convenio_id; ?>"<?
-                                if (@$obj->_convenio_id == $value->convenio_id):echo'selected';
+                            <? foreach ($parceiros as $value) : ?>
+                                <option value="<?= $value->financeiro_parceiro_id; ?>"<?
+                                if (@$obj->_financeiro_parceiro_id == $value->financeiro_parceiro_id):echo'selected';
                                 endif;
-                                ?>><?php echo $value->nome; ?></option>
+                                ?>><?php echo $value->razao_social; ?></option>
                                     <? endforeach; ?>
                         </select>
                     </td>

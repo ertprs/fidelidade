@@ -376,3 +376,9 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN pdf_carne
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN pdf_cover_carne text;
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN carnet_id integer;
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN num_carne integer;
+
+
+--19/08/2019
+
+ 
+ALTER TABLE ponto.tb_procedimento_convenio ADD COLUMN financeiro_parceiro_id integer;

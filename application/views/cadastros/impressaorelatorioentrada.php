@@ -39,7 +39,7 @@
         <h4>TODAS OS DEVEDORES</h4>
     <? } ?>
     <h4>RELATORIO DE ENTRADA</h4>
-    <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
+    <h4>PERIODO: <?= date('d/m/Y', strtotime($txtdata_inicio)); ?> ate <?= date('d/m/Y', strtotime($txtdata_fim)); ?></h4>
     <hr>
     <?
     if ($relatorioentrada > 0) {
@@ -66,7 +66,10 @@
             <tbody>
                 <?php
                 $total = 0;
+                $total_parcelas = 0;
                 foreach ($relatorioentrada as $item) :
+                    @$qtd_parcelas++;
+                @$qtd_parcelas_{$item->forma_entradas_saida_id}++;
                     $total = $total + $item->valor;
                     ?>
                     <tr>
@@ -105,6 +108,49 @@
         ?>
     </table>
 </div> <!-- Final da DIV content -->
+<br>
+ <?php 
+ 
+ $conta = $this->forma->listarforma();  
+ 
+ ?>
+<table  border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
+                <thead>
+                <th class="tabela_header">Descrição</th>
+                <th class="tabela_header">Valor</th>
+                </thead>
+                <tbody>
+                    <?
+                    $estilo_linha = "tabela_content01";
+                    foreach ($conta as $item) {
+                        ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                        $valor = $this->caixa->listarsomacontarelatorio($item->forma_entradas_saida_id,$txtdata_inicio,$txtdata_fim);
+                        ?>
+                        <tr>
+                            <td class="<?php echo $estilo_linha; ?>"><?= @$item->descricao; ?></td>
+                            <td class="<?php echo $estilo_linha; ?>"><?
+                           
+//                            if (@$qtd_parcelas_{$item->forma_entradas_saida_id} == "") {
+//                                echo "0";
+//                            }else{
+//                                 echo @$qtd_parcelas_{$item->forma_entradas_saida_id};
+//                            }
+                             
+                            ?>   
+	                           R$<?= number_format(@$valor[0]->total, 2, ",", "."); ?></td>
+                        </tr>
+                    <? } ?>
+                </tbody>
+                 <tfoot>
+                    <tr>
+                        <th class="tabela_footer" colspan="2">
+                            Total Parcelas: <?=  @$qtd_parcelas; ?>
+                        </th>
+                    </tr>
+                </tfoot>
+               
+            </table>
+
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript">

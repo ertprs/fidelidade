@@ -151,7 +151,7 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                             ?>
                             <th class="tabela_header">Empresa</th>
                         <? } ?>
-                        <th class="tabela_header">Plano</th>
+                        <th class="tabela_header">Parceiro</th>
                         <th class="tabela_header">Procedimento</th>
                         <th class="tabela_header">Grupo</th>
                         <? if ($medicinadotrabalho == "t") { ?>
@@ -189,7 +189,7 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                                     ?>
                                     <td class="<?php echo $estilo_linha; ?>"><?= $item->empresa; ?></td>
                                 <? } ?>
-                                <td class="<?php echo $estilo_linha; ?>"><?= $item->convenio; ?></td>                               
+                                <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td>                               
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->procedimento; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->grupo; ?></td>
                                 <? if ($medicinadotrabalho == "t") { ?>

@@ -24,6 +24,7 @@ class Procedimentoplano extends BaseController {
         $this->load->model('ambulatorio/procedimento_model', 'procedimento');
         $this->load->model('cadastro/grupoconvenio_model', 'grupoconvenio');
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+         $this->load->model('cadastro/parceiro_model', 'parceiro');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -63,6 +64,7 @@ class Procedimentoplano extends BaseController {
         //$this->carregarView($data, 'giah/servidor-form');
         $data['convenio'] = $this->procedimentoplano->listarconvenio();
         $data['empresa'] = $this->empresa->listarempresasprocedimento();
+        $data['parceiros'] = $this->parceiro->listarparceiros();
         $this->loadView('ambulatorio/procedimentoplano-form', $data);
     }
 

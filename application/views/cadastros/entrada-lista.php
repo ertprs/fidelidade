@@ -29,7 +29,6 @@
                         <th class="tabela_title">Empresa</th>
                         <th class="tabela_title">Observacao</th>
                     </tr>
-
                     <tr>
                         <th class="tabela_title">
                             <select name="conta" id="conta" class="size2">

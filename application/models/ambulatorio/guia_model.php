@@ -5079,8 +5079,6 @@ ORDER BY p.nome";
         $paciente_id = $parcela[0]->paciente_id;
         $credor = $parcela[0]->financeiro_credor_devedor_id;
 
-//        echo "<pre>";;
-//       print_r($info_paciente);
 //        
 //        echo "Credor: ".$credor ; echo '<br>';
 //       echo "paciente : ".$paciente_id ; echo '<br>';
@@ -11151,7 +11149,12 @@ ORDER BY ae.agenda_exames_id)";
 
         $this->db->select(' ');
         $this->db->from('tb_empresa e');
-        $this->db->where('e.empresa_id', $empresa_id);
+        if ($empresa_id == "") {
+            
+        } else {
+            $this->db->where('e.empresa_id', $empresa_id);
+        }
+        $this->db->where('e.ativo', 't');
 
         $this->db->orderby('e.empresa_id');
         $return = $this->db->get();
@@ -11261,7 +11264,9 @@ ORDER BY ae.agenda_exames_id)";
                             $this->db->set('dependente', $value->paciente_id);
                             $this->db->set('financeiro_parceiro_id', $this->session->userdata('financeiro_parceiro_id'));
                             $this->db->set('data_cadastro', $horario);
-                            $this->db->set('operador_cadastro', $operador);
+                            if ($operador == "") {
+                                $this->db->set('operador_cadastro', $operador);
+                            }
                             $this->db->insert('tb_paciente_verificados');
                             @$cotador++;
                         }
@@ -11346,7 +11351,7 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->update('tb_paciente_verificados');
     }
 
-    function atualizarintegracaogerencianetcarne($charge_id, $paciente_contrato_parcelas_id, $link = NULL, $pdf = NULL ,$link_carne,$cover_carne,$pdf_carne,$pdf_cover_carne,$carnet_id,$ci) {
+    function atualizarintegracaogerencianetcarne($charge_id, $paciente_contrato_parcelas_id, $link = NULL, $pdf = NULL, $link_carne, $cover_carne, $pdf_carne, $pdf_cover_carne, $carnet_id, $ci) {
 
         /* inicia o mapeamento no banco */
         $horario = date("Y-m-d H:i:s");
@@ -11360,8 +11365,8 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->set('cover_carne', $cover_carne);
         $this->db->set('pdf_carnet', $pdf_carne);
         $this->db->set('pdf_cover_carne', $pdf_cover_carne);
-        $this->db->set('carnet_id',$carnet_id);
-          $this->db->set('num_carne',$ci);
+        $this->db->set('carnet_id', $carnet_id);
+        $this->db->set('num_carne', $ci);
 
 
 //            $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
