@@ -126,8 +126,12 @@
                                             ?>
                                             <th class="tabela_header" colspan="2">
                                                 <div class="bt_link">
-                                                    <a   href="<?= $link_carne; ?>" target="_blank">Link Carnê
+                                                     <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/listarlinkscarne/$contrato_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                     Link Carnê
                                                     </a>
+<!--                                                    <a   href="<?= $link_carne; ?>" target="_blank">Link Carnê
+                                                    </a>-->
+                                                    
                                                 </div>
                                             </th>
                                             <?
