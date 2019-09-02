@@ -1,0 +1,22 @@
+A2902713              C & B ADMINISTRADORA104CAIXA ECON. FEDERAL 2019080600002805DEBITO AUTOMATICO                                                    
+F4492                     0031013000636119  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000063054787320    0
+F3967                     0613013000173457  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000069452814420    0
+F1277                     0769000000386871  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000046613226300    0
+F4374                     1559013000235304  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000005950094356    0
+F3080                     1563013001288748  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000060568754310    0
+F957                      1922013000443627  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000006598852390    0
+F4768                     1977000013357518  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000080026109387    0
+F2916                     2183013000222511  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000002699830313    0
+F4449                     2183013000561294  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000001046948381    0
+F4437                     2558013000974902  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000063420473320    0
+F2365                     2558013001376111  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000021189226391    0
+F4428                     2558013001589301  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000069971684349    0
+F4726                     2558000131403208  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000002121931471    0
+F4472                     2843013000226263  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000001849189366    0
+F4619                     3134013000047715  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000063778017349    0
+F3336                     3535013000273620  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000001214878300    0
+F4395                     4116013000243926  2019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000036988729860    0
+F1504                     0000000000000000002019081000000000000189030Pagamento por debito automatico sistema Fidelidade          2000010022716300    0
+F2854                     0000000000000000  2019081000000000000189002Pagamento por debito automatico sistema Fidelidade          2000099079046353    0
+F2509                     1048013000317167  2019081000000000000189002Pagamento por debito automatico sistema Fidelidade          2000004357331331    0
+Z0000220000000000003780000000000000000000                                                                                                             

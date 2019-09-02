@@ -5648,18 +5648,14 @@ table tr:hover  #achado{
 
                 if ($contvalor{$item2->valor} > 12) { //se a parcela for maior que 12 (o gerencianet só aceita 12) irá entrar na condição.
                     $quantidade_div = $contvalor{$item2->valor} - 12; //pega a quantidade total diminui 12, e gera um carne com o resultado.
-                    $carnes[] = array('quantidade' => $quantidade_div, 'valor' => $item2->valor, 'data' => $item2->data);
                     $carnes[] = array('quantidade' => 12, 'valor' => $item2->valor, 'data' => $item2->data);
+                    $carnes[] = array('quantidade' => $quantidade_div, 'valor' => $item2->valor, 'data' => $item2->data);
                 } else {
                     $carnes[] = array('quantidade' => $contvalor{$item2->valor}, 'valor' => $item2->valor, 'data' => $item2->data);
                 }
             }
         }
-
-//        echo "<pre>";
-//        print_r($carnes);
-//        die;
-
+                            
         $data_nascimento = $cliente[0]->nascimento;
 
         if ($telefone == "") {
@@ -5676,6 +5672,23 @@ table tr:hover  #achado{
 //            $preco_parcela = $pagamento[0]->valor * 100;
 
             foreach ($carnes as $value) {
+                @$qtd{$value['quantidade']} = @$value['quantidade'];
+//sistema atual de carne só funciona com 23 e 24 parcelas
+                if ($value['quantidade'] == 12) {
+                    @$qtd_f = @$qtd{$value['quantidade']};
+                } else {
+                    @$qtd_f = @$qtd{$value['quantidade']} + 1;
+                }
+                if (@$validade_q{$value['valor']} >= 1) { // $validade_q{$value['valor']} é um contador 
+                    $validade{$value['data']} = date("Y-m-d", strtotime("+$qtd_f month", strtotime($value['data'])));
+                    $datavv = $validade{$value['data']};
+                } else {
+                    $validade{$value['data']} = date("Y-m-d", strtotime("+0 month", strtotime($value['data'])));
+                    $datavv = $validade{$value['data']};
+                    @$validade_q{$value['valor']} ++;
+                }
+                $datavv = $validade{$value['data']};
+
 
                 if ($value['valor'] < 5 || $value['valor'] == "") {
                     $mensagem = "Erro, Valor tem que ser Maior ou Igual a R$ 5,00";
@@ -5719,10 +5732,12 @@ table tr:hover  #achado{
                         ];
                     }
 
+
+
                     $body = [
                         'items' => $items,
                         'customer' => $customer,
-                        'expire_at' => $value['data'], // data de vencimento da primeira parcela do carnê
+                        'expire_at' => $datavv, // data de vencimento da primeira parcela do carnê
                         'repeats' => $value['quantidade'], // número de parcelas do carnê
                         'split_items' => false
                     ];
@@ -5978,7 +5993,6 @@ table tr:hover  #achado{
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontrato($contrato_id);
 
         $this->load->View('ambulatorio/linkscane-lista', $data);
-        
     }
 
 }

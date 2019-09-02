@@ -81,7 +81,7 @@ class login_model extends Model {
     }
 
     function autenticarparceiro($usuario, $senha) {
-        $this->db->select('o.financeiro_parceiro_id');
+        $this->db->select('o.financeiro_parceiro_id,o.razao_social');
 
         $this->db->from('tb_financeiro_parceiro o');
         $this->db->where('o.usuario', $usuario);
@@ -92,9 +92,11 @@ class login_model extends Model {
         if (isset($return) && count($return) > 0) {
 
             $p = array(
+                'autenticado'=> true,
                 'autenticado_parceiro' => true,
                 'financeiro_parceiro_id' => $return[0]->financeiro_parceiro_id,
-                'login_parceiro' => $usuario
+                'login_parceiro' => $usuario,
+                'parceiro' => $return[0]->razao_social
             );
 
             $this->session->set_userdata($p);

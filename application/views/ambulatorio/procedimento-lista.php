@@ -24,7 +24,13 @@
                         <th class="tabela_header" width="10%">Grupo</th>
                         <th class="tabela_header" width="10%">Codigo</th>
                         <th class="tabela_header" width="25%">Descri&ccedil;&atilde;o</th>
-                        <th class="tabela_header"  width="70px;" colspan="2"  ><center>Detalhes</center></th>
+                        <?php
+                        if (@$this->session->userdata('autenticado_parceiro') == true) {
+                            
+                        } else {
+                            ?>
+                            <th class="tabela_header"  width="70px;" colspan="2"  ><center>Detalhes</center></th>
+                        <?php } ?>
                 </tr>
                 </thead>
                 <?php
@@ -52,33 +58,50 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->grupo; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->codigo; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->descricao; ?></td>
- 
-
-                                <td class="<?php echo $estilo_linha; ?>"  width="50px;">
-                                    <div class="bt_link">
-                                        <a onclick="return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>')" href="<?= base_url() . "ambulatorio/procedimento/excluir/$item->procedimento_tuss_id"; ?>" target="_blank"> 
-
-                                            Excluir
-                                        </a></div>
-            <!--                                    <a onclick="javascript: return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>');"
-                                           href="<?= base_url() ?>ambulatorio/procedimento/excluir/<?= $item->procedimento_tuss_id; ?>">
-                                            <img border="0" title="Excluir" alt="Excluir"
-                                                 src="<?= base_url() ?>img/form/page_white_delete.png" />
-                                        </a>-->
 
 
-                <!--                                    <a href="<?= base_url() ?>ambulatorio/procedimento/carregarprocedimento/<?= $item->procedimento_tuss_id ?>">
-                     <img border="0" title="Detalhes" alt="Detalhes"
-                          src="<?= base_url() ?>img/form/page_white_edit.png" />
-                 </a>-->
-                                </td>
-                                <td class="<?php echo $estilo_linha; ?>"  width="50px;"> <div class="bt_link">
-                                        <a  onclick="javascript:window.open('<?= base_url() . "ambulatorio/procedimento/carregarprocedimento/$item->procedimento_tuss_id"; ?> ', '_blank');">
-        <!--                                        <img border="0" title="Detalhes" alt="Detalhes"
-                                                 src="<?= base_url() ?>img/form/page_white_edit.png" />-->
-                                            Editar</a></div>
 
-                                </td>
+                                <?php
+                                if (@$this->session->userdata('autenticado_parceiro') == true) {
+                                    
+                                } else {
+                                    ?>
+                                    <td class="<?php echo $estilo_linha; ?>"  width="50px;">
+
+                                        <div class="bt_link">
+                                            <a onclick="return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>')" href="<?= base_url() . "ambulatorio/procedimento/excluir/$item->procedimento_tuss_id"; ?>" target="_blank"> 
+
+                                                Excluir
+                                            </a></div>
+
+                                                <!--                                    <a onclick="javascript: return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>');"
+                                                       href="<?= base_url() ?>ambulatorio/procedimento/excluir/<?= $item->procedimento_tuss_id; ?>">
+                                                        <img border="0" title="Excluir" alt="Excluir"
+                                                             src="<?= base_url() ?>img/form/page_white_delete.png" />
+                                                    </a>-->
+
+                                                                <!--                                    <a href="<?= base_url() ?>ambulatorio/procedimento/carregarprocedimento/<?= $item->procedimento_tuss_id ?>">
+                                                                     <img border="0" title="Detalhes" alt="Detalhes"
+                                                                          src="<?= base_url() ?>img/form/page_white_edit.png" />
+                                                                 </a>-->
+                                    </td>
+
+
+
+                                    <td class="<?php echo $estilo_linha; ?>"  width="50px;"> <div class="bt_link">
+                                            <a  onclick="javascript:window.open('<?= base_url() . "ambulatorio/procedimento/carregarprocedimento/$item->procedimento_tuss_id"; ?> ', '_blank');">
+            <!--                                        <img border="0" title="Detalhes" alt="Detalhes"
+                                                     src="<?= base_url() ?>img/form/page_white_edit.png" />-->
+                                                Editar</a></div>
+
+                                    </td>
+
+                                <?php } ?>
+
+
+
+
+
                             </tr>
 
                         </tbody>
@@ -100,14 +123,14 @@
                                     }
                                     ?>> 50 </option>
                                     <option onclick="javascript:window.location.href = ('<?= base_url() ?>ambulatorio/procedimento/pesquisar/100');" <?
-                                            if ($limit == 100) {
-                                                echo "selected";
-                                            }
+                                    if ($limit == 100) {
+                                        echo "selected";
+                                    }
                                     ?>> 100 </option>
                                     <option onclick="javascript:window.location.href = ('<?= base_url() ?>ambulatorio/procedimento/pesquisar/todos');" <?
-                                            if ($limit == "todos") {
-                                                echo "selected";
-                                            }
+                                    if ($limit == "todos") {
+                                        echo "selected";
+                                    }
                                     ?>> Todos </option>
                                 </select>
                             </div>

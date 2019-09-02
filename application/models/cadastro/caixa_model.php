@@ -376,7 +376,7 @@ class caixa_model extends Model {
         $this->db->join('tb_paciente p', 'p.credor_devedor_id = s.nome', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->where('s.ativo', 'true');
-        $this->db->where('p.ativo', 'true');
+//        $this->db->where('p.ativo', 'true');
 
         if (@$_POST['forma_pagamento'] != 0) {
             $this->db->where('p.forma_rendimento_id ', $_POST['forma_pagamento']);
@@ -398,6 +398,7 @@ class caixa_model extends Model {
         }
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        
 //        $this->db->orderby('s.conta'); 
 //        $this->db->orderby('s.data');
         $this->db->orderby('fcd.razao_social');

@@ -26,20 +26,48 @@
                     <td>
                         <label>Parceiro *</label>
                     </td>
+
                     <td>
                         <input type="hidden" name="teste_conv_secundario" id="conv_secundario"  value="f" />
                         <!--<input type="hidden" name="conv_principal_id" id="conv_principal_id"/>-->
                         <!--<input type="hidden" name="conv_secundario_perc" id="conv_secundario_perc"/>-->
-                        <select name="parceiro" id="parceiro" class="size4" required="">
-                            <option value="">Selecione</option>
-                            <? foreach ($parceiros as $value) : ?>
-                                <option value="<?= $value->financeiro_parceiro_id; ?>"<?
-                                if (@$obj->_financeiro_parceiro_id == $value->financeiro_parceiro_id):echo'selected';
-                                endif;
-                                ?>><?php echo $value->razao_social; ?></option>
-                                    <? endforeach; ?>
-                        </select>
+                        <?php
+                        if (@$this->session->userdata('autenticado_parceiro') == true) {
+                            ?>
+                            <select name="parceiro" id="parceiro" class="size4" required="">
+<!--                                <option value="">Selecione</option>-->
+                                <? foreach ($parceiros as $value) : ?>
+                                <?php
+                                            if (@$this->session->userdata('financeiro_parceiro_id') != $value->financeiro_parceiro_id) {
+                                                continue;
+                                            }
+                                            ?>
+                                
+                                    <option value="<?= $value->financeiro_parceiro_id; ?>"<?
+                                    if (@$this->session->userdata('financeiro_parceiro_id') == $value->financeiro_parceiro_id):echo'selected';
+                                    endif;
+                                    ?>><?php echo $value->razao_social; ?></option>
+                                            
+                                        <? endforeach; ?>
+
+                            </select>
+                            <?
+                        } else {
+                            ?>
+                            <select name="parceiro" id="parceiro" class="size4" required="">
+                                <option value="">Selecione</option>
+                                <? foreach ($parceiros as $value) : ?>
+                                    <option value="<?= $value->financeiro_parceiro_id; ?>"<?
+                                    if (@$obj->_financeiro_parceiro_id == $value->financeiro_parceiro_id):echo'selected';
+                                    endif;
+                                    ?>><?php echo $value->razao_social; ?></option>
+                                        <? endforeach; ?>
+                            </select>
+                        <?php } ?>
+
+
                     </td>
+
                 </tr>
                 <tr id="procedimentodiv">
                     <td>
@@ -194,7 +222,9 @@
                         <label>Autorizar manual</label>
                     </td>
                     <td>
-                        <input type="checkbox" name="txtautorizar"  id="txtautorizar" class="texto01" <?php if(@$obj->_autorizar_manual == "t"){ echo "checked";}?>  />
+                        <input type="checkbox" name="txtautorizar"  id="txtautorizar" class="texto01" <?php if (@$obj->_autorizar_manual == "t") {
+                                echo "checked";
+                            } ?>  />
                     </td>
                 </tr>
             </table>    

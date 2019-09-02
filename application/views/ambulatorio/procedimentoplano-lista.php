@@ -21,15 +21,15 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                 $geral = $this->session->userdata('geral');
                 if ($geral == 't') {
                     ?>
-<!--                    <td>
-                        <div class="bt_link_new">
-                            <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/0">
-                                Novo Agrupador
-                            </a>
-                        </div>
-                    </td>-->
+        <!--                    <td>
+                            <div class="bt_link_new">
+                                <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/0">
+                                    Novo Agrupador
+                                </a>
+                            </div>
+                        </td>-->
                 <? } ?>
-<!--                <td>
+    <!--                <td>
                     <div class="bt_link_new">
                         <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarmultiplosprocedimentoplano" target="_blank">
                             Multiplos Procedimentos 
@@ -49,13 +49,13 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                 $geral = $this->session->userdata('geral');
                 if ($geral == 't') {
                     ?>
-<!--                    <td>
-                        <div class="bt_link_new">
-                            <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/0" target="_blank">
-                                Novo Agrupador
-                            </a>
-                        </div>
-                    </td>-->
+        <!--                    <td>
+                            <div class="bt_link_new">
+                                <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/0" target="_blank">
+                                    Novo Agrupador
+                                </a>
+                            </div>
+                        </td>-->
                 <? } ?>
             <? } ?>
         </tr>
@@ -79,7 +79,7 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                 <form method="get" action="<?= base_url() ?>ambulatorio/procedimentoplano/pesquisar">
                     <tr>
                         <th class="tabela_title">Plano</th>
-             
+
                         <th class="tabela_title">Grupo</th>
                         <th class="tabela_title">Procedimento</th>
                         <th colspan="2" class="tabela_title">Codigo</th>
@@ -98,7 +98,7 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
 
                             </select>
                         </th>
-                         
+
                         <th class="tabela_title">
                             <select name="grupo" id="grupo" class="size2">
                                 <option value="">Selecione</option>
@@ -201,28 +201,29 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                                 <? } ?>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->codigo; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->valortotal; ?></td>
-
-
+ 
                                 <? if ($perfil_id != 10) { ?>
                                     <? if (@$item->agrupador != 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                            <div class="bt_link">
                                             <a onclick="javascript: return confirm('Deseja realmente excluir o procedimento? ');" target="_blank"
                                                href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id ?>">
                                                 Excluir
-                                            </a>
+                                            </a></div>
                 <!--                                    href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id; ?>"-->
                                         </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;"> 
+                                            <div class="bt_link">
                                             <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplano/<?= $item->procedimento_convenio_id ?>">
                                                 Editar
-                                            </a>
+                                            </a></div>
                                         </td>
-<!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
+                <!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
                                             <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoformapagamento/<?= $item->procedimento_convenio_id ?>">
                                                 Pagamento
                                             </a>
                                         </td>-->
-<!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
+                <!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
                                             <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanosessao/<?= $item->procedimento_convenio_id ?>">
                                                 Sessão
                                             </a>
@@ -233,14 +234,18 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                                         <td class="<?php echo $estilo_linha; ?>" width="80px;"> </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="80px;"> </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                            <a target="_blank" onclick="javascript: return confirm('Deseja realmente excluir o procedimento? ');" href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id ?>">
-                                                Excluir
-                                            </a>
+                                            <div class="bt_link">
+                                                <a target="_blank" onclick="javascript: return confirm('Deseja realmente excluir o procedimento? ');" href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id ?>">
+                                                    Excluir
+                                                </a>
+                                            </div>
                                         </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;"> 
-                                            <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/<?= $item->procedimento_convenio_id ?>">
-                                                Editar
-                                            </a>
+                                            <div class="bt_link">
+                                                <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/<?= $item->procedimento_convenio_id ?>">
+                                                    Editar
+                                                </a>
+                                            </div>
                                         </td>
                                     <? } ?>
 

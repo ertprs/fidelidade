@@ -913,8 +913,7 @@ class paciente_model extends BaseModel {
                 $this->db->where('paciente_id', $paciente_id);
                 $this->db->update('tb_paciente_contrato_dependente');
             }
-
-
+ 
             return $paciente_id;
         } catch (Exception $exc) {
             return false;

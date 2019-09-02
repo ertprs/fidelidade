@@ -27,6 +27,15 @@
             echo $divMensagem;
             unset($mensagem);
         }
+
+        $permissao = $this->empresa->listarpermissoesaleatorio();
+        if (@count($permissao) > 0) {
+             foreach ($permissao as $item) {
+                if ($item->modificar_verificar == "t") {
+                    $flag_parceiro = "true";
+                }
+            }
+        }
         ?>
 
         <div id="login">
@@ -40,12 +49,15 @@
                     <input type="password" id="txtSenha" name="txtSenha"  class="texto05" value="<?= @$obj->_senha; ?>" />
                     <label id="labelSenha">Empresa</label>
                     <select  name="txtempresa" id="txtempresa" class="size06" >
-                        <?if (count($empresa)> 1){?>
-                        <option value="">Selecione</option>
-                        <?}?>
+                        <? if (count($empresa) > 1) { ?>
+                            <option value="">Selecione</option>
+                        <? } ?>
                         <? foreach ($empresa as $item) : ?>
                             <option value="<?= $item->empresa_id; ?>"><?= $item->nome; ?></option>
-                                <? endforeach; ?>
+                        <? endforeach; ?>
+                        <?php if (@$flag_parceiro == 'true') { ?>
+                            <option value="parceiro">Parceiro</option>
+                        <?php } ?>
                     </select>
                     <div class="buttons">
                         <button type="submit" name="btnEnviar">Login</button>
@@ -59,7 +71,7 @@
 </html>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         jQuery('#form_login').validate({
             rules: {
                 txtLogin: {

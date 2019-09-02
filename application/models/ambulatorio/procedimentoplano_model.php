@@ -52,6 +52,11 @@ class procedimentoplano_model extends Model {
         if (isset($args['grupo']) && strlen($args['grupo']) > 0) {
             $this->db->where('pt.grupo ilike', $args['grupo'] . "%");
         }
+        if (@$this->session->userdata('autenticado_parceiro') == true) {
+             $this->db->where('pc.financeiro_parceiro_id', @$this->session->userdata('financeiro_parceiro_id'));
+            
+        }
+        
         return $this->db;
     }
 
@@ -456,7 +461,11 @@ class procedimentoplano_model extends Model {
                 $this->db->from('tb_procedimento_convenio');
                 $this->db->where('ativo', 't');
                 $this->db->where("procedimento_tuss_id", $_POST['procedimento']);
-                $this->db->where("convenio_id", $_POST['convenio']);
+                
+                if ( @$_POST['convenio'] != "") {
+                     $this->db->where("convenio_id", @$_POST['convenio']);
+                }
+               
                 $query = $this->db->get();
                 $return = $query->result();
                 $qtde = count($return);

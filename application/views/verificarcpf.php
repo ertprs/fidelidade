@@ -46,7 +46,13 @@
     </style>
     <?php 
         $permissao = $this->empresa->listarpermissoesaleatorio();
-    
+     if (@count($permissao) > 0) {
+             foreach ($permissao as $item) {
+                if ($item->modificar_verificar == "t") {
+                    $flag_parceiro = "true";
+                }
+            }
+        }
     ?>
     <body> 
 
@@ -58,7 +64,7 @@
                 <div id="sis_info">SISTEMA DE GESTAO DE CLINICAS - v1.0</div>
             </div>
             <?php
-            if (@$permissao[0]->modificar_verificar == 't') {
+            if (@$flag_parceiro == 'true') {
                 ?>
 
                 <div id="login_controles">
