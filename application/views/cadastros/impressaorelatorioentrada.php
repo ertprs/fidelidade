@@ -70,7 +70,7 @@
                 foreach ($relatorioentrada as $item) :
                     @$qtd_parcelas++;
                 @$qtd_parcelas_{$item->forma_entradas_saida_id}++;
-                    $total = $total + $item->valor;
+                    $total += $item->valor;
                     ?>
                     <tr>
                         <td ><?= @$item->paciente_id; ?></td>

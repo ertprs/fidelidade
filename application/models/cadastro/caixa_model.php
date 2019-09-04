@@ -976,7 +976,7 @@ class caixa_model extends Model {
         $this->db->join('tb_paciente p', 'p.credor_devedor_id = s.nome', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->where('s.ativo', 'true');
-        $this->db->where('p.ativo', 'true');
+//        $this->db->where('p.ativo', 'true');
         $this->db->where('s.conta',$conta);
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $inicio))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-',  $fim))));
