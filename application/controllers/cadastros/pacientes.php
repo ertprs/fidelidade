@@ -56,7 +56,6 @@ class pacientes extends BaseController {
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['parceiros'] = $this->exame->listarparceiros();
         $this->loadView('cadastros/paciente-ficha_1alternativo', $data);
-        
     }
 
     function novodependente() {
@@ -333,17 +332,13 @@ class pacientes extends BaseController {
         $data['idade'] = 1;
         $data['empresa_id'] = $empresa_id;
         $this->loadView('cadastros/paciente-ficha_2', $data);
-        
-        
     }
 
     function carregardocumentosalternativo($paciente_id) {
         $obj_paciente = new paciente_model($paciente_id);
         $data['obj'] = $obj_paciente;
-        $data['idade'] = 1; 
+        $data['idade'] = 1;
         $this->loadView('cadastros/paciente-ficha_2alternativo', $data);
-        
-        
     }
 
     function carregarcontrato($paciente_id, $empresa_id = NULL) {
@@ -354,7 +349,6 @@ class pacientes extends BaseController {
         $data['forma_pagamento'] = $this->paciente->listaforma_pagamento($obj_paciente->_plano_id);
         // var_dump($data['forma_pagamento']); die;
         $this->loadView('cadastros/paciente-ficha_3', $data);
-        
     }
 
     function carregartitular($paciente_id) {
@@ -400,30 +394,40 @@ class pacientes extends BaseController {
         $titular_flag = $empresa_p[0]->titular_flag;
         // echo '<pre>';
         // var_dump($titular_flag);
-        // die;
-        $this->paciente->gravardependente2($paciente_id);
-        if($_POST['financeiro_parceiro_id'] > 0){
+        
+         $this->paciente->gravardependente2($paciente_id);
+         
+         $contrato_id = $this->paciente->listarcontratotitular();
+        
+        if ($this->session->userdata('cadastro') == 2) {
+            
+            $this->guia->geraparcelasdependente($paciente_id, $contrato_id);
+        }
+         
+        if ($_POST['financeiro_parceiro_id'] > 0) {
 
             $parceiro_id = $_POST['financeiro_parceiro_id'];
+
             $parceiros = $this->paciente->listarparceirosurl($parceiro_id);
             // var_dump($parceiros); die;
+
             foreach ($parceiros as $key => $value) {
                 $retorno_paciente = $this->paciente->listardados($paciente_id);
-                if($titular_flag == 't'){
+                if ($titular_flag == 't') {
                     $retorno_paciente[0]->paciente_id = $titular_id;
                 }
+
                 // echo '<pre>';
                 // var_dump($retorno_paciente); die;
                 $json_paciente = json_encode($retorno_paciente);
-                
+
                 // $fields = array('' => $_POST['body']);
                 $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
-
                 // var_dump($url); die;
                 $postdata = http_build_query(
-                    array(
-                        'body' => $json_paciente
-                    )
+                        array(
+                            'body' => $json_paciente
+                        )
                 );
 
                 $opts = array('http' =>
@@ -437,10 +441,9 @@ class pacientes extends BaseController {
 
                 $result = file_get_contents($url, false, $context);
                 // var_dump($result); die;
-            
             }
         }
-        
+
 
 //        var_dump($paciente_id); die;
 
@@ -464,19 +467,19 @@ class pacientes extends BaseController {
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
         // var_dump($parceiros); die;
-      
+
         foreach ($parceiros as $key => $value) {
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
-            
+
             // $fields = array('' => $_POST['body']);
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
 
             // var_dump($url); die;
             $postdata = http_build_query(
-                array(
-                    'body' => $json_paciente
-                )
+                    array(
+                        'body' => $json_paciente
+                    )
             );
 
             $opts = array('http' =>
@@ -490,17 +493,14 @@ class pacientes extends BaseController {
 
             $result = file_get_contents($url, false, $context);
             // var_dump($result); die;
-           
         }
-        
+
 
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
         } else {
             redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
         }
-        
-        
     }
 
     function gravar3() {
@@ -924,18 +924,18 @@ class pacientes extends BaseController {
         $data['funcionarios'] = $this->paciente->listarfuncionariosempresacadastro($empresa_id);
         $data['quantidade_funcionarios'] = $this->paciente->listarquantidadedefuncionario($empresa_id);
         $data['forma_pagamento'] = $this->paciente->listarformaspagamentos();
-        $data['empresa_id'] = $empresa_id; 
-        $data['paciente'] = $this->paciente->listardados(19468); 
+        $data['empresa_id'] = $empresa_id;
+        $data['paciente'] = $this->paciente->listardados(19468);
         $data['empresa'] = $this->guia->listarempresa();
         $data['contratos'] = $this->paciente->listarcontratocadastroempresa($empresa_id);
-        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontratoempresa($empresa_id); 
+        $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontratoempresa($empresa_id);
         $data['listarpagamentosconsultaextra'] = $this->paciente->listarpagamentosconsultaavulsaempresa($empresa_id);
         $data['listarpagamentosconsultacoop'] = $this->paciente->listarpagamentosconsultacoopempresa($empresa_id);
         $data['historicoconsultasrealizadas'] = $this->paciente->listarhistoricoconsultasrealizadasempresa($empresa_id);
-        $data['empresapermissao'] = $this->empresa->listarpermissoes(); 
-        $data['permissao'] = $this->empresa->listarpermissoes(); 
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
+        $data['permissao'] = $this->empresa->listarpermissoes();
         $contrato_ativo = $this->guia->listarcontratoativoempresa($empresa_id);
-       
+
         if (count($contrato_ativo) > 0) {
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
@@ -950,19 +950,18 @@ class pacientes extends BaseController {
                 // $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
                 //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
                 $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro)));
-                $data_atual = date("Y-m-d"); 
+                $data_atual = date("Y-m-d");
                 //verificando se a data atual for maior que a data do (contrato+dias do plano) se for maior vai criar um novo contrato.
-                if ($data_atual > $data_tot_contrato) { 
+                if ($data_atual > $data_tot_contrato) {
                     if ($data['permissao'][0]->renovar_contrato_automatico == 't') {
-                        $contrato_ativo = $this->guia->gravarnovocontratoanualempresa($paciente_contrato_id,$empresa_id);
+                        $contrato_ativo = $this->guia->gravarnovocontratoanualempresa($paciente_contrato_id, $empresa_id);
                     } else {
-                        $contrato_ativo = $this->guia->gravarnovocontratoanualdesativarempresa($paciente_contrato_id,$empresa_id);
+                        $contrato_ativo = $this->guia->gravarnovocontratoanualdesativarempresa($paciente_contrato_id, $empresa_id);
                     }
-                    
                 }
             }
         }
-   
+
         $this->session->set_flashdata('message', @$data['mensagem']);
         $this->loadView('ambulatorio/empresacadastrodetalhes-lista', $data);
     }
@@ -979,10 +978,10 @@ class pacientes extends BaseController {
     }
 
     function gravardocumentosfuncionario() {
-        $empresa_id = $_POST['empresa_cadastro_id']; 
+        $empresa_id = $_POST['empresa_cadastro_id'];
         if ($empresa_id != "") {
             $paciente_id = $this->paciente->gravardocumentosfuncionarioempresa();
-            
+
             if ($paciente_id == '-1') {
                 $data['mensagem'] = 'Erro, Quantidade no plano Atingida.';
                 $this->session->set_flashdata('message', $data['mensagem']);
@@ -1045,12 +1044,12 @@ class pacientes extends BaseController {
     }
 
     function atualizarquantidadefuncionarios() {
-        
+
         $empresa_cadastro_id = $_POST['empresa_id'];
-    
+
 
         $retorno = $this->paciente->atualizarquantidadefuncionarios();
-        
+
         $this->paciente->atualizarvalorcontratoempresa($empresa_cadastro_id);
 
         if ($retorno != '-1') {
@@ -1069,81 +1068,83 @@ class pacientes extends BaseController {
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
-    function finalizarcadastrodefuncionarios($empresa_id = NULL) {  
-        
+    function finalizarcadastrodefuncionarios($empresa_id = NULL) {
+
         $data['empresa_id'] = $empresa_id;
         $data['forma_rendimento'] = $this->paciente->listarformapagamento();
         $this->load->View('cadastros/finalizarcadastrofuncionarios-form', $data);
-        
     }
 
     function finalizarcadastrofuncionarios() {
-        
+
         $empresa_id = $_POST['empresa_id'];
         $paciente_contrato_id = $this->paciente->finalizarcadastrofuncionarios();
-        $this->guia->gravarparcelacontratoempresa($paciente_contrato_id); 
+        $this->guia->gravarparcelacontratoempresa($paciente_contrato_id);
         $this->guia->gerarparcelaverificadora($empresa_id);
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
-        
-        
-         
-        
     }
-    
-    
-     function gravartodospacientesexterno() {
+
+    function gravartodospacientesexterno() {
         @$situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
 //        $paciente_id = $this->paciente->gravar2();
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
-   
-        $pacientes =  $this->paciente->listartodospacientes();
-        
+
+        $pacientes = $this->paciente->listartodospacientes();
+
 //        echo "<pre>";
 //        var_dump($pacientes);
 //        echo count($pacientes); 
 //        die;
-        
-        foreach ($parceiros as $key => $value) { 
-            
-          foreach($pacientes as $item){
-            $retorno_paciente = $this->paciente->listardados($item->paciente_id);
-            $json_paciente = json_encode($retorno_paciente);
-            
-            // $fields = array('' => $_POST['body']);
-            $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
+
+        foreach ($parceiros as $key => $value) {
+
+            foreach ($pacientes as $item) {
+                $retorno_paciente = $this->paciente->listardados($item->paciente_id);
+                $json_paciente = json_encode($retorno_paciente);
+
+                // $fields = array('' => $_POST['body']);
+                $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
 
 //             var_dump($url); die;
-            $postdata = http_build_query(
-                array(
-                    'body' => $json_paciente
-                )
-            );
-              
-            $opts = array('http' =>
-                array(
-                    'method' => 'POST',
-                    'header' => 'Content-type: application/x-www-form-urlencoded',
-                    'content' => $postdata
-            )); 
-            $context = stream_context_create($opts); 
-            $result = file_get_contents($url, false, $context);
-            // var_dump($result); die; 
+                $postdata = http_build_query(
+                        array(
+                            'body' => $json_paciente
+                        )
+                );
+
+                $opts = array('http' =>
+                    array(
+                        'method' => 'POST',
+                        'header' => 'Content-type: application/x-www-form-urlencoded',
+                        'content' => $postdata
+                ));
+                $context = stream_context_create($opts);
+                $result = file_get_contents($url, false, $context);
+                // var_dump($result); die; 
+            }
         }
-        
-     }
-        
+
 
 //        if ($situacao == 'Titular') {
 //            redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
 //        } else {
 //            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
 //        }
-        
-        
     }
     
+    function novodependentecompleto() {
+
+        $data['idade'] = 0;
+        $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
+        $data['listaconvenio'] = $this->paciente->listaconvenio();
+        $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $data['parceiros'] = $this->exame->listarparceiros();
+        
+        $this->loadView('cadastros/paciente-fichadependente_2', $data);
+        
+    }
 
 }
 

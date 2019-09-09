@@ -382,3 +382,30 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN num_carne
 
  
 ALTER TABLE ponto.tb_procedimento_convenio ADD COLUMN financeiro_parceiro_id integer;
+
+--06/09/2019
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN parcela_dependente boolean;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ALTER COLUMN parcela_dependente SET DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN paciente_dependente_id integer;
+
+--09/09/2019
+ 
+CREATE TABLE ponto.tb_observacao_contrato
+(
+  observacao_contrato_id serial NOT NULL,
+  observacao text,
+  paciente_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  CONSTRAINT tb_observacao_contrato_pkey PRIMARY KEY (observacao_contrato_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_observacao_contrato
+  OWNER TO postgres;

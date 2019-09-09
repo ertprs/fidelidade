@@ -67,7 +67,6 @@
                     <fieldset>
                         <table id="table_justa">
                             <thead>
-
                                 <tr>
                                     <th width="70px;" class="tabela_header">Dependente</th>
     <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->

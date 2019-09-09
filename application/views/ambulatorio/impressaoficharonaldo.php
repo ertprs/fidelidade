@@ -79,40 +79,49 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
             <tr>
                 <td >MATRICULA: <b>0<?= @$titular_id; ?></b> 
                 </td>
-                <td >VENCIMENTO: <?  if (@$contrato[0]->qtd_dias == "" || @$contrato[0]->qtd_dias == 0) {
-//                    @$qtd_dias = 0;
-                } else {
-                    @$qtd_dias = @$contrato[0]->qtd_dias;
-                }
- 
+                <!--<td >-->
+                    <!--VENCIMENTO:-->
+ <?  
+//                    
+//                    if (@$contrato[0]->qtd_dias == "" || @$contrato[0]->qtd_dias == 0) {
+////                    @$qtd_dias = 0;
+//                } else {
+//                    @$qtd_dias = @$contrato[0]->qtd_dias;
+//                }
+// 
                 
-             if (@$paciente[0]->qtd_dias == "" || @$paciente[0]->qtd_dias == 0) {
-//                    @$qtd_dias = 0; 
-                } else {
-                    @$qtd_dias = @$paciente[0]->qtd_dias;
-                    
-                }   
+//             if (@$paciente[0]->qtd_dias == "" || @$paciente[0]->qtd_dias == 0) {
+////                    @$qtd_dias = 0; 
+//                } else {
+//                    @$qtd_dias = @$paciente[0]->qtd_dias;
+//                    
+//                }   
                 
                 
-                if (@$contrato[0]->data_cadastro != "") {
-                    if (@$contrato[0]->data_cadastro == "") {
-                        echo "00/00/0000";
-                    } else {
-                        if (@$qtd_dias == "") {
-                            @$qtd_dias = 0;
-                        }
-                        $validade = date("Y-m-d", strtotime("+$qtd_dias days", strtotime(@$contrato[0]->data_cadastro)));
-                        echo substr(@$validade, 8, 2) . '/' . substr(@$validade, 5, 2) . '/' . substr(@$validade, 0, 4);
-                    }
-                } else {
-                    if (@$paciente[0]->data_cadastro == "") {
-                        echo "00/00/0000";
-                    } else {
-                        $validade = date("Y-m-d", strtotime("+$qtd_dias days", strtotime(@$paciente[0]->data_cadastro)));
-                        echo substr(@$validade, 8, 2) . '/' . substr(@$validade, 5, 2) . '/' . substr(@$validade, 0, 4);
-                    }
-                }
-                    ?> <b> </b></td>
+//                if (@$contrato[0]->data_cadastro != "") {
+//                    if (@$contrato[0]->data_cadastro == "") {
+//                        echo "00/00/0000";
+//                    } else {
+//                        if (@$qtd_dias == "") {
+//                            @$qtd_dias = 0;
+//                        }
+//                        $validade = date("Y-m-d", strtotime("+$qtd_dias days", strtotime(@$contrato[0]->data_cadastro)));
+//                        echo substr(@$validade, 8, 2) . '/' . substr(@$validade, 5, 2) . '/' . substr(@$validade, 0, 4);
+//                    }
+//                } else {
+//                    if (@$paciente[0]->data_cadastro == "") {
+//                        echo "00/00/0000";
+//                    } else {
+//                        $validade = date("Y-m-d", strtotime("+$qtd_dias days", strtotime(@$paciente[0]->data_cadastro)));
+//                        echo substr(@$validade, 8, 2) . '/' . substr(@$validade, 5, 2) . '/' . substr(@$validade, 0, 4);
+//                    }
+//                }
+                    ?> 
+        <!--<b> </b>-->
+    
+    <!--</td>-->
+                
+                
             </tr>
 
         </tbody>

@@ -248,7 +248,8 @@ class paciente_model extends BaseModel {
                             gpi.pdf_carnet,
                             gpi.pdf_cover_carne,
                             gpi.carnet_id,
-                            gpi.num_carne
+                            gpi.num_carne,
+                            cp.paciente_dependente_id
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
@@ -608,7 +609,7 @@ class paciente_model extends BaseModel {
 
             $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, c.nome as cidade_desc,c.municipio_id as cidade_cod,
                 pcd.pessoa_juridica,
-                fp.razao_social as parceiro
+                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns
 
                 ');
             $this->db->from('tb_paciente p');
@@ -681,6 +682,7 @@ class paciente_model extends BaseModel {
             $this->_ligacao = $return[0]->ligacao;
             $this->_financeiro = $return[0]->financeiro;
             $this->_cpffinanceiro = $return[0]->cpffinanceiro;
+            $this->_cns = $return[0]->cns;
         }
     }
 
@@ -913,7 +915,7 @@ class paciente_model extends BaseModel {
                 $this->db->where('paciente_id', $paciente_id);
                 $this->db->update('tb_paciente_contrato_dependente');
             }
- 
+
             return $paciente_id;
         } catch (Exception $exc) {
             return false;
@@ -923,8 +925,6 @@ class paciente_model extends BaseModel {
     function gravardocumentos() {
 
         try {
-
-
             $this->db->select('consulta_avulsa, consulta_coop');
             $this->db->from('tb_forma_pagamento');
             $this->db->where('forma_pagamento_id', $_POST['plano']);
@@ -1196,10 +1196,10 @@ class paciente_model extends BaseModel {
         try {
 
             $this->db->set('nome', $_POST['nome']);
-            if ($_POST['cpf'] != '') {
+            if (@$_POST['cpf'] != '') {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
             }
-            if ($_POST['financeiro_parceiro_id'] != '') {
+            if (@$_POST['financeiro_parceiro_id'] != '') {
                 $this->db->set('parceiro_id', $_POST['financeiro_parceiro_id']);
             }
 
@@ -1208,9 +1208,40 @@ class paciente_model extends BaseModel {
             } else {
                 $this->db->set('cpf_responsavel_flag', 'f');
             }
-            $this->db->set('codigo_paciente', $_POST['cod_pac']);
 
-            $this->db->set('rg', $_POST['rg']);
+            if (@$_POST['cod_pac'] != '') {
+                $this->db->set('codigo_paciente', $_POST['cod_pac']);
+            }
+            if (@$_POST['rg'] != '') {
+                $this->db->set('rg', $_POST['rg']);
+            }
+            if (@$_POST['logradouro'] != '') {
+                $this->db->set('logradouro', $_POST['logradouro']);
+            }
+
+            if (@$_POST['numero'] != '') {
+                $this->db->set('numero', "23");
+            }
+
+
+            if (@$_POST['bairro'] != '') {
+                $this->db->set('bairro', $_POST['bairro']);
+            }
+
+            if (@$_POST['municipio_id'] != '') {
+
+                $this->db->set('municipio_id', $_POST['municipio_id']);
+            }
+            if (@$_POST['cep'] != '') {
+                $this->db->set('cep', $_POST['cep']);
+            }
+            if (@$_POST['email'] != '') {
+                $this->db->set('cns', $_POST['email']);
+            }
+
+
+
+
             $this->db->set('grau_parentesco', $_POST['grau_parentesco']);
 //            $nascimento = $_POST['nascimento'];
             if ($_POST['nascimento'] != '') {
@@ -1689,8 +1720,19 @@ class paciente_model extends BaseModel {
         $this->db->where('pessoa_juridica', 'f');
         $query = $this->db->get();
         $resultado = $query->result();
+        if ($this->session->userdata('cadastro') == 2) {
 
-        $query_endereço = "UPDATE ponto.tb_paciente p
+            $query_endereço = "UPDATE ponto.tb_paciente p
+       SET  complemento=p2.complemento,            
+       celular=p2.celular, telefone=p2.telefone,
+       tipo_logradouro=p2.tipo_logradouro, vendedor = p2.vendedor
+        FROM ponto.tb_paciente p2
+        WHERE p2.paciente_id = {$_POST['txtNomeid']}
+        AND p.paciente_id = $paciente_id
+        ";
+            $this->db->query($query_endereço);
+        } else {
+            $query_endereço = "UPDATE ponto.tb_paciente p
        SET cep=p2.cep, logradouro=p2.logradouro, numero=p2.numero, complemento=p2.complemento, 
        bairro=p2.bairro, municipio_id=p2.municipio_id,     
        celular=p2.celular, telefone=p2.telefone,
@@ -1700,8 +1742,8 @@ class paciente_model extends BaseModel {
         WHERE p2.paciente_id = {$_POST['txtNomeid']}
         AND p.paciente_id = $paciente_id
         ";
-        $this->db->query($query_endereço);
-
+            $this->db->query($query_endereço);
+        }
         $total = count($resultado);
         $valor = $retorno[0]->valoradcional;
         if ($total < $retorno[0]->parcelas) {
@@ -3714,7 +3756,7 @@ class paciente_model extends BaseModel {
     }
 
     function listarpagamentoscontratoparcelagerencianettodos($contrato_id) {
-        $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, fp.nome as plano,cpi.charge_id,cpi.link,cp.parcela');
+        $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, fp.nome as plano,cpi.charge_id,cpi.link,cp.parcela,cp.paciente_dependente_id');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_gerencianet cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
@@ -3789,7 +3831,7 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
-    function listarpagamentoscontratoparcelagerencianetcarneupdate($contrato_id,$valor) {
+    function listarpagamentoscontratoparcelagerencianetcarneupdate($contrato_id, $valor) {
         $this->db->select('cp.valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, fp.nome as plano,cpi.charge_id,cpi.link,cp.parcela');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
@@ -3800,11 +3842,23 @@ class paciente_model extends BaseModel {
         $this->db->where("cp.excluido", 'f');
         $this->db->where("cp.taxa_adesao", 'f');
         $this->db->where("charge_id is null");
-        $this->db->where("cp.valor",$valor);
+        $this->db->where("cp.valor", $valor);
 //        $this->db->where("cp.data_cartao_iugu is null");
         $this->db->orderby("cp.data");
         $return = $this->db->get();
         return $return->result();
+    }
+    
+    function listarcontratotitular(){
+          $this->db->select('paciente_contrato_id, plano_id');
+        $this->db->from('tb_paciente_contrato');
+        $this->db->where('paciente_id', $_POST['txtNomeid']);
+        $this->db->where('ativo', 't');
+        $query = $this->db->get();
+        $return = $query->result();
+        $paciente_contrato_id = $return[0]->paciente_contrato_id;
+        return $paciente_contrato_id;
+        
     }
 
 }

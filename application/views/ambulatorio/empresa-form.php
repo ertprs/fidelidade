@@ -146,7 +146,10 @@
                                 if (@$obj->_cadastro == 1):echo 'selected';
                                 endif;
                                 ?>>Alternativo</option>
-
+                                <option value=2 <?
+                                if (@$obj->_cadastro == 2):echo 'selected';
+                                endif;
+                                ?>>Completo</option>
                             </select>
                         </dd>
                         <dt>

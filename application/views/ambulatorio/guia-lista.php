@@ -14,9 +14,13 @@ if (count($exames) > 0) {
     $ativo = 'f';
 }
 ?>
+<style>
+    #observacao{
+        width: 190%; height: 70%;
+    }
+</style>
 <div class="content ficha_ceatox">
     <? if ($ativo == 'f') { ?>
- 
         <div class="bt_link_new">
             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontrato/" . $paciente['0']->paciente_id; ?> ', '_blank', 'width=900,height=600');">
                 Novo Contrato
@@ -99,15 +103,15 @@ if (count($exames) > 0) {
                             <tr>
                                 <td style="width: 150px;" class="<?php echo $estilo_linha; ?>" ><a href="<?= base_url() ?>ambulatorio/guia/listardependentes/<?= @$paciente['0']->paciente_id; ?>/<?= @$item->paciente_contrato_id ?>" target="_blank"><?= @$item->paciente_contrato_id . "-" . @$item->plano; ?></a></td>
                                 <td style="width: 150px;" class="<?php echo $estilo_linha; ?>" ><?= substr(@$item->data_cadastro, 8, 2) . "/" . substr(@$item->data_cadastro, 5, 2) . "/" . substr(@$item->data_cadastro, 0, 4); ?></td>
-                                
+
                                 <? if ($item->ativo == 't') { ?>
                                     <td class="<?php echo $estilo_linha; ?>" style="width: 150px;">Ativo</td>
                                 <? } else { ?>
                                     <td class="<?php echo $estilo_linha; ?>" style="width: 150px;">Inativo</td>
                                 <? } ?>
-                                <?if($perfil_id != 6 && $perfil_id != 5){?>
-                                <?$perfil_id = $this->session->userdata('perfil_id');?>
-                                
+                                <? if ($perfil_id != 6 && $perfil_id != 5) { ?>
+                                    <? $perfil_id = $this->session->userdata('perfil_id'); ?>
+
                                     <td class="<?php echo $estilo_linha; ?>" width="50px;">       
                                         <div class="bt_link_new" style="width: 100px;">
                                             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . @$item->paciente_contrato_id ?> ', '_blank', 'width=1000,height=1000');">
@@ -129,52 +133,68 @@ if (count($exames) > 0) {
                                             </a>
                                         </div>
                                     </td>
-                                
-                                <? if ($perfil_id == 1 && $item->ativo == 't') { ?>
-                                    <td class="<?php echo $estilo_linha; ?>" >       
-                                        <div class="bt_link_new" style="width: 100px;">
-                                            <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente[0]->paciente_id . "/" . @$item->paciente_contrato_id ?>">
-                                                Excluir
-                                            </a>
-                                        </div>
-                                    </td>   
-                                <? } else {
-                                    ?>
-                                    <td class="<?php echo $estilo_linha; ?>"> 
-                                        <? if ($ativo == 'f') { ?>
+
+                                    <? if (($perfil_id == 1 || $perfil_id == 5) && $item->ativo == 't') { ?>
+                                        <td class="<?php echo $estilo_linha; ?>" >       
                                             <div class="bt_link_new" style="width: 100px;">
-                                                <a onclick="javascript: return confirm('Deseja realmente re-ativar o contrato?');"   href="<?= base_url() . "ambulatorio/guia/ativarcontrato/" . $paciente['0']->paciente_id . "/" . @$item->paciente_contrato_id ?>">
-                                                    Re-Ativar
+                                                <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente[0]->paciente_id . "/" . @$item->paciente_contrato_id ?>">
+                                                    Excluir
                                                 </a>
                                             </div>
-                                        <? } ?>
-                                    </td>      
-                                <? } ?>
-                                <?
-                                if ($operador_id == 1) {
-                                    ?>
-                                    <td class="<?php echo $estilo_linha; ?>" >       
-                                        <div class="bt_link_new" style="width: 100px;">
-                                            <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas. Excluir por esse botão fará o contrato sumir');"   href="<?= base_url() . "ambulatorio/guia/excluircontratoadmin/" . $paciente[0]->paciente_id . "/" . @$item->paciente_contrato_id ?>">
-                                                Excluir (Admin)
-                                            </a>
-                                        </div>
-                                    </td> 
+                                        </td>   
+                                    <? } else {
+                                        ?>
+                                        <td class="<?php echo $estilo_linha; ?>"> 
+                                            <? if ($ativo == 'f') { ?>
+                                                <div class="bt_link_new" style="width: 100px;">
+                                                    <a onclick="javascript: return confirm('Deseja realmente re-ativar o contrato?');"   href="<?= base_url() . "ambulatorio/guia/ativarcontrato/" . $paciente['0']->paciente_id . "/" . @$item->paciente_contrato_id ?>">
+                                                        Re-Ativar
+                                                    </a>
+                                                </div>
+                                            <? } ?>
+                                        </td>      
+                                    <? } ?>
                                     <?
+                                    if ($operador_id == 1) {
+                                        ?>
+                                        <td class="<?php echo $estilo_linha; ?>" >       
+                                            <div class="bt_link_new" style="width: 100px;">
+                                                <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas. Excluir por esse botão fará o contrato sumir');"   href="<?= base_url() . "ambulatorio/guia/excluircontratoadmin/" . $paciente[0]->paciente_id . "/" . @$item->paciente_contrato_id ?>">
+                                                    Excluir (Admin)
+                                                </a>
+                                            </div>
+                                        </td> 
+                                        <?
+                                    }
+                                    ?>
+                                    <?
+                                } else {
+                                    if ($perfil_id == 5 && $item->ativo == 't') {
+                                        ?>
+                                        <td class="<?php echo $estilo_linha; ?>" >       
+                                            <div class="bt_link_new" style="width: 100px;">
+                                                <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente[0]->paciente_id . "/" . @$item->paciente_contrato_id ?>">
+                                                    Excluir
+                                                </a>
+                                            </div>
+                                        </td> 
+                                        <?
+                                    } else {
+                                        ?>
+                                        <td class="<?php echo $estilo_linha; ?>" colspan="5"> 
+                                        </td>     
+                                        <?
+                                    }
                                 }
                                 ?>
-                                <?}else{?>
-                                    <td class="<?php echo $estilo_linha; ?>" colspan="5"> 
-                                    </td>       
-                                <?}?>
 
-                                        <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                            <div class="bt_link_new">
-                                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
-                                                    Pagamento Iugu
-                                                </a>
-                                            </div>
-                                        </td>-->
+                                                                                                        <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                                                                                            <div class="bt_link_new">
+                                                                                                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
+                                                                                                                    Pagamento Iugu
+                                                                                                                </a>
+                                                                                                            </div>
+                                                                                                        </td>-->
 
 
 
@@ -201,18 +221,18 @@ if (count($exames) > 0) {
 
                         <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= @$titular['0']->paciente_id; ?>/<?= @$titular['0']->paciente_contrato_id ?>');"><?= @$titular['0']->paciente_contrato_id; ?></td>
                         <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= @$titular['0']->paciente_id; ?>/<?= @$titular['0']->paciente_contrato_id ?>');"><?= @$titular['0']->nome; ?></td>
-                    <?if($perfil_id != 6 && $perfil_id != 5){?>
-                        <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                            <div class="bt_link_new">
-                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . @$titular['0']->paciente_contrato_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">
-                                    Carteira
-                                </a>
-                            </div>
-                        </td>
+                        <? if ($perfil_id != 6 && $perfil_id != 5) { ?>
+                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                <div class="bt_link_new">
+                                    <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . @$titular['0']->paciente_contrato_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">
+                                        Carteira
+                                    </a>
+                                </div>
+                            </td>
 
-                    <?}else{?>
-                        <td class="<?php echo $estilo_linha; ?>" width="100px;"></td>
-                    <?}?>    
+                        <? } else { ?>
+                            <td class="<?php echo $estilo_linha; ?>" width="100px;"></td>
+                        <? } ?>    
                         <?
                     }
                     ?>
@@ -226,37 +246,105 @@ if (count($exames) > 0) {
                     </tfoot>
                 </table>
         </fieldset>
+        <fieldset>
+
+
+            <button type="button" class="btn-toggle" data-element="#minhaDiv">Observação</button> 
+            <br>
+            <div id="minhaDiv" style="display:none">
+
+                <form action="<?= base_url() ?>ambulatorio/guia/gravarobservacaopaciente/<?= $paciente[0]->paciente_id; ?>" method="post" target="_blank">
+                    <table>
+                        <tr>
+                            <td> <textarea type="text" name="observacao" id="observacao" style=""></textarea>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>  <button type="submit">Enviar</button></td>
+                        </tr>
+
+                    </table>
+                </form>
+                <br>
+
+            </div>
+            <br>
+            <legend>Observações</legend>
+            <table>
+                <tr>
+                    <td  class="tabela_header">Observação</td>
+                    <td  class="tabela_header">Usuário</td>
+                    <td  class="tabela_header" colspan="2">Data/Hora</td>
+                </tr>
+                <?php
+                $estilo_linha = "tabela_content01";
+                foreach ($observacao_paciente as $item) {
+                    ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
+                    ?>
+                    <tr>
+                        <td  class="<?php echo $estilo_linha; ?>" ><?= $item->observacao ?></td>
+                        <td  class="<?php echo $estilo_linha; ?>" ><?= $item->operador ?></td>
+                        <td  class="<?php echo $estilo_linha; ?>" ><?= date('d/m/Y H:i:s', strtotime($item->data_cadastro)) ?></td>
+
+                        <?php
+                        if ($this->session->userdata('operador_id') == 1) {
+                            ?>
+                            <td  class="<?php echo $estilo_linha; ?>" >
+                                <div class="bt_link_new" style="width: 100px;">
+                                    <a  onclick="javascript: return confirm('Deseja realmente excluir?');"  href="<?= base_url() ?>ambulatorio/guia/excluirobservacao/<?= $item->observacao_contrato_id; ?>" target="_blank">Excluir</a>
+                                </div>
+                            </td>
+                            <?php
+                        }
+                        ?>
+
+
+                    </tr>
+
+                    <?
+                }
+                ?>
+            </table>
+        </fieldset>
+        <br>
     </div>
 
 
-<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
-<script type="text/javascript">
-
-    
-    $(document).ready(function () {
-        
-        $.getJSON('<?= base_url() ?>autocomplete/pagamentoautomaticoiugucliente', {paciente_id: <?=$paciente['0']->paciente_id;?>, ajax: true}, function (j) {
-//           alert(j);
-//                    
-        });
-        
-        $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoiugucliente', {paciente_id: <?=$paciente['0']->paciente_id;?>, ajax: true}, function (j) {
-//           alert(j);
-//                    
-        });
-        
-        $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoconsultaavulsaiugucliente', {paciente_id: <?=$paciente['0']->paciente_id;?>, ajax: true}, function (j) {
-//           alert(j);
-//                    
-        });
-    });
+    <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
+    <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+    <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+    <script type="text/javascript">
 
 
+                                $(document).ready(function () {
+
+                                    $.getJSON('<?= base_url() ?>autocomplete/pagamentoautomaticoiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
+                                        //           alert(j);
+                                        //                    
+                                    });
+
+                                    $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
+                                        //           alert(j);
+                                        //                    
+                                    });
+
+                                    $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoconsultaavulsaiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
+                                        //           alert(j);
+                                        //                    
+                                    });
+                                });
 
 
 
 
+                                $(function () {
+                                    $(".btn-toggle").click(function (e) {
+                                        e.preventDefault();
+                                        el = $(this).data('element');
+                                        $(el).toggle();
+                                    });
+                                });
 
-</script>
+
+    </script>

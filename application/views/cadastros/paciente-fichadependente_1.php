@@ -48,12 +48,21 @@
                 <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
                     <option value='' >selecione</option>
                     <?php
+                     if (count($listarparceiro) == 1) {
+                        $true = "selected";
+                    } else {
+                        $true = "";
+                    }
+                    
                     foreach ($listarparceiro as $item) {
                         ?>
 
                         <option   value =<?php echo $item->financeiro_parceiro_id; ?> <?
                         if (@$obj->_financeiro_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
                         endif;
+                         if ($true != "") {
+                            echo $true;
+                        }
                         ?>><?php echo $item->fantasia; ?></option>
                                   <?php
                               }

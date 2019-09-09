@@ -186,6 +186,7 @@ class Guia extends BaseController {
 //      var_dump($data['titular'] ); die;
         $data['guia'] = $this->guia->listar($paciente_id);
         $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $data['observacao_paciente'] = $this->guia->listarobservacaocadastro($paciente_id);
         $this->loadView('ambulatorio/guia-lista', $data);
     }
 
@@ -986,10 +987,10 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/listardependentes/$paciente_id/$contrato_id");
     }
 
-    function confirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+    function confirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $depende_id = NULL) {
 
 //        var_dump($valor); die;
-        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id)) {
+        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $depende_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
@@ -2124,6 +2125,10 @@ class Guia extends BaseController {
         $paciente_id = $_POST['txtpaciente_id'];
         $contrato_id = $_POST['txtcontrato_id'];
         $ambulatorio_guia_id = $this->guia->gravardependentes($paciente_id, $contrato_id);
+        if ($this->session->userdata('cadastro') == 2) {
+            $dependente_id = $_POST['dependente'];
+            $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
+        }
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar a dependente. Opera&ccedil;&atilde;o cancelada.';
         } else {
@@ -2398,7 +2403,6 @@ class Guia extends BaseController {
     }
 
     function listardependentes($paciente_id, $contrato_id) {
-
 
         $data['paciente_id'] = $paciente_id;
         $data['paciente'] = $this->paciente->listardados($paciente_id);
@@ -4139,7 +4143,11 @@ class Guia extends BaseController {
 //        }
     }
 
-    function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+    function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {
+
+        if ($dependente_id != "" && $this->session->userdata('cadastro') == 2) {
+            $paciente_id = $dependente_id;
+        }
 
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
         $data['paciente_id'] = $paciente_id;
@@ -4259,7 +4267,8 @@ class Guia extends BaseController {
 // chamando na propria tela  a função alterando a data 
         $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
 // chamando uma função existente confirmando o pagamento;
-        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id)) {
+        //botei essa $paciente_id duas vezes para que quando for dependente pegar o credor devedor do dependente
+        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $paciente_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
@@ -4953,10 +4962,13 @@ table tr:hover  #achado{
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
-    public function gerarpagamentogerencianet($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+    public function gerarpagamentogerencianet($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {
+
+                            
+       $cliente = $this->paciente->listardados($paciente_id);
+                            
 
 
-        $cliente = $this->paciente->listardados($paciente_id);
         $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
         $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
         $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
@@ -5003,10 +5015,7 @@ table tr:hover  #achado{
         $nome_produto = "Parcela";
         $quantidade = '1';
         $valor = $pagamento[0]->valor * 100;
-
-
         $data_nascimento = $cliente[0]->nascimento;
-
         if ($telefone == "") {
             $mensagem = "Erro, Telefone ou Celular do cliente não cadastrados.";
         } elseif ($data_nascimento == "") {
@@ -5114,8 +5123,6 @@ table tr:hover  #achado{
                 print_r($e->code);
                 print_r($e->error);
                 print_r($e->errorDescription);
-
-
                 if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
                     $erro = ", Telefone inválido!";
                 } elseif ($e->errorDescription == ", Cpf (11111111111) inválido") {
@@ -5128,7 +5135,6 @@ table tr:hover  #achado{
                 } else {
                     $erro = "";
                 }
-
                 $mensagem = "Erro" . @$erro;
             } catch (Exception $e) {
                 print_r($e->getMessage());
@@ -5205,9 +5211,7 @@ table tr:hover  #achado{
         $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
         $email = $cliente[0]->cns;
 
-
         $empresa = $this->guia->listarempresa();
-
 
         $empresa[0]->client_id;
 
@@ -5219,9 +5223,9 @@ table tr:hover  #achado{
             redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
             return;
         }
+
         $paciente = $cliente[0]->nome;
         $cpf = $cliente[0]->cpf;
-
 
         if ($cliente[0]->celular != "") {
             $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
@@ -5230,6 +5234,10 @@ table tr:hover  #achado{
         } else {
             $telefone = "";
         }
+
+
+
+
         $pagamento = $this->paciente->listarpagamentoscontratoparcelagerencianettodos($contrato_id);
 
 
@@ -5250,6 +5258,50 @@ table tr:hover  #achado{
 
             foreach ($pagamento as $value) {
 
+                if ($this->session->userdata('cadastro') == 2) {
+                    if ($value->paciente_dependente_id != "") {
+                        $cliente = $this->paciente->listardados($value->paciente_dependente_id);
+                    } else {
+                        $cliente = $this->paciente->listardados($paciente_id);
+                    }
+
+
+                    $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+                    $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+                    $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+                    $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+                    $email = $cliente[0]->cns;
+                       $data_nascimento = $cliente[0]->nascimento;
+
+                    $paciente = $cliente[0]->nome;
+                    $cpf = $cliente[0]->cpf;
+
+                    if ($cliente[0]->celular != "") {
+                        $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+                    } elseif ($cliente[0]->telefone != "") {
+                        $telefone = preg_replace('/[^\d]+/', '', $cliente[0]->telefone);
+                    } else {
+                        $telefone = "";
+                    }
+
+                    if ($telefone == "") {
+                        $mensagem = "Erro, Telefone ou Celular do cliente não cadastrados.";
+                        continue;
+                    } elseif ($data_nascimento == "") {
+                        $mensagem .= "Data de nascimento,";
+                         continue;
+                    } elseif ($cpf == "") {
+                        $mensagem .= "Erro, CPF do cliente não cadastrado.";
+                         continue;
+                    } elseif ($paciente == "") {
+                        $mensagem .= "Erro, Nome do paciente não cadastrado";
+                         continue;
+                    }
+//                        echo $paciente;      
+                    
+                }
+              
+                            
                 $data_vencimento = $value->data;
 
                 if ($value->valor < 5 || $value->valor == "") {
@@ -5373,6 +5425,7 @@ table tr:hover  #achado{
                     }
                 }
             }
+//            die;
         }
 
 //        echo '<pre>';
@@ -5397,7 +5450,6 @@ table tr:hover  #achado{
         $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
         $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
         $email = $cliente[0]->cns;
-
 
 //        print_r($cliente);;
 
@@ -5655,7 +5707,7 @@ table tr:hover  #achado{
                 }
             }
         }
-                            
+
         $data_nascimento = $cliente[0]->nascimento;
 
         if ($telefone == "") {
@@ -5994,7 +6046,20 @@ table tr:hover  #achado{
 
         $this->load->View('ambulatorio/linkscane-lista', $data);
     }
+    
+    function gravarobservacaopaciente($paciente_id){
+                            
+        $this->guia->gravarobservacaocontrato($paciente_id);
+        
+       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
 
+    function excluirobservacao($observacao_contrato_id){
+        $this->guia->excluirobservacao($observacao_contrato_id);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+        
+    }
+    
 }
 
 /* End of file welcome.php */
