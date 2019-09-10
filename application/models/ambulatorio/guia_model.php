@@ -11397,7 +11397,7 @@ ORDER BY ae.agenda_exames_id)";
 
     function geraparcelasdependente($dependente_id, $paciente_contrato_id) {
 
-        $this->db->select('parcelas,plano_id');
+        $this->db->select('*');
         $this->db->from('tb_paciente_contrato');
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
         $this->db->where('ativo', 't');
@@ -11410,7 +11410,6 @@ ORDER BY ae.agenda_exames_id)";
         $ajuste = $plano[0]->valor_carteira;
 
 
-
         $this->db->select('');
         $this->db->from('tb_paciente');
         $this->db->where('paciente_id', $dependente_id);
@@ -11418,8 +11417,13 @@ ORDER BY ae.agenda_exames_id)";
 
         $tirarx = str_replace("x", "", $res[0]->parcelas);
 
-
         $parcelas = substr($res[0]->parcelas, 0, 2);
+        
+//    echo '<pre>';    
+//print_r($res);
+//
+//
+//die;
 
         $parcelas = (int) $parcelas;
         $mes = 1;
@@ -11438,7 +11442,8 @@ ORDER BY ae.agenda_exames_id)";
 //        $this->db->where('excluido', 'f');
         $this->db->where('taxa_adesao', 'f');
         $this->db->where("(parcela_dependente = false or parcela_dependente is null)");
-        $this->db->limit($parcelas);
+//        $this->db->limit($parcelas);
+        $this->db->where("(adesao_digitada is not null or adesao_digitada != '' )");
         $this->db->orderby('parcela');
         $dados = $this->db->get()->result();
 //        echo "<pre>";
