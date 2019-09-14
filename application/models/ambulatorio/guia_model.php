@@ -485,6 +485,7 @@ class guia_model extends Model {
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcd.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->where('pcd.ativo','t');
         $this->db->where("pcd.paciente_id", $paciente_id);
         $return = $this->db->get();
         return $return->result();
