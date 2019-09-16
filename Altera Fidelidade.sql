@@ -419,3 +419,7 @@ ALTER TABLE ponto.tb_paciente_contrato ALTER COLUMN nao_renovar SET DEFAULT fals
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN reativar boolean;
 ALTER TABLE ponto.tb_paciente ALTER COLUMN reativar SET DEFAULT false;
+
+
+--16/09/2019
+ALTER TABLE ponto.tb_financeiro_credor_devedor ADD COLUMN paciente_id integer;

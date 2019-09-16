@@ -482,7 +482,7 @@ class guia_model extends Model {
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcd.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
-        $this->db->where('pcd.ativo','t');
+        $this->db->where('pcd.ativo', 't');
         $this->db->where("pcd.paciente_id", $paciente_id);
         $return = $this->db->get();
         return $return->result();
@@ -839,7 +839,7 @@ class guia_model extends Model {
             $this->db->where("pc.paciente_id", $paciente_titular_id);
         }
 
- 
+
         // $this->db->where("pcp.data <=", $data);
         $this->db->where("pc.ativo", 't');
         $this->db->where("pcp.ativo", 't');
@@ -5099,6 +5099,9 @@ ORDER BY p.nome";
 
         $credor = $parcela[0]->financeiro_credor_devedor_id;
 
+//        echo $credor;
+//        die;
+
         if ($this->session->userdata('cadastro') == 2 && $depende_id != "") {
             $paciente_id = $depende_id;
             $credor = $parcela[0]->financeiro_credor_devedor_id_dependente;
@@ -5559,6 +5562,7 @@ ORDER BY p.nome";
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('paciente_id',$paciente_id);
             $this->db->insert('tb_financeiro_credor_devedor');
             $financeiro_credor_devedor_id = $this->db->insert_id();
 
@@ -6835,9 +6839,9 @@ AND data <= '$data_fim'";
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
             if (isset($_POST['nao_renovar'])) {
-                $this->db->set('nao_renovar', 't');                
-            }else{
-                 $this->db->set('nao_renovar', 'f');   
+                $this->db->set('nao_renovar', 't');
+            } else {
+                $this->db->set('nao_renovar', 'f');
             }
             $this->db->set('paciente_id', $_POST['txtpaciente']);
             $this->db->set('plano_id', $_POST['plano']);
@@ -6869,16 +6873,20 @@ AND data <= '$data_fim'";
         $operador_id = $this->session->userdata('operador_id');
 
 
-        $this->db->select('paciente_contrato_id, pc.plano_id, fp.taxa_adesao, valoradcional, fp.parcelas');
+        $this->db->select('paciente_contrato_id, pc.plano_id, fp.taxa_adesao, valoradcional, fp.parcelas,pc.paciente_id,p.credor_devedor_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
-        $this->db->where('paciente_id', $paciente_id);
+        $this->db->join('tb_paciente as p', 'p.paciente_id = pc.paciente_id');
+        $this->db->where('pc.paciente_id', $paciente_id);
         $this->db->where('pc.ativo', 't');
         $query = $this->db->get();
         $return = $query->result();
+
 //        echo '<pre>';
 //        var_dump($_POST);
+//        print_r($return);
 //        die;
+
         @$paciente_contrato_id = $return[0]->paciente_contrato_id;
 //        $ajuste = $return[0]->ajuste;
         $ajuste = substr($_POST['checkboxvalor1'], 3, 5);
@@ -6950,31 +6958,42 @@ AND data <= '$data_fim'";
 //        var_dump($data_adesao);
 //        var_dump($data_receber);
 //        die;
-        $this->db->set('razao_social', $_POST['nome']);
-        $this->db->set('cep', $_POST['cep']);
-        if ($_POST['cpf'] != '') {
-            $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
-        } else {
-            $this->db->set('cpf', null);
-        }
-        $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
-        $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
-        if ($_POST['tipo_logradouro'] != '') {
-            $this->db->set('tipo_logradouro_id', $_POST['tipo_logradouro']);
-        }
-        if ($_POST['municipio_id'] != '') {
-            $this->db->set('municipio_id', $_POST['municipio_id']);
-        }
-        $this->db->set('logradouro', $_POST['endereco']);
-        $this->db->set('numero', $_POST['numero']);
-        $this->db->set('bairro', $_POST['bairro']);
-        $this->db->set('complemento', $_POST['complemento']);
+
+
+
+
+        if ($return[0]->credor_devedor_id == "") {
+
+
+            $this->db->set('razao_social', $_POST['nome']);
+            $this->db->set('cep', $_POST['cep']);
+            if ($_POST['cpf'] != '') {
+                $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
+            } else {
+                $this->db->set('cpf', null);
+            }
+            $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
+            if ($_POST['tipo_logradouro'] != '') {
+                $this->db->set('tipo_logradouro_id', $_POST['tipo_logradouro']);
+            }
+            if ($_POST['municipio_id'] != '') {
+                $this->db->set('municipio_id', $_POST['municipio_id']);
+            }
+            $this->db->set('logradouro', $_POST['endereco']);
+            $this->db->set('numero', $_POST['numero']);
+            $this->db->set('bairro', $_POST['bairro']);
+            $this->db->set('complemento', $_POST['complemento']);
 //        $horario = date("Y-m-d H:i:s");
 //        $operador_id = $this->session->userdata('operador_id');
-        $this->db->set('data_cadastro', $horario);
-        $this->db->set('operador_cadastro', $operador_id);
-        $this->db->insert('tb_financeiro_credor_devedor');
-        $financeiro_credor_devedor_id = $this->db->insert_id();
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_financeiro_credor_devedor');
+            $financeiro_credor_devedor_id = $this->db->insert_id();
+        } else {
+            $financeiro_credor_devedor_id = $return[0]->credor_devedor_id;
+        }
+
 
         $data_atual = date("d/m/Y");
 //        $data_adesao = date("Y-m-d");
@@ -9983,10 +10002,9 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
 
         if ($this->session->userdata('cadastro') == 2 && $dependente == true) {
-            
+
             $this->db->where('pcp.paciente_dependente_id', $paciente_titular_id);
             $this->db->where('pc.paciente_contrato_id', $paciente_contrato_id);
-            
         } else {
 
             $this->db->where("pc.paciente_id", $paciente_titular_id);
@@ -11445,7 +11463,6 @@ ORDER BY ae.agenda_exames_id)";
         $dadospaciente = $this->db->get()->result();
 
         $tirarx = str_replace("x", "", $res[0]->parcelas);
-
         $parcelas = substr($res[0]->parcelas, 0, 2);
 
 //    echo '<pre>';    
@@ -11464,6 +11481,9 @@ ORDER BY ae.agenda_exames_id)";
             $dia = "0" . $dia;
         }
 
+
+
+
         $this->db->select('');
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
@@ -11478,32 +11498,50 @@ ORDER BY ae.agenda_exames_id)";
 //        echo "<pre>";
 //        print_r($dados);
 //        die;
-//        $this->db->set('razao_social', $dadospaciente[0]->nome);
-//        $this->db->set('cep', $dadospaciente[0]->cep);
-//        if ($dadospaciente[0]->cpf != '' && $dadospaciente[0]->cpf != "NULL") {
-//            $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $dadospaciente[0]->cpf)));
-//        } else {
-//            $this->db->set('cpf', null);
-//        }
-//        $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $dadospaciente[0]->telefone))));
-//        $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $dadospaciente[0]->celular))));
-//        if ($dadospaciente[0]->tipo_logradouro != '') {
-//            $this->db->set('tipo_logradouro_id', $dadospaciente[0]->tipo_logradouro);
-//        }
-//        if ($dadospaciente[0]->municipio_id != '') {
-//            $this->db->set('municipio_id', $dadospaciente[0]->municipio_id);
-//        }
-//        $this->db->set('logradouro', $dadospaciente[0]->logradouro);
-//        $this->db->set('numero', $dadospaciente[0]->numero);
-//        $this->db->set('bairro', $dadospaciente[0]->bairro);
-//        $this->db->set('complemento', $dadospaciente[0]->complemento);
-        $horario = date("Y-m-d H:i:s");
-        $operador_id = $this->session->userdata('operador_id');
-////        $this->db->set('data_cadastro', $horario);
-////        $this->db->set('operador_cadastro', $operador_id);
-//        $this->db->insert('tb_financeiro_credor_devedor');
-//        $financeiro_credor_devedor_id = $this->db->insert_id();
 
+
+
+
+
+
+        if ($dadospaciente[0]->credor_devedor_id == "") {
+
+            $this->db->set('razao_social', $dadospaciente[0]->nome);
+            $this->db->set('cep', $dadospaciente[0]->cep);
+            if ($dadospaciente[0]->cpf != '' && $dadospaciente[0]->cpf != "NULL") {
+                $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $dadospaciente[0]->cpf)));
+            } else {
+                $this->db->set('cpf', null);
+            }
+            $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $dadospaciente[0]->telefone))));
+            $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $dadospaciente[0]->celular))));
+            if ($dadospaciente[0]->tipo_logradouro != '') {
+                $this->db->set('tipo_logradouro_id', $dadospaciente[0]->tipo_logradouro);
+            }
+            if ($dadospaciente[0]->municipio_id != '') {
+                $this->db->set('municipio_id', $dadospaciente[0]->municipio_id);
+            }
+            $this->db->set('logradouro', $dadospaciente[0]->logradouro);
+            $this->db->set('numero', $dadospaciente[0]->numero);
+            $this->db->set('bairro', $dadospaciente[0]->bairro);
+            $this->db->set('complemento', $dadospaciente[0]->complemento);
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->where('paciente_id', $dependente_id);
+            $this->db->insert('tb_financeiro_credor_devedor');
+            $financeiro_credor_devedor_id = $this->db->insert_id();
+
+            $this->db->where('paciente_id', $dependente_id);
+            $this->db->set('credor_devedor_id', $financeiro_credor_devedor_id);
+            $this->db->update('tb_paciente');
+            
+            
+        } else {
+            $financeiro_credor_devedor_id = $dadospaciente[0]->credor_devedor_id;
+        }
+ 
         $data_atual = date("d/m/Y");
 //      echo $dadospaciente[0]->cpf;
 //        echo  $financeiro_credor_devedor_id;
@@ -11512,6 +11550,8 @@ ORDER BY ae.agenda_exames_id)";
 //        print_r($dados);
 //        echo $financeiro_credor_devedor_id;
 //        die;
+
+
 
         foreach ($dados as $item) {
             $this->db->set('valor', $ajuste);
@@ -11557,9 +11597,8 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->set('operador_atualizacao', $operador);
         $this->db->set('ativo', 'f');
         $this->db->update('tb_observacao_contrato');
-        
     }
-    
+
     function listarparcelaspacientependente($paciente_contrato_id) {
 
         $this->db->select('
@@ -11582,7 +11621,6 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->orderby('pcp.data');
         $return = $this->db->get();
         return $return->result();
-        
     }
 
 }

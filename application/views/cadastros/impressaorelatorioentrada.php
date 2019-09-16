@@ -65,6 +65,9 @@
             </thead>
             <tbody>
                 <?php
+//                echo "<pre>";
+//                print_r($relatorioentrada);
+                
                 $total = 0;
                 $total_parcelas = 0;
                 foreach ($relatorioentrada as $item) :
@@ -73,7 +76,9 @@
                     $total += $item->valor;
                     ?>
                     <tr>
+                        
                         <td ><?= @$item->paciente_id; ?></td>
+                        
                         <td ><?= @$item->conta; ?></td>
                         <td ><?= @$item->razao_social; ?>&nbsp;</td>
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
