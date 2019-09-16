@@ -146,6 +146,10 @@
                 </select>
             </div>
             <div>
+                <label>Não renovar</label> 
+                <input type="checkbox"  name="nao_renovar" id="nao_renovar">
+            </div>
+            <div>
                 <label>Forma Pagamento </label>
 
                 <select name="forma_rendimento_id" id="forma_rendimento_id" class="size2">
@@ -159,6 +163,9 @@
                     }
                     ?> 
                 </select>
+                
+                
+                
             </div>
             <div>
                 <label>Vendedor</label>
@@ -212,17 +219,24 @@
                 <label>Parceiro</label>
                 <select name="parceiro_id" id="parceiro_id" class="size2">
                     <option value="">Selecione</option>
-                    <? foreach($parceiros as $item){ ?>
-                        <option value="<?=$item->financeiro_parceiro_id?>"> <?=$item->razao_social?> </option>
+                    <? foreach ($parceiros as $item) { ?>
+                        <option value="<?= $item->financeiro_parceiro_id ?>"> <?= $item->razao_social ?> </option>
                     <? } ?>
                 </select>
             </div>
-            
-            
+
+
             <div>
                 <label>Cód. Paciente</label>
                 <input type="text" id="cod_pac" class="texto02" name="cod_pac"/>
             </div>
+            
+             <div>
+                <label>Reativar</label> 
+                <input type="checkbox"  name="reativar" id="reativar">
+            </div>
+              
+            
         </fieldset>
         <button type="submit">Enviar</button>
         <button type="reset">Limpar</button>

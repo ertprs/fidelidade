@@ -149,20 +149,29 @@ class Guia extends BaseController {
         $data['permissao'] = $this->empresa->listarpermissoes();
 
         if (count($contrato_ativo) > 0) {
+                            
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
+                $parcelas_pendente = $this->guia->listarparcelaspacientependente($paciente_contrato_id);
+                
+//                echo "<pre>";
+//                print_r(count($parcelas_pendente));
+//               die;
                 $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
                 $data_cadastro = $contrato_ativo[count($contrato_ativo) - 1]->data_cadastro;
                 $qtd_dias = $contrato_ativo[count($contrato_ativo) - 1]->qtd_dias;
+                
+                  
                 if ($qtd_dias == "") {
                     $qtd_dias = 0;
-                } else {
-                    
+                } else {                    
                 }
                 // $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
                 //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
                 $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro)));
                 $data_atual = date("Y-m-d");
+                
+                
 //               var_dump($data_tot_contrato);die;
 //            print_r($data_tot_contrato);
 //                echo "***********";
@@ -171,13 +180,14 @@ class Guia extends BaseController {
 //                  print_r($qtd_dias);
 //                echo "***********";
                 //verificando se a data atual for maior que a data do (contrato+dias do plano) se for maior vai criar um novo contrato.
-                if ($data_atual > $data_tot_contrato) {
-
+                if ($data_atual > $data_tot_contrato && count($parcelas_pendente) == 0 && ($contrato_ativo[0]->nao_renovar == 'f' || $contrato_ativo[0]->nao_renovar == null)) {
+                            
                     if ($data['permissao'][0]->renovar_contrato_automatico == 't') {
                         $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
                     } else {
                         $contrato_ativo = $this->guia->gravarnovocontratoanualdesativar($paciente_contrato_id);
                     }
+                            
                 }
             }
         }

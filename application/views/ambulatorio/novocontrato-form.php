@@ -359,6 +359,10 @@
                         ?> 
                     </select>
                 </div>
+                 <div>
+                    <label>Não renovar</label> 
+                    <input type="checkbox"  name="nao_renovar" id="nao_renovar">
+                </div>
 
 
 

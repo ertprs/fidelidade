@@ -36,6 +36,11 @@
                     ?>>Feminino</option>
                 </select>
             </div>
+             <div>
+                <label>Reativar</label> 
+                <input type="checkbox"  name="reativar" id="reativar">
+            </div>
+            
             <fieldset>
                 <legend>Titular</legend>
                 <div>

@@ -409,3 +409,13 @@ WITH (
 );
 ALTER TABLE ponto.tb_observacao_contrato
   OWNER TO postgres;
+
+--12/09/2019
+ 
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN nao_renovar boolean;
+ALTER TABLE ponto.tb_paciente_contrato ALTER COLUMN nao_renovar SET DEFAULT false;
+
+--12/09/2019
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN reativar boolean;
+ALTER TABLE ponto.tb_paciente ALTER COLUMN reativar SET DEFAULT false;

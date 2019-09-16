@@ -39,7 +39,6 @@ class pacientes extends BaseController {
     }
 
     function novo() {
-
         $data['idade'] = 0;
         $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
         $data['listaconvenio'] = $this->paciente->listaconvenio();
@@ -359,8 +358,7 @@ class pacientes extends BaseController {
     }
 
     function gravar() {
-
-
+ 
         if ($paciente_id = $this->paciente->gravar()) {
             $data['mensagem'] = 'Paciente gravado com sucesso';
         } else {
@@ -1145,6 +1143,15 @@ class pacientes extends BaseController {
         $this->loadView('cadastros/paciente-fichadependente_2', $data);
         
     }
+    
+    
+    function reativarpaciente(){
+        $this->paciente->reativarpaciente();
+         
+       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    
+    
 
 }
 

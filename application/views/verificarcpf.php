@@ -209,7 +209,7 @@
                                             $paciente_titular_id = $paciente_id;
                                             $paciente_dependente_id = null;
                                         }
-
+                                        
                                         $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id); // Traz as paarcelas que ja estão pagas
                                         $parcelasPrevistas = $this->guia->listarparcelaspacienteprevistas($paciente_titular_id); // Traz as parcelas anteriores a data atual
 
@@ -225,8 +225,7 @@
 
                                             echo "<br><br><br><div id='div_mensagem'>Carencia liberada<br>";
                                             echo "Titular:<b>" . @$item->nome . "</b><br>";
-
-
+ 
 
                                             foreach ($listadependentes as $value) {
                                                 if ($value->nome != $item->nome) {
@@ -248,8 +247,10 @@
                                                 }
                                             }
                                             echo " </div>";
+                                            
                                         } else {
-
+                                            echo "<pre>";
+ 
                                             if (count($parcelas) >= count($parcelasPrevistas)) { // Verifica se as parcelas estão em dia
                                                 $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
                                                 $grupo = 'CONSULTA';
@@ -278,6 +279,7 @@
 
                                                 //            var_dump($carencia_mensal); die;
                                                 $parcelas_mensal = $this->guia->listarparcelaspacientemensal($paciente_titular_id);
+                                                 
                                                 if ($carencia_mensal == 't') {
                                                     $listaratendimentomensal = $this->guia->listaratendimentoparceiromensal($paciente_titular_id, $grupo);
                                                     //            var_dump($listaratendimentomensal);
@@ -292,6 +294,7 @@
                                                 $dias_parcela = 30 * count($parcelas);
                                                 $dias_atendimento = $carencia * count($listaratendimento);
                                                 $carencia_necessaria = $carencia * $numero_consultas_aut;
+                                                 
                                                 // Divide o número de dias da parcela pelo de atendimentos. Caso não exista atendimento, iguala a zero para poder entrar na condição abaixo
                                                 // Abaixo tem vários var_dumps para saber algumas coisas. Eles são de deus. Eles me fizeram conseguir concluir essa parada
                                                 // 
@@ -315,6 +318,7 @@
                                                     } else {
                                                         $carencia_liberada = 'f';
                                                     }
+                                                    
                                                 } else {
                                                     if ((($dias_parcela - $dias_atendimento) >= $carencia_necessaria) && $dias_parcela > 0) {
                                                         // Caso o paciente tenha carência, ele faz o exame de graça, caso não, ele cai na condição abaixo que grava na tabela exames como false
@@ -323,8 +327,9 @@
                                                     } else {
                                                         $carencia_liberada = 'f';
                                                     }
+                                                    
                                                 }
-//                var_dump($carencia_mensal); die;
+               
                                                 //        $carencia_liberada = 'f';
                                                 // Caso o cliente não tenha carência, o sistema vai buscar consultas avulsas
                                                 if ($carencia_liberada == 'f') {
@@ -342,6 +347,7 @@
                                                     @$listarconsultaavulsa = array();
                                                     @$tipo_consulta = '';
                                                 }
+                                               
 
                                                 /* Se no fim das contas se tudo der errado, a variável carencia_liberada vai conter a informacao 'f'que irá ser salva na linha da consulta
                                                   no banco, para dessa forma o sistema cobrar o valor do exame ao invés de utilizar da carência */

@@ -43,7 +43,6 @@
             </div>
             <div>
                 <label>Parceiro</label>
-
                 <? $listarparceiro = $this->paciente->listarparceiros(); ?>
                 <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
                     <option value='' >selecione</option>
@@ -98,6 +97,10 @@
             <div>
                 <label>Email</label>
                 <input type="text" id="email" class="texto06" name="email"  value="<?= @$obj->_cns; ?>" />
+            </div>
+            <div>
+                <label>Reativar</label> 
+                <input type="checkbox"  name="reativar" id="reativar">
             </div>
 
             <fieldset>

@@ -20,23 +20,31 @@
         $dependente = false;
     }
 
+ 
     if ($dependente == true) {
         $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
 //        $paciente_id = $retorno[0]->paciente_id;
         @$paciente_titular_id = $retorno[0]->paciente_id;
+        @$paciente_contrato_id = $retorno[0]->paciente_contrato_id;
         $paciente_dependente_id = $paciente_id;
     } else {
 //        $paciente_id = $_POST['txtNomeid'];
         $paciente_titular_id = $paciente_id;
         $paciente_dependente_id = null;
     }
+
+
 //        var_dump($_POST['txtNomeid']);
 //        var_dump($paciente_id);
 //        die;
 //        $paciente_id = $_POST['txtNomeid'];
 
+
+
+
     $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id);
     $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
+
 
 
     if ($empresa_p[0]->tipo_carencia == "SOUDEZ") {
@@ -83,12 +91,24 @@
             $especialidade_liberado = 'Pendência';
         }
     } else {
+
+ 
         $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id);
         $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
         $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id);
         $quantidade_parcelas_pagas = $this->guia->listarparcelaspagas($paciente_titular_id);
 
+     if ($this->session->userdata('cadastro') == 2 && $dependente == true) {
+            $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id, $paciente_contrato_id, $dependente);           
+            $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id, $paciente_contrato_id, $dependente);
+            $quantidade_parcelas_pagas = $this->guia->listarparcelaspagas($paciente_titular_id, $paciente_contrato_id, $dependente);
+        }
+        
 
+//        echo "<pre>";
+//        
+//        print_r($parcelas);
+//        die;
         $exame_liberado = 'Pendência';
         $consulta_liberado = 'Pendência';
         $especialidade_liberado = 'Pendência';
@@ -105,15 +125,17 @@
                 break;
             }
         }
+        
+          
+       
 
- 
+
         if (count($parcelas) == 0 && count($quantidade_parcelas) > 0 && count($quantidade_parcelas_pagas) == count($quantidade_parcelas)) {
 
             $exame_liberado = 'Liberado';
             $consulta_liberado = 'Liberado';
             $especialidade_liberado = 'Liberado';
-            $liberado = true; 
-            
+            $liberado = true;
         } else {
             // Se tiverem parcelas, vai pegar a ultima parcela do foreach acima e usa a data abaixo.
             if (count($parcelas) > 0 && $liberado) {
@@ -154,13 +176,13 @@
         <div>
             <table>
                 <tr><td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Contrato</a></div></td>
-                    <? if ($perfil_id == 1) { ?> 
+    <? if ($perfil_id == 1) { ?> 
                         <td width="100px;"><div class="bt_linkm"><a onclick="javascript: return confirm('Deseja realmente excluir o cliente?');" href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">Excluir</a></div></td>
                         <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
                                 VENDEDOR : <?= @$paciente[0]->vendedor_nome; ?> 
                             </div></td>
-                    <? }
-                    ?>
+<? }
+?>
                 </tr>
             </table>            
         </div>
@@ -180,11 +202,11 @@
                         <option value="M" <?
                     if ($paciente['0']->sexo == "M"):echo 'selected';
                     endif;
-                    ?>>Masculino</option>
+?>>Masculino</option>
                         <option value="F" <?
-                        if ($paciente['0']->sexo == "F"):echo 'selected';
-                        endif;
-                    ?>>Feminino</option>
+                    if ($paciente['0']->sexo == "F"):echo 'selected';
+                    endif;
+?>>Feminino</option>
                     </select>
                 </div>
 
@@ -224,7 +246,7 @@
                             Carência Exame   
                         </td>
                         <td>
-                            <?= $exame_liberado ?>     
+<?= $exame_liberado ?>     
                         </td>
                     </tr>
                     <tr>
@@ -232,7 +254,7 @@
                             Carência Consulta    
                         </td>
                         <td>
-                            <?= $consulta_liberado ?>       
+<?= $consulta_liberado ?>       
                         </td>
                     </tr>
                     <tr>
@@ -240,7 +262,7 @@
                             Carência Especialidade    
                         </td>
                         <td>
-                            <?= $especialidade_liberado ?>       
+<?= $especialidade_liberado ?>       
                         </td>
                     </tr>
                 </table>
@@ -249,11 +271,11 @@
             <fieldset>
                 <legend>Documentos</legend>
                 <div>
-                    <? if ($paciente['0']->cpf_responsavel_flag == 't') { ?>
+<? if ($paciente['0']->cpf_responsavel_flag == 't') { ?>
                         <label>CPF do Resposável</label>
-                    <? } else { ?>
+<? } else { ?>
                         <label>CPF</label>
-                    <? } ?>
+<? } ?>
 
                     <? if (strlen($paciente['0']->cpf) <= 11) { ?>
                         <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   

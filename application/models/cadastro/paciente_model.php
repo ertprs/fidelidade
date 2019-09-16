@@ -3,8 +3,7 @@
 require_once APPPATH . 'models/base/BaseModel.php';
 
 //require_once APPPATH . 'models/base/ConvertXml.php';
-
-
+ 
 
 class paciente_model extends BaseModel {
 
@@ -86,7 +85,7 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente p')
                 ->join('tb_municipio', 'tb_municipio.municipio_id = p.municipio_id', 'left')
                 ->select('p.*, tb_municipio.nome as ciade, tb_municipio.estado')
-                ->where('p.ativo', 'true');
+                ->where("(p.ativo ='true' or p.reativar = 't' )");
         if ($perfil_id == 6) {
             $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
             $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
@@ -609,7 +608,7 @@ class paciente_model extends BaseModel {
 
             $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, c.nome as cidade_desc,c.municipio_id as cidade_cod,
                 pcd.pessoa_juridica,
-                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns
+                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns,p.reativar
 
                 ');
             $this->db->from('tb_paciente p');
@@ -683,6 +682,7 @@ class paciente_model extends BaseModel {
             $this->_financeiro = $return[0]->financeiro;
             $this->_cpffinanceiro = $return[0]->cpffinanceiro;
             $this->_cns = $return[0]->cns;
+            $this->_reativar = $return[0]->reativar;
         }
     }
 
@@ -878,6 +878,12 @@ class paciente_model extends BaseModel {
 
             // $this->db->set('paciente_id',$_POST['txtPacienteId'] );
 
+            if (isset($_POST['reativar'])) {
+                $this->db->set('reativar', 't');
+            } else {
+                $this->db->set('reativar', 'f');
+            }
+
             if ($_POST['paciente_id'] == "") {// insert
                 $this->db->set('data_cadastro', $data);
                 $this->db->set('operador_cadastro', $operador_id);
@@ -1005,7 +1011,11 @@ class paciente_model extends BaseModel {
                 $this->db->set('empresa_id', null);
             }
 
-
+            if (isset($_POST['reativar'])) {
+                $this->db->set('reativar', 't');
+            } else {
+                $this->db->set('reativar', 'f');
+            }
 
 //            if ($_POST['txtcboID'] != '') {
 //                $this->db->set('profissao', $_POST['txtcboID']);
@@ -1037,6 +1047,13 @@ class paciente_model extends BaseModel {
                 if ($situacao == 'Titular') {
                     $horario = date("Y-m-d H:i:s");
                     $operador_id = $this->session->userdata('operador_id');
+
+                    if (isset($_POST['nao_renovar'])) {
+                        $this->db->set('nao_renovar', 't');
+                    } else {
+                        $this->db->set('nao_renovar', 'f');
+                    }
+
                     $this->db->set('paciente_id', $paciente_id);
                     $this->db->set('plano_id', $_POST['plano']);
                     $this->db->set('data_cadastro', $horario);
@@ -1138,12 +1155,16 @@ class paciente_model extends BaseModel {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
             }
 
-
-
 //            if ($_POST['txtcboID'] != '') {
 //                $this->db->set('profissao', $_POST['txtcboID']);
 //            }
             $this->db->set('cep', $_POST['cep']);
+
+            if (isset($_POST['reativar'])) {
+                $this->db->set('reativar', 't');
+            } else {
+                $this->db->set('reativar', 'f');
+            }
 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
@@ -1239,8 +1260,11 @@ class paciente_model extends BaseModel {
                 $this->db->set('cns', $_POST['email']);
             }
 
-
-
+            if (isset($_POST['reativar'])) {
+                $this->db->set('reativar', 't');
+            } else {
+                $this->db->set('reativar', 'f');
+            }
 
             $this->db->set('grau_parentesco', $_POST['grau_parentesco']);
 //            $nascimento = $_POST['nascimento'];
@@ -1252,7 +1276,11 @@ class paciente_model extends BaseModel {
 //            }
             $this->db->set('sexo', $_POST['sexo']);
             $this->db->set('situacao', 'Dependente');
-
+            if (isset($_POST['reativar'])) {
+                $this->db->set('reativar', 't');
+            } else {
+                $this->db->set('reativar', 'f');
+            }
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
@@ -1721,6 +1749,7 @@ class paciente_model extends BaseModel {
         $query = $this->db->get();
         $resultado = $query->result();
         if ($this->session->userdata('cadastro') == 2) {
+            
 
             $query_endereço = "UPDATE ponto.tb_paciente p
        SET  complemento=p2.complemento,            
@@ -3848,9 +3877,9 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
-    
-    function listarcontratotitular(){
-          $this->db->select('paciente_contrato_id, plano_id');
+
+    function listarcontratotitular() {
+        $this->db->select('paciente_contrato_id, plano_id');
         $this->db->from('tb_paciente_contrato');
         $this->db->where('paciente_id', $_POST['txtNomeid']);
         $this->db->where('ativo', 't');
@@ -3858,6 +3887,16 @@ class paciente_model extends BaseModel {
         $return = $query->result();
         $paciente_contrato_id = $return[0]->paciente_contrato_id;
         return $paciente_contrato_id;
+    }
+    
+    function reativarpaciente(){
+        $operador = $this->session->userdata('operador_id');
+        $horario  = date('Y-m-d H:i:s');
+        $this->db->set('ativo','t');
+        $this->db->set('data_atualizacao',$horario);
+        $this->db->set('operador_atualizacao',$operador);
+        $this->db->update('tb_paciente');
+         
         
     }
 

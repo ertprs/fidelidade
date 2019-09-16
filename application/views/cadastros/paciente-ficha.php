@@ -250,6 +250,10 @@
                 <label>Cód. Paciente</label>
                 <input type="text" id="cod_pac" class="texto02" value="<?=@$obj->_codigo_paciente?>" name="cod_pac"/>
             </div>
+             <div>
+                <label>Reativar</label> 
+                <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t") ? "checked" : "";  ?>>
+            </div>
         </fieldset>
         <fieldset>
             <legend>Documentos / Contatos</legend>
