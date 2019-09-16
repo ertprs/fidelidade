@@ -149,29 +149,30 @@ class Guia extends BaseController {
         $data['permissao'] = $this->empresa->listarpermissoes();
 
         if (count($contrato_ativo) > 0) {
-                            
+
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                 $parcelas_pendente = $this->guia->listarparcelaspacientependente($paciente_contrato_id);
-                
+
 //                echo "<pre>";
 //                print_r(count($parcelas_pendente));
 //               die;
                 $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
                 $data_cadastro = $contrato_ativo[count($contrato_ativo) - 1]->data_cadastro;
                 $qtd_dias = $contrato_ativo[count($contrato_ativo) - 1]->qtd_dias;
-                
-                  
+
+
                 if ($qtd_dias == "") {
                     $qtd_dias = 0;
-                } else {                    
+                } else {
+                    
                 }
                 // $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
                 //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
                 $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro)));
                 $data_atual = date("Y-m-d");
-                
-                
+
+
 //               var_dump($data_tot_contrato);die;
 //            print_r($data_tot_contrato);
 //                echo "***********";
@@ -181,13 +182,12 @@ class Guia extends BaseController {
 //                echo "***********";
                 //verificando se a data atual for maior que a data do (contrato+dias do plano) se for maior vai criar um novo contrato.
                 if ($data_atual > $data_tot_contrato && count($parcelas_pendente) == 0 && ($contrato_ativo[0]->nao_renovar == 'f' || $contrato_ativo[0]->nao_renovar == null)) {
-                            
+
                     if ($data['permissao'][0]->renovar_contrato_automatico == 't') {
                         $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
                     } else {
                         $contrato_ativo = $this->guia->gravarnovocontratoanualdesativar($paciente_contrato_id);
                     }
-                            
                 }
             }
         }
@@ -369,14 +369,43 @@ class Guia extends BaseController {
     function relatorioinadimplentes() {
 //        $data['empresa'] = $this->guia->listarempresas();
         $data['bairros'] = $this->paciente->listarbairros();
+
+
         $this->loadView('ambulatorio/relatorioinadimplentes', $data);
     }
 
     function gerarelatorioinadimplentes() {
+        $this->load->plugin('mpdf');
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
         $data['ordenar'] = $_POST['ordenar'];
+
+        if ($_POST['gerar'] == "pdf") {
+
+            $filename = "relatorio.pdf";
+            $cabecalho = "";
+            $rodape = "";
+
+            $html = $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data, true);
+
+            pdf($html, $filename, $cabecalho, $rodape);
+        }
+
+        if ($_POST['gerar'] == "planilha") {
+
+            $nome_arquivo = "relatorio";
+            $html = $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data, true);
+
+            $filename = "Relatorio ";
+            // Configurações header para forçar o download
+            header("Content-type: application/x-msexcel; charset=utf-8");
+            header("Content-Disposition: attachment; filename=\"{$filename}\"");
+            header("Content-Description: PHP Generated Data");
+            // Envia o conteúdo do arquivo
+            echo $html;
+            exit;
+        }
 
         $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data);
     }
@@ -3582,8 +3611,6 @@ class Guia extends BaseController {
 
         $dataFuturo = date("Y-m-d");
         $this->load->View('ambulatorio/impressaodeclaracao', $data);
-        
-        
     }
 
     function impressaodeclaracaoguia($guia_id) {
@@ -4974,9 +5001,9 @@ table tr:hover  #achado{
 
     public function gerarpagamentogerencianet($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {
 
-                            
-       $cliente = $this->paciente->listardados($paciente_id);
-                            
+
+        $cliente = $this->paciente->listardados($paciente_id);
+
 
 
         $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
@@ -5281,7 +5308,7 @@ table tr:hover  #achado{
                     $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
                     $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
                     $email = $cliente[0]->cns;
-                       $data_nascimento = $cliente[0]->nascimento;
+                    $data_nascimento = $cliente[0]->nascimento;
 
                     $paciente = $cliente[0]->nome;
                     $cpf = $cliente[0]->cpf;
@@ -5299,19 +5326,18 @@ table tr:hover  #achado{
                         continue;
                     } elseif ($data_nascimento == "") {
                         $mensagem .= "Data de nascimento,";
-                         continue;
+                        continue;
                     } elseif ($cpf == "") {
                         $mensagem .= "Erro, CPF do cliente não cadastrado.";
-                         continue;
+                        continue;
                     } elseif ($paciente == "") {
                         $mensagem .= "Erro, Nome do paciente não cadastrado";
-                         continue;
+                        continue;
                     }
 //                        echo $paciente;      
-                    
                 }
-              
-                            
+
+
                 $data_vencimento = $value->data;
 
                 if ($value->valor < 5 || $value->valor == "") {
@@ -6056,32 +6082,30 @@ table tr:hover  #achado{
 
         $this->load->View('ambulatorio/linkscane-lista', $data);
     }
-    
-    function gravarobservacaopaciente($paciente_id){
-                            
+
+    function gravarobservacaopaciente($paciente_id) {
+
         $this->guia->gravarobservacaocontrato($paciente_id);
-        
-       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
-    function excluirobservacao($observacao_contrato_id){
+    function excluirobservacao($observacao_contrato_id) {
         $this->guia->excluirobservacao($observacao_contrato_id);
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
-        
     }
-    
-    
-    function impressaodeclaracaopaciente($paciente_id){
-        
-         $this->load->helper('directory');
-         $empresa_id = $this->session->userdata('empresa_id');
-         
+
+    function impressaodeclaracaopaciente($paciente_id) {
+
+        $this->load->helper('directory');
+        $empresa_id = $this->session->userdata('empresa_id');
+
         if (!is_dir("./upload/empresalogo")) {
             mkdir("./upload/empresalogo");
             $destino = "./upload/empresalogo";
             chmod($destino, 0777);
         }
-        
+
         if (!is_dir("./upload/empresalogo/$empresa_id")) {
             mkdir("./upload/empresalogo/$empresa_id");
             $destino = "./upload/empresalogo/$empresa_id";
@@ -6093,16 +6117,14 @@ table tr:hover  #achado{
             sort($data['arquivo_pasta']);
         }
         $data['empresa_id'] = $empresa_id;
-        
+
         $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
-        
+
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
-                            
-        $this->load->View('ambulatorio/impressaodeclaracaopaciente',$data);
-        
-        
+
+        $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
     }
-    
+
 }
 
 /* End of file welcome.php */

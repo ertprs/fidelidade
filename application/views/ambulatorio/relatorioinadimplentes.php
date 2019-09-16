@@ -62,6 +62,19 @@
                             </select>
                         </dd>
                     </div>
+                    
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Gerar </label>
+                        </dt>
+                        <dd>
+                            <select name="gerar" id="gerar" class="size2" tabindex="1">
+                                <option value='' >Selecione</option>
+                                <option value='pdf' >PDF</option>
+                                <option value='planilha' >PLANILHA</option> 
+                            </select>
+                        </dd>
+                    </div>
 
                 </dl>
                 <button type="submit" >Pesquisar</button>
