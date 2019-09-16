@@ -3581,8 +3581,9 @@ class Guia extends BaseController {
         $data['paciente'] = $this->paciente->listardados($paciente_id);
 
         $dataFuturo = date("Y-m-d");
-
         $this->load->View('ambulatorio/impressaodeclaracao', $data);
+        
+        
     }
 
     function impressaodeclaracaoguia($guia_id) {
@@ -6066,6 +6067,39 @@ table tr:hover  #achado{
     function excluirobservacao($observacao_contrato_id){
         $this->guia->excluirobservacao($observacao_contrato_id);
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+        
+    }
+    
+    
+    function impressaodeclaracaopaciente($paciente_id){
+        
+         $this->load->helper('directory');
+         $empresa_id = $this->session->userdata('empresa_id');
+         
+        if (!is_dir("./upload/empresalogo")) {
+            mkdir("./upload/empresalogo");
+            $destino = "./upload/empresalogo";
+            chmod($destino, 0777);
+        }
+        
+        if (!is_dir("./upload/empresalogo/$empresa_id")) {
+            mkdir("./upload/empresalogo/$empresa_id");
+            $destino = "./upload/empresalogo/$empresa_id";
+            chmod($destino, 0777);
+        }
+//        $data['arquivo_pasta'] = directory_map("/home/sisprod/projetos/clinica/upload/$paciente_id/");
+        $data['arquivo_pasta'] = directory_map("./upload/empresalogo/$empresa_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        }
+        $data['empresa_id'] = $empresa_id;
+        
+        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
+        
+        $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
+                            
+        $this->load->View('ambulatorio/impressaodeclaracaopaciente',$data);
+        
         
     }
     

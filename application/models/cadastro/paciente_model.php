@@ -3,7 +3,7 @@
 require_once APPPATH . 'models/base/BaseModel.php';
 
 //require_once APPPATH . 'models/base/ConvertXml.php';
- 
+
 
 class paciente_model extends BaseModel {
 
@@ -1749,7 +1749,7 @@ class paciente_model extends BaseModel {
         $query = $this->db->get();
         $resultado = $query->result();
         if ($this->session->userdata('cadastro') == 2) {
-            
+
 
             $query_endereço = "UPDATE ponto.tb_paciente p
        SET  complemento=p2.complemento,            
@@ -3888,16 +3888,23 @@ class paciente_model extends BaseModel {
         $paciente_contrato_id = $return[0]->paciente_contrato_id;
         return $paciente_contrato_id;
     }
-    
-    function reativarpaciente(){
+
+    function reativarpaciente() {
         $operador = $this->session->userdata('operador_id');
-        $horario  = date('Y-m-d H:i:s');
-        $this->db->set('ativo','t');
-        $this->db->set('data_atualizacao',$horario);
-        $this->db->set('operador_atualizacao',$operador);
+        $horario = date('Y-m-d H:i:s');
+        $this->db->set('ativo', 't');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador);
         $this->db->update('tb_paciente');
-         
-        
+    }
+
+    function listardadospaciente($paciente_id) {        
+        $this->db->select('cbo.descricao,p.logradouro,p.nascimento,p.cep,p.telefone,p.celular,p.numero,p.bairro,p.nome,p.estado_civil_id,p.rg,p.cpf,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_cbo_ocupacao cbo', 'cbo.cbo_ocupacao_id = p.profissao', 'left');
+        $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
+        $this->db->where('paciente_id', $paciente_id);
+        return $this->db->get()->result();
     }
 
 }

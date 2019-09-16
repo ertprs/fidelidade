@@ -178,6 +178,16 @@
                 <tr><td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Contrato</a></div></td>
     <? if ($perfil_id == 1) { ?> 
                         <td width="100px;"><div class="bt_linkm"><a onclick="javascript: return confirm('Deseja realmente excluir o cliente?');" href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">Excluir</a></div></td>
+    <?php }?>
+               <td width="100px;">
+                   <div class="bt_linkm">
+<a  onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/impressaodeclaracaopaciente/<?= $paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">Declaração</a>
+                   
+                   </div></td>
+                          
+                        
+                        
+           <? if ($perfil_id == 1) { ?>             
                         <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
                                 VENDEDOR : <?= @$paciente[0]->vendedor_nome; ?> 
                             </div></td>

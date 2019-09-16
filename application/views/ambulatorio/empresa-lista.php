@@ -22,47 +22,60 @@
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">CNPJ</th>
                         <th class="tabela_header">Raz&atilde;o social</th>
-                        <th class="tabela_header">Detalhes</th>
+                        <th class="tabela_header" colspan="2"   style="text-align: center;">Detalhes</th>
                     </tr>
                 </thead>
                 <?php
-                    $url      = $this->utilitario->build_query_params(current_url(), $_GET);
-                    $consulta = $this->empresa->listar($_GET);
-                    $total    = $consulta->count_all_results();
-                    $limit    = 10;
-                    isset ($_GET['per_page']) ? $pagina = $_GET['per_page'] : $pagina = 0;
+                $url = $this->utilitario->build_query_params(current_url(), $_GET);
+                $consulta = $this->empresa->listar($_GET);
+                $total = $consulta->count_all_results();
+                $limit = 10;
+                isset($_GET['per_page']) ? $pagina = $_GET['per_page'] : $pagina = 0;
 
-                    if ($total > 0) {
-                ?>
-                <tbody>
-                    <?php
+                if ($total > 0) {
+                    ?>
+                    <tbody>
+                        <?php
                         $lista = $this->empresa->listar($_GET)->limit($limit, $pagina)->orderby("nome")->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                     ?>
+                            ?>
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cnpj; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
-                                    <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresa/<?= $item->empresa_id ?>">Editar</a></div>
-                            </td>
 
-                        </tr>
+                                <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                    <div class="bt_link">
+                                        <a href="<?= base_url() ?>ambulatorio/empresa/carregarlogoempresa/<?= $item->empresa_id ?>">Logo</a>
+
+                                    </div>
+
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                    <div class="bt_link">
+                                        <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresa/<?= $item->empresa_id ?>">Editar</a>
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
 
                         </tbody>
                         <?php
-                                }
-                            }
-                        ?>
-                        <tfoot>
-                            <tr>
-                                <th class="tabela_footer" colspan="6">
-                                   <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
+                    }
+                }
+                ?>
+                <tfoot>
+                    <tr>
+                        <th class="tabela_footer" colspan="6">
+                            <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
-                                </th>
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -72,8 +85,8 @@
 </div> <!-- Final da DIV content -->
 <script type="text/javascript">
 
-    $(function() {
-        $( "#accordion" ).accordion();
+    $(function () {
+        $("#accordion").accordion();
     });
 
 </script>

@@ -105,6 +105,33 @@ class Empresa extends BaseController {
         //$this->carregarView($data, 'giah/servidor-form');
         $this->loadView('ambulatorio/empresacadastro-form', $data);
     }
+    
+    function carregarlogoempresa($empresa_id){
+        $this->load->helper('directory');
+         
+        if (!is_dir("./upload/empresalogo")) {
+            mkdir("./upload/empresalogo");
+            $destino = "./upload/empresalogo";
+            chmod($destino, 0777);
+        }
+        
+        if (!is_dir("./upload/empresalogo/$empresa_id")) {
+            mkdir("./upload/empresalogo/$empresa_id");
+            $destino = "./upload/empresalogo/$empresa_id";
+            chmod($destino, 0777);
+        }
+//        $data['arquivo_pasta'] = directory_map("/home/sisprod/projetos/clinica/upload/$paciente_id/");
+        $data['arquivo_pasta'] = directory_map("./upload/empresalogo/$empresa_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        }
+        $data['empresa_id'] = $empresa_id;
+//        $this->loadView('ambulatorio/importacao-imagempaciente', $data);
+        
+        
+        $this->loadView('ambulatorio/empresacadastrologo-form',$data);
+        
+    }
 
 }
 
