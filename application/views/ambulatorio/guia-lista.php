@@ -1,5 +1,6 @@
 
 <?
+ 
 if (count($exames) > 0) {
 
     foreach ($exames as $item) {
@@ -188,13 +189,13 @@ if (count($exames) > 0) {
                                 }
                                 ?>
 
-                                                                                                        <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                                                                                            <div class="bt_link_new">
-                                                                                                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
-                                                                                                                    Pagamento Iugu
-                                                                                                                </a>
-                                                                                                            </div>
-                                                                                                        </td>-->
+                                                                                                                <!--                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                                                                                                    <div class="bt_link_new">
+                                                                                                                        <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/integracaoiugu/" . $paciente['0']->paciente_id . "/" . $item->paciente_contrato_id ?> ', '_blank', 'width=800,height=1000');">
+                                                                                                                            Pagamento Iugu
+                                                                                                                        </a>
+                                                                                                                    </div>
+                                                                                                                </td>-->
 
 
 
@@ -218,17 +219,27 @@ if (count($exames) > 0) {
                             </tr>
                         </thead>
                         <tbody>
-
                         <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= @$titular['0']->paciente_id; ?>/<?= @$titular['0']->paciente_contrato_id ?>');"><?= @$titular['0']->paciente_contrato_id; ?></td>
                         <td class="<?php echo $estilo_linha; ?>" width="100px;"><a onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listardependentes/<?= @$titular['0']->paciente_id; ?>/<?= @$titular['0']->paciente_contrato_id ?>');"><?= @$titular['0']->nome; ?></td>
                         <? if ($perfil_id != 6 && $perfil_id != 5) { ?>
-                            <td class="<?php echo $estilo_linha; ?>" width="50px;">       
-                                <div class="bt_link_new">
+                        <td class="<?php echo $estilo_linha; ?>" width="50px;" >       
+                                <div class="bt_link_new"    >
                                     <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . @$titular['0']->paciente_contrato_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">
                                         Carteira
                                     </a>
                                 </div>
+                             <?php if (@$paciente[0]->situacao == "Dependente" && @$titular['0']->paciente_id != "") {
+                                ?>
+                                     
+                                    <div class="bt_link_new">
+                                        <a href="<?= base_url() . "ambulatorio/guia/pesquisar/" . @$titular['0']->paciente_id; ?>" target="_blank">
+                                            Contrato
+                                        </a>
+                                    </div>
+                             
+                            <?php } ?>
                             </td>
+                           
 
                         <? } else { ?>
                             <td class="<?php echo $estilo_linha; ?>" width="100px;"></td>
@@ -317,34 +328,34 @@ if (count($exames) > 0) {
     <script type="text/javascript">
 
 
-                                $(document).ready(function () {
+                                        $(document).ready(function () {
 
-                                    $.getJSON('<?= base_url() ?>autocomplete/pagamentoautomaticoiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
-                                        //           alert(j);
-                                        //                    
-                                    });
+                                            $.getJSON('<?= base_url() ?>autocomplete/pagamentoautomaticoiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
+                                                //           alert(j);
+                                                //                    
+                                            });
 
-                                    $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
-                                        //           alert(j);
-                                        //                    
-                                    });
+                                            $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
+                                                //           alert(j);
+                                                //                    
+                                            });
 
-                                    $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoconsultaavulsaiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
-                                        //           alert(j);
-                                        //                    
-                                    });
-                                });
-
-
+                                            $.getJSON('<?= base_url() ?>autocomplete/confirmarpagamentoautomaticoconsultaavulsaiugucliente', {paciente_id: <?= $paciente['0']->paciente_id; ?>, ajax: true}, function (j) {
+                                                //           alert(j);
+                                                //                    
+                                            });
+                                        });
 
 
-                                $(function () {
-                                    $(".btn-toggle").click(function (e) {
-                                        e.preventDefault();
-                                        el = $(this).data('element');
-                                        $(el).toggle();
-                                    });
-                                });
+
+
+                                        $(function () {
+                                            $(".btn-toggle").click(function (e) {
+                                                e.preventDefault();
+                                                el = $(this).data('element');
+                                                $(el).toggle();
+                                            });
+                                        });
 
 
     </script>
