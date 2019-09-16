@@ -6871,8 +6871,6 @@ AND data <= '$data_fim'";
     function gravarplanoparcelas($paciente_id) {
         $horario = date("Y-m-d H:i:s");
         $operador_id = $this->session->userdata('operador_id');
-
-
         $this->db->select('paciente_contrato_id, pc.plano_id, fp.taxa_adesao, valoradcional, fp.parcelas,pc.paciente_id,p.credor_devedor_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
@@ -11536,8 +11534,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->where('paciente_id', $dependente_id);
             $this->db->set('credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->update('tb_paciente');
-            
-            
+             
         } else {
             $financeiro_credor_devedor_id = $dadospaciente[0]->credor_devedor_id;
         }
@@ -11550,14 +11547,12 @@ ORDER BY ae.agenda_exames_id)";
 //        print_r($dados);
 //        echo $financeiro_credor_devedor_id;
 //        die;
-
-
-
+ 
         foreach ($dados as $item) {
             $this->db->set('valor', $ajuste);
             $this->db->set('parcela', $item->parcela);
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
-//            $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
+            $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->set('data', $item->data);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
