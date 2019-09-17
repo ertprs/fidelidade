@@ -129,7 +129,7 @@
                     $estilo_linha = "tabela_content01";
                     foreach ($conta as $item) {
                         ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                        $valor = $this->caixa->listarsomacontarelatorio($item->forma_entradas_saida_id,$txtdata_inicio,$txtdata_fim);
+                        $valor = $this->caixa->listarsomacontarelatorio($item->forma_entradas_saida_id,$txtdata_inicio,$txtdata_fim,$cliente);
                         ?>
                         <tr>
                             <td class="<?php echo $estilo_linha; ?>"><?= @$item->descricao; ?></td>

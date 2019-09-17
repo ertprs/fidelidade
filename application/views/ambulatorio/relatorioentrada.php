@@ -62,13 +62,13 @@
                         <label>Data inicio</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtdata_inicio" id="txtdata_inicio" alt="date"/>
+                        <input type="text" name="txtdata_inicio" id="txtdata_inicio" alt="date" required=""/>
                     </dd>
                     <dt>
                         <label>Data fim</label>
                     </dt>
                     <dd>
-                        <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
+                        <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date" required=""/>
                     </dd>
                     <!--                    <dt>
                                         <label>Empresa</label>
@@ -76,7 +76,7 @@
                                         <dd>
                                             <select name="empresa" id="empresa" class="size2">
                     <? foreach ($empresa as $value) : ?>
-                                                                        <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
+                                                                            <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
                     <? endforeach; ?>
                                                 <option value="0">TODOS</option>
                                             </select>
@@ -115,6 +115,21 @@
                             ?>
                         </select> 
                     </dd>
+
+
+                    <dt>
+                        <label>Cliente</label>
+                    </dt>
+                    <dd>
+                        <select name="cliente" id="cliente" class="size2">
+                            
+                            <option value="0">TODOS</option>
+                            <option value="1">TITULAR</option>
+                            <option value="2">DEPENDENTES</option>
+
+                        </select> 
+                    </dd>
+
 
 
                 </dl>

@@ -367,7 +367,8 @@ class caixa_model extends Model {
                             s.classe,
                             fr.nome as forma_rendimento,
                             p.paciente_id,
-                            fe.forma_entradas_saida_id,s.nome');
+                            fe.forma_entradas_saida_id,s.nome,
+                            p.situacao');
         $this->db->from('tb_entradas s');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
@@ -396,6 +397,16 @@ class caixa_model extends Model {
         if ($_POST['conta'] != 0) {
             $this->db->where('s.conta', $_POST['conta']);
         }
+        
+        if ($_POST['cliente'] == "1") {
+            $this->db->where("(p.situacao != 'Dependente' or p.situacao is null) ");
+        }
+        
+        if ($_POST['cliente'] == "2") {
+               $this->db->where('p.situacao','Dependente');
+        }
+        
+        
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         
@@ -966,7 +977,7 @@ class caixa_model extends Model {
     }
     
     
-    function listarsomacontarelatorio($conta,$inicio,$fim) {
+    function listarsomacontarelatorio($conta,$inicio,$fim,$cliente=NULL) {
         $this->db->select('sum(s.valor) as total');
         $this->db->from('tb_entradas s');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
@@ -980,6 +991,16 @@ class caixa_model extends Model {
         $this->db->where('s.conta',$conta);
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $inicio))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-',  $fim))));
+        
+         
+        
+       if ($cliente == "1") {
+           $this->db->where("(p.situacao != 'Dependente' or p.situacao is null) ");
+        }
+        
+        if ($cliente == "2") {
+               $this->db->where('p.situacao','Dependente');
+        }
         $return = $this->db->get();
         return $return->result();
     }
