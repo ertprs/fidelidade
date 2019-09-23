@@ -260,6 +260,7 @@ class Guia extends BaseController {
         $contador = 0;
         $body_E_con = '';
         $valor_total = 0;
+        $num_sequencial = 01;
         foreach ($relatorio as $item) {
 
             $data_vencimento = date("Ymd", strtotime($item->data));
@@ -281,17 +282,24 @@ class Guia extends BaseController {
             $E[0] = ''; // Iniciando o Array;
             $E[1] = 'E'; // string(01); Código do registro = "E"
             $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
-            $E[3] = substr($item->conta_agencia, 0, 4); // string(04); Agência para débito/crédito
-            $conta = $item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  "; // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
+            $E[3] = $this->utilitario->preencherEsquerda(substr($item->conta_agencia, 0, 4),4,'0'); // string(04); Agência para débito/crédito
+            $conta = $this->utilitario->preencherEsquerda($item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  ",4,'0'); // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
             $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
             $E[5] = $data_vencimento; // string(08); Data do vencimento
             $E[6] = $this->utilitario->preencherEsquerda($valor_debito, 15, '0'); // string(15); Valor do débito
             $E[7] = '03'; // string(02); Código da moeda  Real = 03
             $E[8] = $this->utilitario->preencherDireita('Pagamento por debito automatico sistema Fidelidade', 60, ' '); // string(60);  String pra usar a vontade limitando o tamanho, essa informação é só uma observação que apenas retorna para a clinica. O banco não utiliza
-            $E[9] = $tipo_iden; // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
-            $E[10] = $cpf_cnpj; // string(15); // CPF ou CNPJ
-            $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
-            $E[12] = '0'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
+            $E[9] = $this->utilitario->preencherEsquerda($item->paciente_id, 6, '0');
+            $E[10] = $this->utilitario->preencherDireita('', 8, ' ');
+            $E[11] = $this->utilitario->preencherEsquerda($num_sequencial, 6, '0');
+            $num_sequencial++;
+            $E[12] = '0';
+//            $E[9] = $tipo_iden; // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
+//            $E[10] = $cpf_cnpj; // string(15); // CPF ou CNPJ
+//            $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
+//            $E[12] = '0'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
+
+
             $body_con = implode($E); // Corpo concatenado
 
             $body_E[] = $body_con; // Adiciona no array. (interessante essa variável pra verificar possiveis problemas nas linhas)
@@ -303,15 +311,23 @@ class Guia extends BaseController {
             // var_dump($body_con); 
             // die;
         }
+                            
+        
         $valor_total = number_format($valor_total, 2, '', '');
         $Z = array(); // Footer chamado de Trailler
         $Z[0] = ''; // Iniciando indice zero;
         $Z[1] = 'Z'; // ; string(1) Indicação do que é a linha;
         $contador = $contador + 2; // Tem que contar o Header e o Footer
         $Z[2] = $this->utilitario->preencherEsquerda($contador, 6, '0'); // ;
-        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;
-        $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;
-        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
+        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;                         
+        $Z[4] = $this->utilitario->preencherDireita("", 119, ' ');
+        $Z[5] = $this->utilitario->preencherEsquerda($num_sequencial, 6, '0');
+        $Z[6] = $this->utilitario->preencherEsquerda("", 1, '0');
+//        
+//            $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;                       
+//        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
+
+
         ; // ;
         $footer_Z = implode($Z);
 
@@ -2162,9 +2178,11 @@ class Guia extends BaseController {
     function gravardependentes() {
         $paciente_id = $_POST['txtpaciente_id'];
         $contrato_id = $_POST['txtcontrato_id'];
+
         $ambulatorio_guia_id = $this->guia->gravardependentes($paciente_id, $contrato_id);
         if ($this->session->userdata('cadastro') == 2) {
             $dependente_id = $_POST['dependente'];
+
             $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
         }
         if ($ambulatorio_guia_id == "-1") {
@@ -5271,7 +5289,6 @@ table tr:hover  #achado{
         } else {
             $telefone = "";
         }
-
 
 
 

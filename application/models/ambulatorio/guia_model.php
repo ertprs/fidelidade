@@ -5066,11 +5066,10 @@ ORDER BY p.nome";
         if ($total > $retorno[0]->parcelas) {
             $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor - '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                 WHERE paciente_contrato_id = '$paciente_contrato_id' AND parcela_dependente = 'f'";
             $this->db->query($sql);
         }
-
-
+ 
         $this->db->set('ativo', 'f');
         $this->db->set('data_atualizacao', $horario);
         $this->db->set('operador_atualizacao', $operador_id);
@@ -5562,7 +5561,7 @@ ORDER BY p.nome";
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
-            $this->db->set('paciente_id',$paciente_id);
+            $this->db->set('paciente_id', $paciente_id);
             $this->db->insert('tb_financeiro_credor_devedor');
             $financeiro_credor_devedor_id = $this->db->insert_id();
 
@@ -7120,7 +7119,7 @@ AND data <= '$data_fim'";
 
                 $sql2 = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor_adicional'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                 WHERE paciente_contrato_id = '$paciente_contrato_id' AND parcela_dependente = 'f'";
                 $this->db->query($sql2);
             }
         }
@@ -7241,7 +7240,7 @@ AND data <= '$data_fim'";
 
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND parcela_dependente = 'f'";
                 $this->db->query($sql);
 
 //            $this->db->set('ativo', 'f');
@@ -11441,12 +11440,14 @@ ORDER BY ae.agenda_exames_id)";
     }
 
     function geraparcelasdependente($dependente_id, $paciente_contrato_id) {
-
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
         $this->db->select('*');
         $this->db->from('tb_paciente_contrato');
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
         $this->db->where('ativo', 't');
         $res = $this->db->get()->result();
+
 
         $this->db->select('');
         $this->db->from('tb_forma_pagamento');
@@ -11459,28 +11460,19 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->from('tb_paciente');
         $this->db->where('paciente_id', $dependente_id);
         $dadospaciente = $this->db->get()->result();
-
         $tirarx = str_replace("x", "", $res[0]->parcelas);
         $parcelas = substr($res[0]->parcelas, 0, 2);
 
-//    echo '<pre>';    
-//print_r($res);
-//
-//
-//die;
+
 
         $parcelas = (int) $parcelas;
         $mes = 1;
-        $dia = substr($dados[0]->data, 8, 12);
-        $adesao = $dados[0]->adesao_digitada;
-
-        if ((int) $dia < 10) {
-            $dia = str_replace('0', '', $dia);
-            $dia = "0" . $dia;
-        }
 
 
 
+
+
+// 2019-05-10 00:00:00 pq foi o dia feito a criação via query
 
         $this->db->select('');
         $this->db->from('tb_paciente_contrato_parcelas');
@@ -11489,21 +11481,26 @@ ORDER BY ae.agenda_exames_id)";
 //        $this->db->where('excluido', 'f');
         $this->db->where('taxa_adesao', 'f');
         $this->db->where("(parcela_dependente = false or parcela_dependente is null)");
-//        $this->db->limit($parcelas);
-        $this->db->where("(adesao_digitada is not null or adesao_digitada != '' )");
-        $this->db->orderby('parcela');
+        $this->db->limit($parcelas);
+//        $this->db->where("( (adesao_digitada is not null or adesao_digitada != '') or data_cadastro = '2019-05-10 00:00:00'  )");
+        $this->db->where("(taxa_adesao = 'f')");
+        $this->db->orderby('parcela', 'asc');
         $dados = $this->db->get()->result();
+
+        $dia = substr($dados[0]->data, 8, 12);
+        $adesao = $dados[0]->adesao_digitada;
+
+        if ((int) $dia < 10) {
+            $dia = str_replace('0', '', $dia);
+            $dia = "0" . $dia;
+        }
+
 //        echo "<pre>";
 //        print_r($dados);
+//        print_r($res);
 //        die;
 
-
-
-
-
-
         if ($dadospaciente[0]->credor_devedor_id == "") {
-
             $this->db->set('razao_social', $dadospaciente[0]->nome);
             $this->db->set('cep', $dadospaciente[0]->cep);
             if ($dadospaciente[0]->cpf != '' && $dadospaciente[0]->cpf != "NULL") {
@@ -11523,8 +11520,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->set('numero', $dadospaciente[0]->numero);
             $this->db->set('bairro', $dadospaciente[0]->bairro);
             $this->db->set('complemento', $dadospaciente[0]->complemento);
-            $horario = date("Y-m-d H:i:s");
-            $operador_id = $this->session->userdata('operador_id');
+
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->where('paciente_id', $dependente_id);
@@ -11534,11 +11530,10 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->where('paciente_id', $dependente_id);
             $this->db->set('credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->update('tb_paciente');
-             
         } else {
             $financeiro_credor_devedor_id = $dadospaciente[0]->credor_devedor_id;
         }
- 
+
         $data_atual = date("d/m/Y");
 //      echo $dadospaciente[0]->cpf;
 //        echo  $financeiro_credor_devedor_id;
@@ -11547,7 +11542,7 @@ ORDER BY ae.agenda_exames_id)";
 //        print_r($dados);
 //        echo $financeiro_credor_devedor_id;
 //        die;
- 
+
         foreach ($dados as $item) {
             $this->db->set('valor', $ajuste);
             $this->db->set('parcela', $item->parcela);
