@@ -282,8 +282,8 @@ class Guia extends BaseController {
             $E[0] = ''; // Iniciando o Array;
             $E[1] = 'E'; // string(01); Código do registro = "E"
             $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
-            $E[3] = $this->utilitario->preencherEsquerda(substr($item->conta_agencia, 0, 4),4,'0'); // string(04); Agência para débito/crédito
-            $conta = $this->utilitario->preencherEsquerda($item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  ",4,'0'); // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
+            $E[3] = $this->utilitario->preencherEsquerda(substr($item->conta_agencia, 0, 4), 4, '0'); // string(04); Agência para débito/crédito
+            $conta = $this->utilitario->preencherEsquerda($item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  ", 4, '0'); // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
             $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
             $E[5] = $data_vencimento; // string(08); Data do vencimento
             $E[6] = $this->utilitario->preencherEsquerda($valor_debito, 15, '0'); // string(15); Valor do débito
@@ -311,8 +311,8 @@ class Guia extends BaseController {
             // var_dump($body_con); 
             // die;
         }
-                            
-        
+
+
         $valor_total = number_format($valor_total, 2, '', '');
         $Z = array(); // Footer chamado de Trailler
         $Z[0] = ''; // Iniciando indice zero;
@@ -396,6 +396,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
         $data['ordenar'] = $_POST['ordenar'];
+//        echo "<pre>";
+//        print_r($data['relatorio']);
+//        die;
 
         if ($_POST['gerar'] == "pdf") {
 
@@ -2182,7 +2185,6 @@ class Guia extends BaseController {
         $ambulatorio_guia_id = $this->guia->gravardependentes($paciente_id, $contrato_id);
         if ($this->session->userdata('cadastro') == 2) {
             $dependente_id = $_POST['dependente'];
-
             $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
         }
         if ($ambulatorio_guia_id == "-1") {
@@ -4046,6 +4048,8 @@ class Guia extends BaseController {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicovoptante();
+
+
         $origem_ind = "./upload/SICOVoptante";
         if ($_POST['apagar'] == 1) {
             delete_files($origem_ind);
@@ -4096,7 +4100,7 @@ class Guia extends BaseController {
             $E[0] = ''; // Iniciando o Array;
             $E[1] = 'E'; // string(01); Código do registro = "E"
             $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
-            $E[3] = substr($item->conta_agencia, 0, 4); // string(04); Agência para débito/crédito
+            $E[3] = $this->utilitario->preencherEsquerda($item->conta_agencia, 4, '0'); // string(04); Agência para débito/crédito
             $conta = $item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  "; // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
             $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
             $E[5] = $this->utilitario->preencherDireita('', 8, ' '); // string(08); Data do vencimento
@@ -5803,7 +5807,7 @@ table tr:hover  #achado{
                     $options = [
                         'client_id' => $clientId,
                         'client_secret' => $clientSecret,
-                        'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                        'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
                     ];
 
                     $item_1 = [
@@ -5875,6 +5879,8 @@ table tr:hover  #achado{
 //                       print_r($e->error);echo "<br>";
 //                       print_r($e->errorDescription);die;
                         @$property = $e->errorDescription['message'];
+                        
+                       
 
 //                        if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
 //                            $erro = ", Telefone inválido!";
@@ -5893,7 +5899,7 @@ table tr:hover  #achado{
 
                         switch ($e->code) {
                             case 3500000:
-                                $message = 'Erro interno do servidor.';
+                                $message = 'Erro interno do servidor.';                        
                                 break;
                             case 3500001:
                                 $message = $messageErrorDefault;
@@ -6021,6 +6027,9 @@ table tr:hover  #achado{
                                 $message = $messageErrorDefault;
                                 break;
                         }
+                        
+                      $this->paciente->gravarerrogerencianet($paciente_id,$contrato_id,$message,$e->code);
+                      
                     } catch (Exception $e) {
                         print_r($e->getMessage());
                     }

@@ -10,9 +10,6 @@
     th{
         font-family: arial;
     }
-
-
-
 </style>
 
 <title>Relatório Entrada</title>

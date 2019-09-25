@@ -138,17 +138,15 @@ class guia_model extends Model {
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
-
-
-        if (@$_POST['forma_pagamento'] == 'manual') {
+        if ($_POST['forma_pagamento'] == 'manual') {
             $this->db->where('pcp.manual', 't');
-        } else if (@$_POST['forma_pagamento'] == 'cartao') {
+        } else if ($_POST['forma_pagamento'] == 'cartao') {
             $this->db->where('pcp.data_cartao_iugu is not null');
-        } else if (@$_POST['forma_pagamento'] == 'debito') {
+        } else if ($_POST['forma_pagamento'] == 'debito') {
             $this->db->where('pcp.debito', 't');
-        } else if (@$_POST['forma_pagamento'] == 'boleto_emp') {
+        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
             $this->db->where('pcp.empresa_iugu', 't');
-        } else if (@$_POST['forma_pagamento'] == 'boleto') {
+        } else if ($_POST['forma_pagamento'] == 'boleto') {
             $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
             $this->db->where('pcp.data_cartao_iugu is null');
             $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
@@ -840,7 +838,7 @@ class guia_model extends Model {
         }
 
 
-        // $this->db->where("pcp.data <=", $data);
+        $this->db->where("pcp.data <=", $data);
         $this->db->where("pc.ativo", 't');
         $this->db->where("pcp.ativo", 't');
         $this->db->where("pcp.excluido", 'f');
@@ -5063,13 +5061,19 @@ ORDER BY p.nome";
             $valor = 0;
         }
 
-        if ($total > $retorno[0]->parcelas) {
-            $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
+        if ($this->session->userdata('cadastro') == 2) {
+            
+        } else {
+
+            if ($total > $retorno[0]->parcelas) {
+                $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor - '$valor'
-                 WHERE paciente_contrato_id = '$paciente_contrato_id' AND parcela_dependente = 'f'";
-            $this->db->query($sql);
+                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                $this->db->query($sql);
+            }
         }
- 
+
+
         $this->db->set('ativo', 'f');
         $this->db->set('data_atualizacao', $horario);
         $this->db->set('operador_atualizacao', $operador_id);
@@ -7114,13 +7118,19 @@ AND data <= '$data_fim'";
             $total = count($resultado);
             $total_limite = $return[0]->parcelas;
             $valor = $return[0]->valoradcional;
-            if ($total > $total_limite) {
-                $valor_adicional = ($total - $total_limite) * $valor;
 
-                $sql2 = "UPDATE ponto.tb_paciente_contrato_parcelas
+
+
+            if ($this->session->userdata('cadastro') == 2) {
+                
+            } else {
+                if ($total > $total_limite) {
+                    $valor_adicional = ($total - $total_limite) * $valor;
+                    $sql2 = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor_adicional'
-                 WHERE paciente_contrato_id = '$paciente_contrato_id' AND parcela_dependente = 'f'";
-                $this->db->query($sql2);
+                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                    $this->db->query($sql2);
+                }
             }
         }
         $this->db->set('ativo', 'f');
@@ -7238,10 +7248,17 @@ AND data <= '$data_fim'";
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->insert('tb_paciente_contrato_dependente');
 
-                $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
+                if ($this->session->userdata('cadastro') == 2) {
+                    
+                } else {
+                    
+                    $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id AND parcela_dependente = 'f'";
-                $this->db->query($sql);
+                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                    $this->db->query($sql);
+                    
+                }
+
 
 //            $this->db->set('ativo', 'f');
 //            $this->db->set('paciente_contrato_id', $paciente_contrato_id);
@@ -9973,7 +9990,7 @@ ORDER BY ae.agenda_exames_id)";
         } else {
             $this->db->where("pc.paciente_id", $paciente_titular_id);
         }
-        // $this->db->where("pcp.data <=", $data);
+         $this->db->where("pcp.data <=", $data);
         $this->db->where("pc.ativo", 't');
 //        $this->db->where("pcp.ativo", 't');
         $this->db->where("pcp.excluido", 'f');
@@ -10007,7 +10024,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->where("pc.paciente_id", $paciente_titular_id);
         }
 
-        // $this->db->where("pcp.data <=", $data);
+        $this->db->where("pcp.data <=", $data);
         $this->db->where("pc.ativo", 't');
         $this->db->where("pcp.ativo", 'f');
         $this->db->where("pcp.excluido", 'f');
@@ -11447,15 +11464,13 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
         $this->db->where('ativo', 't');
         $res = $this->db->get()->result();
-
-
+ 
         $this->db->select('');
         $this->db->from('tb_forma_pagamento');
         $this->db->where('forma_pagamento_id', $res[0]->plano_id);
         $plano = $this->db->get()->result();
-        $ajuste = $plano[0]->valor_carteira;
-
-
+        $ajuste = $plano[0]->valoradcional;
+        
         $this->db->select('');
         $this->db->from('tb_paciente');
         $this->db->where('paciente_id', $dependente_id);

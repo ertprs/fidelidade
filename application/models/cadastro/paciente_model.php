@@ -1442,11 +1442,20 @@ class paciente_model extends BaseModel {
 //        die;
         $paciente_contrato_id = $return[0]->paciente_contrato_id;
 
+
+
 //        $ajuste = $return[0]->ajuste;
         $ajuste = substr(@$_POST['checkboxvalor1'], 3, 5);
         $parcelas = substr(@$_POST['checkboxvalor1'], 0, 2);
 
         $parcelas = (int) $parcelas;
+
+        $parcela_ajust = $parcelas . " x " . $ajuste;
+
+        $this->db->set('parcelas', $parcela_ajust);
+        $this->db->where('paciente_contrato_id', $paciente_contrato_id);
+        $this->db->update('tb_paciente_contrato');
+
         $mes = 1;
         $dia = @$_POST['vencimentoparcela'];
         if ((int) @$_POST['vencimentoparcela'] < 10) {
@@ -3898,13 +3907,47 @@ class paciente_model extends BaseModel {
         $this->db->update('tb_paciente');
     }
 
-    function listardadospaciente($paciente_id) {        
+    function listardadospaciente($paciente_id) {
         $this->db->select('cbo.descricao,p.logradouro,p.nascimento,p.cep,p.telefone,p.celular,p.numero,p.bairro,p.nome,p.estado_civil_id,p.rg,p.cpf,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_cbo_ocupacao cbo', 'cbo.cbo_ocupacao_id = p.profissao', 'left');
         $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
         $this->db->where('paciente_id', $paciente_id);
         return $this->db->get()->result();
+    }
+
+    function gravarerrogerencianet($paciente_id, $contrato_id, $message, $code_error) {
+        $operador = $this->session->userdata('operador_id');
+        $horario = date('Y-m-d H:i:s');
+        $this->db->set('operador_cadastro', $operador);
+        $this->db->set('data_cadastro', $horario);
+        $this->db->set('code_erro', $code_error);
+        $this->db->set('paciente_contrato_id', $contrato_id);
+        $this->db->set('paciente_id', $paciente_id);
+        $this->db->set('mensagem', $message);
+        $this->db->insert('tb_erros_gerencianet');
+    }
+
+    function listarerros($args = array()) {
+
+        $this->db->select('p.nome as paciente, eg.mensagem,eg.code_erro,eg.erros_gerencianet_id');
+        $this->db->from('tb_erros_gerencianet eg');
+        $this->db->join('tb_paciente p', 'p.paciente_id = eg.paciente_id', 'left');
+        $this->db->where('eg.ativo', 't');
+        if (isset($args['nome']) && strlen($args['nome']) > 0) {
+            $this->db->where('p.nome ilike', '%' . $args['nome'] . '%');
+        }
+        return $this->db;
+    }
+
+    function excluirerro($erros_gerencianet_id) {
+        $operador = $this->session->userdata('operador_id');
+        $horario = date('Y-m-d H:i:s');
+        $this->db->set('operador_atualizacao', $operador);
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('ativo', 'f');
+        $this->db->where('erros_gerencianet_id', $erros_gerencianet_id);
+        $this->db->update('tb_erros_gerencianet');
     }
 
 }

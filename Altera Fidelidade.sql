@@ -423,3 +423,29 @@ ALTER TABLE ponto.tb_paciente ALTER COLUMN reativar SET DEFAULT false;
 
 --16/09/2019
 ALTER TABLE ponto.tb_financeiro_credor_devedor ADD COLUMN paciente_id integer;
+
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN parcelas character varying(222);
+
+--25/09/2019
+
+
+CREATE TABLE ponto.tb_erros_gerencianet
+(
+  erros_gerencianet_id serial NOT NULL,
+  paciente_id integer,
+  paciente_contrato_id integer,
+  code_erro character varying(200),
+  data_cadastro timestamp without time zone,
+  mensagem text,
+  operador_cadastro integer,
+  ativo boolean DEFAULT true,
+  operador_atualizacao integer,
+  data_atualizacao timestamp without time zone,
+  CONSTRAINT tb_erros_gerencianet_pkey PRIMARY KEY (erros_gerencianet_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_erros_gerencianet
+  OWNER TO postgres;

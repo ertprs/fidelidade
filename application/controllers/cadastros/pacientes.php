@@ -113,8 +113,6 @@ class pacientes extends BaseController {
         }
         $data['paciente_id'] = $paciente_id;
         $this->loadView('ambulatorio/importacao-imagempaciente', $data);
-        
-        
     }
 
     function importarimagem() {
@@ -360,7 +358,7 @@ class pacientes extends BaseController {
     }
 
     function gravar() {
- 
+
         if ($paciente_id = $this->paciente->gravar()) {
             $data['mensagem'] = 'Paciente gravado com sucesso';
         } else {
@@ -394,16 +392,16 @@ class pacientes extends BaseController {
         $titular_flag = $empresa_p[0]->titular_flag;
         // echo '<pre>';
         // var_dump($titular_flag);
-        
-         $this->paciente->gravardependente2($paciente_id);
-         
-         $contrato_id = $this->paciente->listarcontratotitular();
-        
+
+        $this->paciente->gravardependente2($paciente_id);
+
+        $contrato_id = $this->paciente->listarcontratotitular();
+
         if ($this->session->userdata('cadastro') == 2) {
-            
+
             $this->guia->geraparcelasdependente($paciente_id, $contrato_id);
         }
-         
+
         if ($_POST['financeiro_parceiro_id'] > 0) {
 
             $parceiro_id = $_POST['financeiro_parceiro_id'];
@@ -1133,7 +1131,7 @@ class pacientes extends BaseController {
 //            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
 //        }
     }
-    
+
     function novodependentecompleto() {
 
         $data['idade'] = 0;
@@ -1141,24 +1139,21 @@ class pacientes extends BaseController {
         $data['listaconvenio'] = $this->paciente->listaconvenio();
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['parceiros'] = $this->exame->listarparceiros();
-        
+
         $this->loadView('cadastros/paciente-fichadependente_2', $data);
-        
     }
-    
-    
-    function reativarpaciente(){
+
+    function reativarpaciente() {
         $this->paciente->reativarpaciente();
-         
-       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
-    
-    
+
     function importarlogoempresa() {
         $empresa_id = $_POST['empresa_id'];
-        
-        
-       if (!is_dir("./upload/empresalogo")) {
+
+
+        if (!is_dir("./upload/empresalogo")) {
             mkdir("./upload/empresalogo");
             $destino = "./upload/empresalogo";
             chmod($destino, 0777);
@@ -1191,8 +1186,8 @@ class pacientes extends BaseController {
     }
 
     function excluirlogoempresa($empresa_id, $nome) {
-        
-        
+
+
 
         if (!is_dir("./uploadopm/empresalogo/$empresa_id")) {
             mkdir("./uploadopm/empresalogo");
@@ -1207,9 +1202,27 @@ class pacientes extends BaseController {
         unlink($origem);
 
         redirect(base_url() . "ambulatorio/empresa/carregarlogoempresa/$empresa_id");
-
- 
     }
+
+    
+    
+    function errosgerencianet($args = array()) {
+         
+        $this->loadView('cadastros/errosgerencianet-lista',  $args);
+        
+        
+    }
+    
+    function excluirerro($erros_gerencianet_id){
+        
+        $this->paciente->excluirerro($erros_gerencianet_id);
+        redirect(base_url()."cadastros/pacientes/errosgerencianet");
+        
+        
+    }
+    
+    
+    
     
 
 }

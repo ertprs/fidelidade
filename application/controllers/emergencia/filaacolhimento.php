@@ -28,11 +28,9 @@ class filaacolhimento extends BaseController {
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['paciente_id'] = $paciente_id;
         $horario = date(" Y-m-d H:i:s");
-
         $hour = substr($horario, 11, 3);
         $minutes = substr($horario, 15, 2);
         $seconds = substr($horario, 18, 4);
-
         $this->loadView('emergencia/solicitacoes-paciente', $data);
     }
 

@@ -20,7 +20,7 @@
         $dependente = false;
     }
 
- 
+
     if ($dependente == true) {
         $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
 //        $paciente_id = $retorno[0]->paciente_id;
@@ -92,32 +92,46 @@
         }
     } else {
 
- 
         $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id);
         $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
         $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id);
         $quantidade_parcelas_pagas = $this->guia->listarparcelaspagas($paciente_titular_id);
 
-     if ($this->session->userdata('cadastro') == 2 && $dependente == true) {
-            $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id, $paciente_contrato_id, $dependente);           
+        if ($this->session->userdata('cadastro') == 2 && $dependente == true) {
+            $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id, $paciente_contrato_id, $dependente);
             $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id, $paciente_contrato_id, $dependente);
             $quantidade_parcelas_pagas = $this->guia->listarparcelaspagas($paciente_titular_id, $paciente_contrato_id, $dependente);
         }
-        
 
-//        echo "<pre>";
-//        
+//        echo "<pre>"; 
 //        print_r($parcelas);
 //        die;
+
         $exame_liberado = 'Pendência';
         $consulta_liberado = 'Pendência';
         $especialidade_liberado = 'Pendência';
 
-
         $liberado = false;
-        $carencia_exame = @$carencia[0]->carencia_exame;
-        $carencia_consulta = @$carencia[0]->carencia_consulta;
-        $carencia_especialidade = @$carencia[0]->carencia_especialidade;
+        if (@$carencia[0]->carencia_exame != "") {
+            $carencia_exame = $carencia[0]->carencia_exame;
+        } else {
+            $carencia_exame = 0;
+        }
+
+        if (@$carencia[0]->carencia_consulta != "") {
+            $carencia_consulta = $carencia[0]->carencia_consulta;
+        } else {
+            $carencia_consulta = 0;
+        }
+
+        if (@$carencia[0]->carencia_especialidade != "") {
+            $carencia_especialidade = $carencia[0]->carencia_especialidade;
+        } else {
+            $carencia_especialidade = 0;
+        }
+
+ 
+
         // Se alguma das parcelas não tiver sido paga, o sistema não vai retornar true pra carencia
         foreach ($parcelas as $item) {
             $liberado = true;
@@ -125,9 +139,6 @@
                 break;
             }
         }
-        
-          
-       
 
 
         if (count($parcelas) == 0 && count($quantidade_parcelas) > 0 && count($quantidade_parcelas_pagas) == count($quantidade_parcelas)) {
@@ -141,9 +152,9 @@
             if (count($parcelas) > 0 && $liberado) {
                 $data_atual = date("Y-m-d");
 
-                $data_exame = date('Y-m-d', strtotime("+$carencia_exame days", strtotime($item->data)));
-                $data_consulta = date('Y-m-d', strtotime("+$carencia_consulta days", strtotime($item->data)));
-                $data_especialidade = date('Y-m-d', strtotime("+$carencia_especialidade days", strtotime($item->data)));
+                $data_exame = date('Y-m-d', strtotime("-$carencia_exame days", strtotime($item->data)));
+                $data_consulta = date('Y-m-d', strtotime("-$carencia_consulta days", strtotime($item->data)));
+                $data_especialidade = date('Y-m-d', strtotime("-$carencia_especialidade days", strtotime($item->data)));
 //                                var_dump($parcelas);
 //                                echo '-------------';
 //                                var_dump(strtotime($data_atual));
@@ -176,23 +187,23 @@
         <div>
             <table>
                 <tr><td width="100px;"><div class="bt_linkm"><a href="<?= base_url() ?>ambulatorio/guia/pesquisar/<?= $args['paciente'] ?>">Contrato</a></div></td>
-    <? if ($perfil_id == 1) { ?> 
+                    <? if ($perfil_id == 1) { ?> 
                         <td width="100px;"><div class="bt_linkm"><a onclick="javascript: return confirm('Deseja realmente excluir o cliente?');" href="<?= base_url() ?>ambulatorio/exametemp/excluirpaciente/<?= $paciente_id ?>">Excluir</a></div></td>
-    <?php }?>
-               <td width="100px;">
-                   <div class="bt_linkm">
-<a  onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/impressaodeclaracaopaciente/<?= $paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">Declaração</a>
-                   
-                   </div></td>
-                          
-                        
-                        
-           <? if ($perfil_id == 1) { ?>             
+                    <?php } ?>
+                    <td width="100px;">
+                        <div class="bt_linkm">
+                            <a  onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/impressaodeclaracaopaciente/<?= $paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">Declaração</a>
+
+                        </div></td>
+
+
+
+                    <? if ($perfil_id == 1) { ?>             
                         <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
                                 VENDEDOR : <?= @$paciente[0]->vendedor_nome; ?> 
                             </div></td>
-<? }
-?>
+                    <? }
+                    ?>
                 </tr>
             </table>            
         </div>
@@ -210,13 +221,13 @@
                     <label>Sexo</label>
                     <select name="sexo" id="txtSexo" class="size2">
                         <option value="M" <?
-                    if ($paciente['0']->sexo == "M"):echo 'selected';
-                    endif;
-?>>Masculino</option>
+                        if ($paciente['0']->sexo == "M"):echo 'selected';
+                        endif;
+                        ?>>Masculino</option>
                         <option value="F" <?
-                    if ($paciente['0']->sexo == "F"):echo 'selected';
-                    endif;
-?>>Feminino</option>
+                        if ($paciente['0']->sexo == "F"):echo 'selected';
+                        endif;
+                        ?>>Feminino</option>
                     </select>
                 </div>
 
@@ -256,7 +267,7 @@
                             Carência Exame   
                         </td>
                         <td>
-<?= $exame_liberado ?>     
+                            <?= $exame_liberado ?>     
                         </td>
                     </tr>
                     <tr>
@@ -264,7 +275,7 @@
                             Carência Consulta    
                         </td>
                         <td>
-<?= $consulta_liberado ?>       
+                            <?= $consulta_liberado ?>       
                         </td>
                     </tr>
                     <tr>
@@ -272,7 +283,7 @@
                             Carência Especialidade    
                         </td>
                         <td>
-<?= $especialidade_liberado ?>       
+                            <?= $especialidade_liberado ?>       
                         </td>
                     </tr>
                 </table>
@@ -281,11 +292,11 @@
             <fieldset>
                 <legend>Documentos</legend>
                 <div>
-<? if ($paciente['0']->cpf_responsavel_flag == 't') { ?>
+                    <? if ($paciente['0']->cpf_responsavel_flag == 't') { ?>
                         <label>CPF do Resposável</label>
-<? } else { ?>
+                    <? } else { ?>
                         <label>CPF</label>
-<? } ?>
+                    <? } ?>
 
                     <? if (strlen($paciente['0']->cpf) <= 11) { ?>
                         <input type="text" name="cpf" id ="txtCpf"  alt="cpf" class="texto04" value="<?= $paciente['0']->cpf; ?>" readonly/>   
