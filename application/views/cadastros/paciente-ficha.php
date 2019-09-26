@@ -168,13 +168,19 @@
             <div>
                 <label>Situacao</label>
                 <select name="situacao"> 
-                            
-                    <option  <? if(@$obj->_situacao == "Titular"): echo "selected"; endif;?> >Titular</option>
-                    <option  <? if(@$obj->_situacao == "Dependente"): echo "selected"; endif;?> >Dependente</option>
-                         
+
+                    <option  <?
+                    if (@$obj->_situacao == "Titular"): echo "selected";
+                    endif;
+                    ?> >Titular</option>
+                    <option  <?
+                        if (@$obj->_situacao == "Dependente"): echo "selected";
+                        endif;
+                        ?> >Dependente</option>
+
                 </select> 
                 <!--<input  name="situacao" id="situacao" class="texto03" readonly value="<?= @$obj->_situacao ?>">-->
-             
+
             </div>
             <div>
                 <label>Pessoa Jurídica</label>
@@ -201,46 +207,45 @@
 
                 <select name="estado_civil_id" id="txtEstadoCivil" class="size2" selected="<?= @$obj->_estado_civil; ?>">
                     <option value=0 <?
-                    if (@$obj->_estado_civil == 0):echo 'selected';
-                    endif;
-                    ?>>Selecione</option>
+                            if (@$obj->_estado_civil == 0):echo 'selected';
+                            endif;
+                            ?>>Selecione</option>
                     <option value=1 <?
-                    if (@$obj->_estado_civil == 1):echo 'selected';
-                    endif;
-                    ?>>Solteiro</option>
+                            if (@$obj->_estado_civil == 1):echo 'selected';
+                            endif;
+                            ?>>Solteiro</option>
                     <option value=2 <?
-                    if (@$obj->_estado_civil == 2):echo 'selected';
-                    endif;
-                    ?>>Casado</option>
+                            if (@$obj->_estado_civil == 2):echo 'selected';
+                            endif;
+                            ?>>Casado</option>
                     <option value=3 <?
-                    if (@$obj->_estado_civil == 3):echo 'selected';
-                    endif;
-                    ?>>Divorciado</option>
+                            if (@$obj->_estado_civil == 3):echo 'selected';
+                            endif;
+                            ?>>Divorciado</option>
                     <option value=4 <?
-                    if (@$obj->_estado_civil == 4):echo 'selected';
-                    endif;
-                    ?>>Viuvo</option>
+                            if (@$obj->_estado_civil == 4):echo 'selected';
+                            endif;
+                            ?>>Viuvo</option>
                     <option value=5 <?
-                    if (@$obj->_estado_civil == 5):echo 'selected';
-                    endif;
-                    ?>>Outros</option>
+                            if (@$obj->_estado_civil == 5):echo 'selected';
+                            endif;
+                            ?>>Outros</option>
                 </select>
             </div>
             <div>
                 <label>Parceiro</label>
 
-                <?$listarparceiro = $this->paciente->listarparceiros();?>
+                    <? $listarparceiro = $this->paciente->listarparceiros(); ?>
                 <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
                     <option value='' >selecione</option>
                     <?php
-                    
                     foreach ($listarparceiro as $item) {
                         ?>
 
                         <option   value =<?php echo $item->financeiro_parceiro_id; ?> <?
-                        if (@$obj->_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
-                        endif;
-                        ?>><?php echo $item->fantasia; ?></option>
+                                  if (@$obj->_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
+                                  endif;
+                                  ?>><?php echo $item->fantasia; ?></option>
                                   <?php
                               }
                               ?> 
@@ -248,11 +253,11 @@
             </div>
             <div>
                 <label>Cód. Paciente</label>
-                <input type="text" id="cod_pac" class="texto02" value="<?=@$obj->_codigo_paciente?>" name="cod_pac"/>
+                <input type="text" id="cod_pac" class="texto02" value="<?= @$obj->_codigo_paciente ?>" name="cod_pac"/>
             </div>
-             <div>
+            <div>
                 <label>Reativar</label> 
-                <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t") ? "checked" : "";  ?>>
+                <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t") ? "checked" : ""; ?>>
             </div>
         </fieldset>
         <fieldset>
@@ -268,14 +273,14 @@
                 <? } else { ?>
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
-                <? } ?>
+<? } ?>
 
             </div>
             <div>
                 <label>CPF *</label>
 
 
-                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" />
+                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" />
                 <!--<input type="text" name="cpfcnpj" id ="cpfcnpj" class="texto02" value="" />-->
                 <?php
                 if (@$obj->_cpfresp == "t") {
@@ -351,7 +356,7 @@
 
     </form>
 
-    <? // var_dump(strlen(@$obj->_cpf)); die; ?>
+<? // var_dump(strlen(@$obj->_cpf)); die;    ?>
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
@@ -359,11 +364,13 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
-
                         $("#txtDataEmissao").mask("99/99/9999");
-
+                        $("#txtNascimento").mask("99/99/9999");
+                        $("#txtCelular").mask("(99) 99999-9999");
+                        $("#txtTelefone").mask("(99) 9999-9999");
                         $("#seletorcpf").click(function () {
                             $("#cpfcnpj").mask("999.999.999-99");
+                            $("#cpfcnpj").val('');
                         });
                         $("#seletorcnpj").click(function () {
                             $("#cpfcnpj").mask("99.999.999/9999-99");
@@ -480,6 +487,27 @@
                             });
                         });
 
+                        function verificarCPF() {
+                            // cpfcnpj
+                            if ($('#seletorcpf').prop('checked')) {
+                                var cpf = $("#cpfcnpj").val();
+                                var paciente_id = $("#txtPacienteId").val();
+                                if ($('#cpf_responsavel').prop('checked')) {
+                                    var cpf_responsavel = 'on';
+                                } else {
+                                    var cpf_responsavel = '';
+                                }
+
+                                $.getJSON('<?= base_url() ?>autocomplete/verificarcpfpaciente', {cpf: cpf, cpf_responsavel: cpf_responsavel, paciente_id: paciente_id, ajax: true}, function (j) {
+                                    if (j != '') {
+                                        alert(j);
+                                        $("#cpfcnpj").val('');
+                                    }
+                                });
+                            }
+
+
+                        }
 
 
 

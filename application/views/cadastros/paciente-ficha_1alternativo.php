@@ -219,20 +219,96 @@
                 <label>Parceiro</label>
                 <select name="parceiro_id" id="parceiro_id" class="size2">
                     <option value="">Selecione</option>
-                    <? foreach($parceiros as $item){ ?>
-                        <option value="<?=$item->financeiro_parceiro_id?>"> <?=$item->razao_social?> </option>
+                    <? foreach ($parceiros as $item) { ?>
+                        <option value="<?= $item->financeiro_parceiro_id ?>"> <?= $item->razao_social ?> </option>
                     <? } ?>
                 </select>
             </div>
-            
-            
-             
-             <div>
+
+
+
+            <div>
                 <label>Reativar</label> 
                 <input type="checkbox"  name="reativar" id="reativar">
             </div>
 
         </fieldset>
+
+        <fieldset>
+            <legend>Documentos / Contatos</legend>
+            <div>
+                <label>CPF/CNPJ</label>
+                <? if (strlen(@$obj->_cpf) <= 11) { ?>
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF" checked=""/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
+                <? } elseif (strlen(@$obj->_cpf) > 11) { ?>
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ" checked=""/>CNJP<br>
+                <? } else { ?>
+                    <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
+                    <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
+                <? } ?>
+
+            </div>
+            <div>
+                <label>CPF/CNPJ</label>
+                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$obj->_cpf; ?>" required/>
+                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
+            </div>
+            <div>
+                <label>RG</label>
+
+
+                <input type="text" name="rg"  id="txtDocumento" class="texto04" maxlength="20" value="<?= @$obj->_documento; ?>" />
+            </div>
+            <div>
+                <label>UF Expedidor</label>
+
+
+                <input type="text" id="txtuf_rg" class="texto02" name="uf_rg" maxlength="20" value="<?= @$obj->_uf_rg; ?>"/>
+            </div>
+            <div>
+                <div>
+                    <label>Data Emiss&atilde;o</label>
+
+
+                    <input type="text" name="data_emissao" id="txtDataEmissao" class="texto02" alt="date" value="<?php echo substr(@$obj->_data_emissao, 8, 2) . '/' . substr(@$obj->_data_emissao, 5, 2) . '/' . substr(@$obj->_data_emissao, 0, 4); ?>" />
+                </div>
+
+                <div>
+
+                    <label>Outro documento</label>
+
+
+                    <input type="text"   name="outro_documento" id="outro_documento" class="texto03" value="<?= @$obj->_outro_documento; ?>" />
+                </div>
+
+                <div>
+                    <label>Numero</label>
+                    <input type="text"   name="numero_documento" id="numero_documentor" class="texto02" value="<?= @$obj->_numero_documento; ?>" />
+                </div>
+
+
+                <div>
+                    <label>Email</label>
+                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>" required/>
+                </div>
+                <div>
+                    <label>Telefone</label>
+
+
+                    <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 9999-9999" value="<?= @$obj->_telefone; ?>"/>
+                </div>
+                <div>
+                    <label>Celular *</label>
+                    <input type="text" id="txtCelular" class="texto02" name="celular" alt="(99) 99999-9999" value="<?= @$obj->_celular; ?>" required/>
+                </div>
+                <div class="bt_linkm">
+                    <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
+                    </a></div>
+        </fieldset>
+
+
         <button type="submit">Enviar</button>
         <button type="reset">Limpar</button>
 
@@ -248,118 +324,95 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+
 <script type="text/javascript">
-    $("#cpffinanceiro").mask("999.999.999-99");
-    $("#nascimento").mask("99/99/9999");
-    $("#cep").mask("99999-999");
 
-//    $(document).ready(function () {
-//        jQuery('#form_paciente').validate({
-//            rules: {
-//                nome: {
-//                    required: true,
-//                    minlength: 3
-//                },
-//                sexo: {
-//                    required: true
-//                },
-//                situacao: {
-//                    required: true
-//                },
-//                plano: {
-//                    required: true
-//                },
-//                bairro: {
-//                    required: true
-//                },
-//                municipio_id: {
-//                    required: true
-//                },
-//                endereco: {
-//                    required: true
-//                },
-//                nascimento: {
-//                    required: true
-//                }
-//
-//            },
-//            messages: {
-//                nome: {
-//                    required: "*",
-//                    minlength: "*"
-//                },
-//                sexo: {
-//                    required: "*"
-//                },
-//                situacao: {
-//                    required: "*"
-//                },
-//                plano: {
-//                    required: "*"
-//                },
-//                bairro: {
-//                    required: "*"
-//                },
-//                municipio_id: {
-//                    required: "*"
-//                },
-//                endereco: {
-//                    required: "*"
-//                },
-//                nascimento: {
-//                    required: "*"
-//                }
-//            }
-//        });
-//    });
+                        $("#cpffinanceiro").mask("999.999.999-99");
+                        $("#nascimento").mask("99/99/9999");
+                        $("#cep").mask("99999-999");
+                        $("#txtDataEmissao").mask("99/99/9999");
+                        $("#txtCelular").mask("(99) 99999-9999");
+                        $("#txtTelefone").mask("(99) 9999-9999");
+                        $("#cpfcnpj").mask("999.999.999-99");
 
-    $(function () {
-        $("#txtcbo").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",
-            minLength: 3,
-            focus: function (event, ui) {
-                $("#txtcbo").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtcbo").val(ui.item.value);
-                $("#txtcboID").val(ui.item.id);
-                return false;
-            }
-        });
-    });
+                        $("#seletorcpf").click(function () {
+                            $("#cpfcnpj").mask("999.999.999-99");
+                            $("#cpfcnpj").val("");
+                        });
 
-    $(function () {
-        $("#txtCidade").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
-            minLength: 3,
-            focus: function (event, ui) {
-                $("#txtCidade").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtCidade").val(ui.item.value);
-                $("#txtCidadeID").val(ui.item.id);
-                return false;
-            }
-        });
-    });
-    $(function () {
-        $("#txtEstado").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=estado",
-            minLength: 2,
-            focus: function (event, ui) {
-                $("#txtEstado").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtEstado").val(ui.item.value);
-                $("#txtEstadoID").val(ui.item.id);
-                return false;
-            }
-        });
-    });
+                        $("#seletorcnpj").click(function () {
+                            $("#cpfcnpj").mask("99.999.999/9999-99");
+                        });
 
+ 
+
+                        $(function () {
+                            $("#txtcbo").autocomplete({
+                                source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",
+                                minLength: 3,
+                                focus: function (event, ui) {
+                                    $("#txtcbo").val(ui.item.label);
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    $("#txtcbo").val(ui.item.value);
+                                    $("#txtcboID").val(ui.item.id);
+                                    return false;
+                                }
+                            });
+                        });
+
+                        $(function () {
+                            $("#txtCidade").autocomplete({
+                                source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
+                                minLength: 3,
+                                focus: function (event, ui) {
+                                    $("#txtCidade").val(ui.item.label);
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    $("#txtCidade").val(ui.item.value);
+                                    $("#txtCidadeID").val(ui.item.id);
+                                    return false;
+                                }
+                            });
+                        });
+                        $(function () {
+                            $("#txtEstado").autocomplete({
+                                source: "<?= base_url() ?>index.php?c=autocomplete&m=estado",
+                                minLength: 2,
+                                focus: function (event, ui) {
+                                    $("#txtEstado").val(ui.item.label);
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    $("#txtEstado").val(ui.item.value);
+                                    $("#txtEstadoID").val(ui.item.id);
+                                    return false;
+                                }
+                            });
+                        });
+
+                        function verificarCPF() {
+                            // cpfcnpj
+                            if ($('#seletorcpf').prop('checked')) {
+                                var cpf = $("#cpfcnpj").val();
+                                var paciente_id = $("#txtPacienteId").val();
+                                if ($('#cpf_responsavel').prop('checked')) {
+                                    var cpf_responsavel = 'on';
+                                } else {
+                                    var cpf_responsavel = '';
+                                }
+
+                                $.getJSON('<?= base_url() ?>autocomplete/verificarcpfpaciente', {cpf: cpf, cpf_responsavel: cpf_responsavel, paciente_id: paciente_id, ajax: true}, function (j) {
+                                    if (j != '') {
+                                        alert(j);
+                                        $("#cpfcnpj").val('');
+                                    }
+                                });
+                            }
+
+                        }
 
 
 

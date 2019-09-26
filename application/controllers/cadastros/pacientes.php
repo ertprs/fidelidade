@@ -371,15 +371,93 @@ class pacientes extends BaseController {
     function gravardocumentos() {
 
         $paciente_id = $this->paciente->gravardocumentos();
-
-        redirect(base_url() . "cadastros/pacientes/carregardocumentos/$paciente_id");
+        $situacao = $_POST['situacao'];
+        @$empresa_id = @$_POST['empresa_cadastro_id'];
+        $paciente_id = $this->paciente->gravar2($paciente_id);
+        // $parceiro_id = $_POST['financeiro_parceiro_id'];
+        $parceiros = $this->paciente->listarparceirosurl();
+        // var_dump($situacao); die;       
+        foreach ($parceiros as $key => $value) {
+            $retorno_paciente = $this->paciente->listardados($paciente_id);
+            $json_paciente = json_encode($retorno_paciente);
+            // $fields = array('' => $_POST['body']);
+            $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
+            // var_dump($url); die;
+            $postdata = http_build_query(
+                    array(
+                        'body' => $json_paciente
+                    )
+            );
+            $opts = array('http' =>
+                array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => $postdata
+            ));
+            $context = stream_context_create($opts);
+            $result = file_get_contents($url, false, $context);
+            // var_dump($result); die;
+        }
+        if ($situacao == 'Titular') {
+            redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
+        } else {
+            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
+        } 
+//        redirect(base_url() . "cadastros/pacientes/carregardocumentos/$paciente_id");
+              
     }
 
     function gravardocumentosalternativo() {
 
         $paciente_id = $this->paciente->gravardocumentosalternativo();
 
-        redirect(base_url() . "cadastros/pacientes/carregardocumentosalternativo/$paciente_id");
+        
+        $situacao = $_POST['situacao'];
+        @$empresa_id = @$_POST['empresa_cadastro_id'];
+        
+        $paciente_id = $this->paciente->gravar2($paciente_id);
+        // $parceiro_id = $_POST['financeiro_parceiro_id'];
+        $parceiros = $this->paciente->listarparceirosurl();
+//         var_dump($paciente_id); die;
+        foreach ($parceiros as $key => $value) {
+            $retorno_paciente = $this->paciente->listardados($paciente_id);
+            $json_paciente = json_encode($retorno_paciente);
+
+            // $fields = array('' => $_POST['body']);
+            $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
+
+            // var_dump($url); die;
+            $postdata = http_build_query(
+                    array(
+                        'body' => $json_paciente
+                    )
+            );
+
+            $opts = array('http' =>
+                array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => $postdata
+            ));
+
+            $context = stream_context_create($opts);
+
+            $result = file_get_contents($url, false, $context);
+            // var_dump($result); die;
+        }
+
+
+        if ($situacao == 'Titular') {
+            redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
+        } else {
+            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
+        }
+        
+        
+//        redirect(base_url() . "cadastros/pacientes/carregardocumentosalternativo/$paciente_id");
+        
+        
+        
     }
 
     function gravardependente() {

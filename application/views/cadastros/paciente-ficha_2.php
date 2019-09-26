@@ -248,7 +248,7 @@
             </div>
             <div>
                 <label>CPF/CNPJ</label>
-                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18"  class="texto03" value="<?= @$obj->_cpf; ?>" required/>
+                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$obj->_cpf; ?>" required/>
                 <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
             </div>
             <div>
@@ -326,6 +326,7 @@
 
                         $("#seletorcpf").click(function () {
                             $("#cpfcnpj").mask("999.999.999-99");
+                            $("#cpfcnpj").val('');
                         });
                         $("#seletorcnpj").click(function () {
                             $("#cpfcnpj").mask("99.999.999/9999-99");
@@ -421,7 +422,27 @@
                             });
                         });
 
+                        function verificarCPF() {
+                            // cpfcnpj
 
+                            if ($('#seletorcpf').prop('checked')) {
+                                var cpf = $("#cpfcnpj").val();
+                                var paciente_id = $("#txtPacienteId").val();
+                                if ($('#cpf_responsavel').prop('checked')) {
+                                    var cpf_responsavel = 'on';
+                                } else {
+                                    var cpf_responsavel = '';
+                                }
+                                $.getJSON('<?= base_url() ?>autocomplete/verificarcpfpaciente', {cpf: cpf, cpf_responsavel: cpf_responsavel, paciente_id: paciente_id, ajax: true}, function (j) {
+                                    if (j != '') {
+                                        alert(j);
+                                        $("#cpfcnpj").val('');
+                                    }
+                                });
+                            }
+
+
+                        }
 
 
 </script>

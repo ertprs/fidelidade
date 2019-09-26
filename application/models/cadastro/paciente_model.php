@@ -1369,7 +1369,7 @@ class paciente_model extends BaseModel {
         }
     }
 
-    function gravar2() {
+    function gravar2($paciente_id=NULL) {
 
         try {
 
@@ -1410,8 +1410,12 @@ class paciente_model extends BaseModel {
 
             // $this->db->set('paciente_id',$_POST['txtPacienteId'] );
 
-
-            $paciente_id = $_POST['paciente_id'];
+            if ($_POST['paciente_id'] != "") {
+                 $paciente_id = $_POST['paciente_id'];
+            }else{
+                
+            }
+            
             $this->db->set('data_atualizacao', $data);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('paciente_id', $paciente_id);
@@ -1795,18 +1799,21 @@ class paciente_model extends BaseModel {
             if (trim($erro) != "") // erro de banco
                 return -1;
         }else {
+            
+            if ($this->session->userdata('cadastro') == 2) {
+                
+            } else {
+                $this->db->set('paciente_id', $paciente_id);
+                $this->db->set('paciente_contrato_id', $paciente_contrato_id);
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->insert('tb_paciente_contrato_dependente');
 
-            $this->db->set('paciente_id', $paciente_id);
-            $this->db->set('paciente_contrato_id', $paciente_contrato_id);
-            $this->db->set('data_cadastro', $horario);
-            $this->db->set('operador_cadastro', $operador_id);
-            $this->db->insert('tb_paciente_contrato_dependente');
-
-            $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
+                $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
                  WHERE paciente_contrato_id = $paciente_contrato_id";
-            $this->db->query($sql);
-
+                $this->db->query($sql);
+            }
 //            $this->db->set('ativo', 'f');
 //            $this->db->set('paciente_contrato_id', $paciente_contrato_id);
 //            $this->db->update('tb_paciente_contrato_parcelas');
@@ -3824,7 +3831,7 @@ class paciente_model extends BaseModel {
 
     function listarparcelagerncianetpendentes() {
         $data = date("Y-m-t");
-        $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, fp.nome as plano, pc.paciente_id, cpi.charge_id,cpi.carne,cpi.carnet_id');
+        $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, fp.nome as plano, pc.paciente_id, cpi.charge_id,cpi.carne,cpi.carnet_id,cpi.num_carne');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
@@ -3930,7 +3937,7 @@ class paciente_model extends BaseModel {
 
     function listarerros($args = array()) {
 
-        $this->db->select('p.nome as paciente, eg.mensagem,eg.code_erro,eg.erros_gerencianet_id');
+        $this->db->select('p.nome as paciente, eg.mensagem,eg.code_erro,eg.erros_gerencianet_id,eg.data_cadastro');
         $this->db->from('tb_erros_gerencianet eg');
         $this->db->join('tb_paciente p', 'p.paciente_id = eg.paciente_id', 'left');
         $this->db->where('eg.ativo', 't');
@@ -3948,6 +3955,19 @@ class paciente_model extends BaseModel {
         $this->db->set('ativo', 'f');
         $this->db->where('erros_gerencianet_id', $erros_gerencianet_id);
         $this->db->update('tb_erros_gerencianet');
+    }
+    
+    function contadorcpfautocomplete($cpf, $paciente_id) {
+        $this->db->select();
+        $this->db->from('tb_paciente');
+        $this->db->where('cpf', str_replace("-", "", str_replace(".", "", $cpf)));
+        $this->db->where('ativo', 't');
+        if ($paciente_id > 0) {
+            $this->db->where('paciente_id !=', $paciente_id);
+        }
+        $this->db->where('cpf_responsavel_flag', 'f');
+        $return = $this->db->count_all_results();
+        return $return;
     }
 
 }

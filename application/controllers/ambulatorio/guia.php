@@ -5807,7 +5807,7 @@ table tr:hover  #achado{
                     $options = [
                         'client_id' => $clientId,
                         'client_secret' => $clientSecret,
-                        'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+                        'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
                     ];
 
                     $item_1 = [

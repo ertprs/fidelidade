@@ -18,6 +18,7 @@
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">Mensagem</th>
                         <th class="tabela_header">Código</th>
+                        <th class="tabela_header">Data</th>
                         <th class="tabela_header">Detalhes</th>
                     </tr>
                 </thead>
@@ -41,8 +42,10 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente; ?></td>
 
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->mensagem; ?></td>
-                                
+                               
                                    <td class="<?php echo $estilo_linha; ?>"><?= $item->code_erro; ?></td>
+                                    <td class="<?php echo $estilo_linha; ?>"><?= date('d/m/Y', strtotime($item->data_cadastro)); ?></td>
+                                
 
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;">
 

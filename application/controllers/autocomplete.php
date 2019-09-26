@@ -2761,33 +2761,26 @@ class Autocomplete extends Controller {
         $client_id = $empresa[0]->client_id;
         $client_secret = $empresa[0]->client_secret;
 
-
         $options = [
             'client_id' => $client_id,
             'client_secret' => $client_secret,
-            'sandbox' => true // altere conforme o ambiente (true = desenvolvimento e false = producao)
+            'sandbox' => false // altere conforme o ambiente (true = desenvolvimento e false = producao)
         ];
 
 
-
         if ($client_id != "" && $client_secret != "") {
-
             foreach ($pagamento as $item) {
                 if ($item->carne == "t") {
+
                     $params = [
                         'id' => $item->carnet_id
                     ];
-
-
                     try {
                         $api = new Gerencianet($options);
                         $carnet = $api->detailCarnet($params, []);
-                        echo '<pre>';
-//                        print_r($carnet);
-
                         $carnet['data']['charges'];
                         foreach ($carnet['data']['charges'] as $value) {
-                            if ($item->charge_id == $value['charge_id'] && ($value['status'] == "settled" || $value['status'] == "paid")) {
+                            if ($item->charge_id == $value['charge_id'] && ($value['status'] == "settled" || $value['status'] == "paid") && $item->num_carne == $value['parcel']) {
                                 $this->guia->confirmarpagamentoautomaticogerencianet($item->paciente_contrato_parcelas_id);
                             } else {
                                 
@@ -2830,6 +2823,28 @@ class Autocomplete extends Controller {
             echo 'false';
         }
     }
+
+    function verificarcpfpaciente() {
+        $cpf = $_GET['cpf'];
+        $cpf_responsavel = $_GET['cpf_responsavel'];
+        $paciente_id = $_GET['paciente_id'];
+        $mensagem = '';
+        if ($cpf != "" && $cpf != "000.000.000-00") {
+            if ($this->utilitario->validaCPF($cpf)) {
+                $contadorcpf = $this->paciente_m->contadorcpfautocomplete($cpf, $paciente_id);
+                if ($cpf_responsavel == 'on') {
+                    $contadorcpf = 0;
+                }
+                if ($contadorcpf > 0) {
+                    $mensagem = 'CPF do paciente já cadastrado';
+                }
+            } else {
+                $mensagem = 'Erro ao gravar paciente. CPF inválido';
+            }
+        }
+        echo json_encode($mensagem);
+    }
+    
 
 }
 

@@ -164,7 +164,7 @@
                     <label>Protocolo liga&ccedil;&atilde;o</label>
                     <input type="text" id="ligacao" class="texto04" name="ligacao" value="<?= @$obj->_ligacao; ?>" required/>
                 </div>
-<? } ?>
+            <? } ?>
             <div>
                 <label>Forma Pagamento *</label>
 
@@ -243,7 +243,7 @@
             <div>
                 <label>Parceiro</label>
 
-<? $listarparceiro = $this->paciente->listarparceiros(); ?>
+                <? $listarparceiro = $this->paciente->listarparceiros(); ?>
                 <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
                     <option value='' >selecione</option>
                     <?php
@@ -259,35 +259,35 @@
                               ?> 
                 </select>
             </div>
-            
-              
-             <div>
+
+
+            <div>
                 <label>Reativar</label> 
-                <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t" ) ? "checked" :"" ; ?> >
+                <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t" ) ? "checked" : ""; ?> >
             </div>
-              
+
         </fieldset>
         <fieldset>
             <legend>Documentos / Contatos</legend>
             <div>
                 <label>CPF/CNPJ</label>
-<? if (strlen(@$obj->_cpf) <= 11) { ?>
+                <? if (strlen(@$obj->_cpf) <= 11) { ?>
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF" checked=""/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
-<? } elseif (strlen(@$obj->_cpf) > 11) { ?>
+                <? } elseif (strlen(@$obj->_cpf) > 11) { ?>
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ" checked=""/>CNJP<br>
-<? } else { ?>
+                <? } else { ?>
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
-<? } ?>
+                <? } ?>
 
             </div>
             <div>
                 <label>CPF *</label>
 
 
-                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" />
+                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" />
                 <!--<input type="text" name="cpfcnpj" id ="cpfcnpj" class="texto02" value="" />-->
                 <?php
                 if (@$obj->_cpfresp == "t") {
@@ -363,7 +363,7 @@
 
     </form>
 
-<? // var_dump(strlen(@$obj->_cpf)); die;   ?>
+    <? // var_dump(strlen(@$obj->_cpf)); die;   ?>
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
@@ -375,15 +375,15 @@
                         $("#nascimento").mask("99/99/9999");
                         $("#txtDataEmissao").mask("99/99/9999");
                         $("#cpffinanceiro").mask("999.999.999-99");
+                        $("#txtCelular").mask("(99) 99999-9999");
+                        $("#txtTelefone").mask("(99) 9999-9999");
                         $("#seletorcpf").click(function () {
                             $("#cpfcnpj").mask("999.999.999-99");
-
+                            $("#cpfcnpj").val("");
                         });
                         $("#seletorcnpj").click(function () {
                             $("#cpfcnpj").mask("99.999.999/9999-99");
                         });
-
-
 //                        var tamanho = $("#cpfcnpj").val().length;
 //                        if (tamanho < 11) {
 ////                                alert('sdas');
@@ -391,7 +391,6 @@
 //                        } else if (tamanho >= 11) {
 //                            $("#cpfcnpj").mask("99.999.999/9999-99");
 //                        }
-
 <? if (strlen(@$obj->_cpf) <= 11) { ?>
                             $("#cpfcnpj").mask("999.999.999-99");
 <? } else { ?>
@@ -495,6 +494,25 @@
                         });
 
 
+                        function verificarCPF() {
+                            // cpfcnpj
+                            if ($('#seletorcpf').prop('checked')) {
+                                var cpf = $("#cpfcnpj").val();
+                                var paciente_id = $("#txtPacienteId").val();
+                                if ($('#cpf_responsavel').prop('checked')) {
+                                    var cpf_responsavel = 'on';
+                                } else {
+                                    var cpf_responsavel = '';
+                                }
 
+                                $.getJSON('<?= base_url() ?>autocomplete/verificarcpfpaciente', {cpf: cpf, cpf_responsavel: cpf_responsavel, paciente_id: paciente_id, ajax: true}, function (j) {
+                                    if (j != '') {
+                                        alert(j);
+                                        $("#cpfcnpj").val('');
+                                    }
+                                });
+                            }
+
+                        }
 
 </script>

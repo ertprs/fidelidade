@@ -17,7 +17,7 @@
             </div>
             <div>
                 <label>CPF</label>
-                <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" required/>
+                <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>"   onblur="verificarCPF()"  required/>
                 <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
             </div>
             <div>
@@ -127,77 +127,99 @@
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+
 <script type="text/javascript">
 
+                    $("#txtcpf").mask("999.999.999-99");
+                    $("#txtNascimento").mask("99/99/9999");
+                    $("#cep").mask("99999-999");
+                    $(function () {
+                        $("#txtcbo").autocomplete({
+                            source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",
+                            minLength: 3,
+                            focus: function (event, ui) {
+                                $("#txtcbo").val(ui.item.label);
+                                return false;
+                            },
+                            select: function (event, ui) {
+                                $("#txtcbo").val(ui.item.value);
+                                $("#txtcboID").val(ui.item.id);
+                                return false;
+                            }
+                        });
+                    });
+
+                    $(function () {
+                        $("#txtCidade").autocomplete({
+                            source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
+                            minLength: 3,
+                            focus: function (event, ui) {
+                                $("#txtCidade").val(ui.item.label);
+                                return false;
+                            },
+                            select: function (event, ui) {
+                                $("#txtCidade").val(ui.item.value);
+                                $("#txtCidadeID").val(ui.item.id);
+                                return false;
+                            }
+                        });
+                    });
+                    $(function () {
+                        $("#txtEstado").autocomplete({
+                            source: "<?= base_url() ?>index.php?c=autocomplete&m=estado",
+                            minLength: 2,
+                            focus: function (event, ui) {
+                                $("#txtEstado").val(ui.item.label);
+                                return false;
+                            },
+                            select: function (event, ui) {
+                                $("#txtEstado").val(ui.item.value);
+                                $("#txtEstadoID").val(ui.item.id);
+                                return false;
+                            }
+                        });
+                    });
 
 
-    $(function () {
-        $("#txtcbo").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",
-            minLength: 3,
-            focus: function (event, ui) {
-                $("#txtcbo").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtcbo").val(ui.item.value);
-                $("#txtcboID").val(ui.item.id);
-                return false;
-            }
-        });
-    });
 
-    $(function () {
-        $("#txtCidade").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=cidade",
-            minLength: 3,
-            focus: function (event, ui) {
-                $("#txtCidade").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtCidade").val(ui.item.value);
-                $("#txtCidadeID").val(ui.item.id);
-                return false;
-            }
-        });
-    });
-    $(function () {
-        $("#txtEstado").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=estado",
-            minLength: 2,
-            focus: function (event, ui) {
-                $("#txtEstado").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtEstado").val(ui.item.value);
-                $("#txtEstadoID").val(ui.item.id);
-                return false;
-            }
-        });
-    });
+                    $(function () {
+                        $("#txtNomepaciente").autocomplete({
+                            source: "<?= base_url() ?>index.php?c=autocomplete&m=pacientetitular",
+                            minLength: 3,
+                            focus: function (event, ui) {
+                                $("#txtNomepaciente").val(ui.item.label);
+                                return false;
+                            },
+                            select: function (event, ui) {
+                                $("#txtNomepaciente").val(ui.item.value);
+                                $("#txtNomeid").val(ui.item.id);
+                                $("#txtTelefone").val(ui.item.itens);
+                                $("#nascimento").val(ui.item.valor);
+                                $("#txtEnd").val(ui.item.endereco);
+                                return false;
+                            }
+                        });
+                    });
+ 
+                    function verificarCPF() {
+                        // txtcpf
+                        var cpf = $("#txtcpf").val();
+                        var paciente_id = $("#txtPacienteId").val();
+                        if ($('#cpf_responsavel').prop('checked')) {
+                            var cpf_responsavel = 'on';
+                        } else {
+                            var cpf_responsavel = '';
+                        }
 
-
-
-    $(function () {
-        $("#txtNomepaciente").autocomplete({
-            source: "<?= base_url() ?>index.php?c=autocomplete&m=pacientetitular",
-            minLength: 3,
-            focus: function (event, ui) {
-                $("#txtNomepaciente").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                $("#txtNomepaciente").val(ui.item.value);
-                $("#txtNomeid").val(ui.item.id);
-                $("#txtTelefone").val(ui.item.itens);
-                $("#nascimento").val(ui.item.valor);
-                $("#txtEnd").val(ui.item.endereco);
-                return false;
-            }
-        });
-    });
-
+                        $.getJSON('<?= base_url() ?>autocomplete/verificarcpfpaciente', {cpf: cpf, cpf_responsavel: cpf_responsavel, paciente_id: paciente_id, ajax: true}, function (j) {
+                            if (j != '') {
+                                alert(j);
+                                $("#txtcpf").val('');
+                            }
+                        });
+                    }
 
 </script>
