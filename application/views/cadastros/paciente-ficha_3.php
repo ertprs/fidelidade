@@ -4,7 +4,7 @@
             <legend>Dados do Paciente</legend>
             <div>
                 <label>Nome *</label>                      
-                <input type ="hidden" name ="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
+                <input type ="hidden" name="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id="txtPacienteId">
                 <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$obj->_nome; ?>" readonly/>
                 <input type="hidden" id="empresa_cadastro_id" name="empresa_cadastro_id" class="texto10"  value="<?= @$empresa_id; ?>"  />
             </div>

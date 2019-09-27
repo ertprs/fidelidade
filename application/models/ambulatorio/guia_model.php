@@ -5110,7 +5110,6 @@ ORDER BY p.nome";
             $credor = $parcela[0]->financeiro_credor_devedor_id_dependente;
         }
 
-
 //       echo "Credor: ".$credor ; echo '<br>';
 //       echo "paciente : ".$paciente_id ; echo '<br>';
 //       die; 
@@ -6236,7 +6235,6 @@ AND data <= '$data_fim'";
 
     function gravarconsultaavulsa($paciente_id) {
         try {
-
 //            $this->db->select('consulta_avulsa');
 //            $this->db->from('tb_paciente');
 //            $this->db->where("paciente_id", $paciente_id);
@@ -6245,7 +6243,6 @@ AND data <= '$data_fim'";
             $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
             $data = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
 //            var_dump($valor); die;
-
             /* inicia o mapeamento no banco */
             $horario = date("Y-m-d H:i:s");
             $hora = date("H:i:s");
@@ -6255,6 +6252,10 @@ AND data <= '$data_fim'";
             $this->db->set('data', $data);
             $this->db->set('tipo', 'EXTRA');
             $this->db->set('valor', $valor);
+            if ($valor == 0.00) {
+                $this->db->set('ativo', 'f');
+                $this->db->set('manual', 't');
+            }
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->insert('tb_consultas_avulsas');
@@ -6287,6 +6288,10 @@ AND data <= '$data_fim'";
             $this->db->set('data', $data);
             $this->db->set('tipo', 'COOP');
             $this->db->set('valor', $valor);
+            if ($valor == 0.00) {
+                $this->db->set('ativo', 'f');
+                $this->db->set('manual', 't');
+            }
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->insert('tb_consultas_avulsas');
@@ -6327,6 +6332,10 @@ AND data <= '$data_fim'";
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
+            $paciente_contrato_parcelas_id = $this->db->insert_id();
+            if ($valor == 0.00) {
+                $this->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id);
+            }
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
@@ -7007,6 +7016,10 @@ AND data <= '$data_fim'";
         if ($return[0]->taxa_adesao == 't') {
             $this->db->set('taxa_adesao', 't');
             $this->db->set('valor', $ajuste);
+            if ($ajuste == 0.00) {
+                $this->db->set('ativo', 'f');
+                $this->db->set('manual', 't');
+            }
             $this->db->set('parcela', 0);
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -7017,11 +7030,13 @@ AND data <= '$data_fim'";
         }
 
 
-
         for ($i = 1; $i <= $parcelas; $i++) {
-
             $this->db->set('adesao_digitada', $_POST['adesao']);
             $this->db->set('valor', $ajuste);
+            if ($ajuste == 0.00) {
+                $this->db->set('ativo', 'f');
+                $this->db->set('manual', 't');
+            }
             $this->db->set('parcela', $i);
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -7029,6 +7044,8 @@ AND data <= '$data_fim'";
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
+
+
             //$mes++;
             if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas) {
 
@@ -7039,6 +7056,10 @@ AND data <= '$data_fim'";
                     $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
                     $this->db->set('valor', $ajuste);
+                    if ($ajuste == 0.00) {
+                        $this->db->set('ativo', 'f');
+                        $this->db->set('manual', 't');
+                    }
                     $this->db->set('parcela', $i);
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -7053,8 +7074,11 @@ AND data <= '$data_fim'";
                     $data_receber = date("Y-m-d", strtotime("-1 days", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
 
-
                     $this->db->set('valor', $ajuste);
+                    if ($ajuste == 0.00) {
+                        $this->db->set('ativo', 'f');
+                        $this->db->set('manual', 't');
+                    }
                     $this->db->set('parcela', $i);
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -11146,7 +11170,7 @@ ORDER BY ae.agenda_exames_id)";
         $paciente_id = $parcela[0]->paciente_id;
         $credor = $parcela[0]->financeiro_credor_devedor_id;
 
-          
+
         if (!$credor > 0) {
             $credor = $this->criarcredordevedorpaciente($paciente_id);
         }

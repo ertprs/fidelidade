@@ -1369,7 +1369,7 @@ class paciente_model extends BaseModel {
         }
     }
 
-    function gravar2($paciente_id=NULL) {
+    function gravar2($paciente_id = NULL) {
 
         try {
 
@@ -1411,11 +1411,11 @@ class paciente_model extends BaseModel {
             // $this->db->set('paciente_id',$_POST['txtPacienteId'] );
 
             if ($_POST['paciente_id'] != "") {
-                 $paciente_id = $_POST['paciente_id'];
-            }else{
+                $paciente_id = $_POST['paciente_id'];
+            } else {
                 
             }
-            
+
             $this->db->set('data_atualizacao', $data);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('paciente_id', $paciente_id);
@@ -1573,9 +1573,8 @@ class paciente_model extends BaseModel {
 //        var_dump($return[0]->taxa_adesao); die;
 
 
-        if (@$_POST['empresa_cadastro_id'] != "") {
-            
-        } else {
+        if (@$_POST['empresa_cadastro_id'] == "") {
+
             if ($return[0]->taxa_adesao == 't') {
                 $adesao_post = str_replace(",", ".", str_replace(".", "", @$_POST['valor_adesao']));
                 $this->db->set('adesao_digitada', @$_POST['adesao']);
@@ -1585,7 +1584,10 @@ class paciente_model extends BaseModel {
                     $this->db->set('valor', $ajuste);
                 }
                 $this->db->set('taxa_adesao', 't');
-
+                if ($adesao_post == 0.00 || $ajuste == 0.00) {
+                    $this->db->set('ativo', 'f');
+                    $this->db->set('manual', 't');
+                }
                 // $this->db->set('valor', $ajuste);
                 $this->db->set('parcela', 0);
                 $this->db->set('paciente_contrato_id', $paciente_contrato_id);
@@ -1602,6 +1604,10 @@ class paciente_model extends BaseModel {
 
             $this->db->set('adesao_digitada', $_POST['adesao']);
             $this->db->set('valor', $ajuste);
+            if ($ajuste == 0.00) {
+                $this->db->set('ativo', 'f');
+                $this->db->set('manual', 't');
+            }
             $this->db->set('parcela', $i);
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -1619,6 +1625,10 @@ class paciente_model extends BaseModel {
                     $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
                     $this->db->set('valor', $ajuste);
+                    if ($ajuste == 0.00) {
+                        $this->db->set('ativo', 'f');
+                        $this->db->set('manual', 't');
+                    }
                     $this->db->set('parcela', $i);
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -1626,15 +1636,16 @@ class paciente_model extends BaseModel {
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
                     $this->db->insert('tb_paciente_contrato_parcelas');
-
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+2 days", strtotime($data_receber)));
                 } elseif (date("d", strtotime($data_receber)) == '29') {
                     $data_receber = date("Y-m-d", strtotime("-1 days", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
-
-
                     $this->db->set('valor', $ajuste);
+                    if ($ajuste == 0.00) {
+                        $this->db->set('ativo', 'f');
+                        $this->db->set('manual', 't');
+                    }
                     $this->db->set('parcela', $i);
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
@@ -1642,8 +1653,6 @@ class paciente_model extends BaseModel {
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
                     $this->db->insert('tb_paciente_contrato_parcelas');
-
-
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 days", strtotime($data_receber)));
                 }
@@ -1799,7 +1808,7 @@ class paciente_model extends BaseModel {
             if (trim($erro) != "") // erro de banco
                 return -1;
         }else {
-            
+
             if ($this->session->userdata('cadastro') == 2) {
                 
             } else {
@@ -3956,7 +3965,7 @@ class paciente_model extends BaseModel {
         $this->db->where('erros_gerencianet_id', $erros_gerencianet_id);
         $this->db->update('tb_erros_gerencianet');
     }
-    
+
     function contadorcpfautocomplete($cpf, $paciente_id) {
         $this->db->select();
         $this->db->from('tb_paciente');
