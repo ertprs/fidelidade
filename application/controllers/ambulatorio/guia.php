@@ -143,11 +143,10 @@ class Guia extends BaseController {
     }
 
     function pesquisar($paciente_id) {
-
+        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
-
         if (count($contrato_ativo) > 0) {
 
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
@@ -1046,8 +1045,7 @@ class Guia extends BaseController {
     }
 
     function confirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $depende_id = NULL) {
-
-//        var_dump($valor); die;
+        $this->guia->verificarcredordevedorgeral($paciente_id);
         if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $depende_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
@@ -1058,7 +1056,7 @@ class Guia extends BaseController {
     }
 
     function confirmarpagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
-
+        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
 //        var_dump($valor); die;
         $tipo = $this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id);
         // var_dump($tipo); die;
@@ -2488,6 +2486,7 @@ class Guia extends BaseController {
 //        var_dump($data['historicoconsultasrealizadas']); die; 
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $contrato_id;
+        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }
 
@@ -4203,16 +4202,15 @@ class Guia extends BaseController {
     }
 
     function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {
-
         if ($dependente_id != "" && $this->session->userdata('cadastro') == 2) {
             $paciente_id = $dependente_id;
         }
-
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
         $data['paciente_id'] = $paciente_id;
         $data['contrato_id'] = $contrato_id;
         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
         $data['contas'] = $this->guia->listarcontas();
+        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
         $this->load->View('ambulatorio/alterarpagamento-form', $data);
     }
 
@@ -5879,8 +5877,8 @@ table tr:hover  #achado{
 //                       print_r($e->error);echo "<br>";
 //                       print_r($e->errorDescription);die;
                         @$property = $e->errorDescription['message'];
-                        
-                       
+
+
 
 //                        if (@$e->errorDescription['property'] == "/payment/banking_billet/customer/phone_number") {
 //                            $erro = ", Telefone inválido!";
@@ -5899,7 +5897,7 @@ table tr:hover  #achado{
 
                         switch ($e->code) {
                             case 3500000:
-                                $message = 'Erro interno do servidor.';                        
+                                $message = 'Erro interno do servidor.';
                                 break;
                             case 3500001:
                                 $message = $messageErrorDefault;
@@ -6027,9 +6025,8 @@ table tr:hover  #achado{
                                 $message = $messageErrorDefault;
                                 break;
                         }
-                        
-                      $this->paciente->gravarerrogerencianet($paciente_id,$contrato_id,$message,$e->code);
-                      
+
+                        $this->paciente->gravarerrogerencianet($paciente_id, $contrato_id, $message, $e->code);
                     } catch (Exception $e) {
                         print_r($e->getMessage());
                     }

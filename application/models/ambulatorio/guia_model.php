@@ -5306,10 +5306,14 @@ ORDER BY p.nome";
 //        var_dump($parcela); die;
         $valor = $parcela[0]->valor;
         $paciente_id = $parcela[0]->paciente_id;
+
         $credor = $parcela[0]->financeiro_credor_devedor_id;
+
+
         if (!$credor > 0) {
             $credor = $this->criarcredordevedorpaciente($paciente_id);
         }
+
         $plano = $parcela[0]->plano;
         $data = $parcela[0]->data;
         $conta_id = $parcela[0]->conta_id;
@@ -7251,12 +7255,11 @@ AND data <= '$data_fim'";
                 if ($this->session->userdata('cadastro') == 2) {
                     
                 } else {
-                    
+
                     $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
                  WHERE paciente_contrato_id = $paciente_contrato_id ";
                     $this->db->query($sql);
-                    
                 }
 
 
@@ -9990,7 +9993,7 @@ ORDER BY ae.agenda_exames_id)";
         } else {
             $this->db->where("pc.paciente_id", $paciente_titular_id);
         }
-         $this->db->where("pcp.data <=", $data);
+        $this->db->where("pcp.data <=", $data);
         $this->db->where("pc.ativo", 't');
 //        $this->db->where("pcp.ativo", 't');
         $this->db->where("pcp.excluido", 'f');
@@ -11143,6 +11146,7 @@ ORDER BY ae.agenda_exames_id)";
         $paciente_id = $parcela[0]->paciente_id;
         $credor = $parcela[0]->financeiro_credor_devedor_id;
 
+          
         if (!$credor > 0) {
             $credor = $this->criarcredordevedorpaciente($paciente_id);
         }
@@ -11154,6 +11158,9 @@ ORDER BY ae.agenda_exames_id)";
         $horario = date("Y-m-d H:i:s");
 //        $data = date("Y-m-d");
         $operador_id = $this->session->userdata('operador_id');
+
+
+
         $this->db->set('valor', $valor);
 //        $inicio = $_POST['inicio'];
 
@@ -11464,13 +11471,13 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
         $this->db->where('ativo', 't');
         $res = $this->db->get()->result();
- 
+
         $this->db->select('');
         $this->db->from('tb_forma_pagamento');
         $this->db->where('forma_pagamento_id', $res[0]->plano_id);
         $plano = $this->db->get()->result();
         $ajuste = $plano[0]->valoradcional;
-        
+
         $this->db->select('');
         $this->db->from('tb_paciente');
         $this->db->where('paciente_id', $dependente_id);
@@ -11626,6 +11633,33 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->orderby('pcp.data');
         $return = $this->db->get();
         return $return->result();
+    }
+
+    function verificarcredordevedorgeral($paciente_id) {
+        $this->db->select('p.credor_devedor_id,p.cpf,fcd.financeiro_credor_devedor_id,fcd.cpf as cpfcredor,p.paciente_id');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.cpf = p.cpf');
+        $this->db->where("(p.cpf is not null and p.cpf != 'NULL')");
+        $this->db->where('p.paciente_id', $paciente_id);
+        $return = $this->db->get()->result();
+        if (count($return) == 1) {
+            $this->db->where('paciente_id', $paciente_id);
+            $this->db->set('credor_devedor_id', $return[0]->financeiro_credor_devedor_id);
+            $this->db->update('tb_paciente');
+            return;
+        }
+        $this->db->select('p.credor_devedor_id,p.cpf');
+        $this->db->from('tb_paciente p');
+        $this->db->where('p.paciente_id', $paciente_id);
+        $return2 = $this->db->get()->result();
+        if ($return2[0]->credor_devedor_id == "" || $return2[0]->credor_devedor_id == 'null') {
+            $credor = $this->criarcredordevedorpaciente($paciente_id);
+            if ($credor != "") {
+                $this->db->where('paciente_id', $paciente_id);
+                $this->db->set('credor_devedor_id', $credor);
+                $this->db->update('tb_paciente');
+            }
+        }
     }
 
 }
