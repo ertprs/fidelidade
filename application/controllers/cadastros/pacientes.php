@@ -410,8 +410,6 @@ class pacientes extends BaseController {
     function gravardocumentosalternativo() {
 
         $paciente_id = $this->paciente->gravardocumentosalternativo();
-
-        
         $situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
         

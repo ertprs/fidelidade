@@ -1047,13 +1047,14 @@ class paciente_model extends BaseModel {
                 if ($situacao == 'Titular') {
                     $horario = date("Y-m-d H:i:s");
                     $operador_id = $this->session->userdata('operador_id');
-
                     if (isset($_POST['nao_renovar'])) {
                         $this->db->set('nao_renovar', 't');
                     } else {
                         $this->db->set('nao_renovar', 'f');
                     }
-
+                    if ($_POST['forma_rendimento_id'] != '') {
+                        $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
+                    }
                     $this->db->set('paciente_id', $paciente_id);
                     $this->db->set('plano_id', $_POST['plano']);
                     $this->db->set('data_cadastro', $horario);
@@ -1189,6 +1190,9 @@ class paciente_model extends BaseModel {
 
                 $situacao = $_POST['situacao'];
                 if ($situacao == 'Titular') {
+                    if ($_POST['forma_rendimento_id'] != '') {
+                        $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
+                    }
                     $horario = date("Y-m-d H:i:s");
                     $operador_id = $this->session->userdata('operador_id');
                     $this->db->set('paciente_id', $paciente_id);

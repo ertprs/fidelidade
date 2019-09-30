@@ -445,7 +445,7 @@ class Guia extends BaseController {
 //        $data['empresa'] = $this->guia->listarempresas();
         $data['planos'] = $this->formapagamento->listarforma();
         $data['vencedor'] = $this->operador_m->listarvendedor(1);
-
+        $data['forma']  = $this->formapagamento->listarformaRendimentoPaciente();
         $this->loadView('ambulatorio/relatoriocontratosinativos', $data);
     }
 
@@ -458,7 +458,6 @@ class Guia extends BaseController {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatoriocontratosinativos();
-
         $this->load->View('ambulatorio/impressaorelatoriocontratosinativos', $data);
     }
 

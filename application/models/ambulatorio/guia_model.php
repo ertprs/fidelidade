@@ -297,6 +297,10 @@ class guia_model extends Model {
                 }
             }
         }
+        
+        if (!empty($_POST['forma_rendimento'])) {
+            $this->db->where('pc.forma_rendimento_id',$_POST['forma_rendimento']);
+        }
 
 
         if ($_POST['tipodata'] == "E" & $_POST['tipobusca'] == "I") {
@@ -9122,6 +9126,7 @@ ORDER BY ae.agenda_exames_id)";
 //            echo $return_parcelas[0]->data;
 //            die; 
             $this->db->set('paciente_id', $return[0]->paciente_id);
+            $this->db->set('forma_rendimento_id', $return[0]->forma_rendimento_id);
             $this->db->set('plano_id', $return[0]->plano_id);
             $this->db->set('data_cadastro', $nova_data_contrato_atual);
             $this->db->set('operador_cadastro', $operador_id);
@@ -9129,7 +9134,6 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->set('pago_todos_iugu', $return[0]->pago_todos_iugu);
             $this->db->insert('tb_paciente_contrato');
             $paciente_contrato_novo_id = $this->db->insert_id();
-
 
             if ($verificar_contrato[0]->empresa_id != "" || $verificar_contrato[0]->empresa_id != NULL) {
                 @$dia_menos_um = date('d') - 1;

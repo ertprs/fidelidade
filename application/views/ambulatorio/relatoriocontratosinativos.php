@@ -62,6 +62,21 @@
                             <option value="E">Excluido</option>
                         </select>
                     </dd>
+                       <dt>
+                        <label>Forma de Pagamento</label>
+                    </dt>
+                    <dd>
+                      <select name="forma_rendimento" id="forma_rendimento" class="size2">
+                           <option value="">TODOS</option>
+                            <?php 
+                            foreach($forma as $value){
+                                ?>                            
+                            <option value="<?= $value->forma_rendimento_id ?>"><?= $value->nome ?></option>
+                            <?                               
+                            }
+                            ?> 
+                        </select>
+                    </dd>
                     
                 </dl>
                 <button type="submit" >Pesquisar</button>
