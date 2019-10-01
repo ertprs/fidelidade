@@ -259,12 +259,20 @@
                               ?> 
                 </select>
             </div>
-
-
             <div>
                 <label>Reativar</label> 
                 <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t" ) ? "checked" : ""; ?> >
             </div>
+           <?php
+            if ($this->session->userdata('operador_id') == '1') {
+                ?>
+                <div>
+                    <label>Credor Devedor</label> 
+                    <input type="text"  name="credor_devedor_id" id="credor_devedor_id" value="<?= $obj->_credor_devedor_id; ?>"  >
+                </div>
+                <?
+            }
+            ?>
 
         </fieldset>
         <fieldset>
@@ -337,7 +345,7 @@
 
                 <div>
                     <label>Email</label>
-                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>" required/>
+                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>"  />
                 </div>
                 <div>
                     <label>Telefone</label>

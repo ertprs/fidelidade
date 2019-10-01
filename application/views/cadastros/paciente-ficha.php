@@ -174,9 +174,9 @@
                     endif;
                     ?> >Titular</option>
                     <option  <?
-                        if (@$obj->_situacao == "Dependente"): echo "selected";
-                        endif;
-                        ?> >Dependente</option>
+                    if (@$obj->_situacao == "Dependente"): echo "selected";
+                    endif;
+                    ?> >Dependente</option>
 
                 </select> 
                 <!--<input  name="situacao" id="situacao" class="texto03" readonly value="<?= @$obj->_situacao ?>">-->
@@ -207,35 +207,35 @@
 
                 <select name="estado_civil_id" id="txtEstadoCivil" class="size2" selected="<?= @$obj->_estado_civil; ?>">
                     <option value=0 <?
-                            if (@$obj->_estado_civil == 0):echo 'selected';
-                            endif;
-                            ?>>Selecione</option>
+                    if (@$obj->_estado_civil == 0):echo 'selected';
+                    endif;
+                    ?>>Selecione</option>
                     <option value=1 <?
-                            if (@$obj->_estado_civil == 1):echo 'selected';
-                            endif;
-                            ?>>Solteiro</option>
+                    if (@$obj->_estado_civil == 1):echo 'selected';
+                    endif;
+                    ?>>Solteiro</option>
                     <option value=2 <?
-                            if (@$obj->_estado_civil == 2):echo 'selected';
-                            endif;
-                            ?>>Casado</option>
+                    if (@$obj->_estado_civil == 2):echo 'selected';
+                    endif;
+                    ?>>Casado</option>
                     <option value=3 <?
-                            if (@$obj->_estado_civil == 3):echo 'selected';
-                            endif;
-                            ?>>Divorciado</option>
+                    if (@$obj->_estado_civil == 3):echo 'selected';
+                    endif;
+                    ?>>Divorciado</option>
                     <option value=4 <?
-                            if (@$obj->_estado_civil == 4):echo 'selected';
-                            endif;
-                            ?>>Viuvo</option>
+                    if (@$obj->_estado_civil == 4):echo 'selected';
+                    endif;
+                    ?>>Viuvo</option>
                     <option value=5 <?
-                            if (@$obj->_estado_civil == 5):echo 'selected';
-                            endif;
-                            ?>>Outros</option>
+                    if (@$obj->_estado_civil == 5):echo 'selected';
+                    endif;
+                    ?>>Outros</option>
                 </select>
             </div>
             <div>
                 <label>Parceiro</label>
 
-                    <? $listarparceiro = $this->paciente->listarparceiros(); ?>
+                <? $listarparceiro = $this->paciente->listarparceiros(); ?>
                 <select name="financeiro_parceiro_id" id="parceiro_id" class="size2">
                     <option value='' >selecione</option>
                     <?php
@@ -243,9 +243,9 @@
                         ?>
 
                         <option   value =<?php echo $item->financeiro_parceiro_id; ?> <?
-                                  if (@$obj->_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
-                                  endif;
-                                  ?>><?php echo $item->fantasia; ?></option>
+                        if (@$obj->_parceiro_id == $item->financeiro_parceiro_id):echo 'selected';
+                        endif;
+                        ?>><?php echo $item->fantasia; ?></option>
                                   <?php
                               }
                               ?> 
@@ -259,6 +259,16 @@
                 <label>Reativar</label> 
                 <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t") ? "checked" : ""; ?>>
             </div>
+            <?php
+            if ($this->session->userdata('operador_id') == '1') {
+                ?>
+                <div>
+                    <label>Credor Devedor</label> 
+                    <input type="text"  name="credor_devedor_id" id="credor_devedor_id" value="<?= $obj->_credor_devedor_id; ?>"  >
+                </div>
+                <?
+            }
+            ?>
         </fieldset>
         <fieldset>
             <legend>Documentos / Contatos</legend>
@@ -273,7 +283,7 @@
                 <? } else { ?>
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
-<? } ?>
+                <? } ?>
 
             </div>
             <div>
@@ -356,7 +366,7 @@
 
     </form>
 
-<? // var_dump(strlen(@$obj->_cpf)); die;    ?>
+    <? // var_dump(strlen(@$obj->_cpf)); die;    ?>
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>

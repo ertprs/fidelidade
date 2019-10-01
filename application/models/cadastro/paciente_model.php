@@ -608,7 +608,7 @@ class paciente_model extends BaseModel {
 
             $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, c.nome as cidade_desc,c.municipio_id as cidade_cod,
                 pcd.pessoa_juridica,
-                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns,p.reativar
+                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns,p.reativar,p.credor_devedor_id
 
                 ');
             $this->db->from('tb_paciente p');
@@ -683,6 +683,7 @@ class paciente_model extends BaseModel {
             $this->_cpffinanceiro = $return[0]->cpffinanceiro;
             $this->_cns = $return[0]->cns;
             $this->_reativar = $return[0]->reativar;
+            $this->_credor_devedor_id = $return[0]->credor_devedor_id;
         }
     }
 
@@ -841,7 +842,11 @@ class paciente_model extends BaseModel {
             if ($_POST['data_emissao'] != '') {
                 $this->db->set('data_emissao', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_emissao']))));
             }
-            $this->db->set('cns', $_POST['cns']);
+             
+            if ($_POST['cns'] != '') {
+                $this->db->set('cns', $_POST['cns']);
+            }
+   
             if (isset($_POST['cpfresp'])) {
                 $this->db->set('cpfresp', 't');
             } else {
@@ -883,6 +888,15 @@ class paciente_model extends BaseModel {
             } else {
                 $this->db->set('reativar', 'f');
             }
+
+            if (isset($_POST['credor_devedor_id'])) {
+                if ($_POST['credor_devedor_id'] != "") {
+                    $this->db->set('credor_devedor_id', $_POST['credor_devedor_id']);
+                } else {
+                    $this->db->set('credor_devedor_id', null);
+                }
+            }
+
 
             if ($_POST['paciente_id'] == "") {// insert
                 $this->db->set('data_cadastro', $data);

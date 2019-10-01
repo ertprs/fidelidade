@@ -289,16 +289,13 @@
 
                     <input type="text"   name="outro_documento" id="outro_documento" class="texto03" value="<?= @$obj->_outro_documento; ?>" />
                 </div>
-
                 <div>
                     <label>Numero</label>
                     <input type="text"   name="numero_documento" id="numero_documentor" class="texto02" value="<?= @$obj->_numero_documento; ?>" />
-                </div>
-
-
+                </div> 
                 <div>
                     <label>Email</label>
-                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>" required/>
+                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>"  />
                 </div>
                 <div>
                     <label>Telefone</label>

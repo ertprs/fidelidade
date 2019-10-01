@@ -11669,6 +11669,7 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.cpf = p.cpf');
         $this->db->where("(p.cpf is not null and p.cpf != 'NULL')");
         $this->db->where('p.paciente_id', $paciente_id);
+        $this->db->where('fcd.ativo','t');
         $return = $this->db->get()->result();
         if (count($return) == 1) {
             $this->db->where('paciente_id', $paciente_id);
