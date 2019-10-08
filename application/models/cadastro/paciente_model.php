@@ -1822,20 +1822,21 @@ class paciente_model extends BaseModel {
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_dependente');
+            
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
-        }else {
-
-            if ($this->session->userdata('cadastro') == 2) {
-                
-            } else {
+            }else {
                 $this->db->set('paciente_id', $paciente_id);
                 $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->insert('tb_paciente_contrato_dependente');
-
+                
+            if ($this->session->userdata('cadastro') == 2) {
+                
+            } else {
+               
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
                  WHERE paciente_contrato_id = $paciente_contrato_id";

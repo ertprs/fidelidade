@@ -143,7 +143,8 @@ class Guia extends BaseController {
     }
 
     function pesquisar($paciente_id) {
-        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
+                            
+        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);        
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
@@ -4364,8 +4365,7 @@ class Guia extends BaseController {
 
         $nome = $_FILES['arquivo']['name'];
         $nome_arq = $_FILES['arquivo'];
-
-
+                            
 
         if (!is_dir("./upload/retornoimportados")) {
             mkdir("./upload/retornoimportados");
@@ -4430,9 +4430,7 @@ class Guia extends BaseController {
         else
             $erro = $this->upload->display_errors();
         $data['mensagem'] = 'Erro';
-
-
-
+                            
         $this->session->set_flashdata('message', $data['mensagem']);
 
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
@@ -4441,56 +4439,46 @@ class Guia extends BaseController {
     function lerarquivoretornoimportado($nome_arquivo = NULL) {
 
         $chave_pasta = $this->session->userdata('empresa_id');
-
-
+                            
         $arquivo6 = fopen('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
         // Lê o conteúdo do arquivo  
         //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
         while (!feof($arquivo6)) {
             //Mostra uma linha do arquivo 
             $linha = fgets($arquivo6, 1024);
-            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+            $codigo_retornno =  substr($linha, 67, 2);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
                 //pegando uma coluna especifica com o substr
                 $paciente_id = substr($linha, 1, 25);
                 @$contador_parcelas{$paciente_id} ++;
             }
         }
-
-        fclose($arquivo6);
-
-
-
+        fclose($arquivo6);                   
         // Abre o Arquvio no Modo r (para leitura)
         $arquivo = fopen('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
         // Lê o conteúdo do arquivo 
-        // 
         //criando a tabela onde vai mostrar as informações
         while (!feof($arquivo)) {
             //Mostra uma linha do arquivo 
-            $linha = fgets($arquivo, 1024);
-            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+            $linha = fgets($arquivo, 1024);            
+            $paciente_id = substr($linha, 1, 25);
+            $codigo_retornno =  substr($linha, 67, 2);           
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
                 //pegando uma coluna especifica com o substr
                 $paciente_id = substr($linha, 1, 25);
+                echo $paciente_id;                            
                 //fazendo a consulta de acordo com o numero do paciente do arquivo 
-                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);
-                //aqui é para não ficar duplicando 
-//                if (@$verificar6{$data['lista_paciente'][0]->paciente_id} == 1) {
-//                } else {  
+                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);             
                 $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
-//                    @$verificar6{$data['lista_paciente'][0]->paciente_id}++;  
-//                }
+
             }
         }
-
-        fclose($arquivo);
-
-
-
-        if (!unlink('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '')) {
-            
-        }
-
-        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+        fclose($arquivo);  
+        
+    if (!unlink('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '')) {         
+    }
+        
+         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
     function downloadTXToptanteimportado($nome_arquivo = NULL) {
@@ -4774,17 +4762,22 @@ class Guia extends BaseController {
 
     function verarquivoimportado($nome_arquivo = NULL) {
         $chave_pasta = $this->session->userdata('empresa_id');
-
         $arquivo6 = fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
         // Lê o conteúdo do arquivo  
         //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
         while (!feof($arquivo6)) {
             //Mostra uma linha do arquivo 
             $linha = fgets($arquivo6, 1024);
-            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+              $codigo_retornno =  substr($linha, 67, 2);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00" ) {
                 //pegando uma coluna especifica com o substr
                 $paciente_id = substr($linha, 1, 25);
-                @$contador_parcelas{$paciente_id} ++;
+                @$contador_parcelas{$paciente_id} ++;                            
+            }            
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno != "00") {
+                $paciente_id = substr($linha, 1, 25);                             
+                $Array[$paciente_id][] = $codigo_retornno;
+                            
             }
         }
 
@@ -4817,6 +4810,10 @@ table tr:hover  #achado{
  color:white; 
 }
 
+table tr:hover  #achadoERRO{
+ color:white; 
+}
+
 </style><meta charset='utf-8'>"
         . "<table  border=1 cellspacing=0 cellpadding=2 bordercolor='666633' width=100%>  "
         . "<tr><th>Matrícula</th><th>Nome</th><th>Quantidade de Parcelas Pagas</th></tr>";
@@ -4829,37 +4826,85 @@ table tr:hover  #achado{
             if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
                 //pegando uma coluna especifica com o substr
                 $paciente_id = substr($linha, 1, 25);
+                   $codigo_retornno =  substr($linha, 67, 2);                            
 //////////////////fazendo a consulta de acordo com o numero do paciente do arquivo
                 $data['lista_paciente2'] = $this->guia->listarpacienteimportadopagos($paciente_id);
-
 ////////////////para não dublicar os pacientes achados
-
-                if (@$verificar2{$data['lista_paciente2'][0]->paciente_id} == 1) {
-                    
-                } else {
-                    if (@$data['lista_paciente2'][0]->paciente_id != "") {
+                if (!(@$verificar2{$data['lista_paciente2'][0]->paciente_id} == 1)) {                
+                     if (@$data['lista_paciente2'][0]->paciente_id != "" && $codigo_retornno == "00") {
                         echo "<tr><td><b  id='achado' >" . @$data['lista_paciente2'][0]->paciente_id . "</b></td>"
                         . "<td><b id='achado'  >" . @$data['lista_paciente2'][0]->paciente . "</b></td>"
-                        . "<td><b id='achado'  >" . @$contador_parcelas{$paciente_id} . " </b></td></tr>";
-
+                        . "<td><b id='achado'  >" . @$contador_parcelas{$paciente_id} . "</b></td></tr>";                         
                         @$verificar2{$data['lista_paciente2'][0]->paciente_id} ++;
                         @$totalpacientes++;
                         @$totalparcelas += @$contador_parcelas{$paciente_id};
-                    } else {
-                        
-                    }
+                    } 
                 }
+                            
             }
         }
         echo " <tr><th colspan='2'>Quantidade de Pacientes:" . @$totalpacientes . "</th><th>Total Parcelas:" . @$totalparcelas . "</th></tr></table>";
-        // Fecha arquivo aberto
+// Fecha arquivo aberto
         fclose($arquivo2);
-
+        
+////////////////////////////////////////////////     
+//PARCELAS COM ERRO
+//abrindo novamente
+         $totalcomerro = 0;
+        $arquivo4= fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+        echo " <meta charset='utf-8'>";
+        echo "<hr>";
+        echo "<table  border=1 cellspacing=0 cellpadding=2 bordercolor='666633' width=50%> ";
+        echo "<tr><th colspan='2'>Parcelas com erros</th><th colspan='2'>Código do erro</th></tr>";
+        while (!feof($arquivo4)) {
+            //Mostra uma linha do arquivo 
+            $linha = fgets($arquivo4, 1024);
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z") {
+                //pegando uma coluna especifica com o substr
+                $paciente_id = substr($linha, 1, 25);
+                $codigo_retornno =  substr($linha, 67, 2);
+                            
+                //fazendo a consulta de acordo com o numero do paciente do arquivo
+              $data['lista_paciente3'] = $this->guia->listarpacienteimportadopagos($paciente_id);                
+              if(@$data['lista_paciente3'][0]->paciente_id != "" && $codigo_retornno != "00"){ 
+                     if (@$cont4{$data['lista_paciente3'][0]->paciente_id} == 0) { 
+                         $totalcomerro++;
+                            
+                       echo "<tr><td><b  id='achadoERRO' >" . @$data['lista_paciente3'][0]->paciente_id . "</b></td>"
+                        . "<td><b id='achadoERRO'  >" . @$data['lista_paciente3'][0]->paciente . "</b></td>"
+                        . "<td><b id='achadoERRO'  > ";
+                       foreach($Array as $item => $value){ 
+                           $contvirgula = 0;
+                           if ($item == $paciente_id) {
+                            foreach($value as $code){
+                                $contvirgula++;
+                                echo $code;
+                                if (count($value) > $contvirgula) {
+                                    echo " , ";                                    
+                                }                             
+                              }
+                           }                           
+                       }
+                       echo " </b></td></tr>"; 
+                       @$cont4{$data['lista_paciente3'][0]->paciente_id}++;
+                  }                                               
+              }
+                            
+            }
+        }
+        echo "<tr><td colspan='1'>Total</td><td colspan='2'>".$totalcomerro."</td></tr>";
+        echo " </table>";
+        // Fecha arquivo aberto
+        fclose($arquivo4);                          
+////////////////////////////////////////////       
 //abrindo novamente
         $arquivo3 = fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
-        echo " <meta charset='utf-8'>"
-        . "<table  border=1 cellspacing=0 cellpadding=2 bordercolor='666633' width=100%>  "
-        . " ";
+        echo " <meta charset='utf-8'>";
+        
+          
+        echo "<table  border=1 cellspacing=0 cellpadding=2 bordercolor='666633' width=50%>  ";
+        echo "<br>";
+        echo "<tr><th colspan='2'>Matrículas não encontradas</th></tr>";
         while (!feof($arquivo3)) {
             //Mostra uma linha do arquivo 
             $linha = fgets($arquivo3, 1024);
@@ -4868,21 +4913,19 @@ table tr:hover  #achado{
                 $paciente_id = substr($linha, 1, 25);
                 //fazendo a consulta de acordo com o numero do paciente do arquivo
                 $data['lista_paciente3'] = $this->guia->listarpacienteimportadopagos($paciente_id);
-
-                if (@$verificar3{$data['lista_paciente3'][0]->paciente_id} == 1) {
-                    
-                } else {
-                    if (@$data['lista_paciente3'][0]->paciente_id != "") {
-                        
-                    } else {
-                        echo "<tr><td><b  id='naoachado' style='' >" . @ $paciente_id = substr($linha, 1, 25) . "</b></td><td><b  id='naoachado' >Matrícula Não Encontrada</b></td></tr>";
-                    }
-                }
+                if (!(@$verificar3{$data['lista_paciente3'][0]->paciente_id} == 1)) {
+                    if (!(@$data['lista_paciente3'][0]->paciente_id != "")) {
+                          echo "<tr><td><b  id='naoachado' style='' >" . @ $paciente_id = substr($linha, 1, 25) . "</b></td><td><b  id='naoachado' >Matrícula Não Encontrada</b></td></tr>";
+                    }  
+                } 
             }
         }
         echo " </table>";
         // Fecha arquivo aberto
         fclose($arquivo3);
+        
+                            
+        
     }
 
     function cancelarparcela($paciente_id = NULL, $contrato_id = NULL, $paciente_contrato_parcelas_id = NULL) {
