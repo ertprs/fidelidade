@@ -4438,8 +4438,7 @@ class Guia extends BaseController {
 
     function lerarquivoretornoimportado($nome_arquivo = NULL) {
 
-        $chave_pasta = $this->session->userdata('empresa_id');
-                            
+        $chave_pasta = $this->session->userdata('empresa_id');                            
         $arquivo6 = fopen('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
         // Lê o conteúdo do arquivo  
         //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
@@ -4475,7 +4474,8 @@ class Guia extends BaseController {
         }
         fclose($arquivo);  
         
-    if (!unlink('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '')) {         
+    if (!unlink('./upload/retornoimportados/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
+        
     }
         
          redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
@@ -4769,20 +4769,29 @@ class Guia extends BaseController {
             //Mostra uma linha do arquivo 
             $linha = fgets($arquivo6, 1024);
               $codigo_retornno =  substr($linha, 67, 2);
-            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00" ) {
+                            
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
+                if (!(substr($linha, 0, 1) == 'F' || substr($linha, 0, 1) == '' || substr($linha, 0, 1) == 'B')) {
+                     echo "<meta charset='utf-8'><h1>Arquivo inválido</h1>";
+                     return;
+                }
                 //pegando uma coluna especifica com o substr
                 $paciente_id = substr($linha, 1, 25);
-                @$contador_parcelas{$paciente_id} ++;                            
-            }            
-            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno != "00") {
-                $paciente_id = substr($linha, 1, 25);                             
+                @$contador_parcelas{$paciente_id} ++;
+            }
+            if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno != "00") {                   
+                if (!(substr($linha, 0, 1) == 'F' || substr($linha, 0, 1) == '' || substr($linha, 0, 1) == 'B')) {
+                     echo "<meta charset='utf-8'><h1>Arquivo inválido</h1>";
+                     return;
+                }           
+                $paciente_id = substr($linha, 1, 25);
                 $Array[$paciente_id][] = $codigo_retornno;
-                            
             }
         }
 
         fclose($arquivo6);
 
+                            
 //abrindo novamente
         $arquivo2 = fopen('./upload/retornoimportados/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
         echo "<style>tr:nth-child(2n+2) {
@@ -4829,6 +4838,7 @@ table tr:hover  #achadoERRO{
                    $codigo_retornno =  substr($linha, 67, 2);                            
 //////////////////fazendo a consulta de acordo com o numero do paciente do arquivo
                 $data['lista_paciente2'] = $this->guia->listarpacienteimportadopagos($paciente_id);
+                            
 ////////////////para não dublicar os pacientes achados
                 if (!(@$verificar2{$data['lista_paciente2'][0]->paciente_id} == 1)) {                
                      if (@$data['lista_paciente2'][0]->paciente_id != "" && $codigo_retornno == "00") {
@@ -4842,6 +4852,8 @@ table tr:hover  #achadoERRO{
                 }
                             
             }
+            
+            
         }
         echo " <tr><th colspan='2'>Quantidade de Pacientes:" . @$totalpacientes . "</th><th>Total Parcelas:" . @$totalparcelas . "</th></tr></table>";
 // Fecha arquivo aberto
@@ -4925,7 +4937,6 @@ table tr:hover  #achadoERRO{
         fclose($arquivo3);
         
                             
-        
     }
 
     function cancelarparcela($paciente_id = NULL, $contrato_id = NULL, $paciente_contrato_parcelas_id = NULL) {
