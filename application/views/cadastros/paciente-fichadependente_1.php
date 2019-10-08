@@ -16,9 +16,13 @@
                 <input type="text" name="rg"  id="txtDocumento" class="texto04" maxlength="20" value="<?= @$obj->_documento; ?>" />
             </div>
             <div>
+                <label>&nbsp;</label>
+                  <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
+            </div>
+            <div>
                 <label>CPF</label>
                 <input type="text" name="cpf" id ="txtcpf" maxlength="11" alt="cpf" class="texto02" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" required />
-                <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
+              
             </div>
             <div>
                 <label>Grau de Parentesco</label>
