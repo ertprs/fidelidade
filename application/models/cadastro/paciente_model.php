@@ -330,17 +330,17 @@ class paciente_model extends BaseModel {
 
     function listarparcelaiugucartao() {
         $data = date("Y-m-d");
-
         $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, pc.paciente_contrato_id, fp.nome as plano, pc.paciente_id, cp.data_cartao_iugu');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("cp.data_cartao_iugu <=", $data);
+        $this->db->where("(cp.data_envio_iugu < '$data'  or  cp.data_envio_iugu is null)");
         $this->db->where("pc.ativo", 't');
         $this->db->where("cp.ativo", 't');
         $this->db->where("cp.excluido", 'f');
-//        $this->db->where("invoice_id is null");
+//      $this->db->where("invoice_id is null");
         $this->db->orderby("cp.data");
         $return = $this->db->get();
         return $return->result();

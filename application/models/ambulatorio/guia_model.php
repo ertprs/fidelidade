@@ -5386,7 +5386,7 @@ ORDER BY p.nome";
     function confirmarpagamentoautocomplete($paciente_contrato_parcelas_id) {
 
         $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
-//        var_dump($parcela); die;
+//      var_dump($parcela); die;
         $valor = $parcela[0]->valor;
         $paciente_id = $parcela[0]->paciente_id;
         $credor = $parcela[0]->financeiro_credor_devedor_id;
@@ -5427,8 +5427,7 @@ ORDER BY p.nome";
         $this->db->set('operador_cadastro', 1);
         $this->db->insert('tb_saldo');
 
-
-
+ 
         /////////////////////////////////////////////////
         $horario = date("Y-m-d H:i:s");
         $operador_id = $this->session->userdata('operador_id');
@@ -10227,7 +10226,7 @@ ORDER BY ae.agenda_exames_id)";
                 $this->db->set('ativo', 'f');
                 $this->db->set('data_atualizacao', $horario);
                 $this->db->set('operador_atualizacao', $operador_id);
-                $this->db->where('paciente_contrato_parcelas_id', @$pacel->paciente_contrato_parcelas_id);
+                $this->db->where('paciente_contrato_parcelas_id', $pacel->paciente_contrato_parcelas_id);
                 $this->db->update('tb_paciente_contrato_parcelas');
             }
             break;
@@ -11684,6 +11683,16 @@ ORDER BY ae.agenda_exames_id)";
         }
     }
 
+    
+    
+    function confirmarenviohoje($paciente_contrato_parcelas_id){        
+        $horario = date("Y-m-d");
+        $operador_id = $this->session->userdata('operador_id');      
+        $this->db->set('data_envio_iugu', $horario);         
+        $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+        $this->db->update('tb_paciente_contrato_parcelas');
+        
+    }
 }
 
 ?>

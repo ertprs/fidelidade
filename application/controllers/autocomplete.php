@@ -882,8 +882,7 @@ class Autocomplete extends Controller {
 //        die;
 
         $retorno = 'false';
-
-
+ 
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
@@ -901,9 +900,9 @@ class Autocomplete extends Controller {
             $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
             $valor = $item->valor * 100;
             $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
-
             $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
-
+            $this->guia->confirmarenviohoje($paciente_contrato_parcelas_id);
+            
             $payment_token = Iugu_PaymentToken::create(
                             Array(
                                 'method' => 'credit_card',
@@ -920,8 +919,7 @@ class Autocomplete extends Controller {
 //            echo '<pre>';
 //            var_dump($cartao_cliente);
 //            die;
-            if ($payment_token['errors'] == 0) {
-
+            if ($payment_token['errors'] == 0) {           
                 $gerar = Iugu_Charge::create(
                                 Array(
                                     'token' => $payment_token,
@@ -952,6 +950,7 @@ class Autocomplete extends Controller {
                                     )
                                 )
                 );
+                
             } else {
                 $gerar["url"] = '';
                 $gerar["invoice_id"] = '';
@@ -962,7 +961,6 @@ class Autocomplete extends Controller {
 //            var_dump($payment_token);
 //            var_dump($gerar);
 //            die;
-
             $retorno = 'true';
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
         }

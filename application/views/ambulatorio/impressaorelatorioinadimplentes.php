@@ -31,7 +31,7 @@
             echo "NOME";
         } elseif (@$_POST['ordenar'] == 'order_bairro') {
             echo "BAIRRO";
-        }else{
+        } else {
             
         }
         ?>
@@ -39,9 +39,9 @@
 
     <hr>
     <table border="1">
-<?
-if (count($relatorio) > 0) {
-    ?> 
+        <?
+        if (count($relatorio) > 0) {
+            ?> 
             <?php
             foreach ($relatorio as $item) :
                 @$cont_parcelas{$item->paciente_id}{$item->valor} ++;
@@ -65,38 +65,42 @@ if (count($relatorio) > 0) {
                 </tr>
             </thead>
             <tbody>
-    <?php
-    $total = 0;
-
-    foreach ($relatorio as $item) :
-        $total = $total + $item->valor;
+                <?php
+                $total = 0;
+                $qtd_pacientes = 0;
+                $qtd_parcelas = 0;
+                foreach ($relatorio as $item) :
+                    if ($cont_parcelas{$item->paciente_id}{$item->valor} >= $parcelas) {
+                        $total = $total + $item->valor;
 ///////////////////////////////////////////////////////////////////////////////////////////                
 //////-> verifica se o paciente já foi colocado na tabela com o valor dele, eu botei o valor e o id do paciente pq: se o cara tiver adesão vai mostrar separado.
-        if (@$verificar{$item->paciente_id}{$item->valor} >= 1) {
-            
-        } else {
-            @$qtd_pacientes++;
-            @$qtd_parcelas += $cont_parcelas{$item->paciente_id}{$item->valor};
-            ?>
-                        <tr>
-                            <td >  <?= @$item->paciente_id; ?></td>
-                            <td ><?= @$item->nome; ?></td>
-                            <td ><?= @$item->logradouro . " " . $item->numero . " " . $item->complemento . " "; ?></td>
-                            <td ><?= @$item->bairro ?></td>
-                            <td ><?= @$item->complemento ?> </td>
-                            <td ><?= @$item->celular . "/" . $item->telefone; ?></td>
-                            <td ><?
-            foreach (@$datas{$item->paciente_id}{$item->valor} as $data) {
-                echo substr(@$data, 8, 2) . "/" . substr(@$data, 5, 2) . "/" . substr(@$data, 0, 4) . "<br>";
+                        if (@$verificar{$item->paciente_id}{$item->valor} >= 1) {
+                            
+                        } else {
+
+                            $qtd_pacientes++;
+                            $qtd_parcelas += $cont_parcelas{$item->paciente_id}{$item->valor};
+                            ?>
+                            <tr>
+                                <td >  <?= @$item->paciente_id; ?></td>
+                                <td ><?= @$item->nome; ?></td>
+                                <td ><?= @$item->logradouro . " " . $item->numero . " " . $item->complemento . " "; ?></td>
+                                <td ><?= @$item->bairro ?></td>
+                                <td ><?= @$item->complemento ?> </td>
+                                <td ><?= @$item->celular . "/" . $item->telefone; ?></td>
+                                <td ><?
+                foreach (@$datas{$item->paciente_id}{$item->valor} as $data) {
+                    echo substr(@$data, 8, 2) . "/" . substr(@$data, 5, 2) . "/" . substr(@$data, 0, 4) . "<br>";
+                }
+                            ?></td>
+                                <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td>
+                                <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
+
+
+                            </tr>
+                <?
+                @$verificar{$item->paciente_id}{$item->valor} ++;
             }
-            ?></td>
-                            <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td>
-                            <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
-
-
-                        </tr>
-            <?
-            @$verificar{$item->paciente_id}{$item->valor} ++;
         } endforeach;
     ?>
                 <tr>
@@ -120,15 +124,13 @@ if (count($relatorio) > 0) {
     <table border='2'>
         <tr>
             <td><b>Total de clientes</b></td>
-            <td><?= @$qtd_pacientes; ?></td>
-
+            <td><?= $qtd_pacientes; ?></td>
         </tr>
         <tr>
             <td><b>Total de parcelas</b></td>
-            <td><?= @$qtd_parcelas; ?></td>
+            <td><?=  $qtd_parcelas; ?></td>
         </tr> 
-
-
+ 
     </table>
     <br><br><br><br><br><br>
 

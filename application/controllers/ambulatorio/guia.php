@@ -396,6 +396,8 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
         $data['ordenar'] = $_POST['ordenar'];
+        $data['parcelas'] = $_POST['parcelas'];
+        
 //        echo "<pre>";
 //        print_r($data['relatorio']);
 //        die;

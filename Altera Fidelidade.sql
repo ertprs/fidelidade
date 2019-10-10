@@ -449,3 +449,8 @@ WITH (
 );
 ALTER TABLE ponto.tb_erros_gerencianet
   OWNER TO postgres;
+
+
+--10/10/2019
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_envio_iugu date;
