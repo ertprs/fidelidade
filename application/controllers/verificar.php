@@ -876,27 +876,18 @@ class Verificar extends Controller {
     }
 
     function pagamentoautomaticoiugu() {
-
         set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
         ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
-
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
-
 //        echo '<pre>';
 //        var_dump($pagamento);
 //        die;
-
         $retorno = 'false';
-
-
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-
         foreach ($pagamento as $item) {
-
             $paciente_id = $item->paciente_id;
-
             $cartao_cliente = $this->paciente_m->listarcartaoclienteverificar($paciente_id);
             $cliente = $this->paciente_m->listardados($paciente_id);
             $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
@@ -906,9 +897,8 @@ class Verificar extends Controller {
             $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
             $valor = $pagamento[0]->valor * 100;
             $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
-
             $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
-
+            $this->guia->confirmarenviohoje($paciente_contrato_parcelas_id);
             $payment_token = Iugu_PaymentToken::create(
                             Array(
                                 'method' => 'credit_card',

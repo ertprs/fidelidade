@@ -1611,7 +1611,6 @@ class Guia extends BaseController {
 //        die;
         //GERANDO A COBRANÇA
         if (count($pagamento_iugu) == 0) {
-
             $payment_token = Iugu_PaymentToken::create(Array(
                         'method' => 'credit_card',
                         'data' => Array(
@@ -1624,7 +1623,6 @@ class Guia extends BaseController {
                         ),
                             )
             );
-
             $gerar = Iugu_Charge::create(
                             Array(
                                 'token' => $payment_token,
@@ -4049,8 +4047,7 @@ class Guia extends BaseController {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicovoptante();
-
-
+                            
         $origem_ind = "./upload/SICOVoptante";
         if ($_POST['apagar'] == 1) {
             delete_files($origem_ind);
@@ -4082,10 +4079,11 @@ class Guia extends BaseController {
         $A[11] = $this->utilitario->preencherDireita('', 52, ' '); // string(52); String vazia
 
         $header_A = implode($A);
-        $body_E = array();
+        $body_D = array();
         $contador = 0;
-        $body_E_con = '';
+        $body_D_con = '';
         $valor_total = 0;
+        $num_sequencial = 01;
         foreach ($relatorio as $item) {
             if (strlen($item->cpf) > 11) {
                 $tipo_iden = 1;
@@ -4097,40 +4095,51 @@ class Guia extends BaseController {
                 $tipo_iden = 2;
                 $cpf_cnpj = "0000" . $cpf;
             }
-            $E = array();
-            $E[0] = ''; // Iniciando o Array;
-            $E[1] = 'E'; // string(01); Código do registro = "E"
-            $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
-            $E[3] = $this->utilitario->preencherEsquerda($item->conta_agencia, 4, '0'); // string(04); Agência para débito/crédito
+            $D = array();
+            $D[0] = ''; // Iniciando o Array;
+            $D[1] = 'D'; // string(01); Código do registro = "D"
+            $D[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
+            $D[3] = $this->utilitario->preencherEsquerda($item->conta_agencia, 4, '0'); // string(04); Agência para débito/crédito
             $conta = $item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  "; // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
-            $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
-            $E[5] = $this->utilitario->preencherDireita('', 8, ' '); // string(08); Data do vencimento
-            $E[6] = $this->utilitario->preencherDireita('', 15, ' '); // string(15); Valor do débito
-            $E[7] = $this->utilitario->preencherDireita('', 2, ' '); // string(02); Código da moeda  Real = 03
-            $E[8] = $this->utilitario->preencherDireita('', 60, ' '); // string(60);  String pra usar a vontade limitando o tamanho, essa informação é só uma observação que apenas retorna para a clinica. O banco não utiliza
-            $E[9] = $this->utilitario->preencherDireita('', 1, ' '); // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
-            $E[10] = $this->utilitario->preencherDireita($cpf_cnpj, 15, ' ');  // string(15); // CPF ou CNPJ
-            $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
-            $E[12] = '5'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
-            $body_con = implode($E); // Corpo concatenado
-
-            $body_E[] = $body_con; // Adiciona no array. (interessante essa variável pra verificar possiveis problemas nas linhas)
-            $body_E_con .= $body_con . "\n"; // Corpo concatenado
+            $D[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
+            $D[5] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); //  
+            $D[6] = $this->utilitario->preencherDireita('', 60, ' '); // 
+            $D[7] = $this->utilitario->preencherDireita('', 14, ' '); //                              
+            $D[8] = $this->utilitario->preencherEsquerda($num_sequencial, 6, '0');
+            $num_sequencial++;
+            $D[9] = '0';
+            // $E[9] = $this->utilitario->preencherDireita('', 1, ' '); // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
+           // $E[10] = $this->utilitario->preencherDireita($cpf_cnpj, 15, ' ');  // string(15); // CPF ou CNPJ
+           // $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
+           // $E[12] = '5'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
+            $body_con = implode($D); // Corpo concatenado
+            $body_D[] = $body_con; // Adiciona no array. (interessante essa variável pra verificar possiveis problemas nas linhas)
+            $body_D_con .= $body_con . "\n"; // Corpo concatenado
             $contador++;
         }
-        $valor_total = number_format($valor_total, 2, '', '');
+                            
         $Z = array(); // Footer chamado de Trailler
         $Z[0] = ''; // Iniciando indice zero;
         $Z[1] = 'Z'; // ; string(1) Indicação do que é a linha;
         $contador = $contador + 2; // Tem que contar o Header e o Footer
         $Z[2] = $this->utilitario->preencherEsquerda($contador, 6, '0'); // ;
-        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;
-        $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;
-        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
-        ; // ;
+        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;                         
+        $Z[4] = $this->utilitario->preencherDireita("", 119, ' ');
+        $Z[5] = $this->utilitario->preencherEsquerda($num_sequencial, 6, '0');
+        $Z[6] = $this->utilitario->preencherEsquerda("", 1, '0');        
+//        $Z = array(); // Footer chamado de Trailler
+//        $Z[0] = ''; // Iniciando indice zero;
+//        $Z[1] = 'Z'; // ; string(1) Indicação do que é a linha;
+//        $contador = $contador + 2; // Tem que contar o Header e o Footer
+//        $Z[2] = $this->utilitario->preencherEsquerda($contador, 6, '0'); // ;
+//        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;
+//        $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;
+//        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
+//       
+                            
         $footer_Z = implode($Z);
         $string_geral = '';
-        $string_geral = $header_A . "\n" . $body_E_con . $footer_Z;
+        $string_geral = $header_A . "\n" . $body_D_con . $footer_Z;
         if (!is_dir("./upload/SICOVoptante")) {
             mkdir("./upload/SICOVoptante");
             $destino = "./upload/SICOVoptante";

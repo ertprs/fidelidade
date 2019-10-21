@@ -9862,7 +9862,8 @@ ORDER BY ae.agenda_exames_id)";
                             pcd.conta_agencia,
                             pcd.codigo_operacao,
                             pcd.conta_numero,
-                            pcd.conta_digito');
+                            pcd.conta_digito,
+                            pc.paciente_contrato_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_paciente_conta_debito pcd', 'p.paciente_id = pcd.paciente_id', 'left');
@@ -11690,9 +11691,11 @@ ORDER BY ae.agenda_exames_id)";
         $operador_id = $this->session->userdata('operador_id');      
         $this->db->set('data_envio_iugu', $horario);         
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-        $this->db->update('tb_paciente_contrato_parcelas');
-        
+        $this->db->update('tb_paciente_contrato_parcelas');        
     }
+    
+    
+    
 }
 
 ?>
