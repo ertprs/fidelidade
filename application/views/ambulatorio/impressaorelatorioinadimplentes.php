@@ -54,6 +54,7 @@
                 <tr>
                     <th class="tabela_header">Numero do Cliente</th>
                     <th class="tabela_header">Nome</th>
+                    <th class="tabela_header">Cpf</th>
                     <th class="tabela_header">Endereço</th>
                     <th class="tabela_header">Bairro</th>
                     <th class="tabela_header">Complemento</th>
@@ -84,6 +85,9 @@
                             <tr>
                                 <td >  <?= @$item->paciente_id; ?></td>
                                 <td ><?= @$item->nome; ?></td>
+                                <td ><? 
+                                echo preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $item->cpf);                                                                              
+                                       ?></td>
                                 <td ><?= @$item->logradouro . " " . $item->numero . " " . $item->complemento . " "; ?></td>
                                 <td ><?= @$item->bairro ?></td>
                                 <td ><?= @$item->complemento ?> </td>

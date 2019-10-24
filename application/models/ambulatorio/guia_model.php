@@ -126,7 +126,8 @@ class guia_model extends Model {
                             pcp.data_cartao_iugu,
                             pcp.debito,
                             pcp.empresa_iugu,
-                            p.paciente_id');
+                            p.paciente_id,
+                            p.cpf');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
