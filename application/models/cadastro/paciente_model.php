@@ -330,17 +330,17 @@ class paciente_model extends BaseModel {
 
     function listarparcelaiugucartao() {
         $data = date("Y-m-d");
-
         $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, pc.paciente_contrato_id, fp.nome as plano, pc.paciente_id, cp.data_cartao_iugu');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("cp.data_cartao_iugu <=", $data);
+        $this->db->where("(cp.data_envio_iugu < '$data'  or  cp.data_envio_iugu is null)");
         $this->db->where("pc.ativo", 't');
         $this->db->where("cp.ativo", 't');
         $this->db->where("cp.excluido", 'f');
-//        $this->db->where("invoice_id is null");
+//      $this->db->where("invoice_id is null");
         $this->db->orderby("cp.data");
         $return = $this->db->get();
         return $return->result();
@@ -348,18 +348,18 @@ class paciente_model extends BaseModel {
 
     function listarparcelaiugucartaocliente($paciente_id) {
         $data = date("Y-m-d");
-
         $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, pc.paciente_contrato_id, fp.nome as plano, pc.paciente_id, cp.data_cartao_iugu');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("cp.data_cartao_iugu <=", $data);
+        $this->db->where("(cp.data_envio_iugu < '$data'  or  cp.data_envio_iugu is null)");
         $this->db->where("pc.paciente_id", $paciente_id);
         $this->db->where("cp.ativo", 't');
         $this->db->where("pc.ativo", 't');
         $this->db->where("cp.excluido", 'f');
-//        $this->db->where("invoice_id is null");
+//      $this->db->where("invoice_id is null");
         $this->db->orderby("cp.data");
         $return = $this->db->get();
         return $return->result();
@@ -1822,20 +1822,21 @@ class paciente_model extends BaseModel {
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_dependente');
+            
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
-        }else {
-
-            if ($this->session->userdata('cadastro') == 2) {
-                
-            } else {
+            }else {
                 $this->db->set('paciente_id', $paciente_id);
                 $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->insert('tb_paciente_contrato_dependente');
-
+                
+            if ($this->session->userdata('cadastro') == 2) {
+                
+            } else {
+               
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
                  WHERE paciente_contrato_id = $paciente_contrato_id";

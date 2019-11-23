@@ -378,6 +378,7 @@ class caixa_model extends Model {
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->where('s.ativo', 'true');
         $this->db->where('p.ativo', 'true');
+     
 
         if (@$_POST['forma_pagamento'] != 0) {
             $this->db->where('p.forma_rendimento_id ', $_POST['forma_pagamento']);

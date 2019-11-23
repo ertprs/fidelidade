@@ -733,8 +733,6 @@ class Autocomplete extends Controller {
         if ($key != '') {
 
             foreach ($pagamento as $item) {
-
-
                 Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
                 $invoice_id = $item->invoice_id;
 
@@ -743,7 +741,6 @@ class Autocomplete extends Controller {
 //                var_dump($retorno);
 //                die;
                 if ($retorno['status'] == 'paid') {
-
                     $this->guia->confirmarpagamentoautomaticoiugu($item->paciente_contrato_parcelas_id);
                 }
                 if ($retorno['status'] == 'expired') {
@@ -871,27 +868,18 @@ class Autocomplete extends Controller {
     }
 
     function pagamentoautomaticoiugu() {
-
         set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
         ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
-
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
-
 //        echo '<pre>';
 //        var_dump($pagamento);
 //        die;
-
         $retorno = 'false';
-
-
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-
         foreach ($pagamento as $item) {
-
             $paciente_id = $item->paciente_id;
-
             $cartao_cliente = $this->paciente_m->listarcartaoclienteautocomplete($paciente_id);
             $cliente = $this->paciente_m->listardados($paciente_id);
             $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
@@ -901,9 +889,9 @@ class Autocomplete extends Controller {
             $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
             $valor = $item->valor * 100;
             $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
-
             $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
-
+            $this->guia->confirmarenviohoje($paciente_contrato_parcelas_id);
+            
             $payment_token = Iugu_PaymentToken::create(
                             Array(
                                 'method' => 'credit_card',
@@ -920,8 +908,7 @@ class Autocomplete extends Controller {
 //            echo '<pre>';
 //            var_dump($cartao_cliente);
 //            die;
-            if ($payment_token['errors'] == 0) {
-
+            if ($payment_token['errors'] == 0) {           
                 $gerar = Iugu_Charge::create(
                                 Array(
                                     'token' => $payment_token,
@@ -952,6 +939,7 @@ class Autocomplete extends Controller {
                                     )
                                 )
                 );
+                
             } else {
                 $gerar["url"] = '';
                 $gerar["invoice_id"] = '';
@@ -962,7 +950,6 @@ class Autocomplete extends Controller {
 //            var_dump($payment_token);
 //            var_dump($gerar);
 //            die;
-
             $retorno = 'true';
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
         }
@@ -975,22 +962,16 @@ class Autocomplete extends Controller {
         ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
         $paciente_id = $_GET['paciente_id'];
         $pagamento = $this->paciente_m->listarparcelaiugucartaocliente($paciente_id);
-
 //        echo '<pre>';
 //        var_dump($pagamento);
 //        die;
-
         $retorno = 'false';
-
-
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
 
         foreach ($pagamento as $item) {
-
             $paciente_id = $item->paciente_id;
-
             $cartao_cliente = $this->paciente_m->listarcartaoclienteautocomplete($paciente_id);
             $cliente = $this->paciente_m->listardados($paciente_id);
             $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
@@ -1000,9 +981,8 @@ class Autocomplete extends Controller {
             $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
             $valor = $item->valor * 100;
             $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
-
             $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
-
+            $this->guia->confirmarenviohoje($paciente_contrato_parcelas_id);
             $payment_token = Iugu_PaymentToken::create(
                             Array(
                                 'method' => 'credit_card',

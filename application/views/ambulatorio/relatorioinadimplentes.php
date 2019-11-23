@@ -62,7 +62,14 @@
                             </select>
                         </dd>
                     </div>
-                    
+                    <div id="parcelas">
+                        <dt>
+                            <label title="Maior ou igual a quantidade de parcelas">Parcelas</label>
+                        </dt>
+                        <dd>
+                            <input type="number" name="parcelas" id="parcelas" min="0" value="0" />
+                        </dd>
+                    </div>                    
                     <div id="bairrodiv">
                         <dt>
                             <label>Gerar </label>

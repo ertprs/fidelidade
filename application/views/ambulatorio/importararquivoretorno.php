@@ -1,5 +1,4 @@
  
-
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
         <h3><a href="#">&nbsp;&nbsp;&nbsp; Importar Arquivo Retorno</a></h3>
@@ -30,28 +29,41 @@
                 <table>
                     <tr>
                         <?
+                        $cont = 0;
                         $this->load->helper('directory');
                         $chave_pasta = $this->session->userdata('empresa_id');
 
                         $arquivo_pasta = directory_map("./upload/retornoimportados/$chave_pasta/");
                         if ($arquivo_pasta != false) {
                             ?> 
-                   <tr>
+                  
                             <?
                             foreach ($arquivo_pasta as $value) {
-                                ?>
+                                $cont++;                                   
+                                   ?>
+                                   <?php if ($cont == 4) {
+                                       ?>
+                                   <tr>
+                                       <?                                      
+                                   }
+                                   ?> 
                                 <td width="10px"> <img         width="50px" height="50px"  src="<?= base_url(); ?>img/archive-zip-icon.png"><br><? echo $value ?>
                                     <a   href="<?= base_url() . "./ambulatorio/guia/lerarquivoretornoimportado/" . $value; ?>"  target="_blank">Ler arquivo</a>
                                 </td> 
-                                <td>&nbsp;</td>        
-                            <br><?
+                                
+                            <?php if ($cont == 3) {
+                                       ?>
+                                   </tr>
+                                   <?  $cont= 0;  }  ?>         
+                            <?
                         }
                     }
                     ?>
-                    </tr> 
+                      
                 </table>
             </div>
 
+            <hr>
             <hr>
             <h3 class="singular">
                 <div class="bt_link_new" >
@@ -61,28 +73,38 @@
             </h3>
             <div>
                 <table>
-                    <tr>
+                  
                         <?
+                         $cont = 0;
                         $this->load->helper('directory');
                         $chave_pasta = $this->session->userdata('empresa_id');
 
                         $arquivo_pasta = directory_map("./upload/retornoimportados/todos/$chave_pasta/");
                         if ($arquivo_pasta != false) {
-                            ?> 
-                        <tr>
-                            <?
-                            foreach ($arquivo_pasta as $value) {
-                                ?>
-                                <td width="10px"> <img  onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/downloadTXToptanteimportado/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"      width="50px" height="50px"  src="<?= base_url(); ?>img/archive-zip-icon.png"><br><? echo $value ?>
-                                    <a onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/verarquivoimportado/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"  href="#" >Ver arquivo</a>
-                                </td>
-
-                                <td>&nbsp;</td>        
-                            <br><?
-                    }
-                }
-                        ?>
-                    </tr>
+                             
+                               foreach ($arquivo_pasta as $value) {
+                                   $cont++;                                   
+                                   ?>
+                                   <?php if ($cont == 4) {
+                                       ?>
+                                   <tr>
+                                       <?                                      
+                                   }
+                                   ?>   
+                                   <td width="10px"> <img  onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/downloadTXToptanteimportado/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"      width="50px" height="50px"  src="<?= base_url(); ?>img/archive-zip-icon.png"><br><? echo $value ?>                                       
+                                       <a onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/verarquivoimportado/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"  href="#" >Ver arquivo  </a>
+                                   </td>
+                                   <?php if ($cont == 3) {
+                                       ?>
+                                   </tr>
+                                   <?  $cont= 0;  }  ?>                              
+                                 
+                               <?
+                               
+                           }
+                       }
+                       ?>
+                  
 
                 </table>
             </div>
