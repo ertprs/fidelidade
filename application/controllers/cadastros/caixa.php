@@ -1032,7 +1032,132 @@ class Caixa extends BaseController {
         unlink("./upload/saida/$saidas_id/$value");
         $this->anexarimagemsaida($saidas_id);
     }
+    
+   
+     function relatorioentradapagamento() {
+        $data['conta'] = $this->forma->listarforma();
+        $data['credordevedor'] = $this->caixa->listarcredordevedor();
+        $data['operador'] = $this->operador->listaroperadores();
+        $data['tipo'] = $this->tipo->listartipo();
+        $data['forma_rendimento'] = $this->caixa->listarformarendimento();
+//        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatorioentradapagamento', $data);
+    }
+    
+    
 
+    function gerarelatorioentradapagamento() {
+        $data['txtdata_inicio'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])));
+        $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
+        $data['operador'] = $_POST['operador'];
+        $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
+        $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
+        $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
+        $data['forma'] = $this->forma->buscarforma($_POST['conta']);
+//        $data['empresa'] = $this->guia->listarempresa($_POST['empresa']);
+        $data['relatorioentrada'] = $this->caixa->relatorioentradapagamento(); 
+        $data['mostrar_form_pagamento'] = $_POST['mostrar_forma_pagamento'];
+        $data['cliente'] = $_POST['cliente'];
+//        echo "<pre>";
+//        print_r($data['relatorioentrada']);
+//        die;
+        
+
+
+        if ($_POST['email'] == "NAO") {
+            $this->load->View('cadastros/impressaorelatorioentradapagamento', $data);
+        } elseif ($_POST['email'] == "SIM") {
+            if (count($data['tipo']) > 0) {
+                $tipo = "TIPO:" . $data['tipo'][0]->descricao;
+            } else {
+                $tipo = "TODOS OS TIPOS";
+            }
+            if (count($data['classe']) > 0) {
+                $texto = strtr(strtoupper($data['classe'][0]->descricao), "àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß");
+                $classe = "CLASSE:" . $texto;
+            } else {
+                $classe = "TODAS AS CLASSES";
+            }
+            if (count($data['forma']) > 0) {
+                $forma = "CONTA:" . $data['forma'][0]->descricao;
+            } else {
+                $forma = "TODAS AS CONTAS";
+            }
+            if (count($data['credordevedor']) > 0) {
+                $credordevedor = $data['credordevedor'][0]->razao_social;
+            } else {
+                $credordevedor = "TODOS OS CREDORES";
+            }
+
+            $cabecalho = '<div class="content"> <!-- Inicio da DIV content -->
+
+        <h4> ' . $tipo . ' </h4>
+        <h4> ' . $classe . ' </h4>
+        <h4>' . $forma . '</h4>
+        <h4>' . $credordevedor . '</h4>
+        <h4>RELATORIO DE SAIDA</h4>
+    <h4>PERIODO: ' . $data['txtdata_inicio'] . ' até ' . $data['txtdata_fim'] . '</h4>
+    <hr>';
+
+            if (count($data['relatorioentrada']) > 0) {
+
+                $corpo = '
+        <table border="1">
+            <thead>
+                <tr> 
+                  <th width="100px;" class="tabela_header">Numero do Cliente</th>
+                    <th width="100px;" class="tabela_header">Conta</th>
+                    <th class="tabela_header">Nome</th>
+                    <th class="tabela_header">Dt entrada</th>
+                    <th class="tabela_header">Tipo</th>
+                    <th class="tabela_header">Classe</th>
+                    <th class="tabela_header">Valor</th>
+                    <th class="tabela_header">Observacao</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+                $total = 0;
+                $corpo2 = '';
+                $corpo3 = '';
+                foreach ($data['relatorioentrada'] as $item) :
+                    $total = $total + $item->valor;
+                    $corpo2 = $corpo2 . '
+                    <tr>
+                        <td >' . $item->paciente_id . '</td>
+                        <td >' . $item->conta . '</td>
+                        <td >' . $item->razao_social . '</td>
+                        <td >' . $item->tipo . '</td>
+                        <td >' . $item->classe . '</td>
+                        <td >' . substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4) . '</td>
+                        <td >' . number_format($item->valor, 2, ",", ".") . '</td>
+                        <td >' . $item->observacao . '</td>
+                    </tr>';
+                endforeach;
+                $corpo3 = '<tr>
+                    <td colspan="4" bgcolor="#C0C0C0"><b>TOTAL</b></td>
+                    <td colspan="2" bgcolor="#C0C0C0"><b>' . number_format($total, 2, ",", ".") . '</b></td>
+                </tr>
+            </tbody>';
+
+                $html = $cabecalho . $corpo . $corpo2 . $corpo3;
+            } else {
+                $corpo = '
+                <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
+                ';
+                $html = $cabecalho . $corpo;
+            }
+
+
+//                    var_dump($html);
+//            die;
+            $tiporelatorio = 'relatorioentrada';
+            $email_id = $this->caixa->gravaremailmensagem($html);
+            $this->formrelatorioemail($email_id, $tiporelatorio);
+        }
+    }
+    
+    
 }
 
 /* End of file welcome.php */

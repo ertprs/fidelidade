@@ -1005,6 +1005,105 @@ class caixa_model extends Model {
         return $return->result();
     }
     
+    
+     function relatorioentradapagamento() {
+        $this->db->select('s.valor,
+                            s.entradas_id,
+                            s.observacao,
+                            s.data,
+                            o.nome as operador,
+                            fcd.razao_social,
+                            fe.descricao as conta,
+                            s.tipo,
+                            s.classe,
+                            fr.nome as forma_rendimento,
+                            p.paciente_id,
+                            fe.forma_entradas_saida_id,s.nome,
+                            p.situacao,
+                            pcp.manual,
+                            pcp.data_cartao_iugu,
+                            pcp.debito,
+                            pcp.empresa_iugu,
+                            pcp.paciente_contrato_parcelas_id');
+        $this->db->from('tb_entradas s');
+        $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
+        $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
+        $this->db->join('tb_financeiro_classe fc', 'fc.descricao = s.classe', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = s.operador_cadastro', 'left');
+        $this->db->join('tb_paciente p', 'p.credor_devedor_id = s.nome', 'left');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas pcp','pcp.paciente_contrato_parcelas_id = s.paciente_contrato_parcelas_id','left');
+        $this->db->where('s.ativo', 'true');
+        $this->db->where('p.ativo', 'true');
+        $this->db->where("(pcp.ativo = 'f' or pcp.ativo is null )");
+     
+        if (@$_POST['forma_pagamento'] != 0) {
+            $this->db->where('p.forma_rendimento_id ', $_POST['forma_pagamento']);
+        }
+        if ($_POST['credordevedor'] != 0) {
+            $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
+        }
+        if ($_POST['tipo'] != 0) {
+            $this->db->where('tipo_id', $_POST['tipo']);
+        }
+        if ($_POST['operador'] != 0) {
+            $this->db->where('s.operador_cadastro', $_POST['operador']);
+        }
+        if ($_POST['classe'] != '') {
+            $this->db->where('classe', $_POST['classe']);
+        }
+        if ($_POST['conta'] != 0) {
+            $this->db->where('s.conta', $_POST['conta']);
+        }
+        
+        if ($_POST['cliente'] == "1") {
+            $this->db->where("(p.situacao != 'Dependente' or p.situacao is null) ");
+        }
+        
+        if ($_POST['cliente'] == "2") {
+               $this->db->where('p.situacao','Dependente');
+        }
+        
+        
+        $this->db->where('s.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . ' ' . '00:00:00');
+        $this->db->where('s.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . ' ' . '23:59:59');
+        
+//        $this->db->orderby('s.conta'); 
+//        $this->db->orderby('s.data');
+        $this->db->orderby('fcd.razao_social');
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+    
+    
+       function listarsomacontarelatoriopagamento($conta,$inicio,$fim,$cliente=NULL) {
+        
+        $this->db->select('sum(s.valor) as total');
+        $this->db->from('tb_entradas s');
+        $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
+        $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
+        $this->db->join('tb_financeiro_classe fc', 'fc.descricao = s.classe', 'left');
+        $this->db->join('tb_operador o', 'o.operador_id = s.operador_cadastro', 'left');
+        $this->db->join('tb_paciente p', 'p.credor_devedor_id = s.nome', 'left');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
+        $this->db->where('s.ativo', 'true');
+        $this->db->where('p.ativo', 'true');
+        $this->db->where('s.conta',$conta);
+        
+        $this->db->where('s.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $inicio))) . ' ' . '00:00:00');
+        $this->db->where('s.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $fim))) . ' ' . '23:59:59');
+                
+       if ($cliente == "1") {
+           $this->db->where("(p.situacao != 'Dependente' or p.situacao is null) ");
+        }
+        
+        if ($cliente == "2") {
+               $this->db->where('p.situacao','Dependente');
+        }
+        $return = $this->db->get();
+        return $return->result();
+    }
 
 }
 

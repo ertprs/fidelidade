@@ -361,6 +361,7 @@ $data['permissao'] = $this->db->get()->result();
                                     <ul><span class="file"><a href="<?= base_url() ?>cadastros/contaspagar/relatoriocontaspagar">Relatorio Contas a pagar</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>cadastros/contasreceber/relatoriocontasreceber">Relatorio Contas a Receber</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatoriomovitamentacao">Relatorio Movimentação</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>cadastros/caixa/relatorioentradapagamento">Relatorio Entrada Pagamento</a></span></ul>
                                 <? } ?>
                                 <? if ($perfil_id == 6 || $perfil_id == 5 || $perfil_id == 1) { ?>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissao">Relatorio Comiss&atilde;o</a></span></ul>

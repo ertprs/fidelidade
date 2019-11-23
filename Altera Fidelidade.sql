@@ -454,3 +454,8 @@ ALTER TABLE ponto.tb_erros_gerencianet
 --10/10/2019
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_envio_iugu date;
+
+
+--23/11/2019
+
+ALTER TABLE ponto.tb_entradas ADD COLUMN consultas_avulsas_id integer;

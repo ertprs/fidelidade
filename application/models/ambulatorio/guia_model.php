@@ -5165,7 +5165,6 @@ ORDER BY p.nome";
             $this->db->set('classe', 'PARCELA');
             $this->db->set('nome', $credor);
             $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-
 //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
             if (@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
@@ -5327,8 +5326,8 @@ ORDER BY p.nome";
 //        $data = date("Y-m-d");
         $operador_id = $this->session->userdata('operador_id');
         $this->db->set('valor', $valor);
-//        $inicio = $_POST['inicio'];
-
+//      $inicio = $_POST['inicio'];
+        $this->db->set('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
         $this->db->set('data', $data);
         $this->db->set('tipo', $plano);
         $this->db->set('classe', 'PARCELA');
@@ -5404,7 +5403,7 @@ ORDER BY p.nome";
         $operador_id = $this->session->userdata('operador_id');
         $this->db->set('valor', $valor);
 //        $inicio = $_POST['inicio'];
-
+        $this->db->set('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id); 
         $this->db->set('data', $data);
         $this->db->set('tipo', $plano);
         $this->db->set('classe', 'PARCELA');
@@ -5466,7 +5465,7 @@ ORDER BY p.nome";
         $operador_id = $this->session->userdata('operador_id');
         $this->db->set('valor', $valor);
 //        $inicio = $_POST['inicio'];
-
+        $this->db->set('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
         $this->db->set('data', $data);
         $this->db->set('tipo', $plano);
         $this->db->set('classe', 'PARCELA');
@@ -5599,7 +5598,6 @@ ORDER BY p.nome";
             $credor = $this->criarcredordevedorpaciente($paciente_id);
         }
 
-
         // var_dump($credor); die;
 
         if ($tipo == 'EXTRA') {
@@ -5663,8 +5661,8 @@ ORDER BY p.nome";
             } else {
                 $this->db->set('conta', $conta_id);
             }
-
-//        $this->db->set('observacao', $_POST['Observacao']);
+            $this->db->set('consultas_avulsas_id',$consultas_avulsas_id);
+//          $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_entradas');
@@ -5710,7 +5708,7 @@ ORDER BY p.nome";
         $parcela = $this->listarparcelaconfirmarpagamentoconsultaavulsa($paciente_id);
 //        echo '<pre>';
 //        var_dump($tipo); die;
-
+      
         $credor = $parcela[0]->financeiro_credor_devedor_id;
         if (!$credor > 0) {
             $credor = $this->criarcredordevedorpaciente($paciente_id);
@@ -5728,8 +5726,8 @@ ORDER BY p.nome";
         $data = date("Y-m-d");
         $operador_id = $this->session->userdata('operador_id');
         $this->db->set('valor', $valor);
-//        $inicio = $_POST['inicio'];
-
+//      $inicio = $_POST['inicio'];
+        $this->db->set('consultas_avulsas_id',$consultas_avulsas_id);
         $this->db->set('data', $data);
         $this->db->set('tipo', $plano);
         $this->db->set('classe', 'PARCELA');
@@ -6515,12 +6513,9 @@ AND data <= '$data_fim'";
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
-
             $valor = $return[0]->valor;
 //            var_dump($return);
 //            die;
-
-
             $this->db->set('valor', $valor);
             $this->db->set('data', $data);
             $this->db->set('tipo', 'RECEBIMENTO');
@@ -11184,8 +11179,8 @@ ORDER BY ae.agenda_exames_id)";
 
 
         $this->db->set('valor', $valor);
-//        $inicio = $_POST['inicio'];
-
+//      $inicio = $_POST['inicio'];
+        $this->db->set('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
         $this->db->set('data', $data);
         $this->db->set('tipo', $plano);
         $this->db->set('classe', 'PARCELA');
