@@ -187,15 +187,15 @@ if (@$paciente[0]->logradouro != "") {
 
             <tr  >
                 <td colspan="2" ><?
-                    if (@$paciente[0]->cidade_desc != "") {
-                        echo @$paciente[0]->cidade_desc;
+                    if (@$empresa[0]->municipio != "") {
+                        echo @$empresa[0]->municipio;
                     } else {
                         echo "____________________";
                     }
                     ?> ,
                     <?
-                    if (@$paciente[0]->estado != "") {
-                        echo @$paciente[0]->estado;
+                    if (@$empresa[0]->estado != "") {
+                        echo @$empresa[0]->estado;
                     } else {
                         echo '__________________';
                     }
