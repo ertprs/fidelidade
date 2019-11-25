@@ -569,9 +569,6 @@ class caixa_model extends Model {
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_saldo');
 
-
-
-
             return $entradas_id;
         } catch (Exception $exc) {
             return -1;

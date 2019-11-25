@@ -200,8 +200,6 @@ class contasreceber_model extends Model {
             $this->db->where('financeiro_contasreceber_id', $financeiro_contasreceber_id);
             $this->db->update('tb_financeiro_contasreceber');
 
-
-
             return $entradas_id;
         } catch (Exception $exc) {
             return -1;

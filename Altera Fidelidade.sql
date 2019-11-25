@@ -455,6 +455,10 @@ ALTER TABLE ponto.tb_erros_gerencianet
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_envio_iugu date;
 
+
+--23/11/2019
+
+ALTER TABLE ponto.tb_entradas ADD COLUMN consultas_avulsas_id integer;
 --13/11/2019
 
 CREATE TABLE ponto.tb_envio_iugu_card
