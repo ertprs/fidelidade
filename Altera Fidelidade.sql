@@ -454,3 +454,22 @@ ALTER TABLE ponto.tb_erros_gerencianet
 --10/10/2019
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_envio_iugu date;
+
+--13/11/2019
+
+CREATE TABLE ponto.tb_envio_iugu_card
+(
+  envio_iugu_card_id serial NOT NULL,
+  paciente_contrato_parcelas_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  CONSTRAINT tb_envio_iugu_card_pkey PRIMARY KEY (envio_iugu_card_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_envio_iugu_card
+  OWNER TO postgres;

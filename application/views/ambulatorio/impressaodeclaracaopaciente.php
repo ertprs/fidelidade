@@ -17,11 +17,9 @@
         <table border="0"  style="width: 100%; height: 100%;" >
             <tr>
                 <td width="25%" ><img width="90%" style="padding: 7%;" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td>
-                <td  style="text-align: center;font-size: 15px; " >Nº Cartão___________________</td>
+                <td  style="text-align: center;font-size: 15px; " >Nº Cartão <u>000<?= @$paciente_id ; ?></u></td>
             </tr>
-
             <tr>
-
                 <td  style="text-align: center;" colspan="2" >
                     <b>TERMO DE DECLARAÇÃO <?= @$empresa[0]->razao_social; ?></b>
                 </td>
@@ -101,31 +99,31 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">abaixo natural de <?
-                    if (@$paciente[0]->cidade_desc != "") {
-                        echo "<u>" . @$paciente[0]->cidade_desc . "</u>";
-                    } else {
-                        echo "___________________________";
-                    }
+                <td colspan="2"> <?
+//                    if (@$paciente[0]->cidade_desc != "") {
+//                        echo "<u>" . @$paciente[0]->cidade_desc . "</u>";
+//                    } else {
+//                        echo "___________________________";
+//                    }
                     ?>
-                    , no Estado do <?
+                    Estado do <?
                     if (@$paciente[0]->estado != "") {
                         echo "<u>" . @$paciente[0]->estado . "</u>";
                     } else {
                         echo "_________________________";
                     }
-                    ?></td>
-            </tr>
-
-            <tr>
-                <td colspan="2"> nascido em  <?php
+                    ?>  nascido em  <?php
                     if (@$paciente[0]->nascimento != "") {
                         echo "<u>" . date('d/m/Y', strtotime(@$paciente[0]->nascimento)) . "</u>";
                     } else {
                         echo "__/___/_____";
                     }
                     ?>, residente nesta cidade,  na rua</td>
+                
+                 
             </tr>
+
+            
 
             <tr>
                 <td colspan="2">

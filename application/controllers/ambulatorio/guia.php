@@ -4197,9 +4197,11 @@ class Guia extends BaseController {
     }
 
     function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {
-        if ($dependente_id != "" && $this->session->userdata('cadastro') == 2) {
+                            
+        if ($dependente_id != "" && $this->session->userdata('cadastro') == 2 && $dependente_id != $paciente_id) {
             $paciente_id = $dependente_id;
         }
+                            
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
         $data['paciente_id'] = $paciente_id;
         $data['contrato_id'] = $contrato_id;
@@ -4316,9 +4318,9 @@ class Guia extends BaseController {
     }
 
     function gravaralterarpagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
-// chamando na propria tela  a função alterando a data 
+        // chamando na propria tela  a função alterando a data 
         $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
-// chamando uma função existente confirmando o pagamento;
+         // chamando uma função existente confirmando o pagamento;
         //botei essa $paciente_id duas vezes para que quando for dependente pegar o credor devedor do dependente
         if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $paciente_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
@@ -6192,7 +6194,7 @@ table tr:hover  #achadoERRO{
         $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
-
+        $data['paciente_id'] = $paciente_id;
         $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
     }
 

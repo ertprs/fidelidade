@@ -390,6 +390,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <?php if ($this->session->userdata('operador_id') == '1') {
                                             ?>
                                             <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/errosgerencianet">Manter Erros</a></span></ul>
+                                               <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarenviosparauigu">Manter envio cartão Iugu</a></span></ul>
                                         <?php } ?>
 
                                     <? } ?>

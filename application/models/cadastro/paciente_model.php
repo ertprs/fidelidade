@@ -3997,6 +3997,44 @@ class paciente_model extends BaseModel {
         $return = $this->db->count_all_results();
         return $return;
     }
+    
+    
+    
+    function listarenviosiugucard($args = array()) {
+        $this->db->select('eg.data_cadastro,pc.valor,pc.paciente_contrato_id,p.nome as paciente,eg.envio_iugu_card_id,pc.data_cartao_iugu as data,p.paciente_id');
+        $this->db->from('tb_envio_iugu_card eg'); 
+        $this->db->join('tb_paciente_contrato_parcelas pc','pc.paciente_contrato_parcelas_id = eg.paciente_contrato_parcelas_id','left');      
+        $this->db->join('tb_paciente_contrato pct','pct.paciente_contrato_id = pc.paciente_contrato_id','left');
+        $this->db->join('tb_paciente p','p.paciente_id = pct.paciente_id','left');
+        $this->db->where('eg.ativo', 't');   
+        $this->db->groupby('eg.envio_iugu_card_id,eg.data_cadastro,pc.valor,pc.paciente_contrato_id,p.nome,pc.data_cartao_iugu,p.paciente_id');      
+        $this->db->order_by('eg.data_cadastro','desc');    
+        
+        
+        if (isset($args['data']) && strlen($args['data']) > 0) {   
+             $this->db->where('eg.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 00:00:00");
+             $this->db->where('eg.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 23:59:59");
+        }else{
+             $this->db->where('eg.data_cadastro >=',date('Y-m-d') . " 00:00:00");
+             $this->db->where('eg.data_cadastro <=',date('Y-m-d')  . " 23:59:59");
+        }
+        
+        if (isset($args['numero_contrato']) && strlen($args['numero_contrato']) > 0) {   
+             $this->db->where('pc.paciente_contrato_id',$args['numero_contrato']);             
+        } 
+        return $this->db;
+    }
+    
+    
+    function excluirenvioiugu($envio_iugu_card_id) {
+        $operador = $this->session->userdata('operador_id');
+        $horario = date('Y-m-d H:i:s');
+        $this->db->set('operador_atualizacao', $operador);
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('ativo', 'f');
+        $this->db->where('envio_iugu_card_id', $envio_iugu_card_id);
+        $this->db->update('tb_envio_iugu_card');
+    }
 
 }
 

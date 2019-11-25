@@ -1281,19 +1281,24 @@ class pacientes extends BaseController {
 
     
     
-    function errosgerencianet($args = array()) {
-         
+    function errosgerencianet($args = array()) {       
         $this->loadView('cadastros/errosgerencianet-lista',  $args);
-        
-        
     }
     
     function excluirerro($erros_gerencianet_id){
-        
         $this->paciente->excluirerro($erros_gerencianet_id);
-        redirect(base_url()."cadastros/pacientes/errosgerencianet");
-        
-        
+        redirect(base_url()."cadastros/pacientes/errosgerencianet");     
+    }
+    
+    
+     
+    function listarenviosparauigu($args = array()) {
+           $this->loadView('cadastros/enviosparauigu-lista',  $args);       
+    }
+    
+    function excluirenvioiugu($envio_iugu_card_id){
+        $this->paciente->excluirenvioiugu($envio_iugu_card_id);
+        redirect(base_url()."cadastros/pacientes/listarenviosparauigu");     
     }
     
     
