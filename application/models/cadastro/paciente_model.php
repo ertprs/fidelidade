@@ -4001,7 +4001,7 @@ class paciente_model extends BaseModel {
     
     
     function listarenviosiugucard($args = array()) {
-        $this->db->select('eg.data_cadastro,pc.valor,pc.paciente_contrato_id,p.nome as paciente,eg.envio_iugu_card_id,pc.data_cartao_iugu as data,p.paciente_id');
+        $this->db->select('eg.data_cadastro,pc.valor,pc.paciente_contrato_id,p.nome as paciente,eg.envio_iugu_card_id,pc.data_cartao_iugu as data,p.paciente_id,eg.paciente_contrato_parcelas_id');
         $this->db->from('tb_envio_iugu_card eg'); 
         $this->db->join('tb_paciente_contrato_parcelas pc','pc.paciente_contrato_parcelas_id = eg.paciente_contrato_parcelas_id','left');      
         $this->db->join('tb_paciente_contrato pct','pct.paciente_contrato_id = pc.paciente_contrato_id','left');
@@ -4009,8 +4009,7 @@ class paciente_model extends BaseModel {
         $this->db->where('eg.ativo', 't');   
         $this->db->groupby('eg.envio_iugu_card_id,eg.data_cadastro,pc.valor,pc.paciente_contrato_id,p.nome,pc.data_cartao_iugu,p.paciente_id');      
         $this->db->order_by('eg.data_cadastro','desc');    
-        
-        
+         
         if (isset($args['data']) && strlen($args['data']) > 0) {   
              $this->db->where('eg.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 00:00:00");
              $this->db->where('eg.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 23:59:59");

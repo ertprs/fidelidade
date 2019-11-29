@@ -32,18 +32,17 @@
                         <th class="tabela_header">Data envio</th>
                         <th class="tabela_header">Data parcela</th>
                         <th class="tabela_header">Valor</th>
-                        <th class="tabela_header">Nº contrato</th>                      
+                        <th class="tabela_header">Nº contrato</th>    
+                        <th class="tabela_header">Situação</th> 
                         <th class="tabela_header">Detalhes</th>
                     </tr>
                 </thead>
                 <?php
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
-                $consulta = $this->paciente->listarenviosiugucard($_GET)->get()->result();
-                 
+                $consulta = $this->paciente->listarenviosiugucard($_GET)->get()->result();                 
                 $total = count($consulta);
                 $limit = 10;
                 isset($_GET['per_page']) ? $pagina = $_GET['per_page'] : $pagina = 0;
-
                 if ($total > 0) {
                     ?>
                     <tbody>
@@ -51,15 +50,25 @@
                         $lista = $this->paciente->listarenviosiugucard($_GET)->limit($limit, $pagina)->orderby('eg.data_cadastro')->get()->result();
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
+                            $parcela = $this->paciente->listarpagamentoscontratoparcela($item->paciente_contrato_parcelas_id);
+                            
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
                             ?>
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"> <?= $item->paciente_id; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"> <?= $item->paciente; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= date('d/m/Y', strtotime($item->data_cadastro)); ?> </td>
-                                 <td class="<?php echo $estilo_linha; ?>"><?= date('d/m/Y', strtotime($item->data)); ?> </td>
+                                <td class="<?php echo $estilo_linha; ?>"><?= date('d/m/Y', strtotime($item->data)); ?> </td>
                                 <td class="<?php echo $estilo_linha; ?>"> <?= $item->valor; ?></td> 
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente_contrato_id; ?></td>
+                                 <td class="<?php echo $estilo_linha; ?>"><?
+                                         if (@$parcela[0]->ativo == "f") {
+                                           echo "Parcela paga!";  
+                                         }else{
+                                             echo "Não paga";
+                                         }
+                                 
+                                 ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;">
                                     <a href="<?= base_url() ?>cadastros/pacientes/excluirenvioiugu/<?= $item->envio_iugu_card_id; ?>">
                                         Excluir
@@ -74,7 +83,7 @@
                 ?>
                 <tfoot>
                     <tr>
-                        <th class="tabela_footer" colspan="7">
+                        <th class="tabela_footer" colspan="8">
                             <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
                         </th>
