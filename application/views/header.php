@@ -387,13 +387,8 @@ $data['permissao'] = $this->db->get()->result();
                                         <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisarRepresentante">Listar Representante Comercial</a></span></ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/motivocancelamento">Motivo cancelamento</a></span></ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Manter indica&ccedil;&atilde;o</a></span></ul>
-
-                                        <?php if ($this->session->userdata('operador_id') == '1') {
-                                            ?>
-                                            <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/errosgerencianet">Manter Erros</a></span></ul>
-                                               <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarenviosparauigu">Manter envio cartão Iugu</a></span></ul>
-                                        <?php } ?>
-
+                                        <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/errosgerencianet">Manter Erros</a></span></ul>
+                                        <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarenviosparauigu">Manter envio cartão Iugu</a></span></ul>                                      
                                     <? } ?>
 
                                 </li>

@@ -873,8 +873,7 @@ class Autocomplete extends Controller {
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
 //        echo '<pre>';
 //        print_r($pagamento);
-//        die;
-        
+//        die;        
         foreach ($pagamento as $item) {           
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         }

@@ -185,7 +185,6 @@
                                                 <?
                                             else:
                                             endif;
-
                                         else:
                                             ?>
 
