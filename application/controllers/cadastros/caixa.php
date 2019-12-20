@@ -1155,6 +1155,12 @@ class Caixa extends BaseController {
     }
     
     
+     function excluirarquivoprecadastro($precadastro_id, $value) {
+
+        unlink("./upload/precadastro/$precadastro_id/$value");
+        redirect(base_url()."cadastros/pacientes/carregarprecadastro/".$precadastro_id);
+    }
+    
 }
 
 /* End of file welcome.php */

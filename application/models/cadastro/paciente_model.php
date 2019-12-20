@@ -4035,6 +4035,102 @@ class paciente_model extends BaseModel {
         $this->db->update('tb_envio_iugu_card');
     }
 
+    
+    function listarprecadastro($args = array()){    
+        
+        $this->db->select('pc.nome,pc.cpf,pc.telefone,pc.precadastro_id,pc.nome as forma_pagamento,op.nome as vendedor');
+        $this->db->from('tb_precadastro pc');
+        $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pc.plano_id',"left"); 
+        $this->db->join('tb_operador op','op.operador_id = pc.vendedor','left');
+        $this->db->where('pc.ativo','t');
+        return $this->db;
+        
+    }
+    
+    
+    function dadosvendedor($vendedor_id=NULL){
+        $this->db->select('nome,operador_id');
+        $this->db->from('tb_operador');
+        if ($vendedor_id == "") {
+            $this->db->where('operador_id',$this->session->userdata('operador_id')); 
+        }else{
+             $this->db->where('operador_id',$vendedor_id); 
+        }
+       
+       return  $this->db->get()->result();        
+    }
+    
+    function gravarprecadastro(){
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id');
+        
+        if ($_POST['precadastro_id'] != "") {
+            $this->db->set('nome', $_POST['nome']);
+            if (str_replace("-", "", str_replace(".", "", $_POST['cpf'])) != "") {
+                $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
+            }
+            if (str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))) != "") {
+                $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            }
+            if ($_POST['plano'] != "") {
+                $this->db->set('plano_id', $_POST['plano']);
+            }
+            $this->db->set('vendedor', $_POST['vendedor']);
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador);
+            $this->db->where('precadastro_id', $_POST['precadastro_id']);
+            $this->db->update('tb_precadastro');
+            return $_POST['precadastro_id'];
+        }else{
+            
+        
+        $this->db->set('nome', $_POST['nome']);
+
+        if (str_replace("-", "", str_replace(".", "", $_POST['cpf'])) != "") {
+            $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
+        }
+        if (str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))) != "") {
+            $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+        }
+        if ($_POST['plano'] != "") {
+            $this->db->set('plano_id',$_POST['plano']);     
+        }
+
+        $this->db->set('vendedor',$_POST['vendedor']);
+        $this->db->set('data_cadastro', $horario);
+        $this->db->set('operador_cadastro', $operador);
+        $this->db->insert('tb_precadastro');
+        
+        
+        
+         return $this->db->insert_id();
+        }
+       
+        
+    }
+    
+    
+    function excluirprecadastro($precadastro_id){
+        $horario = date('Y-m-d H:i:s');
+        $operdador = $this->session->userdata('operador_id');
+        $this->db->set('ativo', 'f');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operdador);
+        $this->db->where('precadastro_id',$precadastro_id);
+        $this->db->update('tb_precadastro');
+        
+        
+    }
+    
+    
+    function listardadosprecadastro($precadastro_id){
+       $this->db->select('');
+       $this->db->from('tb_precadastro');
+       $this->db->where('precadastro_id',$precadastro_id);
+       return $this->db->get()->result();
+        
+        
+    }
 }
 
 ?>

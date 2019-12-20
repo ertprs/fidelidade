@@ -302,9 +302,8 @@ class guia_model extends Model {
         if (!empty($_POST['forma_rendimento'])) {
             $this->db->where('pc.forma_rendimento_id',$_POST['forma_rendimento']);
         }
-
-
-        if ($_POST['tipodata'] == "E" & $_POST['tipobusca'] == "I") {
+ 
+        if ($_POST['tipodata'] == "E" && $_POST['tipobusca'] == "I") {
             $this->db->where('pc.data_atualizacao >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
             $this->db->where('pc.data_atualizacao <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
         } else {

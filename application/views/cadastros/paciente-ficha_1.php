@@ -4,8 +4,18 @@
             <legend>Dados do Paciente</legend>
             <div>
                 <label>Nome *</label>                      
+                
+                <?php 
+                if (@$precadastro_id != "") {
+                    ?>                 
+                    <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$lista[0]->nome; ?>" required/>                
+                <?
+                }else{
+                ?>
                 <input type ="hidden" name ="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
                 <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$obj->_nome; ?>" required/>
+                <?php }?>
+                
             </div>
             <div>
                 <label>Nascimento *</label>
@@ -132,18 +142,18 @@
             </div>
             <div>
                 <label>Plano *</label>
-
                 <select name="plano" id="plano" class="size2" required>
                     <option value="" >selecione</option>
                     <?php
                     $planos = $this->formapagamento->listarforma();
                     foreach ($planos as $item) {
                         ?>
-                        <option   value =<?php echo $item->forma_pagamento_id; ?>><?php echo $item->nome; ?></option>
+                    <option   value ="<?php echo $item->forma_pagamento_id; ?>"  <? if(@$lista[0]->plano_id == $item->forma_pagamento_id){ echo "selected"; } ?> ><?php echo $item->nome; ?></option>
                         <?php
                     }
                     ?> 
                 </select>
+                
             </div>
             <div>
                 <label>Não renovar</label> 
@@ -151,7 +161,6 @@
             </div>
             <div>
                 <label>Forma Pagamento </label>
-
                 <select name="forma_rendimento_id" id="forma_rendimento_id" class="size2">
                     <option value="" >Selecione</option>
                     <?php
@@ -175,7 +184,7 @@
                     <?php
                     foreach ($listarvendedor as $item) {
                         ?>
-                        <option   value =<?php echo $item->operador_id; ?>><?php echo $item->nome; ?></option>
+                        <option   value =<?php echo $item->operador_id; ?>  <? if(@$lista[0]->vendedor == $item->operador_id){ echo "selected"; } ?>   ><?php echo $item->nome; ?></option>
                         <?php
                     }
                     ?> 
@@ -262,8 +271,15 @@
                 <input type="checkbox" name="cpf_responsavel" id ="cpf_responsavel" <? if (@$obj->_cpf_responsavel_flag == 't') echo "checked"; ?>> CPF do resposável
             </div>
             <div>               
-                <label>CPF/CNPJ</label>               
-                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$obj->_cpf; ?>" required/>  
+                <label>CPF/CNPJ</label>   
+                <?php 
+                if (@$precadastro_id != "") {
+                    ?> 
+                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$lista[0]->cpf; ?>" required/>  
+                <?php }else{?>
+                
+                 <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$obj->_cpf; ?>" required/>  
+                <?php }?>
             </div>
             <div>
                 <label>RG</label>
@@ -287,8 +303,7 @@
 
                 <div>
 
-                    <label>Outro documento</label>
-
+                    <label>Outro documento</label> 
 
                     <input type="text"   name="outro_documento" id="outro_documento" class="texto03" value="<?= @$obj->_outro_documento; ?>" />
                 </div>
@@ -302,9 +317,20 @@
                 </div>
                 <div>
                     <label>Telefone</label>
-
-
-                    <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 9999-9999" value="<?= @$obj->_telefone; ?>" required/>
+ 
+<?php 
+                if (@$precadastro_id != "") {
+                    ?> 
+                    <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 9999-9999" value="<?= @$lista[0]->telefone; ?>" required/>
+                    
+                    
+                <?php }else{
+                    ?>
+                <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 9999-9999" value="<?= @$obj->_telefone; ?>" required/>
+                        
+                    <?
+                }
+?>
                 </div>
                 <div>
                     <label>Celular *</label>

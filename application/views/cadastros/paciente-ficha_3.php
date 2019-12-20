@@ -155,19 +155,16 @@
                 </select>
             </div>
 
+             
             <div>
-                <label>Vendedor</label>
-
+                <label>Vendedor </label>
                 <select name="vendedor" id="vendedor" class="size2" >
                     <option value="" >selecione</option>
                     <?php
                     $listarvendedor = $this->paciente->listarvendedor();
                     foreach ($listarvendedor as $item) {
                         ?>
-                        <option   value =<?php echo $item->operador_id; ?><?
-                        if (@$obj->_vendedor == $item->operador_id):echo 'selected';
-                        endif;
-                        ?>><?php echo $item->nome; ?></option>
+                    <option <? if(@$obj->_vendedor == $item->operador_id ) { echo "selected"; }?>   value ="<?php echo $item->operador_id; ?>" ><?php echo $item->nome; ?></option>
                                   <?php
                               }
                               ?> 

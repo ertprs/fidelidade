@@ -288,13 +288,21 @@ $data['permissao'] = $this->db->get()->result();
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
+                                             
                                         <? }
                                         ?>
 
 
 
                                     <? } ?>
-                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) { ?>
+                                        <?php 
+                                      if ($perfil_id == 4 || $perfil_id == 1 ) {  
+                                       ?>
+                                              <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarprecadastros">Pŕe-cadastro</a></span></li>
+                                       <?
+                                      }
+                                        ?>
+                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) { ?>                                      
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioadimplentes">Relatorio Adimplentes</a></span></li>
 
