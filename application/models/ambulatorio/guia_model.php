@@ -302,9 +302,8 @@ class guia_model extends Model {
         if (!empty($_POST['forma_rendimento'])) {
             $this->db->where('pc.forma_rendimento_id',$_POST['forma_rendimento']);
         }
-
-
-        if ($_POST['tipodata'] == "E" & $_POST['tipobusca'] == "I") {
+ 
+        if ($_POST['tipodata'] == "E" && $_POST['tipobusca'] == "I") {
             $this->db->where('pc.data_atualizacao >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
             $this->db->where('pc.data_atualizacao <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
         } else {
@@ -5093,28 +5092,22 @@ ORDER BY p.nome";
     }
 
     function confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $depende_id = NULL) {
-
-
+ 
         if ($this->session->userdata('cadastro') == 2 && $depende_id != "") {
             $paciente_id = $depende_id;
         }
 
         $info_paciente = $this->listarinforpaciente($paciente_id);
-
         $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
         $valor = $parcela[0]->valor;
         $paciente_id = $parcela[0]->paciente_id;
-
         $credor = $parcela[0]->financeiro_credor_devedor_id;
-
-//        echo $credor;
-//        die;
-
-        if ($this->session->userdata('cadastro') == 2 && $depende_id != "") {
+  
+        if ($this->session->userdata('cadastro') == 2 && $depende_id != "" && $depende_id != $paciente_id) {
             $paciente_id = $depende_id;
             $credor = $parcela[0]->financeiro_credor_devedor_id_dependente;
         }
-
+          
 //       echo "Credor: ".$credor ; echo '<br>';
 //       echo "paciente : ".$paciente_id ; echo '<br>';
 //       die; 
@@ -5196,8 +5189,7 @@ ORDER BY p.nome";
             $this->db->set('data', $data_parcela);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_saldo');
-
-
+ 
             /////////////////////////////////////////////////
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
@@ -6307,7 +6299,6 @@ AND data <= '$data_fim'";
 
     function gravarnovaparcelacontrato($paciente_id, $contrato_id) {
         try {
-
             $this->db->select('parcela');
             $this->db->from('tb_paciente_contrato_parcelas');
             $this->db->where("paciente_contrato_id", $contrato_id);
@@ -6325,7 +6316,7 @@ AND data <= '$data_fim'";
             $data = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
             $horario = date("Y-m-d H:i:s");
             $hora = date("H:i:s");
-//            $data = date("Y-m-d");
+//          $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('paciente_contrato_id', $contrato_id);
             $this->db->set('data', $data);
@@ -11502,22 +11493,14 @@ ORDER BY ae.agenda_exames_id)";
         $tirarx = str_replace("x", "", $res[0]->parcelas);
         $parcelas = substr($res[0]->parcelas, 0, 2);
 
-
-
+ 
         $parcelas = (int) $parcelas;
         $mes = 1;
-
-
-
-
-
-// 2019-05-10 00:00:00 pq foi o dia feito a criação via query
-
+ 
+ 
         $this->db->select('');
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('paciente_contrato_id', $paciente_contrato_id);
-//        $this->db->where('parcela', 1);
-//        $this->db->where('excluido', 'f');
         $this->db->where('taxa_adesao', 'f');
         $this->db->where("(parcela_dependente = false or parcela_dependente is null)");
         $this->db->limit($parcelas);
@@ -11684,10 +11667,17 @@ ORDER BY ae.agenda_exames_id)";
     
     function confirmarenviohoje($paciente_contrato_parcelas_id){        
         $horario = date("Y-m-d");
+        $data = date("Y-m-d H:i:s");
         $operador_id = $this->session->userdata('operador_id');      
         $this->db->set('data_envio_iugu', $horario);         
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-        $this->db->update('tb_paciente_contrato_parcelas');        
+        $this->db->update('tb_paciente_contrato_parcelas');     
+         
+        $this->db->set('data_cadastro',$data);
+        $this->db->set('operador_cadastro',$operador_id);
+        $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+        $this->db->insert('tb_envio_iugu_card');
+          
     }
     
     

@@ -285,6 +285,13 @@ class Operador extends BaseController {
         $this->load->view('footer');
     }
 
+    function reativaroperador($operador_id){
+        $this->operador_m->reativaroperador($operador_id);
+          $data['mensagem'] = 'Operador reativado com sucesso.';
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "seguranca/operador", $data);
+    }
+    
 }
 
 ?>

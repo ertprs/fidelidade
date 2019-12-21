@@ -38,7 +38,11 @@ class pacientes extends BaseController {
         $this->loadView('cadastros/pacientes-listasubstituir', $data);
     }
 
-    function novo() {
+    function novo($precadastro_id=NULL) {
+        if ($precadastro_id != "") {
+             $data['lista']  = $this->paciente->listardadosprecadastro($precadastro_id);
+             $data['precadastro_id'] = $precadastro_id;
+        }
         $data['idade'] = 0;
         $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
         $data['listaconvenio'] = $this->paciente->listaconvenio();
@@ -1281,25 +1285,99 @@ class pacientes extends BaseController {
 
     
     
-    function errosgerencianet($args = array()) {
-         
+    function errosgerencianet($args = array()) {       
         $this->loadView('cadastros/errosgerencianet-lista',  $args);
-        
-        
     }
     
     function excluirerro($erros_gerencianet_id){
-        
         $this->paciente->excluirerro($erros_gerencianet_id);
-        redirect(base_url()."cadastros/pacientes/errosgerencianet");
-        
-        
+        redirect(base_url()."cadastros/pacientes/errosgerencianet");     
+    }
+    
+    
+     
+    function listarenviosparauigu($args = array()) {
+           $this->loadView('cadastros/enviosparauigu-lista',  $args);       
+    }
+    
+    function excluirenvioiugu($envio_iugu_card_id){
+        $this->paciente->excluirenvioiugu($envio_iugu_card_id);
+        redirect(base_url()."cadastros/pacientes/listarenviosparauigu");     
     }
     
     
     
+    function listarprecadastros($args = array()){
+         
+         $this->loadView('cadastros/precadastro-lista',  $args);       
+    }
     
+    
+    function carregarprecadastro($precadastro_id=NULL){ 
+         $this->load->helper('directory');
+          
+        $data['precadastro_id'] = $precadastro_id;
+        if ($precadastro_id != "") {     
+          $data['arquivo_pasta'] = directory_map("./upload/precadastro/$precadastro_id/");
+          
+          if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+          }
+          
+          $data['lista']  = $this->paciente->listardadosprecadastro($precadastro_id);
+         }
+         $this->loadView('cadastros/precadastro-ficha',$data); 
+    }
+    
+    function gravarprecadastro(){
+      
+        $precadastro_id =  $this->paciente->gravarprecadastro();
+         
+        if (!is_dir("./upload/precadastro/")) {
+            mkdir("./upload/precadastro/");
+            $destino = "./upload/precadastro/";
+            chmod($destino, 0777);
+        } 
+        if (!is_dir("./upload/precadastro/$precadastro_id")) {
+            mkdir("./upload/precadastro/$precadastro_id");
+            $destino = "./upload/precadastro/$precadastro_id";
+            chmod($destino, 0777);
+        }
+        
+        $config['upload_path'] = "./upload/precadastro/" . $precadastro_id . "/";
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|doc|docx|xls|xlsx|ppt|zip|rar';
+        $config['max_size'] = '0';
+        $config['overwrite'] = FALSE;
+        $config['encrypt_name'] = FALSE;
+        $this->load->library('upload', $config);
 
+        if (!$this->upload->do_upload()) {
+            $error = array('error' => $this->upload->display_errors());
+        } else {
+            $error = null;
+            $data = array('upload_data' => $this->upload->data());
+        }
+
+        if ($precadastro_id > 0) {
+           $mensagem = "Cadastrado com sucesso"; 
+        }else{
+            $mensagem = "Erro ao cadastrar";   
+        }        
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url()."cadastros/pacientes/listarprecadastros");
+        
+        
+    }
+
+    function excluirprecadastro($precadastro_id){
+        $this->paciente->excluirprecadastro($precadastro_id);
+        $mensagem = "Excluido com sucesso";
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url()."cadastros/pacientes/listarprecadastros");        
+    }
+    
+    
+    
 }
 
 ?>

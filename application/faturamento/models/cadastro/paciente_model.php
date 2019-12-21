@@ -45,6 +45,7 @@ class paciente_model extends BaseModel {
     var $_indicacao = null;
     var $_reativar = null;
     var $_credor_devedor_id = null;
+     var $_vendedor = null;
 
     function Paciente_model($paciente_id = null) {
         parent::Model();
@@ -120,7 +121,7 @@ class paciente_model extends BaseModel {
     private function instanciar($paciente_id) {
         if ($paciente_id != 0) {
 
-            $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*,c.nome as cidade_desc,c.municipio_id as cidade_cod,p.reativar,p.credor_devedor_id');
+            $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*,c.nome as cidade_desc,c.municipio_id as cidade_cod,p.reativar,p.credor_devedor_id,p.vendedor');
             $this->db->from('tb_paciente p');
             $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
             $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
@@ -173,6 +174,7 @@ class paciente_model extends BaseModel {
             $this->_indicacao = $return[0]->indicacao;
             $this->_reativar = $return[0]->reativar;
             $this->_credor_devedor_id = $return[0]->credor_devedor_id;
+            $this->_vendedor = $return[0]->vendedor;
         }
     }
 

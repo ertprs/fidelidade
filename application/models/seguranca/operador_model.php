@@ -951,5 +951,17 @@ class Operador_model extends BaseModel {
             $this->_valor_base = $return[0]->valor_base;
         }
     }
+    
+    
+    function reativaroperador($operador_id){
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id');
+        $this->db->set('ativo','t');
+        $this->db->set('data_atualizacao',$horario);
+        $this->db->set('operador_atualizacao',$operador);
+        $this->db->where('operador_id',$operador_id);
+        $this->db->update('tb_operador');
+        
+    }
 
 }

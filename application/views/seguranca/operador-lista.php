@@ -23,7 +23,7 @@
                         <th class="tabela_header">Usu&aacute;rio</th>
                         <th class="tabela_header">Perfil</th>
                         <th class="tabela_header">Ativo</th>
-                        <th class="tabela_header" colspan="3" width="140px;">A&ccedil;&otilde;es</th>
+                        <th class="tabela_header" colspan="4" width="140px;">A&ccedil;&otilde;es</th>
                     </tr>
                 </thead>
                 <?php
@@ -50,6 +50,7 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->usuario; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nomeperfil; ?></td>
+                                
                                 <?if($item->ativo == 't'){?>
                                 <td class="<?php echo $estilo_linha; ?>">Ativo</td>
                                 <?}else{?>
@@ -57,25 +58,33 @@
                                 <?}?>
                                                                 <?if($item->ativo == 't'){?>
                                 <td class="<?php echo $estilo_linha; ?>" >
-                                    <a onclick="javascript: confirm('Deseja realmente excluir o operador <?=$item->usuario; ?>'); window.open('<?= base_url() . "seguranca/operador/excluirOperador/$item->operador_id";?>' , '_blanck')"
-                                       >Excluir
+                                    <a onclick="javascript: confirm('Deseja realmente excluir o operador <?=$item->usuario; ?>');"
+                                       href="<?= base_url() . "seguranca/operador/excluirOperador/$item->operador_id";?>"  style="text-decoration: none;">Excluir
                                     </a>
 <!--                                    href="<?=base_url()?>seguranca/operador/excluirOperador/<?=$item->operador_id;?>"-->
                                     </td>
-                                    <td class="<?php echo $estilo_linha; ?>" width="140px;">
-                                    <a  onclick="javascript:window.open('<?= base_url() . "seguranca/operador/alterar/$item->operador_id"; ?> ', '_blank');">Editar
+                                    <td class="<?php echo $estilo_linha; ?>" width="70px;">
+                                        <a    href="<?= base_url() . "seguranca/operador/alterar/$item->operador_id"; ?>"  style="text-decoration: none;">Editar
                                     </a>
 <!--                                        href="<?= base_url() ?>seguranca/operador/alterar/<?= $item->operador_id ?>"-->
                                         </td>
-                                    <td class="<?php echo $estilo_linha; ?>" width="140px;">
-                                    <a  onclick="javascript:window.open('<?= base_url() . "seguranca/operador/operadorconvenio/$item->operador_id"; ?> ', '_blank');">Convenio
+                                    <td class="<?php echo $estilo_linha; ?>" width="70px;">
+                                        <a    href="<?= base_url() . "seguranca/operador/operadorconvenio/$item->operador_id"; ?>" style="text-decoration: none;">Convenio
                                     </a>
 <!--                           href="<?= base_url() ?>seguranca/operador/operadorconvenio/<?= $item->operador_id ?>"-->
-                                        </td>
-                                                                    <?}else{?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="140px;">
+                                     </td>
+                                      <?}else{?>
+                                    
                                     <?}?>
-                            </td>
+                         
+                            <?if($item->ativo != 't'){?>
+                            <td class="<?php echo $estilo_linha; ?>" colspan="4" style="text-align: center;">
+                                <a onclick="javascript: return  confirm('Deseja realmente Reativar o operador <?=$item->usuario; ?>'); " href="<?= base_url() . "seguranca/operador/reativaroperador/$item->operador_id";?>"
+                                       >Reativar
+                                    </a> 
+                             </td>
+                               <?} ?>
+                             
                         </tr>
 
                         </tbody>

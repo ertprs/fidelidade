@@ -9,11 +9,9 @@
         <h3 class="singular"><a href="#">Marcar exames</a></h3>
         <div> 
             <?
-            if (@$paciente[0]->empresa_id != "" || @$paciente[0]->empresa_id != null) {
-                
-            } else {
+            if (!(@$paciente[0]->empresa_id != "" || @$paciente[0]->empresa_id != null)) {
                 ?>
-                <fieldset>
+             <fieldset>
 
 
                     <div class="bt_link"> 
@@ -36,8 +34,10 @@
                         </a>
                     </div> 
                 </fieldset>
-
-            <? } ?>
+            <?
+            } 
+            ?>
+              
 
 
             <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravardependentes" method="post">
@@ -185,7 +185,6 @@
                                                 <?
                                             else:
                                             endif;
-
                                         else:
                                             ?>
 

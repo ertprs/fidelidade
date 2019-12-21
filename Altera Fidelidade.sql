@@ -459,3 +459,45 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_envio_iugu date;
 --23/11/2019
 
 ALTER TABLE ponto.tb_entradas ADD COLUMN consultas_avulsas_id integer;
+--13/11/2019
+
+CREATE TABLE ponto.tb_envio_iugu_card
+(
+  envio_iugu_card_id serial NOT NULL,
+  paciente_contrato_parcelas_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  CONSTRAINT tb_envio_iugu_card_pkey PRIMARY KEY (envio_iugu_card_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_envio_iugu_card
+  OWNER TO postgres;
+
+--02/12/2019
+
+CREATE TABLE ponto.tb_precadastro
+(
+  precadastro_id serial NOT NULL,
+  nome text,
+  cpf character varying(200),
+  telefone character varying(200),
+  plano_id integer,
+  vendedor integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_precadastro_pkey PRIMARY KEY (precadastro_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_precadastro
+  OWNER TO postgres;
+
