@@ -12,11 +12,16 @@
                                 
                                 <table>
                                     <tr>
+                                        <td>Número do Cliente</td>
+                                        <td>Nome</td>                                       
                                         <td>Nº contrato</td>
                                         <td>Data envio</td>
                                     </tr>
                                     <tr>
-                                       <td><input type="text" name="numero_contrato" id="numero_contrato" class="texto6 bestupper" value="<?php echo @$_GET['numero_contrato']; ?>" />  </td>
+                                      <td><input type="number" name="numero_cliente" id="numero_cliente" class="texto6 bestupper" value="<?php echo @$_GET['numero_cliente']; ?>" />  </td>
+                                      <td><input type="text" name="nome" id="nome" class="texto6 bestupper" value="<?php echo @$_GET['nome']; ?>" />  </td>
+                                     
+                                      <td><input type="text" name="numero_contrato" id="numero_contrato" class="texto6 bestupper" value="<?php echo @$_GET['numero_contrato']; ?>" />  </td>
                                       <td><input type="text" name="data" id="data" alt="date"  class="texto6 bestupper" value="<?php echo @$_GET['data']; ?>" />  </td>
                                      
                                       <td>  <button type="submit" id="enviar">Pesquisar</button> </td>
@@ -27,12 +32,12 @@
                         </th>
                     </tr>
                     <tr>
-                        <th class="tabela_header">Número</th>
+                        <th class="tabela_header"  width="50px">Número</th>
                         <th class="tabela_header">Paciente</th>
-                        <th class="tabela_header">Data envio</th>
-                        <th class="tabela_header">Data parcela</th>
-                        <th class="tabela_header">Valor</th>
-                        <th class="tabela_header">Nº contrato</th>    
+                        <th class="tabela_header"  width="70px">Data envio</th>
+                        <th class="tabela_header" width="80px">Data parcela</th>
+                        <th class="tabela_header"  width="70px">Valor</th>
+                        <th class="tabela_header"  width="70px">Nº contrato</th>    
                         <th class="tabela_header">Situação</th> 
                         <th class="tabela_header">Detalhes</th>
                     </tr>

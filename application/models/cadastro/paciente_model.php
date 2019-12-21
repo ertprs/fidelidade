@@ -4014,9 +4014,18 @@ class paciente_model extends BaseModel {
              $this->db->where('eg.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 00:00:00");
              $this->db->where('eg.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 23:59:59");
         }else{
-             $this->db->where('eg.data_cadastro >=',date('Y-m-d') . " 00:00:00");
-             $this->db->where('eg.data_cadastro <=',date('Y-m-d')  . " 23:59:59");
+             //$this->db->where('eg.data_cadastro >=',date('Y-m-d') . " 00:00:00");
+           // $this->db->where('eg.data_cadastro <=',date('Y-m-d')  . " 23:59:59");
         }
+        
+        if (isset($args['nome']) && strlen($args['nome']) > 0) {   
+             $this->db->where('p.nome ilike',"%".$args['nome']."%");             
+        } 
+        
+        if (isset($args['numero_cliente']) && strlen($args['numero_cliente']) > 0) {   
+             $this->db->where('p.paciente_id',$args['numero_cliente']);             
+        } 
+        
         
         if (isset($args['numero_contrato']) && strlen($args['numero_contrato']) > 0) {   
              $this->db->where('pc.paciente_contrato_id',$args['numero_contrato']);             

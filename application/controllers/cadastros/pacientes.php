@@ -1305,10 +1305,7 @@ class pacientes extends BaseController {
         redirect(base_url()."cadastros/pacientes/listarenviosparauigu");     
     }
     
-    
-    
-    function listarprecadastros($args = array()){
-         
+    function listarprecadastros($args = array()){       
          $this->loadView('cadastros/precadastro-lista',  $args);       
     }
     
