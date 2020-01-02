@@ -528,7 +528,6 @@ class Caixa extends BaseController {
         $data['operador'] = $this->operador->listaroperadores();
         $data['tipo'] = $this->tipo->listartipo();
         $data['forma_rendimento'] = $this->caixa->listarformarendimento();
-//        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatorioentrada', $data);
     }
 
@@ -537,11 +536,14 @@ class Caixa extends BaseController {
         $data['txtdata_fim'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])));
         $data['operador'] = $_POST['operador'];
         $data['credordevedor'] = $this->caixa->buscarcredordevedor($_POST['credordevedor']);
-        $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']);
+        $data['tipo'] = $this->tipo->buscartipo($_POST['tipo']); 
         $data['classe'] = $this->classe->buscarclasserelatorio($_POST['classe']);
-        $data['forma'] = $this->forma->buscarforma($_POST['conta']);
-//        $data['empresa'] = $this->guia->listarempresa($_POST['empresa']);
-        $data['relatorioentrada'] = $this->caixa->relatorioentrada();
+        $data['forma'] = $this->forma->buscarforma($_POST['conta']); 
+//        $data['empresa'] = $this->guia->listarempresa($_POST['empresa']); 
+        if ($_POST['tipo'] != 0) {
+            $_POST['tipo'] = $data['tipo'][0]->descricao; 
+        } 
+        $data['relatorioentrada'] = $this->caixa->relatorioentrada(); 
         $data['mostrar_form_pagamento'] = $_POST['mostrar_forma_pagamento'];
         $data['cliente'] = $_POST['cliente'];
          
@@ -584,8 +586,7 @@ class Caixa extends BaseController {
     <h4>PERIODO: ' . $data['txtdata_inicio'] . ' até ' . $data['txtdata_fim'] . '</h4>
     <hr>';
 
-            if (count($data['relatorioentrada']) > 0) {
-
+            if (count($data['relatorioentrada']) > 0) { 
                 $corpo = '
         <table border="1">
             <thead>
