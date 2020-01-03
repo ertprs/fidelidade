@@ -501,3 +501,8 @@ WITH (
 ALTER TABLE ponto.tb_precadastro
   OWNER TO postgres;
 
+--03/01/2020
+
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN forma_dependente boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN forma_dependente SET DEFAULT false;

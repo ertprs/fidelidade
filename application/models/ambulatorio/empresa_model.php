@@ -223,6 +223,12 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('renovar_contrato_automatico', 'f');
             }
+            
+            if (isset($_POST['forma_dependente'])) {
+                $this->db->set('forma_dependente', 't');
+            } else {
+                $this->db->set('forma_dependente', 'f');
+            }
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
@@ -289,7 +295,8 @@ class empresa_model extends Model {
                                f.client_id,
                                f.client_secret,
                                f.carteira_padao_5,
-                               f.modificar_verificar');
+                               f.modificar_verificar,
+                               f.forma_dependente');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -333,6 +340,7 @@ class empresa_model extends Model {
             $this->_client_id = $return[0]->client_id;
             $this->_client_secret = $return[0]->client_secret;
             $this->_modificar_verificar = $return[0]->modificar_verificar;
+            $this->_forma_dependente = $return[0]->forma_dependente; 
         } else {
             $this->_empresa_id = null;
         }

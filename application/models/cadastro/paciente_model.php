@@ -1277,6 +1277,9 @@ class paciente_model extends BaseModel {
             if (@$_POST['email'] != '') {
                 $this->db->set('cns', $_POST['email']);
             }
+             if (@$_POST['forma_rendimento_id'] != '') {
+                $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
+            }
 
             if (isset($_POST['reativar'])) {
                 $this->db->set('reativar', 't');
@@ -1285,13 +1288,11 @@ class paciente_model extends BaseModel {
             }
 
             $this->db->set('grau_parentesco', $_POST['grau_parentesco']);
-//            $nascimento = $_POST['nascimento'];
+ 
             if ($_POST['nascimento'] != '') {
                 $this->db->set('nascimento', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['nascimento']))));
             }
-//            if ($_POST['data_emissao'] != '') {
-//                $this->db->set('data_emissao', $_POST['data_emissao']);
-//            }
+ 
             $this->db->set('sexo', $_POST['sexo']);
             $this->db->set('situacao', 'Dependente');
             if (isset($_POST['reativar'])) {
@@ -4150,7 +4151,7 @@ class paciente_model extends BaseModel {
         $this->db->where("pc.ativo", "t");
         $this->db->where("pc.excluido", "f");
         $this->db->where('p.situacao','Dependente'); 
-        $return = $this->db->get()->result();  
+        $return = $this->db->get()->result();
         foreach($return as $value){
             $this->db->where('paciente_id',$value->paciente_id);
             $this->db->set('forma_rendimento_id',$value->forma_rendimento_id);
