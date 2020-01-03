@@ -361,8 +361,7 @@ class pacientes extends BaseController {
         $this->loadView('cadastros/paciente-ficha_4', $data);
     }
 
-    function gravar() {
-
+    function gravar() { 
         if ($paciente_id = $this->paciente->gravar()) {
             $data['mensagem'] = 'Paciente gravado com sucesso';
         } else {

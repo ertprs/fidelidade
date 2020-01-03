@@ -2472,7 +2472,7 @@ class Guia extends BaseController {
     }
 
     function listarpagamentos($paciente_id, $contrato_id) {
-
+        $this->paciente->atualizarformarendimentodependete($contrato_id);                    
         $data['paciente_id'] = $paciente_id;
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['lista'] = $this->paciente->listardependentes();
@@ -2481,9 +2481,7 @@ class Guia extends BaseController {
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontrato($contrato_id);
         $data['listarpagamentosconsultaextra'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
         $data['listarpagamentosconsultacoop'] = $this->paciente->listarpagamentosconsultacoop($paciente_id);
-        $data['historicoconsultasrealizadas'] = $this->paciente->listarhistoricoconsultasrealizadas($contrato_id);
-//        echo "<pre>";
-//        var_dump($data['historicoconsultasrealizadas']); die; 
+        $data['historicoconsultasrealizadas'] = $this->paciente->listarhistoricoconsultasrealizadas($contrato_id);                           
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $contrato_id;
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
