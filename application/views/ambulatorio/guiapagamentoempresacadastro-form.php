@@ -297,7 +297,7 @@
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
 
                                             <div class="bt_link">
-                                                <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoempresa/<?= @$item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>">Confirmar
+                                                <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoempresa/<?= @$item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>" target="_blank">Confirmar
                                                 </a>
                                             </div>
 

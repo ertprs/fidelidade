@@ -4501,9 +4501,11 @@ class Guia extends BaseController {
 
         @$valor += $pagamento[0]->valor;
 //        }
+        
 
-
+    
         $valor = $valor * 100;
+     
 
 //        echo "<pre>";
 //        print_r($retorno_parcelas);
@@ -4511,13 +4513,14 @@ class Guia extends BaseController {
 
         $empresa1 = $this->paciente->listardadosempresa($empresa_id);
 
-//  echo "<pre>";
-//  print_r($empresa1);
+    
+ 
+//  
 //        $celular = preg_replace('/[^\d]+/', '', $empresa[0]->celular);
         $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 2, 50);
         @$prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 0, 2);
         $codigoUF = $this->utilitario->codigo_uf($empresa1[0]->codigo_ibge);
-//
+
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
 //
