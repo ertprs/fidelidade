@@ -111,10 +111,8 @@
     </table>
 </div> <!-- Final da DIV content -->
 <br>
- <?php 
- 
- $conta = $this->forma->listarforma();  
- 
+ <?php  
+ $conta = $this->forma->listarforma();   
  ?>
 <table  border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
                 <thead>
@@ -130,15 +128,7 @@
                         ?>
                         <tr>
                             <td class="<?php echo $estilo_linha; ?>"><?= @$item->descricao; ?></td>
-                            <td class="<?php echo $estilo_linha; ?>"><?
-                           
-//                            if (@$qtd_parcelas_{$item->forma_entradas_saida_id} == "") {
-//                                echo "0";
-//                            }else{
-//                                 echo @$qtd_parcelas_{$item->forma_entradas_saida_id};
-//                            }
-                             
-                            ?>   
+                            <td class="<?php echo $estilo_linha; ?>"> 
 	                           R$<?= number_format(@$valor[0]->total, 2, ",", "."); ?></td>
                         </tr>
                     <? } ?>

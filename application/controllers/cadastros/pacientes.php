@@ -361,8 +361,7 @@ class pacientes extends BaseController {
         $this->loadView('cadastros/paciente-ficha_4', $data);
     }
 
-    function gravar() {
-
+    function gravar() { 
         if ($paciente_id = $this->paciente->gravar()) {
             $data['mensagem'] = 'Paciente gravado com sucesso';
         } else {
@@ -463,16 +462,12 @@ class pacientes extends BaseController {
     }
 
     function gravardependente() {
-        // echo '<pre>';
-        // var_dump($_POST);
-        // die;
+  
         $paciente_id = $this->paciente->gravardependente();
         $titular_id = $_POST['txtNomeid'];
         $empresa_p = $this->guia->listarempresa();
         $titular_flag = $empresa_p[0]->titular_flag;
-        // echo '<pre>';
-        // var_dump($titular_flag);
-
+ 
         $this->paciente->gravardependente2($paciente_id);
 
         $contrato_id = $this->paciente->listarcontratotitular();
@@ -1212,13 +1207,13 @@ class pacientes extends BaseController {
 //        }
     }
 
-    function novodependentecompleto() {
-
+    function novodependentecompleto() { 
         $data['idade'] = 0;
         $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
         $data['listaconvenio'] = $this->paciente->listaconvenio();
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['parceiros'] = $this->exame->listarparceiros();
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $this->loadView('cadastros/paciente-fichadependente_2', $data);
     }
 

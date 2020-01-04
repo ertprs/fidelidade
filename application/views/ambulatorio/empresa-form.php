@@ -2,7 +2,6 @@
 // echo "<pre>";
 // print_r($obj);
 ?>
-
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
         <h3 class="singular"><a href="#">Cadastro de Sala</a></h3>
@@ -210,7 +209,10 @@
                             <input type="checkbox" name="modificar_verificar"   <? if (@$obj->_modificar_verificar == 't') echo "checked"; ?>> 
                             <label  title="Ao ativar essa flag, a tela de verificar vai necessitar de senha do parceiro que irá poder" >Modificar Verificar</label>  
                         </td> 
-                         
+                         <td>
+                            <input type="checkbox" name="forma_dependente"   <? if (@$obj->_forma_dependente == 't') echo "checked"; ?>> 
+                            <label  title="Ao ativar essa flag no cadastro do dependente irá aparecer a forma de pagamento" >F. Pagamento Dependente</label>  
+                        </td>  
                     </tr>
                 </table> 
                 <br>

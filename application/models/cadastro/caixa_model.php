@@ -356,6 +356,7 @@ class caixa_model extends Model {
     }
 
     function relatorioentrada() {
+          
         $this->db->select('s.valor,
                             s.entradas_id,
                             s.observacao,
@@ -378,16 +379,15 @@ class caixa_model extends Model {
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->where('s.ativo', 'true');
         $this->db->where('p.ativo', 'true');
-     
-
+      
         if (@$_POST['forma_pagamento'] != 0) {
             $this->db->where('p.forma_rendimento_id ', $_POST['forma_pagamento']);
         }
         if ($_POST['credordevedor'] != 0) {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
         }
-        if ($_POST['tipo'] != 0) {
-            $this->db->where('tipo_id', $_POST['tipo']);
+        if ($_POST['tipo'] != '0') {
+            $this->db->where('s.tipo', $_POST['tipo']);
         }
         if ($_POST['operador'] != 0) {
             $this->db->where('s.operador_cadastro', $_POST['operador']);

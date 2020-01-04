@@ -42,7 +42,7 @@
                     </dt>
                     <dd>
                         <select name="tipo" id="tipo" class="size2">
-                            <option value= 0>TODOS</option>
+                            <option value=0>TODOS</option>
                             <? foreach ($tipo as $value) : ?>
                                 <option value="<?= $value->tipo_entradas_saida_id; ?>" ><?php echo $value->descricao; ?></option>
                             <? endforeach; ?>
@@ -115,18 +115,15 @@
                             ?>
                         </select> 
                     </dd>
-
-
+ 
                     <dt>
                         <label>Cliente</label>
                     </dt>
                     <dd>
-                        <select name="cliente" id="cliente" class="size2">
-                            
+                        <select name="cliente" id="cliente" class="size2"> 
                             <option value="0">TODOS</option>
                             <option value="1">TITULAR</option>
-                            <option value="2">DEPENDENTES</option>
-
+                            <option value="2">DEPENDENTES</option> 
                         </select> 
                     </dd>
 
