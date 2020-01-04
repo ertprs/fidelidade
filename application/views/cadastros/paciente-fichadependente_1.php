@@ -82,6 +82,22 @@
                 <label>Reativar</label> 
                 <input type="checkbox"  name="reativar" id="reativar">
             </div>
+            <?php if($empresapermissao[0]->forma_dependente == "t"){?>
+             <div>
+                <label>Forma Pagamento </label>
+                <select name="forma_rendimento_id" id="forma_rendimento_id" class="size2">
+                    <option value="" >Selecione</option>
+                    <?php
+                    $forma = $this->formapagamento->listarformaRendimentoPaciente();
+                    foreach ($forma as $item) {
+                        ?>
+                        <option   value =<?php echo $item->forma_rendimento_id; ?>><?php echo $item->nome; ?></option>
+                        <?php
+                    }
+                    ?> 
+                </select>  
+            </div>
+            <?php }?>
 
             <fieldset>
                 <legend>Titular</legend>

@@ -68,7 +68,7 @@ class pacientes extends BaseController {
         $data['listaconvenio'] = $this->paciente->listaconvenio();
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['parceiros'] = $this->exame->listarparceiros();
-
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $this->loadView('cadastros/paciente-fichadependente_1', $data);
     }
 
@@ -79,7 +79,7 @@ class pacientes extends BaseController {
         $data['listaconvenio'] = $this->paciente->listaconvenio();
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['parceiros'] = $this->exame->listarparceiros();
-
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $this->loadView('cadastros/paciente-fichadependente', $data);
     }
 
