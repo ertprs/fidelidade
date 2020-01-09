@@ -224,7 +224,7 @@
                             <tbody>
                                 <tr>
                                     <td class="<?php echo $estilo_linha; ?>">
-                                        <a style="text-decoration: none;" href="<?= base_url() ?>ambulatorio/guia/auditoriaparcela/ <?= @$contrato_id ?>/<?= @$item->paciente_contrato_parcelas_id ?>" target="_blank">
+                                        <a style="text-decoration: none;" >
                                             <?= @$mes; ?> <? if (@$item->taxa_adesao == 't') { ?><span style="color:green;">Adesão </span><? } ?>
                                         </a >
                                     </td>

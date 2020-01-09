@@ -339,8 +339,7 @@ class paciente_model extends BaseModel {
         $this->db->where("(cp.data_envio_iugu < '$data'  or  cp.data_envio_iugu is null)");
         $this->db->where("pc.ativo", 't');
         $this->db->where("cp.ativo", 't');
-        $this->db->where("cp.excluido", 'f');
-//      $this->db->where("invoice_id is null");
+        $this->db->where("cp.excluido", 'f'); 
         $this->db->orderby("cp.data");
         $return = $this->db->get();
         return $return->result();
