@@ -870,21 +870,21 @@ class Autocomplete extends Controller {
     function pagamentoautomaticoiugu() { 
         
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
-         
+//         echo "<pre>";
+//        print_r($pagamento);
+//        die;
         foreach ($pagamento as $item) {           
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         } 
  
-        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
-        ignore_user_abort(1);  // Executar script em segundo plano
+//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+//        ignore_user_abort(1);  // Executar script em segundo plano
         
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-        foreach ($pagamento as $item) {
-             
-            
+        foreach ($pagamento as $item) { 
              
             $paciente_id = $item->paciente_id;
             $cartao_cliente = $this->paciente_m->listarcartaoclienteautocomplete($paciente_id);
@@ -967,15 +967,15 @@ class Autocomplete extends Controller {
  
         $paciente_id = $_GET['paciente_id'];
         $pagamento = $this->paciente_m->listarparcelaiugucartaocliente($paciente_id); 
-//       echo '<pre>';
-//       print_r($pagamento);
-//       die; 
+//        echo '<pre>';
+//        print_r($pagamento);
+//        die; 
         foreach ($pagamento as $item) {           
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         }
         
-        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
-        ignore_user_abort(1);  // Executar script em segundo plano
+//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+//        ignore_user_abort(1);  // Executar script em segundo plano
         
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();

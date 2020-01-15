@@ -90,7 +90,7 @@ if (count($exames) > 0) {
                             <th class="tabela_header">Contrato</th>
                             <th class="tabela_header">Data</th>
                             <th class="tabela_header">Status</th>
-                            <th colspan="5" class="tabela_header"></th>
+                            <th colspan="6" class="tabela_header"></th>
 
 
                         </tr>
@@ -112,7 +112,18 @@ if (count($exames) > 0) {
                                 <? } ?>
                                 <? if ($perfil_id != 6 && $perfil_id != 5) { ?>
                                     <? $perfil_id = $this->session->userdata('perfil_id'); ?>
-
+                                            
+                                    <?php if($item->ativo == 'f'){?>
+                                    
+                                   <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                        <div class="bt_link_new" style="width: 100px;">
+                                           <a target="_blank" href="<?= base_url() . "ambulatorio/guia/impressaorecibocontrato/" . @$item->paciente_contrato_id . "/" . @$paciente['0']->paciente_id ?>">
+                                                Recibo
+                                            </a>
+                                        </div>
+                                    </td>
+     
+                                    <?php }?>
                                     <td class="<?php echo $estilo_linha; ?>" width="50px;">       
                                         <div class="bt_link_new" style="width: 100px;">
                                             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaoficha/" . @$item->paciente_contrato_id ?> ', '_blank', 'width=1000,height=1000');">
@@ -136,7 +147,7 @@ if (count($exames) > 0) {
                                     </td>
 
                                     <? if (($perfil_id == 1 || $perfil_id == 5) && $item->ativo == 't') { ?>
-                                        <td class="<?php echo $estilo_linha; ?>" >       
+                                        <td class="<?php echo $estilo_linha; ?>"  colspan="2">       
                                             <div class="bt_link_new" style="width: 100px;">
                                                 <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontrato/" . $paciente[0]->paciente_id . "/" . @$item->paciente_contrato_id ?>">
                                                     Excluir

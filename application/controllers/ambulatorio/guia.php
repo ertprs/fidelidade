@@ -6200,6 +6200,20 @@ table tr:hover  #achadoERRO{
         $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
     }
 
+    
+     function impressaorecibocontrato($contrato_id,$paciente_id) {
+        $empresa_id =  $this->session->userdata('empresa_id');
+         
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);                   
+        $data['pagamentos'] = $this->paciente->listarparcelaspagas($contrato_id); 
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+          
+        
+        $this->load->View('ambulatorio/impressaorecibocontrato', $data);
+        
+        
+    }
+    
 }
 
 /* End of file welcome.php */
