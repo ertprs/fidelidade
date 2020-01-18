@@ -16,6 +16,7 @@
                     <th class="tabela_header">CPF</th>
                     <th class="tabela_header">RG</th>
                     <th class="tabela_header">Endere&ccedil;o</th>
+                    <th class="tabela_header">Telefone</th>
                     <th class="tabela_header">Data Cadastro</th>
                     <th class="tabela_header">Cidade</th>
                     <th class="tabela_header">Situa&ccedil;&atilde;o</th>
@@ -24,6 +25,7 @@
             <tbody>
                 <?php
                 $total = 0;
+               
                 foreach ($relatorio as $item) :
                     $total++;
                     ?>
@@ -35,6 +37,12 @@
                         <td ><?= utf8_decode($item->cpf); ?></td>
                         <td ><?= utf8_decode($item->rg); ?></td>
                         <td ><?= utf8_decode($item->logradouro) . " " . $item->numero; ?></td>
+                        <td ><?
+                        echo $item->telefone;
+                        if ($item->celular != "") {
+                            echo " / ".$item->celular;
+                        }                        
+                        ?></td>
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
                         <td ><?= utf8_decode($item->municipio); ?></td>
                         <td ><?= utf8_decode($item->situacao); ?></td>
