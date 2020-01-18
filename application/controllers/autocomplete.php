@@ -867,22 +867,24 @@ class Autocomplete extends Controller {
         }
     }
 
-    function pagamentoautomaticoiugu() {
-//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
-//        ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
+    function pagamentoautomaticoiugu() { 
+        
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
-//        echo '<pre>';
+//         echo "<pre>";
 //        print_r($pagamento);
-//        die;        
+//        die;
         foreach ($pagamento as $item) {           
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
-        }
+        } 
+ 
+//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+//        ignore_user_abort(1);  // Executar script em segundo plano
         
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
-        foreach ($pagamento as $item) {       
+        foreach ($pagamento as $item) { 
              
             $paciente_id = $item->paciente_id;
             $cartao_cliente = $this->paciente_m->listarcartaoclienteautocomplete($paciente_id);
@@ -957,22 +959,23 @@ class Autocomplete extends Controller {
             $retorno = 'true';
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
         }
+      
         echo json_encode($retorno);
     }
 
     function pagamentoautomaticoiugucliente() {
-
-//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
-//        ignore_user_abort(true); // Não encerra o processamento em caso de perda de conexão
+ 
         $paciente_id = $_GET['paciente_id'];
-        $pagamento = $this->paciente_m->listarparcelaiugucartaocliente($paciente_id);
+        $pagamento = $this->paciente_m->listarparcelaiugucartaocliente($paciente_id); 
 //        echo '<pre>';
-//        var_dump($pagamento);
-//        die;
-        
+//        print_r($pagamento);
+//        die; 
         foreach ($pagamento as $item) {           
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         }
+        
+//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+//        ignore_user_abort(1);  // Executar script em segundo plano
         
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();
