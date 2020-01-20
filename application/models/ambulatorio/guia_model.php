@@ -395,7 +395,9 @@ class guia_model extends Model {
                             p.data_cadastro,
                             p.convenio_id,
                             m.nome as municipio,
-                            p.rg');
+                            p.rg,
+                            p.telefone,
+                            p.celular');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = p.convenio_id', 'left');
         $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
