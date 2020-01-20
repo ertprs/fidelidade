@@ -4169,9 +4169,9 @@ class paciente_model extends BaseModel {
         $this->db->where('cp.ativo','f');
         $return = $this->db->get();
         return $return->result();
-        
-        
+         
     }
+    
     
 }
 

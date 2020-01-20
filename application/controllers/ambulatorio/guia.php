@@ -6215,8 +6215,12 @@ table tr:hover  #achadoERRO{
     }
     
     
-      function gerarelatorioprevisaorecebimento() {   
+      function gerarelatorioprevisaorecebimento() { 
+        $empresa_id =  $this->session->userdata('empresa_id'); 
+        $data['empresa'] = $this->guia->listarempresa($empresa_id); 
         $data['relatorio'] = $this->guia->relatorioprevisaorecebimento();
+        $data['consultaavulsas'] = $this->guia->recebimentoconsultaavulsa();
+        $data['consultacoop'] = $this->guia->recebimentoconsultacoop();
         $this->load->View('ambulatorio/impressaorelatorioprevisaorecebimento', $data);
     }
     
