@@ -6206,13 +6206,21 @@ table tr:hover  #achadoERRO{
          
         $data['empresa'] = $this->guia->listarempresa($empresa_id);                   
         $data['pagamentos'] = $this->paciente->listarparcelaspagas($contrato_id); 
-        $data['paciente'] = $this->paciente->listardados($paciente_id);
-          
-        
-        $this->load->View('ambulatorio/impressaorecibocontrato', $data);
-        
-        
+        $data['paciente'] = $this->paciente->listardados($paciente_id); 
+        $this->load->View('ambulatorio/impressaorecibocontrato', $data); 
     }
+    
+    function relatorioprevisaorecebimento() { 
+        $this->loadView('ambulatorio/relatorioprevisaorecebimento');
+    }
+    
+    
+      function gerarelatorioprevisaorecebimento() {   
+        $data['relatorio'] = $this->guia->relatorioprevisaorecebimento();
+        $this->load->View('ambulatorio/impressaorelatorioprevisaorecebimento', $data);
+    }
+    
+    
     
 }
 

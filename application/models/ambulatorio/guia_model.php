@@ -11681,6 +11681,40 @@ ORDER BY ae.agenda_exames_id)";
     }
     
     
+    function relatorioprevisaorecebimento(){
+          $this->db->select('pc.paciente_contrato_id,
+            pcp.paciente_contrato_parcelas_id,
+                            pc.ativo,
+                            p.logradouro,
+                            p.numero,
+                            p.bairro,
+                            p.paciente_id,
+                            p.telefone,
+                            pcp.parcela,
+                            pcp.data,
+                            pcp.taxa_adesao,
+                            m.nome as municipio,
+                            pcp.valor,
+                            p.nome as paciente,
+                            fp.nome as plano,
+                            pc.data_cadastro');
+        $this->db->from('tb_paciente_contrato_parcelas pcp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left'); 
+        $this->db->orderby('pcp.parcela');
+        
+        $data_inicial = date('Y')."-".$_POST['mes']."-01";
+        $data_final= date('Y')."-".$_POST['mes']."-31";
+        $this->db->where('pcp.data >=', $data_inicial);
+        $this->db->where('pcp.data <=', $data_final);
+         
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+    
     
 }
 
