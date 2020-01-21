@@ -1,9 +1,37 @@
 <meta charset="utf-8">
 <div class="content"> <!-- Inicio da DIV content -->
 
+    
     <h4>RELATORIO DE ADIMPLENTES</h4>
     <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
     <h4>BAIRRO: <?= ($_POST['bairro'] != '') ? $_POST['bairro'] : 'TODOS' ?></h4>
+    <h4>FORMA DE PAGAMENTO: <?
+        if (@$_POST['forma_pagamento'] == 'manual') {
+            echo "MANUAL";
+        } else if (@$_POST['forma_pagamento'] == 'cartao') {
+            echo "CARTÃO";
+        } else if (@$_POST['forma_pagamento'] == 'debito') {
+            echo "DEBÍTO";
+        } else if (@$_POST['forma_pagamento'] == 'boleto_emp') {
+            echo "BOLETO EMPRESA";
+        } else if (@$_POST['forma_pagamento'] == 'boleto') {
+            echo "BOLETO";
+        } else {
+            echo "TODOS";
+        }
+        ?>
+    </h4>
+    <h4>ORDENAR POR: <?
+        if (@$_POST['ordenar'] == 'order_nome') {
+            echo "NOME";
+        } elseif (@$_POST['ordenar'] == 'order_bairro') {
+            echo "BAIRRO";
+        } else {
+            
+        }
+        ?>
+    </h4>
+    
     <hr>
     <?
     if (count($relatorio) > 0) {
@@ -36,14 +64,13 @@
                 <? endforeach; ?>
                 <tr>
                     <td colspan="2"><b>TOTAL</b></td>
-                    <td colspan="2"><b><?= number_format($total, 2, ",", "."); ?></b></td>
+                    <td colspan="4"><b><?= number_format($total, 2, ",", "."); ?></b></td>
                 </tr>
             </tbody>
-
+        </table>
 
             <?
-        }
-        else {
+        }        else {
             ?>
             <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
             <?

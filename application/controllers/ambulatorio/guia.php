@@ -437,10 +437,34 @@ class Guia extends BaseController {
     }
 
     function gerarelatorioadimplentes() {
+        $this->load->plugin('mpdf');
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
-        $data['relatorio'] = $this->guia->relatorioadimplentes();
+        $data['relatorio'] = $this->guia->relatorioadimplentes(); 
+        $data['ordenar'] = $_POST['ordenar']; 
+        
+        
+        if ($_POST['gerar'] == "pdf") { 
+            $filename = "relatorio.pdf";
+            $cabecalho = "";
+            $rodape = ""; 
+            $html = $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data, true); 
+            pdf($html, $filename, $cabecalho, $rodape);
+        }
 
+        if ($_POST['gerar'] == "planilha") { 
+            $nome_arquivo = "relatorio";
+            $html = $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data, true); 
+            $filename = "Relatorio ";
+            // Configurações header para forçar o download
+            header("Content-type: application/x-msexcel; charset=utf-8");
+            header("Content-Disposition: attachment; filename=\"{$filename}\"");
+            header("Content-Description: PHP Generated Data");
+            // Envia o conteúdo do arquivo
+            echo $html;
+            exit;
+        }
+        
         $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data);
     }
 

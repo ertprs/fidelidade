@@ -30,8 +30,50 @@
                             </select>
                         </dd>
                     </div>
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Forma de Pagamento</label>
+                        </dt>
+                        <dd>
+                            <select name="forma_pagamento" id="forma_pagamento" class="size2" tabindex="1">
+                                <option value='' >TODOS</option>
+
+                                <option value='manual' >Manual</option>
+                                <option value='cartao' >Cartão</option>
+                                <option value='debito' >Débito</option>
+                                <option value='boleto' >Boleto</option>
+                                <option value='boleto_emp' >Boleto Empresa</option>
+
+
+                            </select>
+                        </dd>
+                    </div>
+                <div id="bairrodiv">
+                        <dt>
+                            <label>Ordenar Por</label>
+                        </dt>
+                        <dd>
+                            <select name="ordenar" id="bairro" class="size2" tabindex="1">
+                                <option value='order_nome' >Nome</option>
+                                <option value='order_bairro' >Bairro</option> 
+                            </select>
+                        </dd>
+                    </div>
+                 <div id="bairrodiv">
+                        <dt>
+                            <label>Gerar </label>
+                        </dt>
+                        <dd>
+                            <select name="gerar" id="gerar" class="size2" tabindex="1">
+                                <option value='' >Selecione</option>
+                                <option value='pdf' >PDF</option>
+                                <option value='planilha' >PLANILHA</option> 
+                            </select>
+                        </dd>
+                    </div>
                     
-                </dl>
+                </dl> 
+                
                 <button type="submit" >Pesquisar</button>
 
             </form>

@@ -237,6 +237,38 @@ class guia_model extends Model {
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
+        
+        
+        if ($_POST['forma_pagamento'] == 'manual') {
+            $this->db->where('pcp.manual', 't');
+        } else if ($_POST['forma_pagamento'] == 'cartao') {
+            $this->db->where('pcp.data_cartao_iugu is not null');
+        } else if ($_POST['forma_pagamento'] == 'debito') {
+            $this->db->where('pcp.debito', 't');
+        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
+            $this->db->where('pcp.empresa_iugu', 't');
+        } else if ($_POST['forma_pagamento'] == 'boleto') {
+            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
+            $this->db->where('pcp.data_cartao_iugu is null');
+            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
+            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
+        } else {
+            
+        }
+        
+        if ($_POST['ordenar'] == 'order_nome') {
+            $this->db->orderby('p.nome');
+            $this->db->orderby('p.bairro');
+            $this->db->orderby('pcp.data');
+        }
+
+        if ($_POST['ordenar'] == 'order_bairro') {
+            $this->db->orderby('p.bairro');
+            $this->db->orderby('p.nome');
+            $this->db->orderby('pcp.data');
+        }
+ 
+        
         $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('p.nome');
