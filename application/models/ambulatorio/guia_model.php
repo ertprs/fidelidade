@@ -252,7 +252,9 @@ class guia_model extends Model {
                             o.nome as operador,
                             op.nome as vendedor,
                             pc.data_atualizacao,
-                            pc.data_cadastro');
+                            pc.data_cadastro,
+                            p.telefone,
+                            p.celular');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
