@@ -4173,6 +4173,17 @@ class paciente_model extends BaseModel {
     }
     
     
+    function listarformaredimento($forma_pagemento=NULL){
+        
+        $this->db->select('');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('forma_rendimento_id',$_POST['forma_pagamento']); 
+        return $this->db->get()->result();
+        
+    }
+    
+    
+    
 }
 
 ?>

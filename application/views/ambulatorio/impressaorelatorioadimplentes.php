@@ -5,20 +5,13 @@
     <h4>RELATORIO DE ADIMPLENTES</h4>
     <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
     <h4>BAIRRO: <?= ($_POST['bairro'] != '') ? $_POST['bairro'] : 'TODOS' ?></h4>
-    <h4>FORMA DE PAGAMENTO: <?
-        if (@$_POST['forma_pagamento'] == 'manual') {
-            echo "MANUAL";
-        } else if (@$_POST['forma_pagamento'] == 'cartao') {
-            echo "CARTÃO";
-        } else if (@$_POST['forma_pagamento'] == 'debito') {
-            echo "DEBÍTO";
-        } else if (@$_POST['forma_pagamento'] == 'boleto_emp') {
-            echo "BOLETO EMPRESA";
-        } else if (@$_POST['forma_pagamento'] == 'boleto') {
-            echo "BOLETO";
-        } else {
-            echo "TODOS";
-        }
+     <h4>FORMA DE PAGAMENTO: <?
+    if (count($forma) > 0) {
+         echo $forma[0]->nome;
+    }else{
+          echo "TODOS";
+    }
+         
         ?>
     </h4>
     <h4>ORDENAR POR: <?

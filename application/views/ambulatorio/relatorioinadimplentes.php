@@ -39,14 +39,30 @@
                         <dd>
                             <select name="forma_pagamento" id="forma_pagamento" class="size2" tabindex="1">
                                 <option value='' >TODOS</option>
-
-                                <option value='manual' >Manual</option>
-                                <option value='cartao' >Cartão</option>
-                                <option value='debito' >Débito</option>
-                                <option value='boleto' >Boleto</option>
-                                <option value='boleto_emp' >Boleto Empresa</option>
-
-
+                                <?php foreach($forma_rendimento as $item){
+                                    ?>
+                                <option value="<?= $item->forma_rendimento_id; ?>"><?= $item->nome; ?></option>
+                                  <? 
+                                    }
+                                 ?> 
+                            </select>
+                        </dd>
+                    </div>
+                    
+                    
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Planos</label>
+                        </dt>
+                        <dd>
+                            <select name="plano_id" id="plano_id" class="size2" tabindex="1">
+                                <option value='' >TODOS</option>
+                                <?php foreach($planos as $item){
+                                    ?>
+                                <option value="<?= $item->forma_pagamento_id; ?>"><?= $item->nome; ?></option>
+                                  <? 
+                                    }
+                                 ?> 
                             </select>
                         </dd>
                     </div>

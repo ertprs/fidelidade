@@ -112,6 +112,7 @@ class guia_model extends Model {
     }
 
     function relatorioinadimplentes() {
+        
         $this->db->select('p.nome,
                             p.logradouro,
                             p.numero,
@@ -127,35 +128,45 @@ class guia_model extends Model {
                             pcp.debito,
                             pcp.empresa_iugu,
                             p.paciente_id,
-                            p.cpf');
+                            p.cpf,
+                            fr.nome as forma_pagamento,
+                            pc.plano_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_rendimento fr','fr.forma_rendimento_id = p.forma_rendimento_id','left');
         $this->db->where('p.ativo', 'true');
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcp.ativo', 'true');
         $this->db->where('pcp.excluido', 'false');
-
+         
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
-        if ($_POST['forma_pagamento'] == 'manual') {
-            $this->db->where('pcp.manual', 't');
-        } else if ($_POST['forma_pagamento'] == 'cartao') {
-            $this->db->where('pcp.data_cartao_iugu is not null');
-        } else if ($_POST['forma_pagamento'] == 'debito') {
-            $this->db->where('pcp.debito', 't');
-        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
-            $this->db->where('pcp.empresa_iugu', 't');
-        } else if ($_POST['forma_pagamento'] == 'boleto') {
-            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
-            $this->db->where('pcp.data_cartao_iugu is null');
-            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
-            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
-        } else {
-            
-        }
-
+        
+//        if ($_POST['forma_pagamento'] == 'manual') {
+//            $this->db->where('pcp.manual', 't');
+//        } else if ($_POST['forma_pagamento'] == 'cartao') {
+//            $this->db->where('pcp.data_cartao_iugu is not null');
+//        } else if ($_POST['forma_pagamento'] == 'debito') {
+//            $this->db->where('pcp.debito', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
+//            $this->db->where('pcp.empresa_iugu', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto') {
+//            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
+//            $this->db->where('pcp.data_cartao_iugu is null');
+//            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
+//            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
+//        } else {
+//            
+//        }
+        
+         if ($_POST['forma_pagamento'] != ""){
+             $this->db->where('p.forma_rendimento_id',$_POST['forma_pagamento']); 
+         }
+         if ($_POST['plano_id'] != ""){
+             $this->db->where('pc.plano_id',$_POST['plano_id']); 
+         } 
         $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
 
@@ -239,23 +250,30 @@ class guia_model extends Model {
         }
         
         
-        if ($_POST['forma_pagamento'] == 'manual') {
-            $this->db->where('pcp.manual', 't');
-        } else if ($_POST['forma_pagamento'] == 'cartao') {
-            $this->db->where('pcp.data_cartao_iugu is not null');
-        } else if ($_POST['forma_pagamento'] == 'debito') {
-            $this->db->where('pcp.debito', 't');
-        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
-            $this->db->where('pcp.empresa_iugu', 't');
-        } else if ($_POST['forma_pagamento'] == 'boleto') {
-            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
-            $this->db->where('pcp.data_cartao_iugu is null');
-            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
-            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
-        } else {
-            
-        }
+//        if ($_POST['forma_pagamento'] == 'manual') {
+//            $this->db->where('pcp.manual', 't');
+//        } else if ($_POST['forma_pagamento'] == 'cartao') {
+//            $this->db->where('pcp.data_cartao_iugu is not null');
+//        } else if ($_POST['forma_pagamento'] == 'debito') {
+//            $this->db->where('pcp.debito', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
+//            $this->db->where('pcp.empresa_iugu', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto') {
+//            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
+//            $this->db->where('pcp.data_cartao_iugu is null');
+//            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
+//            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
+//        } else {
+//            
+//        }
         
+        
+        if ($_POST['forma_pagamento'] != ""){
+            $this->db->where('p.forma_rendimento_id',$_POST['forma_pagamento']); 
+        }
+        if ($_POST['plano_id'] != ""){
+            $this->db->where('pc.plano_id',$_POST['plano_id']); 
+        }   
         if ($_POST['ordenar'] == 'order_nome') {
             $this->db->orderby('p.nome');
             $this->db->orderby('p.bairro');
@@ -11763,6 +11781,14 @@ ORDER BY ae.agenda_exames_id)";
     
     
     
+    function listarplanos(){
+        
+        $this->db->select('');
+        $this->db->from('tb_forma_pagamento');
+        $this->db->where('ativo','t');
+        return $this->db->get()->result();
+        
+    }
     
 }
 
