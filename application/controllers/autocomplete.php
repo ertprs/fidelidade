@@ -877,8 +877,8 @@ class Autocomplete extends Controller {
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         } 
  
-//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
-//        ignore_user_abort(1);  // Executar script em segundo plano
+        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+        ignore_user_abort(1);  // Executar script em segundo plano
         
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();
@@ -974,8 +974,8 @@ class Autocomplete extends Controller {
           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         }
         
-//        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
-//        ignore_user_abort(1);  // Executar script em segundo plano
+        set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
+        ignore_user_abort(1);  // Executar script em segundo plano
         
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();
@@ -2661,13 +2661,14 @@ class Autocomplete extends Controller {
         if (count($data['pacientes']) > 0) {
             foreach ($data['pacientes'] as $item) {
                 $data['exames'] = $this->guia->listarexames($item->paciente_id);
-                $contrato_ativo = $this->guia->listarcontratoativo($item->paciente_id);
+                $contrato_ativo = $this->guia->listarcontratoativo($item->paciente_id); 
                 if (count($contrato_ativo) > 0) {
                     if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                         $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                         $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
                         $data_cadastro = $contrato_ativo[count($contrato_ativo) - 1]->data_cadastro;
                         $qtd_dias = $contrato_ativo[count($contrato_ativo) - 1]->qtd_dias;
+                        $parcelas_pendente = $this->guia->listarparcelaspacientependente($paciente_contrato_id);
                         if ($qtd_dias == "") {
                             $qtd_dias = 0;
                         } else {
@@ -2675,19 +2676,17 @@ class Autocomplete extends Controller {
                         }
                         // $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
                         //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
-                        $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro)));
-
-                        $data_atual = date("Y-m-d");
-
-//                  var_dump($data_tot_contrato);die;
-//            print_r($data_tot_contrato);
-//                echo "***********";
-//                  print_r($data_atual);
-//                echo "***********";
-//                  print_r($qtd_dias);
-//                echo "***********";
+                        $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro))); 
+                        $data_atual = date("Y-m-d"); 
+        //                 var_dump($data_tot_contrato);die;
+        //                 print_r($data_tot_contrato);
+        //                echo "***********";
+        //                 print_r($data_atual);
+        //                echo "***********";
+        //                 print_r($qtd_dias);
+        //                echo "***********";
                         //verificando se a data atual for maior que a data do (contrato+dias do plano) se for maior vai criar um novo contrato.
-                        if ($data_atual > $data_tot_contrato) {
+                         if ($data_atual > $data_tot_contrato && count($parcelas_pendente) == 0 && ($contrato_ativo[0]->nao_renovar == 'f' || $contrato_ativo[0]->nao_renovar == null)) {
                             if ($data['permissao'][0]->renovar_contrato_automatico == 't') {
                                 $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
                             } else {

@@ -1591,8 +1591,7 @@ class paciente_model extends BaseModel {
 //        var_dump($return[0]->taxa_adesao); die;
 
 
-        if (@$_POST['empresa_cadastro_id'] == "") {
-
+        if (@$_POST['empresa_cadastro_id'] == "") { 
             if ($return[0]->taxa_adesao == 't') {
                 $adesao_post = str_replace(",", ".", str_replace(".", "", @$_POST['valor_adesao']));
                 $this->db->set('adesao_digitada', @$_POST['adesao']);

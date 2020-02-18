@@ -508,8 +508,7 @@ class guia_model extends Model {
         return $return->result();
     }
 
-    function listarcontratoativo($paciente_id) {
-
+    function listarcontratoativo($paciente_id) { 
         $this->db->select('pc.paciente_contrato_id,
                             fp.nome as plano,
                             pc.ativo,
@@ -517,7 +516,8 @@ class guia_model extends Model {
                             fp.nome as plano,
                             pc.data_cadastro,
                             fp.qtd_dias,
-                            pc.nao_renovar
+                            pc.nao_renovar,
+                            p.nome as paciente
                             ');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente_contrato_parcelas cp', 'cp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
@@ -7072,8 +7072,7 @@ AND data <= '$data_fim'";
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
         }
-
-
+ 
         for ($i = 1; $i <= $parcelas; $i++) {
             $this->db->set('adesao_digitada', $_POST['adesao']);
             $this->db->set('valor', $ajuste);
@@ -7088,14 +7087,11 @@ AND data <= '$data_fim'";
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
-
-
+ 
             //$mes++;
-            if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas) {
+            if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas) { 
 
-
-                if (date("d", strtotime($data_receber)) == '30') {
-
+                if (date("d", strtotime($data_receber)) == '30') { 
 
                     $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
@@ -9211,8 +9207,7 @@ ORDER BY ae.agenda_exames_id)";
 //            die;
 
 
-            for ($i = 1; $i <= $parcelas; $i++) {
-
+            for ($i = 1; $i <= $parcelas; $i++) { 
                 if ($ajuste == 0 || $ajuste == "") {
                     $this->db->set('valor', $return_plano[0]->valor12);
                 } else {
@@ -9223,8 +9218,7 @@ ORDER BY ae.agenda_exames_id)";
                 $this->db->set('data', $nova_data_parcela_atual);
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
-                $this->db->insert('tb_paciente_contrato_parcelas');
-
+                $this->db->insert('tb_paciente_contrato_parcelas');  
                 $nova_data_parcela_atual = date("Y-m-d", strtotime("+1 month", strtotime($nova_data_parcela_atual)));
             }
 
