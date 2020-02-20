@@ -11736,13 +11736,18 @@ ORDER BY ae.agenda_exames_id)";
         }else{
              $mes = $_POST['mes']; 
         } 
-          $sql = "SELECT pcp.ativo as paga,pcp.data
+          $ano = date('Y');
+          $sql = "SELECT pcp.ativo as paga,pcp.data,pcp.valor
           FROM ponto.tb_paciente_contrato_parcelas pcp 
           left join ponto.tb_paciente_contrato pc on pc.paciente_contrato_id = pcp.paciente_contrato_id 
+          left join ponto.tb_paciente p on p.paciente_id = pc.paciente_id 
           WHERE EXTRACT('Month' From data) = $mes 
+          AND EXTRACT('YEAR' From data) = $ano
           AND pcp.excluido = false
-          AND pc.ativo = true";  
-        return $this->db->query($sql)->result();  
+          AND pc.ativo = true
+          AND p.ativo = true 
+          AND pc.excluido = false";  
+          return $this->db->query($sql)->result();  
     }
     
     function recebimentoconsultaavulsa() { 
@@ -11752,11 +11757,20 @@ ORDER BY ae.agenda_exames_id)";
         }else{
              $mes = $_POST['mes']; 
         } 
-        $sql = "SELECT * FROM ponto.tb_consultas_avulsas cp
+        $ano = date('Y');
+        $sql = "SELECT cp.*,p.nome as paciente FROM ponto.tb_consultas_avulsas cp
+                 left join ponto.tb_paciente p on p.paciente_id = cp.paciente_id 
+                 left join ponto.tb_paciente_contrato pc on pc.paciente_id = p.paciente_id
                  WHERE EXTRACT('Month' From data) = $mes 
-                 AND excluido = false
-                 AND tipo = 'EXTRA' "; 
+                 AND EXTRACT('YEAR' From data) = $ano
+                 AND cp.excluido = false
+                 AND tipo = 'EXTRA'
+                 AND p.ativo = true 
+                 AND pc.ativo = true 
+                 AND pc.excluido = false"; 
         return $this->db->query($sql)->result();  
+        
+        
     }
     
       function recebimentoconsultacoop() { 
@@ -11766,10 +11780,17 @@ ORDER BY ae.agenda_exames_id)";
         }else{
              $mes = $_POST['mes']; 
         }  
-        $sql = "SELECT * FROM ponto.tb_consultas_avulsas cp
+        $ano = date('Y');
+        $sql = "SELECT cp.* FROM ponto.tb_consultas_avulsas cp
+                left join ponto.tb_paciente p on p.paciente_id = cp.paciente_id 
+                left join ponto.tb_paciente_contrato pc on pc.paciente_id = p.paciente_id
                 WHERE EXTRACT('Month' From data) = $mes 
-                AND excluido = false
-                AND tipo = 'COOP'"; 
+                AND EXTRACT('YEAR' From data) = $ano
+                AND cp.excluido = false
+                AND tipo = 'COOP' 
+                AND p.ativo = true 
+                AND pc.excluido = false 
+                AND pc.ativo = true"; 
         return $this->db->query($sql)->result(); 
     }
     

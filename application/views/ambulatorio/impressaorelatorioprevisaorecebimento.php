@@ -7,8 +7,7 @@ $percentualPagas = 0;
 $percentualReceber = 0;
 $percentualNpagas = 0;
 $total = 0;
-        
-
+ 
 foreach($relatorio as $item){
     $total++;
     if ($item->paga == 'f') {
@@ -27,8 +26,13 @@ foreach($consultaavulsas as $item){
         $ParcelasReceber++; 
     }elseif($item->ativo == 't'){
         $ParcelasNpagas++;
+       
     }  
 }
+
+
+
+
 foreach($consultacoop as $item){
     $total++;
     if ($item->ativo == 'f') {
