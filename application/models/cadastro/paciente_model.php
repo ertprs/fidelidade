@@ -1591,8 +1591,7 @@ class paciente_model extends BaseModel {
 //        var_dump($return[0]->taxa_adesao); die;
 
 
-        if (@$_POST['empresa_cadastro_id'] == "") {
-
+        if (@$_POST['empresa_cadastro_id'] == "") { 
             if ($return[0]->taxa_adesao == 't') {
                 $adesao_post = str_replace(",", ".", str_replace(".", "", @$_POST['valor_adesao']));
                 $this->db->set('adesao_digitada', @$_POST['adesao']);
@@ -4169,9 +4168,20 @@ class paciente_model extends BaseModel {
         $this->db->where('cp.ativo','f');
         $return = $this->db->get();
         return $return->result();
+         
+    }
+    
+    
+    function listarformaredimento($forma_pagemento=NULL){
         
+        $this->db->select('');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('forma_rendimento_id',$_POST['forma_pagamento']); 
+        return $this->db->get()->result();
         
     }
+    
+    
     
 }
 

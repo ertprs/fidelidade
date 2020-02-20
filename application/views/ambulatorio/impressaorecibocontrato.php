@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 
+<title>Recibo</title>
 <?php  
 //echo "<pre>";
 //print_r($pagamentos);
@@ -19,10 +20,11 @@
 
  <p><p><h2 align="Center"><FONT color="#333333" face="Engravers MT, Broadway BT">RECIBO</h2></FONT><br clear="all">
  <?php 
+ $valor_total = 0.00;
  foreach($pagamentos as $item){
      
-     
-$valor = number_format($item->valor, 2, ',', '.');
+ $valor_total += $item->valor;
+ $valor = number_format($item->valor, 2, ',', '.');
     
  if ($valor == '0,00') {
       $extenso = 'ZERO';
@@ -40,7 +42,19 @@ $valor = number_format($item->valor, 2, ',', '.');
 <br clear="all">
 
 
-<br clear="all">
+<br clear="all"> 
+ <p>Valor Total: R$ <? 
+ $valor_total = number_format($valor_total, 2, ',', '.');
+ 
+ if ($valor_total == '0,00') {
+      $extenso_total = 'ZERO';
+ } else {
+      $valoreditado_total = str_replace(",", "", str_replace(".", "", $valor_total)); 
+      $extenso_total = GExtenso::moeda($valoreditado_total); 
+ } 
+ echo $valor_total." (".$extenso_total.")"; 
+ 
+ ?></p>
 </p><p>
 <?
 $MES = date("m");

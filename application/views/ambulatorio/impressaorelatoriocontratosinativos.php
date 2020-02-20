@@ -13,6 +13,8 @@
                     <th class="tabela_header">Nome</th>
                     <th class="tabela_header">Número</th>
                     <th class="tabela_header">Plano</th>
+                    <th class="tabela_header">Telefone</th>
+                    <th class="tabela_header">Celular</th>
                     <th class="tabela_header">Data</th>
                     <th class="tabela_header">Vendedor</th>
                     <? if($_POST['tipobusca'] == 'I'){ ?>
@@ -30,8 +32,9 @@
                     <tr>
                         <td ><?= $item->nome; ?></td>
                         <td ><?= $item->paciente_contrato_id; ?></td>
-                        <td ><?= $item->plano; ?></td>
-                       
+                        <td ><?= $item->plano; ?></td> 
+                        <td ><?= $item->telefone; ?></td>
+                        <td ><?= $item->celular; ?></td> 
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
                         <td ><?= $item->vendedor; ?></td>
                         <? if($_POST['tipobusca'] == 'I'){ ?>

@@ -112,6 +112,7 @@ class guia_model extends Model {
     }
 
     function relatorioinadimplentes() {
+        
         $this->db->select('p.nome,
                             p.logradouro,
                             p.numero,
@@ -127,35 +128,45 @@ class guia_model extends Model {
                             pcp.debito,
                             pcp.empresa_iugu,
                             p.paciente_id,
-                            p.cpf');
+                            p.cpf,
+                            fr.nome as forma_pagamento,
+                            pc.plano_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_rendimento fr','fr.forma_rendimento_id = p.forma_rendimento_id','left');
         $this->db->where('p.ativo', 'true');
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcp.ativo', 'true');
         $this->db->where('pcp.excluido', 'false');
-
+         
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
-        if ($_POST['forma_pagamento'] == 'manual') {
-            $this->db->where('pcp.manual', 't');
-        } else if ($_POST['forma_pagamento'] == 'cartao') {
-            $this->db->where('pcp.data_cartao_iugu is not null');
-        } else if ($_POST['forma_pagamento'] == 'debito') {
-            $this->db->where('pcp.debito', 't');
-        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
-            $this->db->where('pcp.empresa_iugu', 't');
-        } else if ($_POST['forma_pagamento'] == 'boleto') {
-            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
-            $this->db->where('pcp.data_cartao_iugu is null');
-            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
-            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
-        } else {
-            
-        }
-
+        
+//        if ($_POST['forma_pagamento'] == 'manual') {
+//            $this->db->where('pcp.manual', 't');
+//        } else if ($_POST['forma_pagamento'] == 'cartao') {
+//            $this->db->where('pcp.data_cartao_iugu is not null');
+//        } else if ($_POST['forma_pagamento'] == 'debito') {
+//            $this->db->where('pcp.debito', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
+//            $this->db->where('pcp.empresa_iugu', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto') {
+//            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
+//            $this->db->where('pcp.data_cartao_iugu is null');
+//            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
+//            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
+//        } else {
+//            
+//        }
+        
+         if ($_POST['forma_pagamento'] != ""){
+             $this->db->where('p.forma_rendimento_id',$_POST['forma_pagamento']); 
+         }
+         if ($_POST['plano_id'] != ""){
+             $this->db->where('pc.plano_id',$_POST['plano_id']); 
+         } 
         $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
 
@@ -237,6 +248,45 @@ class guia_model extends Model {
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
+        
+        
+//        if ($_POST['forma_pagamento'] == 'manual') {
+//            $this->db->where('pcp.manual', 't');
+//        } else if ($_POST['forma_pagamento'] == 'cartao') {
+//            $this->db->where('pcp.data_cartao_iugu is not null');
+//        } else if ($_POST['forma_pagamento'] == 'debito') {
+//            $this->db->where('pcp.debito', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto_emp') {
+//            $this->db->where('pcp.empresa_iugu', 't');
+//        } else if ($_POST['forma_pagamento'] == 'boleto') {
+//            $this->db->where("(pcp.manual is null or  pcp.manual = 'f'  )");
+//            $this->db->where('pcp.data_cartao_iugu is null');
+//            $this->db->where("(pcp.debito is null or  pcp.debito = 'f'  )");
+//            $this->db->where("(pcp.empresa_iugu is null or  pcp.empresa_iugu = 'f'  )");
+//        } else {
+//            
+//        }
+        
+        
+        if ($_POST['forma_pagamento'] != ""){
+            $this->db->where('p.forma_rendimento_id',$_POST['forma_pagamento']); 
+        }
+        if ($_POST['plano_id'] != ""){
+            $this->db->where('pc.plano_id',$_POST['plano_id']); 
+        }   
+        if ($_POST['ordenar'] == 'order_nome') {
+            $this->db->orderby('p.nome');
+            $this->db->orderby('p.bairro');
+            $this->db->orderby('pcp.data');
+        }
+
+        if ($_POST['ordenar'] == 'order_bairro') {
+            $this->db->orderby('p.bairro');
+            $this->db->orderby('p.nome');
+            $this->db->orderby('pcp.data');
+        }
+ 
+        
         $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('p.nome');
@@ -252,7 +302,9 @@ class guia_model extends Model {
                             o.nome as operador,
                             op.nome as vendedor,
                             pc.data_atualizacao,
-                            pc.data_cadastro');
+                            pc.data_cadastro,
+                            p.telefone,
+                            p.celular');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
@@ -456,8 +508,7 @@ class guia_model extends Model {
         return $return->result();
     }
 
-    function listarcontratoativo($paciente_id) {
-
+    function listarcontratoativo($paciente_id) { 
         $this->db->select('pc.paciente_contrato_id,
                             fp.nome as plano,
                             pc.ativo,
@@ -465,7 +516,8 @@ class guia_model extends Model {
                             fp.nome as plano,
                             pc.data_cadastro,
                             fp.qtd_dias,
-                            pc.nao_renovar
+                            pc.nao_renovar,
+                            p.nome as paciente
                             ');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente_contrato_parcelas cp', 'cp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
@@ -7020,8 +7072,7 @@ AND data <= '$data_fim'";
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
         }
-
-
+ 
         for ($i = 1; $i <= $parcelas; $i++) {
             $this->db->set('adesao_digitada', $_POST['adesao']);
             $this->db->set('valor', $ajuste);
@@ -7036,14 +7087,11 @@ AND data <= '$data_fim'";
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
-
-
+ 
             //$mes++;
-            if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas) {
+            if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas) { 
 
-
-                if (date("d", strtotime($data_receber)) == '30') {
-
+                if (date("d", strtotime($data_receber)) == '30') { 
 
                     $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
@@ -9159,8 +9207,7 @@ ORDER BY ae.agenda_exames_id)";
 //            die;
 
 
-            for ($i = 1; $i <= $parcelas; $i++) {
-
+            for ($i = 1; $i <= $parcelas; $i++) { 
                 if ($ajuste == 0 || $ajuste == "") {
                     $this->db->set('valor', $return_plano[0]->valor12);
                 } else {
@@ -9171,8 +9218,7 @@ ORDER BY ae.agenda_exames_id)";
                 $this->db->set('data', $nova_data_parcela_atual);
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
-                $this->db->insert('tb_paciente_contrato_parcelas');
-
+                $this->db->insert('tb_paciente_contrato_parcelas');  
                 $nova_data_parcela_atual = date("Y-m-d", strtotime("+1 month", strtotime($nova_data_parcela_atual)));
             }
 
@@ -11683,6 +11729,60 @@ ORDER BY ae.agenda_exames_id)";
     }
     
     
+    function relatorioprevisaorecebimento(){  
+        if ($_POST['mes'] < 10) {
+            $_POST['mes'] = str_replace('0', '', $_POST['mes'] );  
+            $mes = "0".$_POST['mes'];  
+        }else{
+             $mes = $_POST['mes']; 
+        } 
+          $sql = "SELECT pcp.ativo as paga,pcp.data
+          FROM ponto.tb_paciente_contrato_parcelas pcp 
+          left join ponto.tb_paciente_contrato pc on pc.paciente_contrato_id = pcp.paciente_contrato_id 
+          WHERE EXTRACT('Month' From data) = $mes 
+          AND pcp.excluido = false
+          AND pc.ativo = true";  
+        return $this->db->query($sql)->result();  
+    }
+    
+    function recebimentoconsultaavulsa() { 
+        if ($_POST['mes'] < 10) {
+          $_POST['mes'] = str_replace('0', '', $_POST['mes'] );
+            $mes = "0".$_POST['mes'];  
+        }else{
+             $mes = $_POST['mes']; 
+        } 
+        $sql = "SELECT * FROM ponto.tb_consultas_avulsas cp
+                 WHERE EXTRACT('Month' From data) = $mes 
+                 AND excluido = false
+                 AND tipo = 'EXTRA' "; 
+        return $this->db->query($sql)->result();  
+    }
+    
+      function recebimentoconsultacoop() { 
+        if ($_POST['mes'] < 10) { 
+            $_POST['mes'] = str_replace('0', '', $_POST['mes'] );  
+            $mes = "0".$_POST['mes'];
+        }else{
+             $mes = $_POST['mes']; 
+        }  
+        $sql = "SELECT * FROM ponto.tb_consultas_avulsas cp
+                WHERE EXTRACT('Month' From data) = $mes 
+                AND excluido = false
+                AND tipo = 'COOP'"; 
+        return $this->db->query($sql)->result(); 
+    }
+    
+    
+    
+    function listarplanos(){
+        
+        $this->db->select('');
+        $this->db->from('tb_forma_pagamento');
+        $this->db->where('ativo','t');
+        return $this->db->get()->result();
+        
+    }
     
 }
 

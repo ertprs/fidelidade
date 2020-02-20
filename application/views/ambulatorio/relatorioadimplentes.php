@@ -3,8 +3,7 @@
         <h3><a href="#">Gerar relatorio Adimplentes</a></h3>
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatorioadimplentes">
-                <dl>
-
+                <dl> 
                     <dt>
                         <label>Data inicio</label>
                     </dt>
@@ -30,8 +29,65 @@
                             </select>
                         </dd>
                     </div>
+                     <div id="bairrodiv">
+                        <dt>
+                            <label>Forma de Pagamento</label>
+                        </dt>
+                        <dd>
+                            <select name="forma_pagamento" id="forma_pagamento" class="size2" tabindex="1">
+                                <option value='' >TODOS</option>
+                                <?php foreach($forma_rendimento as $item){
+                                    ?>
+                                <option value="<?= $item->forma_rendimento_id; ?>"><?= $item->nome; ?></option>
+                                  <? 
+                                    }
+                                 ?> 
+                            </select>
+                        </dd>
+                    </div>
+                     
+                    <div id="bairrodiv">
+                        <dt>
+                            <label>Planos</label>
+                        </dt>
+                        <dd>
+                            <select name="plano_id" id="plano_id" class="size2" tabindex="1">
+                                <option value='' >TODOS</option>
+                                <?php foreach($planos as $item){
+                                    ?>
+                                <option value="<?= $item->forma_pagamento_id; ?>"><?= $item->nome; ?></option>
+                                  <? 
+                                    }
+                                 ?> 
+                            </select>
+                        </dd>
+                    </div>
+                <div id="bairrodiv">
+                        <dt>
+                            <label>Ordenar Por</label>
+                        </dt>
+                        <dd>
+                            <select name="ordenar" id="bairro" class="size2" tabindex="1">
+                                <option value='order_nome' >Nome</option>
+                                <option value='order_bairro' >Bairro</option> 
+                            </select>
+                        </dd>
+                    </div>
+                 <div id="bairrodiv">
+                        <dt>
+                            <label>Gerar </label>
+                        </dt>
+                        <dd>
+                            <select name="gerar" id="gerar" class="size2" tabindex="1">
+                                <option value='' >Selecione</option>
+                                <option value='pdf' >PDF</option>
+                                <option value='planilha' >PLANILHA</option> 
+                            </select>
+                        </dd>
+                    </div>
                     
-                </dl>
+                </dl> 
+                
                 <button type="submit" >Pesquisar</button>
 
             </form>

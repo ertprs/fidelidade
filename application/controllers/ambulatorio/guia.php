@@ -148,33 +148,39 @@ class Guia extends BaseController {
         $data['exames'] = $this->guia->listarexames($paciente_id);
         $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
-        if (count($contrato_ativo) > 0) {
-
+        
+//         echo "<pre>";
+        if (count($contrato_ativo) > 0) { 
+        
+            
             if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
                 $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                 $parcelas_pendente = $this->guia->listarparcelaspacientependente($paciente_contrato_id);
-
-//                echo "<pre>";
-//                print_r(count($parcelas_pendente));
-//               die;
+                            
                 $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
                 $data_cadastro = $contrato_ativo[count($contrato_ativo) - 1]->data_cadastro;
                 $qtd_dias = $contrato_ativo[count($contrato_ativo) - 1]->qtd_dias;
-
-
+                
+            
+                       
                 if ($qtd_dias == "") {
                     $qtd_dias = 0;
                 } else {
                     
                 }
+         
                 // $data_contrato_year = date('Y-m-d H:i:s', strtotime("+ 1 year", strtotime($data_contrato)));
                 //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
                 $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro)));
                 $data_atual = date("Y-m-d");
-
-
+//               print_r($data_tot_contrato);  
+//               echo "<br>";
+//               print_r($data_atual > $data_tot_contrato);  
+//                echo "<br>";
+//               print_r($data_contrato);  
+               
 //               var_dump($data_tot_contrato);die;
-//            print_r($data_tot_contrato);
+//                print_r($data_tot_contrato);
 //                echo "***********";
 //                  print_r($data_atual);
 //                echo "***********";
@@ -182,7 +188,6 @@ class Guia extends BaseController {
 //                echo "***********";
                 //verificando se a data atual for maior que a data do (contrato+dias do plano) se for maior vai criar um novo contrato.
                 if ($data_atual > $data_tot_contrato && count($parcelas_pendente) == 0 && ($contrato_ativo[0]->nao_renovar == 'f' || $contrato_ativo[0]->nao_renovar == null)) {
-
                     if ($data['permissao'][0]->renovar_contrato_automatico == 't') {
                         $contrato_ativo = $this->guia->gravarnovocontratoanual($paciente_contrato_id);
                     } else {
@@ -190,7 +195,11 @@ class Guia extends BaseController {
                     }
                 }
             }
+                            
         }
+        
+//       
+//        die;
 //       
         $data['titular'] = $this->guia->listartitular($paciente_id);
 //      var_dump($data['titular'] ); die;
@@ -385,31 +394,34 @@ class Guia extends BaseController {
     function relatorioinadimplentes() {
 //        $data['empresa'] = $this->guia->listarempresas();
         $data['bairros'] = $this->paciente->listarbairros();
-
+        
+        $data['forma_rendimento'] = $this->paciente->listarformapagamento();
+        $data['planos'] = $this->guia->listarplanos();
+                            
 
         $this->loadView('ambulatorio/relatorioinadimplentes', $data);
     }
 
     function gerarelatorioinadimplentes() {
-        $this->load->plugin('mpdf');
+        $this->load->plugin('mpdf'); 
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
         $data['ordenar'] = $_POST['ordenar'];
         $data['parcelas'] = $_POST['parcelas'];
         
-//        echo "<pre>";
-//        print_r($data['relatorio']);
-//        die;
-
+     
+        if ($_POST['forma_pagamento'] != "") {
+           $data['forma']  = $this->paciente->listarformaredimento($_POST['forma_pagamento']);  
+        }else{
+            $data['forma'] = Array();
+        }  
         if ($_POST['gerar'] == "pdf") {
 
             $filename = "relatorio.pdf";
             $cabecalho = "";
-            $rodape = "";
-
-            $html = $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data, true);
-
+            $rodape = ""; 
+            $html = $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data, true); 
             pdf($html, $filename, $cabecalho, $rodape);
         }
 
@@ -433,14 +445,45 @@ class Guia extends BaseController {
 
     function relatorioadimplentes() {
         $data['bairros'] = $this->paciente->listarbairros();
+        $data['planos'] = $this->guia->listarplanos();
+        $data['forma_rendimento'] = $this->paciente->listarformapagamento();                            
         $this->loadView('ambulatorio/relatorioadimplentes', $data);
     }
 
     function gerarelatorioadimplentes() {
+        $this->load->plugin('mpdf');
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
-        $data['relatorio'] = $this->guia->relatorioadimplentes();
+        $data['relatorio'] = $this->guia->relatorioadimplentes(); 
+        $data['ordenar'] = $_POST['ordenar']; 
+        
+        if ($_POST['forma_pagamento'] != "") {
+           $data['forma']  = $this->paciente->listarformaredimento($_POST['forma_pagamento']);  
+        }else{
+            $data['forma'] = Array();
+        }  
+        
+        if ($_POST['gerar'] == "pdf") { 
+            $filename = "relatorio.pdf";
+            $cabecalho = "";
+            $rodape = ""; 
+            $html = $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data, true); 
+            pdf($html, $filename, $cabecalho, $rodape);
+        }
 
+        if ($_POST['gerar'] == "planilha") { 
+            $nome_arquivo = "relatorio";
+            $html = $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data, true); 
+            $filename = "Relatorio ";
+            // Configurações header para forçar o download
+            header("Content-type: application/x-msexcel; charset=utf-8");
+            header("Content-Disposition: attachment; filename=\"{$filename}\"");
+            header("Content-Description: PHP Generated Data");
+            // Envia o conteúdo do arquivo
+            echo $html;
+            exit;
+        }
+        
         $this->load->View('ambulatorio/impressaorelatorioadimplentes', $data);
     }
 
@@ -4049,6 +4092,13 @@ class Guia extends BaseController {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicovoptante();
+                            
+//        echo "<pre>";
+//        
+//        print_r($relatorio);
+//        die;
+        
+        
         $origem_ind = "./upload/SICOVoptante";
         if ($_POST['apagar'] == 1) {
             delete_files($origem_ind);
@@ -4082,6 +4132,7 @@ class Guia extends BaseController {
         $contador = 0;
         $body_E_con = '';
         $valor_total = 0;
+        $num_sequencial = 01;
         foreach ($relatorio as $item) {
             if (strlen($item->cpf) > 11) {
                 $tipo_iden = 1;
@@ -4096,33 +4147,36 @@ class Guia extends BaseController {
             $E = array();
             $E[0] = ''; // Iniciando o Array;
             $E[1] = 'E'; // string(01); Código do registro = "E"
-            $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa
-            $E[3] = substr($item->conta_agencia, 0, 4); // string(04); Agência para débito/crédito
+            $E[2] = $this->utilitario->preencherDireita($item->paciente_id, 25, ' '); // string(25);  Identificação do cliente na Empresa          
+            $E[3] = $this->utilitario->preencherEsquerda(substr($item->conta_agencia, 0, 4), 4, '0'); // string(04); Agência para débito/crédito
             $conta = $item->codigo_operacao . $item->conta_numero . $item->conta_digito . "  "; // Variavel temporaria pra guardar a conta concatenada; no fim tem dois espaços em branco.
             $E[4] = $this->utilitario->preencherEsquerda($conta, 14, '0'); // string(14); Identificação do cliente no Banco
             $E[5] = $this->utilitario->preencherDireita('', 8, ' '); // string(08); Data do vencimento
             $E[6] = $this->utilitario->preencherDireita('', 15, ' '); // string(15); Valor do débito
             $E[7] = $this->utilitario->preencherDireita('', 2, ' '); // string(02); Código da moeda  Real = 03
             $E[8] = $this->utilitario->preencherDireita('', 60, ' '); // string(60);  String pra usar a vontade limitando o tamanho, essa informação é só uma observação que apenas retorna para a clinica. O banco não utiliza
-            $E[9] = $this->utilitario->preencherDireita('', 1, ' '); // string(01); Tipo de identificação: 1 pra CNPJ |  2 pra CPF
-            $E[10] = $this->utilitario->preencherDireita($cpf_cnpj, 15, ' ');  // string(15); // CPF ou CNPJ
-            $E[11] = $this->utilitario->preencherDireita('', 4, ' '); // string(04); Reservado para o futuro. Deixar em branco;
-            $E[12] = '5'; // string(01); Tipo de movimento. No nosso caso: Débito normal = 0
+            $E[9] = $this->utilitario->preencherEsquerda($item->paciente_id, 6, '0'); // string(06) Número do Agendamento Cliente
+            $E[10] = $this->utilitario->preencherDireita('', 8, ' '); //string(08) Reservado para o futuro ("filler")
+            $E[11] = $this->utilitario->preencherEsquerda($num_sequencial, 6, '0'); //string(06) Número Sequencial do Registro
+            $num_sequencial++;
+            $E[12] = '5'; // string(01); Tipo de movimento. No nosso caso: Cadastro de OPTANTES = 5 
             $body_con = implode($E); // Corpo concatenado
             $body_E[] = $body_con; // Adiciona no array. (interessante essa variável pra verificar possiveis problemas nas linhas)
             $body_E_con .= $body_con . "\n"; // Corpo concatenado
             $contador++;
         }
+                            
         $valor_total = number_format($valor_total, 2, '', '');
         $Z = array(); // Footer chamado de Trailler
         $Z[0] = ''; // Iniciando indice zero;
         $Z[1] = 'Z'; // ; string(1) Indicação do que é a linha;
         $contador = $contador + 2; // Tem que contar o Header e o Footer
         $Z[2] = $this->utilitario->preencherEsquerda($contador, 6, '0'); // ;
-        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;
-        $Z[4] = $this->utilitario->preencherEsquerda("000", 17, '0'); // ;
-        $Z[5] = $this->utilitario->preencherDireita("", 109, ' ');
-        ; // ;
+        $Z[3] = $this->utilitario->preencherEsquerda($valor_total, 17, '0'); // ;                         
+        $Z[4] = $this->utilitario->preencherDireita("", 119, ' ');
+        $Z[5] = $this->utilitario->preencherEsquerda($num_sequencial, 6, '0');
+        $Z[6] = $this->utilitario->preencherEsquerda("", 1, '0');
+                            
         $footer_Z = implode($Z);
         $string_geral = '';
         $string_geral = $header_A . "\n" . $body_E_con . $footer_Z;
@@ -6206,13 +6260,25 @@ table tr:hover  #achadoERRO{
          
         $data['empresa'] = $this->guia->listarempresa($empresa_id);                   
         $data['pagamentos'] = $this->paciente->listarparcelaspagas($contrato_id); 
-        $data['paciente'] = $this->paciente->listardados($paciente_id);
-          
-        
-        $this->load->View('ambulatorio/impressaorecibocontrato', $data);
-        
-        
+        $data['paciente'] = $this->paciente->listardados($paciente_id); 
+        $this->load->View('ambulatorio/impressaorecibocontrato', $data); 
     }
+    
+    function relatorioprevisaorecebimento() { 
+        $this->loadView('ambulatorio/relatorioprevisaorecebimento');
+    }
+    
+    
+      function gerarelatorioprevisaorecebimento() { 
+        $empresa_id =  $this->session->userdata('empresa_id'); 
+        $data['empresa'] = $this->guia->listarempresa($empresa_id); 
+        $data['relatorio'] = $this->guia->relatorioprevisaorecebimento();
+        $data['consultaavulsas'] = $this->guia->recebimentoconsultaavulsa();
+        $data['consultacoop'] = $this->guia->recebimentoconsultacoop();
+        $this->load->View('ambulatorio/impressaorelatorioprevisaorecebimento', $data);
+    }
+    
+    
     
 }
 
