@@ -198,6 +198,77 @@ class Autocomplete extends Controller {
 //        die;
     }
 
+    function mensalidadesAPI() {
+        header('Access-Control-Allow-Origin: *');
+
+        $paciente_antigo_id = $_GET['paciente_antigo_id'];
+        $cpf = $_GET['cpf'];
+        if ($paciente_antigo_id > 0) {
+            $paciente_informacoes = $this->guia->listarpacientepacienteidantigo($paciente_antigo_id);
+        } else {
+            $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+        }
+        $pagamento = array(0, '');
+        if(count($paciente_informacoes) > 0){
+            $paciente_id = $paciente_informacoes[0]->paciente_id;
+            if ($paciente_informacoes[0]->situacao == 'Dependente') {
+                $dependente = true;
+            } else {
+                $dependente = false;
+            }
+    
+            if ($dependente) {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+                $paciente_titular_id = $retorno[0]->paciente_id;
+    
+            } else {
+                $paciente_titular_id = $paciente_id;
+            }
+            $pagamento = $this->guia->listarparcelaspacienteAPI($paciente_titular_id);
+        }else{
+            $pagamento = array(-1, 'Cliente não encontrado');
+        }
+        echo json_encode($pagamento);
+    }
+    
+
+    function impressaoCarteiraWeb(){
+        $paciente_id = $_GET['paciente_id'];
+        $paciente_antigo_id = $_GET['paciente_id'];
+        $cpf = $_GET['cpf'];
+        $empresa_id = 1;
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $data['permissao'] = $this->empresa_m->listarpermissoesWeb();
+        // var_dump($data['permissao']); die;
+
+        if ($data['permissao'][0]->carteira_padao_2 == 't') {
+            $data['paciente'] = $this->guia->listarpacientecarteirapadrao2($paciente_id);
+        } else {
+            $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
+        }
+        // var_dump($data['contrato']); die;
+        if ($paciente_antigo_id > 0) {
+            $paciente_informacoes = $this->guia->listarpacientepacienteidantigo($paciente_antigo_id);
+        } else {
+            $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+        }
+        if ($paciente_informacoes[0]->situacao == 'Dependente') {
+            $dependente = true;
+        } else {
+            $dependente = false;
+        }
+        if ($dependente) {
+            $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+            $data['titular_id'] = $retorno[0]->paciente_id;
+        } else {
+            $data['titular_id'] = $paciente_id;
+            $paciente_dependente_id = null;
+        }
+        $html = $this->load->View('ambulatorio/impressaoficharonaldoWeb', $data, true);
+        echo $html;
+        // echo json_encode($html);
+    }
+
     function verificarcarenciaweb() {
         header('Access-Control-Allow-Origin: *');
 

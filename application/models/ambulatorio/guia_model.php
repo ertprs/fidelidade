@@ -23,6 +23,26 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function listarparcelaspacienteAPI($paciente_contrato_id) {
+
+        $this->db->select('
+                            pcp.situacao as pagamento_pendente,
+                            pcp.data,
+                            pcp.valor,
+                            pcpi.url as link_boleto');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas_iugu pcpi', 'pcpi.paciente_contrato_parcelas_id = pcp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->where("pc.paciente_id", $paciente_contrato_id);
+        // $this->db->where("pcp.ativo", 'f');
+        $this->db->where("pc.ativo", 't');
+        $this->db->where("pcp.excluido", 'f');
+        $this->db->orderby('pcp.data DESC');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarpacientecpf($cpf = NULL, $paciente_id = NULL, $nome = NULL) {
         try {
             if ($cpf == "" && $paciente_id == "" && $nome == "") {

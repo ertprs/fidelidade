@@ -7,7 +7,7 @@ class login_model extends Model {
         parent::Model();
     }
 
-    function autenticarpacienteweb($usuario, $senha) {
+function autenticarpacienteweb($usuario, $senha) {
         $horario = date("Y-m-d");
 
         $this->db->select('pc.paciente_contrato_id, p.nome, p.cpf');
