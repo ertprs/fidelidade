@@ -8664,6 +8664,10 @@ ORDER BY ae.agenda_exames_id)";
                             m.nome as municipio,
                             e.bairro,
                             e.impressao_tipo,
+                            e.usuario_epharma,
+                            e.senha_epharma,
+                            e.url_epharma,
+                            e.codigo_plano,
                             e.client_id,
                             e.client_secret');
         $this->db->from('tb_empresa e');
