@@ -7,32 +7,44 @@ $percentualPagas = 0;
 $percentualReceber = 0;
 $percentualNpagas = 0;
 $total = 0;
- 
+
+$PrecoPagas = 0;
+$PrecoReceber = 0;
+$PrecoNpagas = 0;
+
+
 foreach($relatorio as $item){
     $total++;
     if ($item->paga == 'f') {
         $ParcelasPagas++;  
+        $PrecoPagas += $item->valor;
     }elseif(strtotime($item->data) > strtotime(date('Y-m-d'))){   
         $ParcelasReceber++; 
+        $PrecoReceber += $item->valor;
     }elseif($item->paga == 't'){
         $ParcelasNpagas++;
+        $PrecoNpagas += $item->valor;
     }  
 }
 foreach($consultaavulsas as $item){
     $total++;
     if ($item->ativo == 'f') {
         $ParcelasPagas++;  
+        $PrecoPagas += $item->valor;
     }elseif(strtotime($item->data) > strtotime(date('Y-m-d'))){   
         $ParcelasReceber++; 
+        $PrecoReceber += $item->valor;
     }elseif($item->ativo == 't'){
         $ParcelasNpagas++;
-       
+        $PrecoNpagas += $item->valor; 
     }  
 }
+        
 
-
-
-
+//echo "<pre>";
+//print_r($relatorio);
+//
+//die;
 foreach($consultacoop as $item){
     $total++;
     if ($item->ativo == 'f') {
@@ -59,6 +71,11 @@ $percentualNpagas = ($ParcelasNpagas*100)/$total;
 <input type="hidden" id="Ppagas" value="<?= $percentualReceber; ?>">
 <input type="hidden" id="Preceber" value="<?= $percentualReceber; ?>">
 <input type="hidden" id="Pnaopagas" value="<?= $ParcelasNpagas; ?>">
+ 
+<input type="hidden" id="Precopagas" value="<?= $PrecoPagas  ?>">
+<input type="hidden" id="Precoreceber" value="<?= $PrecoReceber; ?>">
+<input type="hidden" id="Preconaopagas" value="<?= $PrecoNpagas; ?>">
+ 
 
 <style>
     td,p{
@@ -107,7 +124,7 @@ switch ($_POST['mes']) {
         <td><div id="columnchart_values"  ></div>
       </td>
       <td>
-         <table border=1 cellspacing=0 cellpadding=2>
+  <table border=1 cellspacing=0 cellpadding=2>
             <tr>
                 <td>Pagas</td>
                 <td>Não pagas</td>
@@ -126,23 +143,27 @@ switch ($_POST['mes']) {
 </table> 
       </td>
     </tr> 
+    <tr>
+        <td><div id="columnchart_values2"  ></div></td>
+    </tr>
+   
 </table>
 
 
   <script type="text/javascript">
     google.charts.load("current", {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(precos);
 //    
    
-
-    
-    function drawChart() {
+ function drawChart() {
          var pagas = parseInt($("#pagas").val());
          var receber =   parseInt($("#receber").val());
          var naopagas =   parseInt($("#naopagas").val());
-          
+         
+           
       var data = google.visualization.arrayToDataTable([
-        ["Element", "Quantidade", { role: "style" } ],
+        ["Element", "Quantidade" , { role: "style" } ],
         ["Pagas",pagas, 'color: #27ae60' ],
         ["Não pagas ",naopagas, 'color:#bdc3c7' ],
         ["A receber",receber , 'color:#dfe4ea' ]
@@ -166,6 +187,52 @@ switch ($_POST['mes']) {
       };
       var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
       chart.draw(view, options);
+  }
+    
+    function precos() {
+         var Precopagas = parseFloat($("#Precopagas").val()); 
+         var Precoreceber =   parseFloat($("#Precoreceber").val());
+         var Preconaopagas =   parseFloat($("#Preconaopagas").val());
+         
+           
+      var data = google.visualization.arrayToDataTable([
+        ["Element", "Preço" , { role: "style" } ],
+        ["Pagas",Precopagas, 'color: #27ae60' ],
+        ["Não pagas ",Preconaopagas, 'color:#bdc3c7' ],
+        ["A receber",Precoreceber , 'color:#dfe4ea' ]
+ 
+      ]);
+     
+ 
+
+    var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]); 
+      var options = { 
+        title: "Preços",
+        width: 800,
+        height: 600,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" }, 
+        pieHole: 0.4,
+      };
+      
+     var formatter = new google.visualization.NumberFormat({
+            decimalSymbol: ',',
+            groupingSymbol: '.',
+            negativeColor: 'red',
+            negativeParens: true,
+            prefix: 'R$ '
+      });
+      
+      formatter.format(data, 1);
+      
+      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values2"));
+      chart.draw(view, options, formatter);
   }
   </script>
 

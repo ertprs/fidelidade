@@ -242,11 +242,14 @@ if (count($exames) > 0) {
                              <?php if (@$paciente[0]->situacao == "Dependente" && @$titular['0']->paciente_id != "") {
                                 ?>
                                      
-                                    <div class="bt_link_new">
+                            <div class="bt_link_new" style="width: 10px;">
                                         <a href="<?= base_url() . "ambulatorio/guia/pesquisar/" . @$titular['0']->paciente_id; ?>" target="_blank">
                                             Contrato
                                         </a>
                                     </div>
+                                    <div class="bt_link">
+                                        <a href="<?= base_url() ?>ambulatorio/guia/excluir/<?= $paciente['0']->paciente_id ?>/<?= $titular['0']->paciente_contrato_id ?>">Excluir </a>
+                                    </div> 
                              
                             <?php } ?>
                             </td>
