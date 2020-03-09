@@ -76,14 +76,6 @@ class empresa_model extends Model {
         return $return->result();
     }
 
-    function listarpermissoesWeb() {
-        $this->db->select('');
-        $this->db->from('tb_empresa');
-        // $this->db->where('empresa_id');
-        $this->db->orderby('empresa_id');
-        return $this->db->get()->result();
-    }
-
     function excluir($exame_empresa_id) {
 
         $horario = date("Y-m-d H:i:s");
@@ -310,10 +302,6 @@ class empresa_model extends Model {
                                f.renovar_contrato_automatico,
                                f.carteira_padao_3,
                                f.carteira_padao_4,
-                               f.usuario_epharma,
-                               f.senha_epharma,
-                               f.url_epharma,
-                               f.codigo_plano,
                                f.client_id,
                                f.client_secret,
                                f.carteira_padao_5,
@@ -334,11 +322,7 @@ class empresa_model extends Model {
             $this->_tipo_carencia = $return[0]->tipo_carencia;
             $this->_titular_flag = $return[0]->titular_flag;
             $this->_telefone = $return[0]->telefone;
-            $this->_usuario_epharma = $return[0]->usuario_epharma;
-            $this->_senha_epharma = $return[0]->senha_epharma;
-            $this->_url_epharma = $return[0]->url_epharma;
             $this->_cep = $return[0]->cep;
-            $this->_codigo_plano = $return[0]->codigo_plano;
             $this->_logradouro = $return[0]->logradouro;
             $this->_numero = $return[0]->numero;
             $this->_bairro = $return[0]->bairro;
@@ -348,7 +332,8 @@ class empresa_model extends Model {
             $this->_nome = $return[0]->nome;
             $this->_email = $return[0]->email;
             $this->_estado = $return[0]->estado;
-	        $this->_botoes_app = $return[0]->botoes_app;
+$this->_botoes_app = $return[0]->botoes_app;
+            $this->_cep = $return[0]->cep;
             $this->_cnes = $return[0]->cnes;
             $this->_banco = $return[0]->banco;
             $this->_cadastro = $return[0]->cadastro;

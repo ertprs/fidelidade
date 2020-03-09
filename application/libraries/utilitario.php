@@ -18,6 +18,11 @@ class Utilitario {
         return $d && $d->format($format) == $date;
     }
 
+    function onlyNumbers($string){
+        $string = preg_replace('/[^0-9]/', '', (string) $string);
+        return $string;
+    }
+
     function retornarNomeMes($mes_number) {
         if ($mes_number == '01') {
             $mes = 'Janeiro';

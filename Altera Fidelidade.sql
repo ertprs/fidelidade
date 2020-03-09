@@ -561,7 +561,10 @@ ALTER TABLE ponto.tb_empresa ADD COLUMN cadastroempresa boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN cadastroempresa SET DEFAULT false;
 
 
+ALTER TABLE ponto.tb_empresa ADD COLUMN usuario_epharma text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN senha_epharma text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN url_epharma text;
 
+ALTER TABLE ponto.tb_empresa ADD COLUMN botoes_app text;
 
-
-
+ALTER TABLE ponto.tb_empresa ADD COLUMN codigo_plano text;
