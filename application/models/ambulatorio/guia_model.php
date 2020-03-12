@@ -554,7 +554,8 @@ class guia_model extends Model {
 
         $this->db->select('p.paciente_id,
                             pc.paciente_contrato_id,
-                            p.nome');
+                            p.nome,
+                            pcd.paciente_contrato_dependente_id');
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcd.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
@@ -5141,8 +5142,7 @@ ORDER BY p.nome";
 
         if ($this->session->userdata('cadastro') == 2) {
             
-        } else {
-
+        } else { 
             if ($total > $retorno[0]->parcelas) {
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor - '$valor'
@@ -11827,6 +11827,27 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->where('ativo','t');
         return $this->db->get()->result();
         
+    }
+    
+    
+    
+    
+    
+    function excluircontratodependente($paciente_id, $paciente_contrato_dependente_id) {
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+    
+        $this->db->set('ativo', 'f');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->where('paciente_id', $paciente_id);
+        $this->db->where('ativo', 't');
+        $this->db->update('tb_paciente_contrato_dependente');
+        $erro = $this->db->_error_message();
+        if (trim($erro) != "") // erro de banco
+            return false;
+        else
+            return true;
     }
     
 }

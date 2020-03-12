@@ -6278,7 +6278,15 @@ table tr:hover  #achadoERRO{
         $this->load->View('ambulatorio/impressaorelatorioprevisaorecebimento', $data);
     }
     
-    
+    function excluircontratodependente($paciente_id, $paciente_contrato_dependente_id) {
+        if ($this->guia->excluircontratodependente($paciente_id, $paciente_contrato_dependente_id)) {
+            $mensagem = 'Sucesso ao excluir a dependente';
+        } else {
+            $mensagem = 'Erro ao excluir a dependente. Opera&ccedil;&atilde;o cancelada.';
+        } 
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
     
 }
 
