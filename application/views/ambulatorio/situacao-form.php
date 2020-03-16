@@ -6,7 +6,8 @@
         <h3 class="singular"><a href="#">Cadastro de Situação</a></h3>
 <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
         <div>
             <form name="form_situacao" id="form_situacao" action="<?= base_url() ?>ambulatorio/saudeocupacional/gravarsituacao" method="post">

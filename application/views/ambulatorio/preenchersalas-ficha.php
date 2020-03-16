@@ -45,7 +45,8 @@ if (@$listarmedico[0]->hora_manha > 0) {
     <?php
     $this->load->library('utilitario');
 //    var_dump($this->session->flashdata('message')); die;
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
     <div>
         <form name="holter_laudo" id="holter_laudo" action="<?= base_url() ?>ambulatorio/laudo/gravarhora_agendamento/<?= @$ambulatorio_laudo_id ?>" method="post">

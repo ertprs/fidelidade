@@ -710,6 +710,11 @@ WITH (
 ALTER TABLE ponto.tb_empresa_cadastro
   OWNER TO postgres;
 
+
+INSERT INTO ponto.tb_perfil(perfil_id, nome, ativo) VALUES (7, 'INDICACAO', TRUE);
+INSERT INTO ponto.tb_perfil(perfil_id, nome, ativo) VALUES (8, 'VENDEDOR EXTERNO', TRUE);
+INSERT INTO ponto.tb_perfil(perfil_id, nome, ativo) VALUES (9, 'VENDEDOR EXTERNO PJ', TRUE);
+
 CREATE TABLE ponto.tb_posts_blog
 (
   posts_blog_id serial NOT NULL,

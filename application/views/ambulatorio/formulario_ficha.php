@@ -38,7 +38,8 @@
     ?>
     <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
     <div >
         <form name="form_laudo" id="form_laudo" action="<?= base_url() ?>ambulatorio/laudo/gravarformulario/<?= $ambulatorio_laudo_id ?>" method="post">

@@ -330,7 +330,7 @@
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;"><font size="-2">
 
                                     <?
-                                    if (($perfil_id == 4) || $perfil_id == 1) { 
+                                    if (($perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) || $perfil_id == 1) { 
                                         if($item->encaixe == 't') { ?>
                                             <div class="bt_link">
                                             <a onclick="javascript: return confirm('Deseja realmente cancelar o encaixe?\n\nObs: Irá excluir também o horário');" href="<?= base_url() ?>ambulatorio/exametemp/examecancelamentoencaixe/<?= $item->agenda_exames_id; ?>">

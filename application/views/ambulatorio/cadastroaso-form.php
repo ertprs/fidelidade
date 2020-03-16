@@ -10,7 +10,8 @@ if (count(@$informacao_aso[0]->impressao_aso) > 0) {
 $this->load->library('utilitario');
 //    echo'<pre>';
 //    var_dump($config); die;
-Utilitario::pmf_mensagem($this->session->flashdata('message'));
+$utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
 ?>
 <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
     <h3>Cadastro ASO</h3>
@@ -212,7 +213,7 @@ Utilitario::pmf_mensagem($this->session->flashdata('message'));
             </div>
 
         </fieldset>
-        <? if ($perfil_id == 4) { ?>
+        <? if ($perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) { ?>
             <fieldset>
                 <legend>Aptidões</legend>
                 <div>

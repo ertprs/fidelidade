@@ -718,13 +718,14 @@ class paciente_model extends BaseModel {
     function listarvendedor() {
         $perfil_id = $this->session->userdata('perfil_id');
         $operador_id = $this->session->userdata('operador_id');
+        //$vendedores = array(4, 8, 9);
         if ($perfil_id == 6) {
             $this->db->select('o.operador_id, o.nome');
             $this->db->from('tb_operador o');
             $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = o.operador_id', 'left');
             $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
             $this->db->orderby('nome');
-            $this->db->where('o.perfil_id', 4);
+            $this->db->where('o.perfil_id', 7);
             $this->db->where('o.ativo', 't');
             $this->db->where('go.ativo', 't');
             $this->db->where('ro.ativo', 't');
@@ -737,7 +738,7 @@ class paciente_model extends BaseModel {
             $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = o.operador_id', 'left');
             // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
             $this->db->orderby('nome');
-            $this->db->where('o.perfil_id', 4);
+            $this->db->where('o.perfil_id', 7);
             $this->db->where('o.ativo', 't');
             $this->db->where('go.ativo', 't');
             // $this->db->where('ro.ativo', 't');
@@ -747,11 +748,10 @@ class paciente_model extends BaseModel {
             $this->db->select('operador_id, nome');
             $this->db->from('tb_operador');
             $this->db->orderby('nome');
-            $this->db->where('perfil_id', 4);
+            $this->db->where('perfil_id',7);
             $this->db->where('ativo', 't');
             $return = $this->db->get();
         }
-
 
         return $return->result();
     }
