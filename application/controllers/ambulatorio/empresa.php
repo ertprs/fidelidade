@@ -33,6 +33,20 @@ class Empresa extends BaseController {
 //            $this->carregarView($data);
     }
 
+    function listarpesquisaSatisfacao() {
+//        $data['guia_id'] = $this->guia->verificaodeclaracao();
+//        $data['impressao'] = $this->empresa->listarconfiguracaoimpressao();
+//        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/pesquisasatisfacao-lista');
+    }
+
+    function solicitacaoagendamento() {
+//        $data['guia_id'] = $this->guia->verificaodeclaracao();
+//        $data['impressao'] = $this->empresa->listarconfiguracaoimpressao();
+//        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/solicitacaoagendamento-lista');
+    }
+
     function carregarempresa($exame_empresa_id) {
         $obj_empresa = new empresa_model($exame_empresa_id);
         $data['obj'] = $obj_empresa;
@@ -49,6 +63,70 @@ class Empresa extends BaseController {
 
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/empresa");
+    }
+
+    function listarpostsblog() {
+    //        $data['guia_id'] = $this->guia->verificaodeclaracao();
+    //        $data['impressao'] = $this->empresa->listarconfiguracaoimpressao();
+    //        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/configurarpostsblog-lista');
+    }
+
+    function carregarpostsblog($posts_blog_id) {
+        $data['posts_blog_id'] = $posts_blog_id;
+        $data['post'] = $this->empresa->carregarlistarpostsblog($posts_blog_id);
+        $data['planos'] = $this->empresa->listarplanos();
+//        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/configurarpostsblog-form', $data);
+    }
+
+    function gravarpostsblog() {
+    //        var_dump($_POST); die;
+        $posts_blog_id = $_POST['posts_blog_id'];
+        if ($this->empresa->gravarpostsblog($posts_blog_id)) {
+            $mensagem = 'Sucesso ao gravar informativo';
+        } else {
+            $mensagem = 'Erro ao gravar informativo. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/listarpostsblog");
+    }
+
+    function excluirpostsblog($posts_blog_id) {
+        //        var_dump($_POST); die;
+        if ($this->empresa->excluirpostsblog($posts_blog_id)) {
+            $mensagem = 'Sucesso ao excluir post do blog';
+        } else {
+            $mensagem = 'Erro ao gravar post do blog. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/listarpostsblog");
+    }
+
+    function confirmarsolicitacaoagendamento($solicitacao_id) {
+//        var_dump($_POST); die;
+        if ($this->empresa->confirmarsolicitacaoagendamento($solicitacao_id)) {
+            $mensagem = 'Sucesso ao confirmar agendamento';
+        } else {
+            $mensagem = 'Erro ao gravar post do blog. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/solicitacaoagendamento");
+    }
+
+    function excluirsolicitacaoagendamento($solicitacao_id) {
+//        var_dump($_POST); die;
+        if ($this->empresa->excluirsolicitacaoagendamento($solicitacao_id)) {
+            $mensagem = 'Sucesso ao excluir agendamento';
+        } else {
+            $mensagem = 'Erro ao gravar post do blog. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/solicitacaoagendamento");
     }
 
     function gravar() {
