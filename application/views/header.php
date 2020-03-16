@@ -181,7 +181,9 @@ $data['permissao'] = $this->db->get()->result();
 
     <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    // var_dump($this->session->flashdata('message'));die;
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
 
 
@@ -321,6 +323,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/listarautorizacao">Tela de Autorização</a></span></li>                                    
                                         <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
+                                        <li><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/solicitacaoagendamento">Solicitação de Agendamento</a></span></li>
                                     <? } ?>
                                 </ul>
                             </li>
@@ -419,6 +422,11 @@ $data['permissao'] = $this->db->get()->result();
                                         <ul><span class="file"><a href="<?= base_url() ?>cadastros/formapagamento/listarformarendimento">Manter Forma Pagamento</a></span></ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>cadastros/parceiro">Manter Parceiros</a></span></ul>
                                     <? } ?>
+                                </li> 
+                                <li><span class="folder">Aplicativo</span>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/listarpostsblog">Informativos</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/listarpesquisaSatisfacao">Pesquisa Satisfação</a></span></ul>
+                                    
                                 </li> 
                                 <li><span class="folder">Administrativas</span>
                                     <? if ($perfil_id == 1) { ?>

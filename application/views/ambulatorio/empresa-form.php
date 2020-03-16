@@ -220,11 +220,12 @@
                             <option value="p_risco_cirurgico" <?= (in_array('p_risco_cirurgico', $botoes_app)) ? 'selected' : ''; ?>>Risco Cirurgico</option>
                             <option value="p_carterinha_virtual" <?= (in_array('p_carterinha_virtual', $botoes_app)) ? 'selected' : ''; ?>>Carterinha Virtual</option>
                             <option value="p_mensalidades" <?= (in_array('p_mensalidades', $botoes_app)) ? 'selected' : ''; ?>>Mensalidades</option>
-                            <option value="p_dicas_saude" <?= (in_array('p_dicas_saude', $botoes_app)) ? 'selected' : ''; ?>>Dicas de Saúde (Blog)</option>
+                            <option value="p_dicas_saude" <?= (in_array('p_dicas_saude', $botoes_app)) ? 'selected' : ''; ?>>Informativos</option>
                             <option value="p_como_chegar" <?= (in_array('p_como_chegar', $botoes_app)) ? 'selected' : ''; ?>>Como chegar</option>
                             <option value="p_convenios" <?= (in_array('p_convenios', $botoes_app)) ? 'selected' : ''; ?>>Convênios</option>
                             <option value="p_atendimento" <?= (in_array('p_atendimento', $botoes_app)) ? 'selected' : ''; ?>>Atendimento</option>
                             <option value="p_pesquisa_de_satisfacao" <?= (in_array('p_pesquisa_de_satisfacao', $botoes_app)) ? 'selected' : ''; ?>>Pesquisa de satisfação</option>
+                            <option value="p_solicitar_consulta" <?= (in_array('p_solicitar_consulta', $botoes_app)) ? 'selected' : ''; ?>>Solicitar Consulta</option>
                             
                         </select>
                     </dd>

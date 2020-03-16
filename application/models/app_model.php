@@ -236,54 +236,6 @@ class app_model extends Model {
 
     }
 
-    function registrarDispositivo($medico_id, $hash){
-        $horario = date("Y-m-d H:i:s");
-        if(count($this->buscarHashDispositivoHash($medico_id, $hash)) > 0){
-            return false;
-        }
-        if($hash != '' && $medico_id != ''){
-            $this->db->set('medico_id', $medico_id);
-            $this->db->set('hash', $hash);
-            $this->db->set('data_cadastro', $horario);
-            $this->db->set('operador_cadastro', $medico_id);
-            $this->db->insert('tb_registro_dispositivo');
-            return array(true);
-        }else{
-            return false;
-        }
-        
-        
-    }
-
-    function buscarHashDispositivo($medico_id, $tipo, $grupo = ''){
-        $this->db->select('rd.hash, rd.medico_id');
-        $this->db->from('tb_registro_dispositivo rd');
-        $this->db->join('tb_operador o', 'o.operador_id = rd.medico_id', 'left');
-        if($grupo == '' && $medico_id > 0){
-            if($tipo == 1){
-                $this->db->where('rd.medico_id ', $medico_id);
-            }
-            if($tipo == 0){
-                $this->db->where('rd.medico_id !=', $medico_id);
-            }
-        }else{
-            $this->db->where("position('$grupo' in o.grupo_agenda) > 0");
-            // die;
-        }
-        
-        $return = $this->db->get()->result();
-        return $return;
-    }
-
-    function buscarHashDispositivoHash($medico_id, $hash){
-        $this->db->select('hash');
-        $this->db->from('tb_registro_dispositivo');
-        $this->db->where('medico_id', $medico_id);
-        $this->db->where('hash', $hash);        
-        $return = $this->db->get()->result();
-        return $return;
-    }
-
     function solicitarAjuste($medico_id, $data_ajustada, $hora_inicio, $hora_fim, $medico_solicitado, $grupo_solicitado, $agenda_exames_id){
         $horario = date("Y-m-d H:i:s");
         if($data_ajustada != '' && $medico_id != ''){
@@ -410,6 +362,54 @@ class app_model extends Model {
         return $return->result();
     }
 
+    function registrarDispositivo($medico_id, $hash){
+        $horario = date("Y-m-d H:i:s");
+        if(count($this->buscarHashDispositivoHash($medico_id, $hash)) > 0){
+            return false;
+        }
+        if($hash != '' && $medico_id != ''){
+            $this->db->set('medico_id', $medico_id);
+            $this->db->set('hash', $hash);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $medico_id);
+            $this->db->insert('tb_registro_dispositivo');
+            return array(true);
+        }else{
+            return false;
+        }
+        
+        
+    }
+
+    function buscarHashDispositivo($medico_id, $tipo, $grupo = ''){
+        $this->db->select('rd.hash, rd.medico_id');
+        $this->db->from('tb_registro_dispositivo rd');
+        $this->db->join('tb_operador o', 'o.operador_id = rd.medico_id', 'left');
+        if($grupo == '' && $medico_id > 0){
+            if($tipo == 1){
+                $this->db->where('rd.medico_id ', $medico_id);
+            }
+            if($tipo == 0){
+                $this->db->where('rd.medico_id !=', $medico_id);
+            }
+        }else{
+            $this->db->where("position('$grupo' in o.grupo_agenda) > 0");
+            // die;
+        }
+        
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
+    function buscarHashDispositivoHash($medico_id, $hash){
+        $this->db->select('hash');
+        $this->db->from('tb_registro_dispositivo');
+        $this->db->where('medico_id', $medico_id);
+        $this->db->where('hash', $hash);        
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function listarFlags($empresa_id = null) {
         if ($empresa_id == null) {
             $empresa_id = 1;
@@ -430,11 +430,13 @@ class app_model extends Model {
                             titulo,
                             breve_descricao,
                             thumbnail,
-                            corpo_html
+                            corpo_html,
+                            fp.nome as plano,
                             ');
-        $this->db->from('tb_posts_blog');
-        $this->db->where("ativo", 't');
-        $this->db->orderby('data_cadastro');
+        $this->db->from('tb_posts_blog pb');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pb.plano_id', 'left');
+        $this->db->where("pb.ativo", 't');
+        $this->db->orderby('pb.data_cadastro');
         $return = $this->db->get();
         return $return->result();
     }
@@ -814,17 +816,51 @@ class app_model extends Model {
         $this->db->update('tb_agenda_exames');
         return true;
     }
-    function gravarSolicitarAgendamento($paciente_id, $data, $hora, $procedimento_id){
+
+    function gravarSolicitarAgendamento($paciente_id, $data, $hora, $procedimento_id, $procedimento_text, $convenio_text){
         $horario = date("Y-m-d H:i:s");
 
         $this->db->set('data', $data);
         $this->db->set('hora', $hora);
-        $this->db->set('procedimento_convenio_id', $procedimento_id);
+        if(!$procedimento_id > 0){
+            $this->db->set('procedimento_text', $procedimento_text);
+            $this->db->set('convenio_text', $convenio_text);
+        }else{
+            $this->db->set('procedimento_convenio_id', $procedimento_id);
+        }
+        
         $this->db->set('paciente_id', $paciente_id);
         $this->db->set('data_cadastro', $horario);
         // $this->db->set('operador_atualizacao', $operador_id);
         $this->db->insert('tb_paciente_solicitar_agendamento');
         return true;
+    }
+
+    function listarsolicitacaoagendamento() {
+        $data = date("Y-m-d");
+        $empresa_id = $this->session->userdata('empresa_id');
+        $this->db->select('pp.paciente_solicitar_agendamento_id, 
+                            pp.paciente_id, 
+                            pp.data, 
+                            pp.hora, 
+                            pp.confirmado, 
+                            p.nome as paciente,
+                            c.nome as convenio, 
+                            pt.nome as procedimento, 
+                            pp.convenio_text, 
+                            pp.procedimento_text, 
+                            pp.data_cadastro');
+        $this->db->from('tb_paciente_solicitar_agendamento pp');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pp.paciente_id', 'left');
+        $this->db->join('tb_procedimento_convenio pc', 'pc.procedimento_convenio_id = pp.procedimento_convenio_id', 'left');
+        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id', 'left');
+        $this->db->join('tb_convenio c', 'c.convenio_id = pc.convenio_id', 'left');
+        $this->db->where('pp.ativo', 't');
+        $this->db->orderby("pp.data");
+//        $this->db->where('paciente_id', $paciente_id);
+//        $this->db->where('data_criacao', $data);
+        $return = $this->db->get();
+        return $return->result();
     }
 
     function listarempresapermissoes($empresa_id = null) {

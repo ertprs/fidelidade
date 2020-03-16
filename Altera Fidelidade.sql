@@ -568,3 +568,71 @@ ALTER TABLE ponto.tb_empresa ADD COLUMN url_epharma text;
 ALTER TABLE ponto.tb_empresa ADD COLUMN botoes_app text;
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN codigo_plano text;
+
+CREATE TABLE ponto.tb_posts_blog
+(
+  posts_blog_id serial NOT NULL,
+  titulo character varying(200),
+  breve_descricao text,
+  thumbnail text,
+  corpo_html text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_posts_blog_pkey PRIMARY KEY (posts_blog_id)
+);
+  
+
+CREATE TABLE ponto.tb_paciente_risco_cirurgico
+(
+  paciente_risco_cirurgico_id serial NOT NULL,
+  paciente_id integer,
+  questionario text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_risco_cirurgico_pkey PRIMARY KEY (paciente_risco_cirurgico_id)
+);
+  
+
+CREATE TABLE ponto.tb_paciente_pesquisa_satisfacao
+(
+  paciente_pesquisa_satisfacao_id serial NOT NULL,
+  paciente_id integer,
+  questionario text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_pesquisa_satisfacao_pkey PRIMARY KEY (paciente_pesquisa_satisfacao_id)
+);
+
+
+
+CREATE TABLE ponto.tb_paciente_solicitar_agendamento
+(
+  paciente_solicitar_agendamento_id serial,
+  paciente_id integer,
+  data text,
+  hora text,
+  convenio_id integer,
+  procedimento_convenio_id integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_solicitar_agendamento_pkey PRIMARY KEY (paciente_solicitar_agendamento_id)
+);
+
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN confirmado boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN procedimento_text text;
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN convenio_text text;
+
+ALTER TABLE ponto.tb_posts_blog ADD COLUMN plano_id integer;

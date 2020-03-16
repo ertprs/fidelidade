@@ -15,6 +15,34 @@ class AppPacienteAPI extends Controller {
         echo json_encode('WebService');
     }
 
+    function registrar_dispositivo(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        
+        $medico_id = $_GET['medico_id'];
+        $hash = $_GET['indentificacao_dispositivo'];
+        
+        // echo '<pre>';
+        // var_dump($texto_add); 
+        // die;
+        $resposta = $this->app->registrarDispositivo($medico_id, $hash);    
+
+        $obj = new stdClass();
+        if(count($resposta) > 0 && $resposta != false){
+            $obj->status = 200;
+        }else{
+            $obj->status = 404;
+        }
+        // echo '<pre>';
+        // var_dump($obj); 
+        // die;
+
+        echo json_encode($obj); 
+    }
+
     function login(){
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: content-type");
@@ -389,7 +417,7 @@ class AppPacienteAPI extends Controller {
         $obj = new stdClass();
         if(count($resposta) > 0){
             $obj->status = 200;
-            $obj->data = $resposta;
+            $obj->data = $resposta[0];
         }else{
             $obj->status = 404;
         }
@@ -489,6 +517,55 @@ class AppPacienteAPI extends Controller {
         if(count($resposta) > 0){
             $obj->status = 200;
             $obj->data = $resposta;
+        }else{
+            $obj->status = 404;
+            $obj->data = [];
+        }
+        // echo '<pre>';
+        // var_dump($obj); 
+        // die;
+
+        echo json_encode($obj); 
+    }
+
+    function gravar_solicitar_agendamento(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        
+        $paciente_id = $json_post->paciente_id;
+        $data = $json_post->data;
+        $hora = $json_post->hora;
+        $procedimento_id = $json_post->procedimento_id;
+        $procedimento_text = $json_post->procedimento_text;
+        $convenio_text = $json_post->convenio_text;
+
+        $retorno = $this->app->gravarSolicitarAgendamento($paciente_id, $data, $hora, $procedimento_id, $procedimento_text, $convenio_text);
+        $obj = new stdClass();
+        if($retorno != false){
+            $obj->status = 200;
+        }else{
+            $obj->status = 404;
+        }
+        // echo '<pre>';
+        // var_dump($obj); 
+        // die;
+        echo json_encode($obj); 
+    }
+
+    function listar_solicitar_agenda() {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+
+        $paciente_id = $_GET['paciente_id'];
+       
+        $result = $this->app->listarsolicitacaoagendamento($paciente_id);
+        
+        $obj = new stdClass();
+        if(count($result) > 0){
+            $obj->status = 200;
+            $obj->data = $result;
         }else{
             $obj->status = 404;
             $obj->data = [];
