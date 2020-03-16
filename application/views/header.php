@@ -181,7 +181,8 @@ $data['permissao'] = $this->db->get()->result();
 
     <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
 
 
@@ -268,23 +269,23 @@ $data['permissao'] = $this->db->get()->result();
                         <ul>
                             <li><span class="folder">Cadastro</span>
                                 <ul>
-                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 6 || $perfil_id == 5) { ?>
+                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 6 || $perfil_id == 5) { ?>
                                         <? if ($this->session->userdata('cadastro') == 1) { ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novoalternativo">Novo Titular</a></span></li>
-                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {   ?>        
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {   ?>        
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentealternativo">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                         <? } elseif ($this->session->userdata('cadastro') == 2) { ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
-                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {  ?>        
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {  ?>        
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentecompleto">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                         <? } else {
                                             ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
-                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {  ?>        
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {  ?>        
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
@@ -296,13 +297,13 @@ $data['permissao'] = $this->db->get()->result();
 
                                     <? } ?>
                                         <?php 
-                                      if ($perfil_id == 4 || $perfil_id == 1 ) {  
+                                      if ($perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 1 || $perfil_id == 7) {  
                                        ?>
                                               <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarprecadastros">Pŕe-cadastro</a></span></li>
                                        <?
                                       }
                                         ?>
-                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) { ?>                                      
+                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) { ?>                                      
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioadimplentes">Relatorio Adimplentes</a></span></li>
 

@@ -21,7 +21,8 @@
     <?php
     $this->load->library('utilitario');
 //    var_dump($this->session->flashdata('message')); die;
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
     <div >
         <form name="eco_laudo" id="eco_laudo" action="<?= base_url() ?>ambulatorio/laudo/gravarecocardio/<?= $ambulatorio_laudo_id ?>" method="post">

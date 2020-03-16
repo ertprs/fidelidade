@@ -2,7 +2,8 @@
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
             <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
 
 <script>
