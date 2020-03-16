@@ -252,7 +252,7 @@ if (count($exames) > 0) {
                                     </div> 
                              
                             <?php } 
-                             if (count($titular) > 0 && $titular['0']->paciente_contrato_id == "") {
+                             if (count($titular) > 0 && $titular['0']->paciente_contrato_id == "" && @$paciente[0]->situacao == "Dependente") {
                                 ?>
                               <div class="bt_link">
                                   <a href="<?= base_url() ?>ambulatorio/guia/excluircontratodependente/<?= $paciente['0']->paciente_id ?>/<?= $titular['0']->paciente_contrato_dependente_id ?>" target="_blank">Excluir </a>

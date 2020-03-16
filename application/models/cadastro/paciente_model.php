@@ -3193,8 +3193,7 @@ class paciente_model extends BaseModel {
     function excluirempresacadastro($empresa_id = NULL) {
         $horario = date("Y-m-d H:i:s");
         try {
-
-
+ 
             $this->db->select('pc.paciente_contrato_id,p.paciente_id');
             $this->db->from('tb_paciente p');
             $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
@@ -3216,8 +3215,8 @@ class paciente_model extends BaseModel {
             $this->db->set('operador_atualizacao', $this->session->userdata('operador_id'));
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('ativo', 'f');
-            $this->db->where('empresa_id', $empresa_id);
-            $this->db->update('tb_empresa');
+            $this->db->where('empresa_cadastro_id', $empresa_id);
+            $this->db->update('tb_empresa_cadastro');
 
             return 0;
         } catch (Exception $ex) {
@@ -3262,10 +3261,7 @@ class paciente_model extends BaseModel {
 
     function gravarquantidadefuncionarios() {
 
-
-
-
-
+ 
         $horario = date("Y-m-d H:i:s");
         $ajuste = substr($_POST['checkboxvalor1'], 3, 5);
         $parcelas = substr($_POST['checkboxvalor1'], 0, 2);
