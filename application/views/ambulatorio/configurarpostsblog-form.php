@@ -18,7 +18,7 @@
                 <label>Plano</label>
 
                 <select name="plano_id" id="plano_id" class="size2">
-                    <option value='' >selecione</option>
+                    <option value='' >Todos</option>
                     <?php
                     foreach ($planos as $item) {?>
                         <option value =<?php echo $item->plano_id; ?> <?=($item->plano_id == @$post[0]->plano_id) ? 'selected': ''?>>

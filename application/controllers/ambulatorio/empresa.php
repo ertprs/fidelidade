@@ -16,6 +16,7 @@ class Empresa extends BaseController {
     function Empresa() {
         parent::Controller();
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+        $this->load->model('app_model', 'app');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -88,10 +89,53 @@ class Empresa extends BaseController {
         } else {
             $mensagem = 'Erro ao gravar informativo. Opera&ccedil;&atilde;o cancelada.';
         }
-
+        $this->enviarNotificacao('Um novo informativo foi publicado!', $_POST['plano_id']);
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/empresa/listarpostsblog");
     }
+
+    function enviarNotificacao($mensagem, $plano_id){
+        $resposta = $this->app->buscarHashDispositivoPaciente($plano_id);    
+        $headers = array();
+        // echo '<pre>';
+        // var_dump($resposta); 
+        // die;
+        if(count($resposta) > 0){
+            $hash = '';
+            $hash_array = array();
+            foreach ($resposta as $key => $value) {
+                $hash_array[] = $value->hash;
+            }
+            $hash = json_encode($hash_array);
+            
+            $url = 'https://onesignal.com/api/v1/notifications';
+            $headers[] = 'Content-Type: application/json; charset=utf-8';
+            $headers[] = 'Authorization: Basic ZTVmZTU2NjEtZDU1My00NzQzLTllZTYtMzFkMjJlMmEzZWZi';
+            $ch = curl_init();
+            $body = '{
+                "app_id": "13964cbb-2421-4e58-b040-0ad8f2b2e9fa",
+                "include_player_ids": '. $hash .',
+                "data": {"foo": "bar"},
+                "contents": {"en": "'. "$mensagem" .'"}
+            }';
+            // var_dump($body);
+            // die;
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+
+            $result = curl_exec($ch);
+            // var_dump($result); die;
+            curl_close($ch);
+            
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 
     function excluirpostsblog($posts_blog_id) {
         //        var_dump($_POST); die;

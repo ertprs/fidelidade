@@ -772,3 +772,20 @@ ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN procedimento_text
 ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN convenio_text text;
 
 ALTER TABLE ponto.tb_posts_blog ADD COLUMN plano_id integer;
+
+
+CREATE TABLE ponto.tb_registro_dispositivo
+(
+  registro_dispositivo_id serial NOT NULL,
+  hash text,
+  medico_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  confirmado boolean DEFAULT true,
+  CONSTRAINT tb_registro_dispositivo_pkey PRIMARY KEY (registro_dispositivo_id)
+);
+
+ALTER TABLE ponto.tb_registro_dispositivo ADD COLUMN paciente_id integer;

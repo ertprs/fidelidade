@@ -424,6 +424,49 @@ class app_model extends Model {
         return $return->result();
     }
 
+    function registrarDispositivoPaciente($paciente_id, $hash){
+        $horario = date("Y-m-d H:i:s");
+        if(count($this->buscarHashDispositivoHashPaciente($paciente_id, $hash)) > 0){
+            return false;
+        }
+        if($hash != '' && $paciente_id != ''){
+            $this->db->set('paciente_id', $paciente_id);
+            $this->db->set('hash', $hash);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', 1);
+            $this->db->insert('tb_registro_dispositivo');
+            return array(true);
+        }else{
+            return false;
+        }
+    }
+
+    function buscarHashDispositivoPaciente($plano_id){
+        $this->db->select('rd.hash, rd.paciente_id');
+        $this->db->from('tb_registro_dispositivo rd');
+        $this->db->join('tb_paciente p', 'p.paciente_id = rd.paciente_id', 'left');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+        if($plano_id > 0){
+            $this->db->where('pc.plano_id', $plano_id);
+        }
+        $this->db->where('rd.medico_id is null');
+        $this->db->groupby('rd.hash, rd.paciente_id');
+        
+        $return = $this->db->get()->result();
+
+        var_dump($return); die;
+        return $return;
+    }
+
+    function buscarHashDispositivoHashPaciente($paciente_id, $hash){
+        $this->db->select('hash');
+        $this->db->from('tb_registro_dispositivo');
+        $this->db->where('paciente_id', $paciente_id);
+        $this->db->where('hash', $hash);        
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function listarPostsBlog() {
 
         $this->db->select('posts_blog_id as id,

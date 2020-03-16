@@ -15,33 +15,7 @@ class AppPacienteAPI extends Controller {
         echo json_encode('WebService');
     }
 
-    function registrar_dispositivo(){
-        header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Headers: content-type");
-        $json_post = json_decode(file_get_contents("php://input"));
-        // var_dump($json_post); 
-        // die;
-        
-        $medico_id = $_GET['medico_id'];
-        $hash = $_GET['indentificacao_dispositivo'];
-        
-        // echo '<pre>';
-        // var_dump($texto_add); 
-        // die;
-        $resposta = $this->app->registrarDispositivo($medico_id, $hash);    
-
-        $obj = new stdClass();
-        if(count($resposta) > 0 && $resposta != false){
-            $obj->status = 200;
-        }else{
-            $obj->status = 404;
-        }
-        // echo '<pre>';
-        // var_dump($obj); 
-        // die;
-
-        echo json_encode($obj); 
-    }
+    
 
     function login(){
         header('Access-Control-Allow-Origin: *');
@@ -619,6 +593,76 @@ class AppPacienteAPI extends Controller {
         if(count($resposta) > 0){
             $obj->status = 200;
             $obj->data = $resposta;
+        }else{
+            $obj->status = 404;
+        }
+        // echo '<pre>';
+        // var_dump($obj); 
+        // die;
+
+        echo json_encode($obj); 
+    }
+
+    function enviarNotificacao($mensagem){
+        $resposta = $this->app->buscarHashDispositivoPaciente();    
+        $headers = array();
+        // echo '<pre>';
+        // var_dump($resposta); 
+        // die;
+        if(count($resposta) > 0){
+            $hash = '';
+            $hash_array = array();
+            foreach ($resposta as $key => $value) {
+                $hash_array[] = $value->hash;
+            }
+            $hash = json_encode($hash_array);
+            
+            $url = 'https://onesignal.com/api/v1/notifications';
+            $headers[] = 'Content-Type: application/json; charset=utf-8';
+            $headers[] = 'Authorization: Basic ZTVmZTU2NjEtZDU1My00NzQzLTllZTYtMzFkMjJlMmEzZWZi';
+            $ch = curl_init();
+            $body = '{
+                "app_id": "13964cbb-2421-4e58-b040-0ad8f2b2e9fa",
+                "include_player_ids": '. $hash .',
+                "data": {"foo": "bar"},
+                "contents": {"en": "'. "$mensagem" .'"}
+            }';
+            // var_dump($body);
+            // die;
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+
+            $result = curl_exec($ch);
+            // var_dump($result); die;
+            curl_close($ch);
+            
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    function registrar_dispositivo(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        
+        $paciente_id = $_GET['paciente_id'];
+        $hash = $_GET['indentificacao_dispositivo'];
+        
+        // echo '<pre>';
+        // var_dump($texto_add); 
+        // die;
+        $resposta = $this->app->registrarDispositivoPaciente($paciente_id, $hash);    
+
+        $obj = new stdClass();
+        if(count($resposta) > 0 && $resposta != false){
+            $obj->status = 200;
         }else{
             $obj->status = 404;
         }
