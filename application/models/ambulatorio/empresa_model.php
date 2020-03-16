@@ -390,8 +390,7 @@ class empresa_model extends Model {
     function listarempresacadatro($args = array()) {
 
         $this->db->select('e.*');
-        $this->db->from('tb_empresa e');
-        $this->db->where('cadastroempresa', 't');
+        $this->db->from('tb_empresa_cadastro e'); 
         if (isset($args['nome']) && strlen($args['nome']) > 0) {
             $this->db->where('nome ilike', $args['nome'] . "%");
         }
@@ -400,39 +399,11 @@ class empresa_model extends Model {
         return $this->db;
     }
 
-    function listardadosempresacadastro($empresa_id = NULL) {
-
-        $this->db->select('empresa_id, 
-                               f.nome,
-                               razao_social,
-                               cnpj,
-                               celular,
-                               telefone,
-                               cep,
-                               modelo_carteira,
-                               logradouro,
-                               numero,
-                               iugu_token,
-                               email,
-                               cadastro,
-                               tipo_carencia,
-                               bairro,
-                               f.banco,
-                               cnes,
-                               codigo_convenio_banco,
-                               f.municipio_id,
-                               c.nome as municipio,
-                               c.estado,
-                               cep,
-                               f.alterar_contrato,
-                               f.confirm_outra_data,
-                               f.financeiro_maior_zero,
-                               f.carteira_padao_1,
-                               f.carteira_padao_2,
-                               f.cadastro_empresa_flag');
-        $this->db->from('tb_empresa f');
+    function listardadosempresacadastro($empresa_id = NULL) { 
+        $this->db->select('f.*,c.nome as municipio,c.municipio_id');
+        $this->db->from('tb_empresa_cadastro f');
         $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
-        $this->db->where('empresa_id', $empresa_id);
+        $this->db->where('empresa_cadastro_id', $empresa_id);
         return $this->db->get()->result();
     }
 
@@ -456,6 +427,57 @@ class empresa_model extends Model {
         $this->db->limit(1);
         $this->db->where('ativo','t');
         return $this->db->get()->result();
+    }
+    function gravarempresacadastro() {
+        try {
+            /* inicia o mapeamento no banco */
+            $this->db->set('nome', $_POST['txtNome']);
+            $this->db->set('razao_social', $_POST['txtrazaosocial']);
+            $this->db->set('cep', $_POST['CEP']); 
+            
+            if ($_POST['txtCNPJ'] != '') {
+                $this->db->set('cnpj', str_replace("-", "", str_replace("/", "", str_replace(".", "", $_POST['txtCNPJ']))));
+            }
+            $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
+            if ($_POST['municipio_id'] != '') {
+                $this->db->set('municipio_id', $_POST['municipio_id']);
+            }
+            if ($_POST['modelo_carteira'] != '') {
+                $this->db->set('modelo_carteira', $_POST['modelo_carteira']);
+            }
+     
+            $this->db->set('email', $_POST['email']);
+
+            $this->db->set('logradouro', $_POST['endereco']);
+            $this->db->set('numero', $_POST['numero']);
+            $this->db->set('bairro', $_POST['bairro']);
+  
+            
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+
+            if ($_POST['txtempresaid'] == "") {// insert
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->insert('tb_empresa_cadastro');
+                $erro = $this->db->_error_message();
+                if (trim($erro) != "") // erro de banco
+                    return -1;
+                else
+                    $empresa_id = $this->db->insert_id();
+            }
+            else { // update
+                $this->db->set('data_atualizacao', $horario);
+                $this->db->set('operador_atualizacao', $operador_id);
+                $empresa_id = $_POST['txtempresaid'];
+                $this->db->where('empresa_cadastro_id', $empresa_id);
+                $this->db->update('tb_empresa_cadastro');
+            }
+            return $empresa_id;
+        } catch (Exception $exc) {
+            return -1;
+        }
     }
 
 }

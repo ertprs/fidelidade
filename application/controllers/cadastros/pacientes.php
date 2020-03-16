@@ -995,10 +995,11 @@ class pacientes extends BaseController {
     function novofuncionario($empresa_id) {
 
         $data['funcionarios'] = $this->paciente->listarfuncionariosempresacadastro($empresa_id);
+       
         $data['quantidade_funcionarios'] = $this->paciente->listarquantidadedefuncionario($empresa_id);
         $data['forma_pagamento'] = $this->paciente->listarformaspagamentos();
         $data['empresa_id'] = $empresa_id;
-        $data['paciente'] = $this->paciente->listardados(19468);
+//        $data['paciente'] = $this->paciente->listardados(19468);
         $data['empresa'] = $this->guia->listarempresa();
         $data['contratos'] = $this->paciente->listarcontratocadastroempresa($empresa_id);
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontratoempresa($empresa_id);

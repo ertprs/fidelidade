@@ -36,6 +36,7 @@
                     <tbody>
                         <?php
                         $lista = $this->empresa->listarempresacadatro($_GET)->limit($limit, $pagina)->orderby("nome")->get()->result();
+                        
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
@@ -45,13 +46,13 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cnpj; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td> 
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresacadastro/<?= $item->empresa_id ?>">Editar</a></div>
+                                        <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresacadastro/<?= $item->empresa_cadastro_id ?>">Editar</a></div>
                                 </td> 
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
-                                        <a href="<?= base_url() ?>cadastros/pacientes/novofuncionario/<?= $item->empresa_id ?>">Detalhes</a></div>   
+                                        <a href="<?= base_url() ?>cadastros/pacientes/novofuncionario/<?= $item->empresa_cadastro_id ?>">Detalhes</a></div>   
                                 </td>                                
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
-                                        <a  onclick="javascript: return confirm('Deseja realmente excluir essa Empresa?');"   href="<?= base_url() ?>cadastros/pacientes/excluirempresacadastro/<?= $item->empresa_id ?>">Excluir</a></div> 
+                                        <a  onclick="javascript: return confirm('Deseja realmente excluir essa Empresa?');"   href="<?= base_url() ?>cadastros/pacientes/excluirempresacadastro/<?= $item->empresa_cadastro_id ?>">Excluir</a></div> 
                                 </td> 
                                 
                                 

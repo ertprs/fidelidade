@@ -7,15 +7,15 @@
     <div id="accordion">
         <h3 class="singular"><a href="#">Cadastro de Sala</a></h3>
         <div>
-            <form name="form_empresa" id="form_empresa" action="<?= base_url() ?>ambulatorio/empresa/gravar" method="post">
+            <form name="form_empresa" id="form_empresa" action="<?= base_url() ?>ambulatorio/empresa/gravarempresacadastro" method="post">
 
                 <dl class="dl_desconto_lista">
                     <dt>
                         <label>Nome</label>
                     </dt>
                     <dd>
-                        <input type="hidden" name="txtempresaid" class="texto10" value="<?= @$empresa[0]->empresa_id; ?>" />
-                        <input type="hidden" name="empresacadastro" class="texto10" value="sim" />
+                        <input type="hidden" name="txtempresaid" class="texto10" value="<?= @$empresa[0]->empresa_cadastro_id; ?>" />
+                         
                         <input type="text" name="txtNome" class="texto10" value="<?= @$empresa[0]->nome; ?>" />
                     </dd>
                     <dt>
@@ -36,18 +36,7 @@
                     <dd>
                         <input type="text" name="txtCNPJ" maxlength="14" alt="cnpj" class="texto03" value="<?= @$empresa[0]->cnpj; ?>" />
                     </dd>
-<!--                    <dt>
-                        <label>CNES</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="txtCNES" maxlength="14" class="texto03" value="<?= @$empresa[0]->cnes; ?>" />
-                    </dd>-->
-<!--                    <dt>
-                        <label>Código Convênio (Banco)</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="codigo_convenio_banco" maxlength="6" class="texto03" value="<?= @$empresa[0]->codigo_convenio_banco; ?>" />
-                    </dd>-->
+ 
                     <dt>
                         <label>Endere&ccedil;o</label>
                     </dt>
@@ -91,73 +80,20 @@
                         <input type="hidden" id="txtCidadeID" class="texto_id" name="municipio_id" value="<?= @$empresa[0]->municipio_id; ?>" readonly="true" />
                         <input type="text" id="txtCidade" class="texto04" name="txtCidade" value="<?= @$empresa[0]->municipio; ?>" />
                     </dd>
-<!--                    <dt>
-                        <label>API Token IUGU</label>
-                    </dt>
-                    <dd>
-                        <input type="text" id="iugu_token" class="texto07" name="iugu_token" value="<?= @$empresa[0]->iugu_token; ?>" />
-                    </dd>-->
+ 
                     <dt>
                         <label>Modelo Carteira</label>
                     </dt>
                     <dd>
                         <input type="text" id="modelo_carteira" class="texto07" name="modelo_carteira" value="<?= @$empresa[0]->modelo_carteira; ?>" />
                     </dd>
-
-<!--                    <dt>
-                        <label>Banco</label>
-                    </dt>
-                    <dd>
-                        <textarea name="banco" rows="1" cols="50"><?= @$empresa[0]->banco; ?></textarea>
-                    </dd>-->
-                    <?
-                    $operador = $this->session->userdata('operador_id');
-                    if ($operador == 1) {
-                        ?>
-<!--                        <dt>
-                            <label>Cadastro</label>
-                        </dt>-->
-<!--                        <dd>
-                            <select name="cadastro" id="cadastro" class="size2" selected="<?= @$empresa[0]->cadastro; ?>">
-                                <option value=0 <?
-                                if (@$empresa[0]->cadastro == 0):echo 'selected';
-                                endif;
-                                ?>>Normal</option>
-                                <option value=1 <?
-                                if (@$empresa[0]->cadastro == 1):echo 'selected';
-                                endif;
-                                ?>>Alternativo</option>
-
-                            </select>
-                        </dd>-->
-<!--                        <dt>
-                            <label>Tipo de Carência</label>
-                        </dt>
-                        <dd>
-                            <select name="tipo_carencia" id="tipo_carencia" class="size2" selected="<?= @$empresa[0]->tipo_carencia; ?>">
-                                <option value="SOUDEZ" <?
-                                if (@$empresa[0]->tipo_carencia == "SOUDEZ"):echo 'selected';
-                                endif;
-                                ?>>Sou Dez</option>
-                                <option value="NORMAL" <?
-                                if (@$empresa[0]->tipo_carencia == "NORMAL"):echo 'selected';
-                                endif;
-                                ?>>Normal</option>
-
-                            </select>
-                        </dd>-->
-                    <? }
-                    ?>
-
+ 
                 </dl>  
                 <br>
                 <br>
                 <br>
                 <table> 
-<!--                    <tr>
-                        <td><input type="checkbox" name="cadastro_empresa_flag"   <? if (@$empresa[0]->cadastro_empresa_flag == 't') echo "checked"; ?>> 
-                            <label  title=" " >Cadastro De Empresa</label>   </td> 
-                    </tr> -->
+ 
                 </table> 
                 <br>
                 <hr/>

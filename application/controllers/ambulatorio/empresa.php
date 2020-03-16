@@ -101,8 +101,9 @@ class Empresa extends BaseController {
 
     function carregarempresacadastro($empresa_id = NULL) {
 
-        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
-        //$this->carregarView($data, 'giah/servidor-form');
+        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id); 
+         
+        
         $this->loadView('ambulatorio/empresacadastro-form', $data);
     }
     
@@ -131,6 +132,17 @@ class Empresa extends BaseController {
         
         $this->loadView('ambulatorio/empresacadastrologo-form',$data);
         
+    }
+    function gravarempresacadastro() {
+        $empresa_id = $this->empresa->gravarempresacadastro();
+        if ($empresa_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar a Empresa. Opera&ccedil;&atilde;o cancelada.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar a Empresa.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']); 
+        redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
+         
     }
 
 }

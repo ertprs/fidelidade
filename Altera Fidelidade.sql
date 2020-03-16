@@ -676,3 +676,36 @@ ALTER TABLE ponto.tb_qtd_funcionarios_empresa
 
 
 
+--16/03/2020
+
+CREATE TABLE ponto.tb_empresa_cadastro
+(
+  empresa_cadastro_id serial NOT NULL,
+  razao_social character varying(200),
+  nome character varying(200),
+  cnpj character varying(20),
+  cep character varying(9),
+  logradouro character varying(200),
+  numero character varying(20),
+  complemento character varying(100),
+  bairro character varying(100),
+  municipio_id integer,
+  celular character varying(15),
+  telefone character varying(15),
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  tipo_logradouro_id integer,
+  tipo_carencia text,
+  modelo_carteira integer,
+  email text,
+  cnes character varying(20),
+  CONSTRAINT tb_empresa_cadastro_pkey PRIMARY KEY (empresa_cadastro_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_empresa_cadastro
+  OWNER TO postgres;
