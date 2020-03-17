@@ -804,3 +804,6 @@ ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_pj_mensal nume
 
 ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN data_cadastro timestamp without time zone;
 ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN operador_cadastro integer;
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao_mensal numeric(10,2);
