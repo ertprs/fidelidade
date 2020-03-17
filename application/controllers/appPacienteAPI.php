@@ -652,7 +652,7 @@ class AppPacienteAPI extends Controller {
         // var_dump($json_post); 
         // die;
         
-        $paciente_id = $_GET['paciente_id'];
+        $paciente_id = $_GET['ID'];
         $hash = $_GET['indentificacao_dispositivo'];
         
         // echo '<pre>';
