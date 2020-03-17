@@ -458,6 +458,18 @@ class app_model extends Model {
         return $return;
     }
 
+    function listarParceiros() {
+        $this->db->select('financeiro_parceiro_id as id,
+                            fantasia as nome,
+                            logradouro as endereco,
+                            telefone as telefone_01,
+                            celular as telefone_02');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where('ativo', 'true');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function buscarHashDispositivoHashPaciente($paciente_id, $hash){
         $this->db->select('hash');
         $this->db->from('tb_registro_dispositivo');

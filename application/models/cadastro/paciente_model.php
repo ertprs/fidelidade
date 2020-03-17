@@ -733,17 +733,33 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
+    function listarIndicacao() {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+        $vendedores = array(7);
+        
+        $this->db->select('operador_id, nome');
+        $this->db->from('tb_operador');
+        $this->db->orderby('nome');
+        $this->db->where_in('perfil_id', $vendedores);
+        $this->db->where('ativo', 't');
+        $return = $this->db->get();
+        
+
+        return $return->result();
+    }
+
     function listarvendedor() {
         $perfil_id = $this->session->userdata('perfil_id');
         $operador_id = $this->session->userdata('operador_id');
-        //$vendedores = array(4, 8, 9);
+        $vendedores = array(4,7, 8, 9);
         if ($perfil_id == 6) {
             $this->db->select('o.operador_id, o.nome');
             $this->db->from('tb_operador o');
             $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = o.operador_id', 'left');
             $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
             $this->db->orderby('nome');
-            $this->db->where('o.perfil_id', 7);
+            $this->db->where('o.perfil_id', 4);
             $this->db->where('o.ativo', 't');
             $this->db->where('go.ativo', 't');
             $this->db->where('ro.ativo', 't');
@@ -756,7 +772,7 @@ class paciente_model extends BaseModel {
             $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = o.operador_id', 'left');
             // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
             $this->db->orderby('nome');
-            $this->db->where('o.perfil_id', 7);
+            $this->db->where('o.perfil_id', 4);
             $this->db->where('o.ativo', 't');
             $this->db->where('go.ativo', 't');
             // $this->db->where('ro.ativo', 't');
@@ -766,7 +782,48 @@ class paciente_model extends BaseModel {
             $this->db->select('operador_id, nome');
             $this->db->from('tb_operador');
             $this->db->orderby('nome');
-            $this->db->where('perfil_id',7);
+            $this->db->where_in('perfil_id', $vendedores);
+            $this->db->where('ativo', 't');
+            $return = $this->db->get();
+        }
+
+        return $return->result();
+    }
+    
+    function listarvendedorexterno() {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+        //$vendedores = array(4, 8, 9);
+        if ($perfil_id == 6) {
+            $this->db->select('o.operador_id, o.nome');
+            $this->db->from('tb_operador o');
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = o.operador_id', 'left');
+            $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+            $this->db->orderby('nome');
+            $this->db->where('o.perfil_id', 8);
+            $this->db->where('o.ativo', 't');
+            $this->db->where('go.ativo', 't');
+            $this->db->where('ro.ativo', 't');
+            $this->db->where('ro.representante_id', $operador_id);
+
+            $return = $this->db->get();
+        } elseif ($perfil_id == 5) {
+            $this->db->select('o.operador_id, o.nome');
+            $this->db->from('tb_operador o');
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = o.operador_id', 'left');
+            // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+            $this->db->orderby('nome');
+            $this->db->where('o.perfil_id', 8);
+            $this->db->where('o.ativo', 't');
+            $this->db->where('go.ativo', 't');
+            // $this->db->where('ro.ativo', 't');
+            $this->db->where('go.gerente_id', $operador_id);
+            $return = $this->db->get();
+        } else {
+            $this->db->select('operador_id, nome');
+            $this->db->from('tb_operador');
+            $this->db->orderby('nome');
+            $this->db->where('perfil_id',8);
             $this->db->where('ativo', 't');
             $return = $this->db->get();
         }
@@ -886,7 +943,7 @@ class paciente_model extends BaseModel {
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
 
-            $this->db->set('rendimentos', $_POST['rendimentos']);
+            $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
 
             $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
             $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
@@ -1432,7 +1489,7 @@ class paciente_model extends BaseModel {
                 $this->db->set('cpfresp', 'f');
             }
             
-            $this->db->set('rendimentos', $_POST['rendimentos']);
+            $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
 
             $this->db->set('outro_documento', $_POST['outro_documento']);
             $this->db->set('numero_documento', $_POST['numero_documento']);

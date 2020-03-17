@@ -768,6 +768,11 @@ CREATE TABLE ponto.tb_paciente_solicitar_agendamento
   hora text,
   convenio_id integer,
   procedimento_convenio_id integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
   CONSTRAINT tb_paciente_solicitar_agendamento_pkey PRIMARY KEY (paciente_solicitar_agendamento_id)
 );
 

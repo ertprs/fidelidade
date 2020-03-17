@@ -109,7 +109,7 @@
             </div>
             <div>
                 <label>Rendimentos</label>
-                <input type="number" id="rendimentos" class="texto02" name="rendimentos" value="<?= (int) @$obj->_rendimentos; ?>" required/>
+                <input type="text" alt="decimal" id="rendimentos" class="texto02" name="rendimentos" value="<?=  number_format(@$obj->_rendimentos, 2, ',', '.'); ?>" required/>
             </div>
 
 
@@ -385,9 +385,9 @@
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+<!-- <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script> -->
+<!-- <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script> -->
+<!-- <script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script> -->
 <script type="text/javascript">
 
                         $("#nascimento").mask("99/99/9999");

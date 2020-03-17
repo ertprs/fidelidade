@@ -377,6 +377,8 @@ $data['permissao'] = $this->db->get()->result();
                                 <? if ($perfil_id == 6 || $perfil_id == 5 || $perfil_id == 1) { ?>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissao">Relatorio Comiss&atilde;o</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaovendedor">Relatorio Comissão Mensal</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexterno">Relatorio Comiss&atilde;o Externo</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternomensal">Relatorio Comiss&atilde;o Externo Mensal</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaorepresentante">Relatorio Representante Comercial</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>
                                      <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioprevisaorecebimento">Relatorio Previsão de Recebimento</a></span></ul>

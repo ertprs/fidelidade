@@ -41,7 +41,7 @@
             
             <?php
             
-                    $datalistarvendedor = $this->paciente->listarvendedor();  
+                    $datalistarvendedor = $this->paciente->listarIndicacao();  
                     $vendedor = $this->paciente->dadosvendedor(@$lista[0]->vendedor);  
                     //if ($this->session->userdata('perfil_id') == 1) {                    
                       
