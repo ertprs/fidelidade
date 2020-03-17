@@ -6248,6 +6248,7 @@ table tr:hover  #achadoERRO{
         $data['empresa_id'] = $empresa_id;
 
         $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
+        // var_dump($data['empresa']); die;
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
         $data['paciente_id'] = $paciente_id;

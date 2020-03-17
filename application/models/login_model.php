@@ -10,12 +10,14 @@ class login_model extends Model {
     function autenticarpacienteweb($usuario, $senha) {
         $horario = date("Y-m-d");
 
-        $this->db->select('pc.paciente_contrato_id, p.nome, p.cpf');
+        $this->db->select('pc.paciente_contrato_id, p.nome, p.cpf, fp.nome as plano');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where('pc.paciente_id', $usuario);
         $this->db->where('p.ativo', 't');
         $this->db->where('pc.paciente_contrato_id', $senha);
+        $this->db->orderby('pc.paciente_contrato_id desc');
         $return = $this->db->get();
         return $return->result();
     }

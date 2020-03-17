@@ -454,7 +454,7 @@ class app_model extends Model {
         
         $return = $this->db->get()->result();
 
-        var_dump($return); die;
+        // var_dump($return); die;
         return $return;
     }
 

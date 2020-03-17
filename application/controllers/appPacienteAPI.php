@@ -35,6 +35,8 @@ class AppPacienteAPI extends Controller {
             $obj->data = new stdClass();
             $obj->data->nome = $resposta[0]->nome;
             $obj->data->cpf = $resposta[0]->cpf;
+            $obj->data->plano = $resposta[0]->plano;
+            $obj->data->sistema = 'F';
         }else{
             $obj->status = 404;
             $obj->id = 0;
@@ -513,7 +515,12 @@ class AppPacienteAPI extends Controller {
         $procedimento_id = $json_post->procedimento_id;
         $procedimento_text = $json_post->procedimento_text;
         $convenio_text = $json_post->convenio_text;
-
+        if(!$paciente_id > 0){
+            $obj = new stdClass();
+            $obj->status = 404;
+            echo json_encode($obj); 
+            die;
+        }
         $retorno = $this->app->gravarSolicitarAgendamento($paciente_id, $data, $hora, $procedimento_id, $procedimento_text, $convenio_text);
         $obj = new stdClass();
         if($retorno != false){
@@ -683,22 +690,12 @@ class AppPacienteAPI extends Controller {
         // echo '<pre>';
         // var_dump($texto_add); 
         // die;
-        $resposta = $this->app->listarConvenios();    
-        foreach ($resposta as $key => $value) {
-            $resposta[$key]->image = '';
-            if(file_exists('./' . $value->caminho_logo) && $value->caminho_logo != ''){
-                // $resposta[$key]->image = 1; 
-                $resposta[$key]->image = base64_encode(file_get_contents(base_url() . $value->caminho_logo));
-            }
-        }
+        $resposta = array();    
 
         $obj = new stdClass();
-        if(count($resposta) > 0){
-            $obj->status = 200;
-            $obj->data = $resposta;
-        }else{
-            $obj->status = 404;
-        }
+        $obj->status = 200;
+        $obj->data = $resposta;
+        
         // echo '<pre>';
         // var_dump($obj); 
         // die;

@@ -2898,6 +2898,29 @@ class Autocomplete extends Controller {
         echo json_encode($var);
     }
 
+    function carregarEnderecoTitular() {
+        $var = array();
+        $result = $this->paciente_m->listarEnderecoTitular($_GET['paciente_id']);
+        if(count($result) > 0){
+            $paciente_id = $result[0]->titular_id;
+            $result2 = $this->paciente_m->listardadospaciente($paciente_id);
+
+            foreach ($result2 as $item) {
+                
+                $retorno['logradouro'] = $item->logradouro;
+                $retorno['numero'] = $item->numero;
+                $retorno['cep'] = $item->cep;
+                $retorno['complemento'] = $item->complemento;
+                $retorno['bairro'] = $item->bairro;
+                $retorno['cidade_desc'] = $item->cidade_desc;
+                $retorno['municipio_id'] = $item->cidade_cod;
+                $var[] = $retorno;
+            }
+        }
+        
+        echo json_encode($var);
+    }
+
     function pacientetitular() {
         if (isset($_GET['term'])) {
             $result = $this->exame->listarautocompletepacientetitular($_GET['term']);

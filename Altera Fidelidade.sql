@@ -794,3 +794,13 @@ CREATE TABLE ponto.tb_registro_dispositivo
 );
 
 ALTER TABLE ponto.tb_registro_dispositivo ADD COLUMN paciente_id integer;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN rendimentos numeric(10,2);
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_externo_mensal numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_externo numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_pj numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_pj_mensal numeric(10,2);
+
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN data_cadastro timestamp without time zone;
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN operador_cadastro integer;

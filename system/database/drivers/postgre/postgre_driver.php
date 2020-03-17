@@ -333,7 +333,7 @@ class CI_DB_postgre_driver extends CI_DB {
 		$table	= func_num_args() > 0 ? func_get_arg(0) : null;
 		$column	= func_num_args() > 1 ? func_get_arg(1) : null;
 		
-		if ($table == null && $v >= '8.1')
+		if ($table == null && $v >= '8.1' || true)
 		{
 			$sql='SELECT LASTVAL() as ins_id';
 		}

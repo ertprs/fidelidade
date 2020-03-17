@@ -464,6 +464,7 @@ class pacientes extends BaseController {
     function gravardependente() {
   
         $paciente_id = $this->paciente->gravardependente();
+        // var_dump($paciente_id); die;
         $titular_id = $_POST['txtNomeid'];
         $empresa_p = $this->guia->listarempresa();
         $titular_flag = $empresa_p[0]->titular_flag;

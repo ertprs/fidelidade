@@ -58,6 +58,13 @@
                               ?> 
                 </select>
             </div>
+            <?if(@$obj->_situacao == "Dependente"){?>
+                <div>
+                    <label>Carregar *</label>
+                    <button type="button" onclick="carregarEnderecoTitular();">End. Titular</button>
+                </div>
+            <?}?>
+            
             <div>
                 <label>Endere&ccedil;o *</label>
                 <input type="text" id="txtendereco" class="texto10" name="endereco" value="<?= @$obj->_endereco; ?>" required/>
@@ -100,6 +107,10 @@
                 <input type="hidden" id="txtcboID" class="texto_id" name="txtcboID" value="<?= @$obj->_cbo_ocupacao_id; ?>" />
                 <input type="text" id="txtcbo" class="texto04" name="txtcbo" value="<?= @$obj->_cbo_nome; ?>" />
                 <input type="hidden" id="txtcbohidden" class="texto04" name="txtcbohidden" value="<?= @$obj->_cbo_nome; ?>" />
+            </div>
+            <div>
+                <label>Rendimentos</label>
+                <input type="number" id="rendimentos" class="texto02" name="rendimentos" value="<?= (int) @$obj->_rendimentos; ?>" required/>
             </div>
 
 
@@ -517,6 +528,22 @@
                             }
 
 
+                        }
+
+                        function carregarEnderecoTitular() {
+                            // cpfcnpj
+                            var paciente_id = $("#txtPacienteId").val();
+                            $.getJSON('<?= base_url() ?>autocomplete/carregarEnderecoTitular', {paciente_id: paciente_id, ajax: true}, function (j) {
+                                if(j.length > 0){
+                                    $("#txtendereco").val(j[0].logradouro);
+                                    $("#txtNumero").val(j[0].numero);
+                                    $("#cep").val(j[0].cep);
+                                    $("#txtComplemento").val(j[0].complemento);
+                                    $("#txtBairro").val(j[0].bairro);
+                                    $("#txtCidade").val(j[0].cidade_desc);
+                                    $("#txtCidadeID").val(j[0].municipio_id);
+                                }
+                            });
                         }
 
 

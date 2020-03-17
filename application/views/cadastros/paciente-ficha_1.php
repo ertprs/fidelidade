@@ -110,7 +110,10 @@
                 <input type="hidden" id="txtcboID" class="texto_id" name="txtcboID" value="<?= @$obj->_cbo_ocupacao_id; ?>" readonly="true" />
                 <input type="text" id="txtcbo" class="texto04" name="txtcbo" value="<?= @$obj->_cbo_nome; ?>" />
             </div>
-
+            <div>
+                <label>Rendimentos</label>
+                <input type="number" id="rendimentos" class="texto02" name="rendimentos" value="<?= (int) @$obj->_rendimentos; ?>" required/>
+            </div>
 
             <div>
                 <label>Indicacao</label>
