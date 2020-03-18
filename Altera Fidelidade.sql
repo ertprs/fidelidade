@@ -817,3 +817,18 @@ ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao numeric(10,2)
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao_mensal numeric(10,2);
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN tipo_declaracao INTEGER;
+CREATE TABLE ponto.tb_voucher_consulta
+(
+  voucher_consulta_id serial NOT NULL,
+  data date,
+  horario time without time zone,s
+  consulta_avulsa_id integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_voucher_consulta_pkey PRIMARY KEY (voucher_consulta_id)
+);
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_id integer;

@@ -26,7 +26,7 @@ class guia_model extends Model {
     function listarparcelaspacienteAPI($paciente_contrato_id) {
 
         $this->db->select('
-                            pcp.situacao as pagamento_pendente,
+                            pcp.ativo as pagamento_pendente,
                             pcp.data,
                             pcp.valor,
                             pcpi.url as link_boleto');
@@ -689,6 +689,27 @@ class guia_model extends Model {
         $this->db->select('ca.observacao');
         $this->db->from('tb_consultas_avulsas ca');
         $this->db->where("ca.consultas_avulsas_id", $consulta_avulsa_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarvoucherconsultaavulsa($consulta_avulsa_id) {
+
+        $this->db->select('vc.data,
+                            vc.horario,
+                            vc.parceiro_id,
+                            fp.logradouro,
+                            fp.numero,
+                            fp.bairro,
+                            m.nome as municipio,
+                            fp.razao_social as parceiro,
+                            vc.data_cadastro');
+        $this->db->from('tb_voucher_consulta vc');
+        $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = vc.parceiro_id', 'left');
+        $this->db->join('tb_municipio m', 'm.municipio_id = fp.municipio_id', 'left');
+        $this->db->where("vc.ativo", 't');
+        $this->db->where("vc.consulta_avulsa_id", $consulta_avulsa_id);
+        $this->db->orderby("vc.data_cadastro desc");
         $return = $this->db->get();
         return $return->result();
     }
@@ -6422,6 +6443,30 @@ AND data <= '$data_fim'";
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->insert('tb_consultas_avulsas');
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+
+    function gravarvoucherconsultaextra($paciente_id, $consulta_avulsa_id) {
+        try {
+
+            $data = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
+            $hora = date("H:i:s", strtotime(str_replace("/", "-", $_POST['hora'])));
+            // var_dump($hora); die;
+
+            $cadastro = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('data', $data);
+            $this->db->set('horario', $hora);
+            $this->db->set('consulta_avulsa_id', $consulta_avulsa_id);
+            $this->db->set('parceiro_id', $_POST['parceiro_id']);
+            $this->db->set('data_cadastro', $cadastro);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->insert('tb_voucher_consulta');
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
