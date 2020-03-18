@@ -138,12 +138,12 @@
                         <input type="text" id="modelo_carteira" class="texto07" name="modelo_carteira" value="<?= @$obj->_modelo_carteira; ?>" />
                     </dd>
 
-                    <dt>
+                    <!-- <dt>
                         <label>Modelo Carteira</label>
                     </dt>
                     <dd>
                         <input type="text" id="modelo_carteira" class="texto07" name="modelo_carteira" value="<?= @$obj->_modelo_carteira; ?>" />
-                    </dd>
+                    </dd> -->
 
                     <dt>
                         <label>Banco</label>
@@ -196,6 +196,23 @@
 
                             </select>
                         </dd>
+
+                        <!-- <dt>
+                            <label>Modelo de Declaração</label>
+                        </dt>
+                        <dd>
+                            <select name="tipo_declaracao" id="tipo_declaracao" class="size2" selected="<?= @$obj->_tipo_declaracao; ?>">
+                                <option value="1" <?
+                                if (@$obj->_tipo_declaracao == "1"):echo 'selected';
+                                endif;
+                                ?>>Declaração Padrão</option>
+                                <option value="2" <?
+                                if (@$obj->_tipo_declaracao == "2"):echo 'selected';
+                                endif;
+                                ?>>Declaração 2</option>
+
+                            </select>
+                        </dd> -->
                     <? }
                     ?>
 
@@ -263,6 +280,9 @@
                      <tr>
                         <td><input type="checkbox" name="carteira_padao_5"   <? if (@$obj->_carteira_padao_5 == 't') echo "checked"; ?>> 
                             <label  title=" " >Carteira Padrão 5</label>  
+                        </td> 
+                        <td><input type="checkbox" name="carteira_padao_6"   <? if (@$obj->_carteira_padao_6 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 6</label>  
                         </td> 
                         <td>
                             <input type="checkbox" name="modificar_verificar"   <? if (@$obj->_modificar_verificar == 't') echo "checked"; ?>> 

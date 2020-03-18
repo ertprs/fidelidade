@@ -762,9 +762,10 @@ class Guia extends BaseController {
 //            $html = $this->load->View('ambulatorio/impressaocarteiradez', $data, true);
             $this->load->View('ambulatorio/impressaocarteiradez', $data);
 //            pdf($html, $filename, $cabecalho, $rodape);
-        } else {
-            
-        }
+        // } elseif ($data['empresa'][0]->modelo_carteira == 3) {
+        //     $this->load->View('ambulatorio/impressaofichaamma', $data);
+        // }
+        }else{}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////        
         // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
@@ -6283,11 +6284,17 @@ table tr:hover  #achadoERRO{
         $data['empresa_id'] = $empresa_id;
 
         $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
-        // var_dump($data['empresa']); die;
+        //var_dump($data['empresa']); die;
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
         $data['paciente_id'] = $paciente_id;
+        // if($data['empresa'][0]->tipo_declaracao == 2){
+        //     $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
+        // }else{
+        //     $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
+        // }
         $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
+       
     }
 
     
