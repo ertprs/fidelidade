@@ -809,6 +809,19 @@ class Guia extends BaseController {
         // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
     }
 
+
+    function impressaovoucherconsultaextra($paciente_id, $contrato_id, $consulta_avulsa_id) {
+
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $data['permissao'] = $this->empresa->listarpermissoes();
+        $data['dependente'] = $this->guia->listardependentes($contrato_id);
+        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id);
+
+        $this->load->View('ambulatorio/impressaovoucherconsultaextra', $data);
+    }
+
     function impressaoorcamento($orcamento) {
         $data['emissao'] = date("d-m-Y");
         $empresa_id = $this->session->userdata('empresa_id');
@@ -1181,6 +1194,17 @@ class Guia extends BaseController {
         $data['pagamento'] = $this->guia->listarconsultaavulsaobservacao($consulta_avulsa_id);
 //        var_dump($data['pagamento']); die;
         $this->load->View('ambulatorio/alterarobservacaopagamentoavulso-form', $data);
+    }
+    
+    function voucherconsultaavulsa($paciente_id, $contrato_id, $consulta_avulsa_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['consulta_avulsa_id'] = $consulta_avulsa_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id);
+        // echo '<pre>';
+    //    var_dump($data['voucher']); die;
+        $this->load->View('ambulatorio/voucherconsultaavulsa-form', $data);
     }
 
     function reenviaremail($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
@@ -1888,6 +1912,19 @@ class Guia extends BaseController {
         $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
         $data['procedimento'] = $this->procedimento->listarprocedimentos();
         redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+    }
+
+
+    function gravarvoucherconsultaextra($consulta_avulsa_id, $paciente_id, $contrato_id) {
+        $ambulatorio_guia_id = $this->guia->gravarvoucherconsultaextra($paciente_id, $consulta_avulsa_id);
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar consulta avulsa.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
+        }
+        $data['paciente_id'] = $paciente_id;
+        $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
+        redirect(base_url() . "ambulatorio/guia/impressaovoucherconsultaextra/$paciente_id/$contrato_id/$consulta_avulsa_id");
     }
 
     function gravarconsultacoop($paciente_id, $contrato_id) {

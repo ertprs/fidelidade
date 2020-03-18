@@ -812,3 +812,19 @@ ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN operador_cadastro
 
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao numeric(10,2);
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao_mensal numeric(10,2);
+
+CREATE TABLE ponto.tb_voucher_consulta
+(
+  voucher_consulta_id serial NOT NULL,
+  data date,
+  horario time without time zone,
+  consulta_avulsa_id integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_voucher_consulta_pkey PRIMARY KEY (voucher_consulta_id)
+);
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_id integer;
