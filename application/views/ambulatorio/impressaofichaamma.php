@@ -487,17 +487,10 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
             <tr>
                 <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
-            <? if(@$paciente[0]->paciente_contrato_id == ''){?>
-            <tr>
-            <td >CONTRATO: <b><?= @$contrato[0]->paciente_contrato_id;?></b></td>
-            </tr>
-            <?}else{
-            ?>
             <tr>
                 <td >CONTRATO: <b><?= @$paciente[0]->paciente_contrato_id;?></b></td>
             </tr>
-            <?}
-            ?>
+
         </tbody>
     </table>
 <?

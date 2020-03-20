@@ -634,6 +634,14 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function listarinformacoesContratodepedente($depende_id){
+        $this->db->select('paciente_contrato_id');
+        $this->db->from('tb_paciente_contrato_dependente');
+        $this->db->where('paciente_id', $depende_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarparcelaobservacao($paciente_contrato_parcelas_id) {
 
         $this->db->select('pcp.paciente_contrato_id,

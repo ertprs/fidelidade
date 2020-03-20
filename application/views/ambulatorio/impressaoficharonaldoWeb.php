@@ -75,7 +75,36 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     </table>
 
     <?
-} else {
+}elseif ($permissao[0]->carteira_padao_6 == 't') {
+    $empresa_id = 1;
+    ?>
+        <table >
+  
+            <tbody align="right">
+                <tr>
+                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+                </tr>
+                <tr>
+                    <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
+                </tr>
+                <tr>
+                    <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
+                </tr>
+                <? if(@$paciente[0]->paciente_contrato_id == ''){?>
+                <tr>
+                <td >CONTRATO: <b><?= @$contrato[0]->paciente_contrato_id;?></b></td>
+                </tr>
+                <?}else{
+                ?>
+                <tr>
+                    <td >CONTRATO: <b><?= @$paciente[0]->paciente_contrato_id;?></b></td>
+                </tr>
+                <?}
+                ?>
+            </tbody>
+        </table>
+    <?
+    } else {
     ?> 
 
 

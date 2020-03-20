@@ -553,6 +553,9 @@ ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_4 SET DEFAULT false;
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_5 boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_5 SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_6 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_6 SET DEFAULT false;
  
 ALTER TABLE ponto.tb_empresa ADD COLUMN renovar_contrato_automatico boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN renovar_contrato_automatico SET DEFAULT true;
@@ -813,11 +816,13 @@ ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN operador_cadastro
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao numeric(10,2);
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao_mensal numeric(10,2);
 
+ALTER TABLE ponto.tb_empresa ADD COLUMN tipo_declaracao INTEGER;
+
 CREATE TABLE ponto.tb_voucher_consulta
 (
   voucher_consulta_id serial NOT NULL,
   data date,
-  horario time without time zone,
+  horario time without time zone,s
   consulta_avulsa_id integer,
   ativo boolean DEFAULT true,
   data_cadastro timestamp without time zone,

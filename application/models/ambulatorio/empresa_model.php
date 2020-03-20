@@ -307,6 +307,7 @@ class empresa_model extends Model {
             if (@$_POST['tipo_carencia']) {
                 $this->db->set('tipo_carencia', $_POST['tipo_carencia']);
             }
+                $this->db->set('tipo_declaracao', $_POST['tipo_declaracao']);
 
             if (isset($_POST['titular_flag'])) {
                 $this->db->set('titular_flag', 't');
@@ -373,6 +374,12 @@ class empresa_model extends Model {
                 $this->db->set('carteira_padao_5', 't');
             } else {
                 $this->db->set('carteira_padao_5', 'f');
+            }
+
+            if (isset($_POST['carteira_padao_6'])) {
+                $this->db->set('carteira_padao_6', 't');
+            } else {
+                $this->db->set('carteira_padao_6', 'f');
             }
 
             if ($_POST['client_id'] != "") {
@@ -512,7 +519,9 @@ class empresa_model extends Model {
                                f.client_secret,
                                f.carteira_padao_5,
                                f.modificar_verificar,
-                               f.forma_dependente');
+                               f.forma_dependente,
+                               f.tipo_declaracao,
+                               f.carteira_padao_6,');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -526,6 +535,7 @@ class empresa_model extends Model {
             $this->_celular = $return[0]->celular;
             $this->_codigo_convenio_banco = $return[0]->codigo_convenio_banco;
             $this->_tipo_carencia = $return[0]->tipo_carencia;
+            $this->_tipo_declaracao = $return[0]->tipo_declaracao;
             $this->_titular_flag = $return[0]->titular_flag;
             $this->_telefone = $return[0]->telefone;
             $this->_usuario_epharma = $return[0]->usuario_epharma;
@@ -557,6 +567,7 @@ class empresa_model extends Model {
             $this->_carteira_padao_3 = $return[0]->carteira_padao_3;
             $this->_carteira_padao_4 = $return[0]->carteira_padao_4;
             $this->_carteira_padao_5 = $return[0]->carteira_padao_5;
+            $this->_carteira_padao_6 = $return[0]->carteira_padao_6;
             $this->_client_id = $return[0]->client_id;
             $this->_client_secret = $return[0]->client_secret;
             $this->_modificar_verificar = $return[0]->modificar_verificar;

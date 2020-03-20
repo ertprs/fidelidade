@@ -243,6 +243,30 @@ class Autocomplete extends Controller {
 
         if ($data['permissao'][0]->carteira_padao_2 == 't') {
             $data['paciente'] = $this->guia->listarpacientecarteirapadrao2($paciente_id);
+        } elseif ($data['permissao'][0]->carteira_padao_6 == 't') {
+
+            $this->load->helper('directory');
+
+        if (!is_dir("./upload/empresalogo")) {
+            mkdir("./upload/empresalogo");
+            $destino = "./upload/empresalogo";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/empresalogo/$empresa_id")) {
+            mkdir("./upload/empresalogo/$empresa_id");
+            $destino = "./upload/empresalogo/$empresa_id";
+            chmod($destino, 0777);
+        }
+
+        $data['arquivo_pasta'] = directory_map("./upload/empresalogo/$empresa_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        //    var_dump($data['arquivo_pasta']); die;
+        }
+
+            $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
+            $data['contrato'] = $this->guia->listarinformacoesContratodepedente($paciente_id);
         } else {
             $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
         }
