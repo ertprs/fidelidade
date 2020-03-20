@@ -1053,6 +1053,10 @@ class paciente_model extends BaseModel {
                 $this->db->set('parceiro_id', $_POST['parceiro_id']);
             }
 
+            if (@$_POST['indicacao_id'] > 0) {
+                $this->db->set('indicacao_id', $_POST['indicacao_id']);
+            }
+
             if ($_POST['forma_rendimento_id'] != '') {
                 $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
             }

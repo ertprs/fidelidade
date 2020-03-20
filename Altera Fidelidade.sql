@@ -835,3 +835,6 @@ CREATE TABLE ponto.tb_voucher_consulta
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_id integer;
 
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN utilizada boolean DEFAULT false;
+
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN indicacao_id integer;
