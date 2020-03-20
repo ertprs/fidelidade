@@ -686,7 +686,7 @@ class guia_model extends Model {
 
     function listarconsultaavulsaobservacao($consulta_avulsa_id) {
 
-        $this->db->select('ca.observacao');
+        $this->db->select('ca.observacao, ca.utilizada');
         $this->db->from('tb_consultas_avulsas ca');
         $this->db->where("ca.consultas_avulsas_id", $consulta_avulsa_id);
         $return = $this->db->get();
@@ -5883,6 +5883,22 @@ ORDER BY p.nome";
         //     return false;
         // else
         return $plano;
+    }
+
+    function gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id) {
+
+        // var_dump($_POST['status']); die;
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->set('utilizada', $_POST['status']);
+        // $this->db->set('ativo', 'f');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
+        $this->db->update('tb_consultas_avulsas');  
+        $erro = $this->db->_error_message();
+
+        return $consultas_avulsas_id;
     }
 
     function confirmarpagamentoautomaticoconsultaavulsaiugu($consultas_avulsas_id, $paciente_id, $tipo, $valor) {

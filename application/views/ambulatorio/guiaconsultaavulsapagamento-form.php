@@ -255,11 +255,17 @@
                                         </td> -->
                                     <? } ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                            <div class="bt_link">
-                                                <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/voucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Voucher
-                                                </a>
-                                            </div>
-                                        </td> 
+                                        <div class="bt_link">
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/voucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Voucher
+                                            </a>
+                                        </div>
+                                    </td> 
+                                    <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                        <div class="bt_link">
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/statusvoucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Status
+                                            </a>
+                                        </div>
+                                    </td> 
                                 </tr>
                             </tbody>
                             <?

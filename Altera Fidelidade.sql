@@ -817,6 +817,7 @@ ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao numeric(10,2)
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao_mensal numeric(10,2);
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN tipo_declaracao INTEGER;
+
 CREATE TABLE ponto.tb_voucher_consulta
 (
   voucher_consulta_id serial NOT NULL,
@@ -832,3 +833,5 @@ CREATE TABLE ponto.tb_voucher_consulta
 );
 
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_id integer;
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN utilizada boolean DEFAULT false;
