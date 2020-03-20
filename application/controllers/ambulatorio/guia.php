@@ -1207,6 +1207,17 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/voucherconsultaavulsa-form', $data);
     }
 
+    function statusvoucherconsultaavulsa($paciente_id, $contrato_id, $consulta_avulsa_id) {
+//        var_dump($paciente_contrato_parcelas_id); die;
+        $data['consulta_avulsa_id'] = $consulta_avulsa_id;
+        $data['paciente_id'] = $paciente_id;
+        $data['contrato_id'] = $contrato_id;
+        $data['consulta'] = $this->guia->listarconsultaavulsaobservacao($consulta_avulsa_id);
+        // echo '<pre>';
+    //    var_dump($data['voucher']); die;
+        $this->load->View('ambulatorio/statusvoucherconsultaavulsa-form', $data);
+    }
+
     function reenviaremail($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 //        var_dump($paciente_contrato_parcelas_id); die;
         $empresa = $this->guia->listarempresa();
@@ -4471,6 +4482,16 @@ class Guia extends BaseController {
     function gravaralterarpagamentoavulsas($consultas_avulsas_id, $paciente_id, $contrato_id) {
         $this->guia->alterardatapagamentoavulsa($consultas_avulsas_id);
         if ($this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id)) {
+            $mensagem = 'Sucesso ao confirmar pagamento';
+        } else {
+            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+        }
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+
+    function gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id, $contrato_id) {
+        if ($this->guia->gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
