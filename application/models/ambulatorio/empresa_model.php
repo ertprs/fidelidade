@@ -409,6 +409,10 @@ class empresa_model extends Model {
 
             $this->db->set('logradouro', $_POST['endereco']);
             $this->db->set('numero', $_POST['numero']);
+            $this->db->set('complemento', $_POST['complemento']);
+
+            //echo $_POST['complemento'];
+           // die;
             $this->db->set('bairro', $_POST['bairro']);
 
             if (isset($_POST['modificar_verificar'])) {
@@ -500,7 +504,8 @@ class empresa_model extends Model {
                                c.nome as municipio,
                                c.estado,
                                cep,
-			       f.botoes_app,
+                   f.botoes_app,
+                   f.complemento,
                                f.alterar_contrato,
                                f.confirm_outra_data,
                                f.financeiro_maior_zero,
@@ -545,6 +550,7 @@ class empresa_model extends Model {
             $this->_codigo_plano = $return[0]->codigo_plano;
             $this->_logradouro = $return[0]->logradouro;
             $this->_numero = $return[0]->numero;
+            $this->_complemento = $return[0]->complemento;
             $this->_bairro = $return[0]->bairro;
             $this->_municipio_id = $return[0]->municipio_id;
             $this->_municipio = $return[0]->municipio;
@@ -605,7 +611,7 @@ class empresa_model extends Model {
     }
 
     function listardadosempresacadastro($empresa_id = NULL) { 
-        $this->db->select('f.*,c.nome as municipio,c.municipio_id, c.estado');
+        $this->db->select('f.*, c.nome as municipio,c.municipio_id, c.estado');
         $this->db->from('tb_empresa f');
         $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
         $this->db->where('empresa_id', $empresa_id);

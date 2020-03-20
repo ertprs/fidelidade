@@ -3418,6 +3418,16 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriocomissaoexternomensal', $data);
     }
 
+    function relatoriocomissaoexternopj() {
+        $data['listarvendedor'] = $this->paciente->listarvendedorexternopj();
+        $this->loadView('ambulatorio/relatoriocomissaoexternopj', $data);
+    }
+
+    function relatoriocomissaoexternomensalpj() {
+        $data['listarvendedor'] = $this->paciente->listarvendedorexternopj();
+        $this->loadView('ambulatorio/relatoriocomissaoexternomensalpj', $data);
+    }
+
     function relatoriocomissaorepresentante() {
         $data['listarvendedor'] = $this->operador_m->listarRepresentantevendasrelatorio();
         $this->loadView('ambulatorio/relatoriocomissaorepresentante', $data);
@@ -3523,6 +3533,30 @@ class Guia extends BaseController {
         // var_dump($data['relatorio_forma']);
         // die;
         $this->load->View('ambulatorio/impressaorelatoriocomissaoexternomensal', $data);
+    }
+
+    function gerarelatoriocomissaoexternopj() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
+        $data['relatorio'] = $this->guia->relatoriocomissaoexterno();
+        $data['relatorio_forma'] = $this->guia->relatoriocomissaoContadorFormaExterno();
+        // echo '<pre>';
+        // var_dump($data['relatorio_forma']); die;
+        $this->load->View('ambulatorio/impressaorelatoriocomissaoexternopj', $data);
+    }
+
+    function gerarelatoriocomissaoexternomensalpj() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+//        var_dump($_POST); die;
+        $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
+        $data['relatorio'] = $this->guia->relatoriocomissaoexternomensal();
+        // $data['relatorio_forma'] = $this->guia->relatoriocomissaovendedorFormaRend();
+        // echo '<pre>'; 
+        // var_dump($data['relatorio_forma']);
+        // die;
+        $this->load->View('ambulatorio/impressaorelatoriocomissaoexternomensalpj', $data);
     }
 
 
@@ -6346,12 +6380,12 @@ table tr:hover  #achadoERRO{
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
         $data['paciente_id'] = $paciente_id;
-        // if($data['empresa'][0]->tipo_declaracao == 2){
-        //     $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
-        // }else{
-        //     $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
-        // }
-        $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
+        if($data['empresa'][0]->tipo_declaracao == 2){
+            $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
+        }else{
+            $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
+        }
+        // $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
        
     }
 

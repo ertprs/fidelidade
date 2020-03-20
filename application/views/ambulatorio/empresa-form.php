@@ -58,6 +58,14 @@
                     <dd>
                         <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" />
                     </dd>
+
+                    <dt>
+                        <label>Complemento</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="txtComplemento" class="texto02" name="complemento" value="<?= @$obj->_complemento; ?>" />
+                    </dd>
+
                     <dt>
                         <label>Bairro</label>
                     </dt>
@@ -197,7 +205,7 @@
                             </select>
                         </dd>
 
-                        <!-- <dt>
+                        <dt>
                             <label>Modelo de Declaração</label>
                         </dt>
                         <dd>
@@ -212,7 +220,7 @@
                                 ?>>Declaração 2</option>
 
                             </select>
-                        </dd> -->
+                        </dd>
                     <? }
                     ?>
 
