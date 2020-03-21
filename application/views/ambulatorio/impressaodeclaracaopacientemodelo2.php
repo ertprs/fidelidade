@@ -216,7 +216,12 @@
             <tr>
             <td>
             Eu,<b><u> <?= $paciente[0]->nome?> </b></u>, Brasileiro(a), estado civil <u>__________</u>, 
-            Profissão <u><? if($paciente[0]->descricao == ''){echo _______________} else{ echo $paciente[0]->descricao }?></u>, portador do RG nº <u>5278977</u>, 
+            Profissão 
+            <u><? if($paciente[0]->descricao == ''){
+                echo '_______________' ;
+            }else{ 
+                echo $paciente[0]->descricao;
+                }?></u>, portador do RG nº <u>5278977</u>, 
             e do CPF nº <u>797.763.025-72</u>, Estado do <u>PARA</u> nascido em <u>15/03/1989</u>, 
             residente nesta cidade, na <u>rua SOL POENTE 123</u>, bairro <u>CIDADE NOVA</u>, 
             cep <u>68503-630</u>, Telefone <u>94 991321105</u>
