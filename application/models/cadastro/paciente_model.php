@@ -4040,11 +4040,20 @@ class paciente_model extends BaseModel {
     }
 
     function listardadospaciente($paciente_id) {
-        $this->db->select('cbo.descricao,p.logradouro,p.complemento, p.nascimento,p.cep,p.telefone,p.celular,p.numero,p.bairro,p.nome,p.estado_civil_id,p.rg,p.cpf,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge');
+        $this->db->select('cbo.descricao,p.logradouro,p.complemento, p.nascimento,p.cep,p.telefone,p.celular,p.numero,p.bairro,p.nome,p.estado_civil_id,p.rg,p.cpf,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, p.tipo_logradouro, tl.descricao as logro');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_cbo_ocupacao cbo', 'cbo.cbo_ocupacao_id = p.profissao', 'left');
+        $this->db->join('tb_tipo_logradouro tl', 'p.tipo_logradouro = tl.tipo_logradouro_id', 'left');
         $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
         $this->db->where('paciente_id', $paciente_id);
+        return $this->db->get()->result();
+    }
+
+    function listaridcontrato($paciente_id) {
+        $this->db->select('paciente_contrato_id');
+        $this->db->from('tb_paciente_contrato');
+        $this->db->where('paciente_id', $paciente_id);
+        $this->db->where('ativo', 't');
         return $this->db->get()->result();
     }
 

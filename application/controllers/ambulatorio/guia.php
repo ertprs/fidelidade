@@ -6381,6 +6381,12 @@ table tr:hover  #achadoERRO{
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
         $data['paciente_id'] = $paciente_id;
         if($data['empresa'][0]->tipo_declaracao == 2){
+            $data['listacontrato'] = $this->paciente->listaridcontrato($paciente_id);
+            $paciente_contrato_id = $data['listacontrato'][0]->paciente_contrato_id;
+            $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
+
+           // var_dump($data['dependente']); die;
+
             $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
         }else{
             $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);

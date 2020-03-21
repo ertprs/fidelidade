@@ -872,7 +872,7 @@ class guia_model extends Model {
 
     function listardependentes($paciente_contrato_id) {
 
-        $this->db->select('p.nome as paciente,p.situacao,p.cpf, fp.nome as contrato');
+        $this->db->select('initcap(p.nome) as paciente,p.situacao,p.cpf, fp.nome as contrato');
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente p', 'p.paciente_id = pcd.paciente_id', 'left');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcd.paciente_contrato_id', 'left');
