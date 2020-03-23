@@ -381,6 +381,8 @@ $data['permissao'] = $this->db->get()->result();
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternomensal">Relatorio Comiss&atilde;o Externo Mensal</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternopj">Relatorio Comiss&atilde;o Externo PJ</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternomensalpj">Relatorio Comiss&atilde;o Externo Mensal PJ </a></span></ul>                                    
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoindicacao">Relatorio Comiss&atilde;o Indicação</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoindicacaomensal">Relatorio Comiss&atilde;o Indicação Mensal</a></span></ul>                                        
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaorepresentante">Relatorio Representante Comercial</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>
                                      <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioprevisaorecebimento">Relatorio Previsão de Recebimento</a></span></ul>

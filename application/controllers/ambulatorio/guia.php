@@ -3428,6 +3428,17 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriocomissaoexternomensalpj', $data);
     }
 
+    function relatoriocomissaoindicacao() {
+        $data['listarvendedor'] = $this->paciente->listarvendedorexternopj();
+        $this->loadView('ambulatorio/relatoriocomissaoindicacao', $data);
+    }
+
+    function relatoriocomissaoindicacaomensal() {
+        $data['listarvendedor'] = $this->paciente->listarvendedorexternopj();
+        $this->loadView('ambulatorio/relatoriocomissaoindicacaomensal', $data);
+    }
+
+
     function relatoriocomissaorepresentante() {
         $data['listarvendedor'] = $this->operador_m->listarRepresentantevendasrelatorio();
         $this->loadView('ambulatorio/relatoriocomissaorepresentante', $data);
@@ -3557,6 +3568,29 @@ class Guia extends BaseController {
         // var_dump($data['relatorio_forma']);
         // die;
         $this->load->View('ambulatorio/impressaorelatoriocomissaoexternomensalpj', $data);
+    }
+
+
+    function gerarelatoriocomissaoindicacao() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+        $data['relatorio'] = $this->guia->relatoriocomissaoexternoindicacao();
+        $data['relatorio_forma'] = $this->guia->relatoriocomissaoContadorFormaExternoindicacao();
+        // echo '<pre>';
+        // var_dump($data['relatorio_forma']); die;
+        $this->load->View('ambulatorio/impressaorelatoriocomissaoindicacao', $data);
+    }
+
+    function gerarelatoriocomissaoindicacaomensal() {
+        $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
+        $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
+//        var_dump($_POST); die;
+        $data['relatorio'] = $this->guia->relatoriocomissaoexternomensaindicacao();
+        // $data['relatorio_forma'] = $this->guia->relatoriocomissaovendedorFormaRend();
+        // echo '<pre>'; 
+        // var_dump($data['relatorio_forma']);
+        // die;
+        $this->load->View('ambulatorio/impressaorelatoriocomissaoindicacaomensal', $data);
     }
 
 
