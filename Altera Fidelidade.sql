@@ -822,7 +822,7 @@ CREATE TABLE ponto.tb_voucher_consulta
 (
   voucher_consulta_id serial NOT NULL,
   data date,
-  horario time without time zone,s
+  horario time without time zone,
   consulta_avulsa_id integer,
   ativo boolean DEFAULT true,
   data_cadastro timestamp without time zone,
