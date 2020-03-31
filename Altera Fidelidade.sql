@@ -838,3 +838,6 @@ ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN utilizada boolean DEFAULT fals
 
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN indicacao_id integer;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN usuario_app text;
+ALTER TABLE ponto.tb_paciente ADD COLUMN senha_app text;

@@ -31,7 +31,7 @@ class AppPacienteAPI extends Controller {
         $obj = new stdClass();
         if(count($resposta) > 0){
             $obj->status = 200;
-            $obj->id = $usuario;
+            $obj->id = $resposta[0]->paciente_id;
             $obj->data = new stdClass();
             $obj->data->nome = $resposta[0]->nome;
             $obj->data->cpf = $resposta[0]->cpf;
@@ -51,6 +51,36 @@ class AppPacienteAPI extends Controller {
 //         "cpf": "84684684654",       /* CPF do paciente. */
 //     }
 // }
+    }
+
+    function gravar_precadastro(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        // $usuario = $json_post->user;
+        // $senha = $json_post->password;
+        $empresa = 1;
+        if(!isset($json_post->nome)){
+            $obj = new stdClass();
+            $obj->message = 'Campo nome em branco';
+            echo json_encode($obj); 
+            die;
+        }
+        $resposta = $this->app->gravarPrecadastro($json_post);
+        $obj = new stdClass();
+        if($resposta > 0){
+            $obj->status = 200;
+            $obj->paciente_id = $resposta[0];
+            $obj->nome = $resposta[1];
+            
+        }else{
+            $obj->status = 404;
+            $obj->paciente_id = 0;
+        }
+        echo json_encode($obj); 
+
     }
 
     function risco_cirurgico(){
