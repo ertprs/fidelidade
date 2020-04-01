@@ -287,10 +287,20 @@
                     } else {
                         @$telefone = $paciente[0]->celular;
                     }
-                    echo "<u>" .@$telefone. "</u>";
                     if (@$telefone == "") {
                         echo "_____________";
-                    }?>
+                    }else{
+                        $nbr_telefone = @$telefone;
+                        //85 992377232
+                        @$parte_um = substr($nbr_telefone, 0, 2);
+                        @$parte_dois = substr($nbr_telefone, 3, 5);
+                        @$parte_tres = substr($nbr_telefone, 8, 4);
+            
+                        @$monta_telefone = "($parte_um) $parte_dois.$parte_tres";
+                        echo "<u>" .@$monta_telefone. "</u>";
+                    }
+                    
+                    ?>
             </td>
             </tr>
 
@@ -587,10 +597,10 @@
         </tr>
 
         <tr>
-        <td align='center'><b>______________________________ <br>
-                            NOME: <br><br>
-                            CPF: <br><br>
-                            CONTRATANTE: <br><br>
+        <td align='center'><b>__________________________________________ <br>
+                            NOME: <?=$paciente[0]->nome?><br><br>
+                            CPF: <?=$monta_cpf?> <br><br>
+                            CONTRATANTE: <?=$paciente[0]->nome?><br><br>
         </b></td>
         </tr>
 

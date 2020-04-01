@@ -307,7 +307,9 @@ class empresa_model extends Model {
             if (@$_POST['tipo_carencia']) {
                 $this->db->set('tipo_carencia', $_POST['tipo_carencia']);
             }
+            if (@$_POST['tipo_declaracao']) {
                 $this->db->set('tipo_declaracao', $_POST['tipo_declaracao']);
+            }
 
             if (isset($_POST['titular_flag'])) {
                 $this->db->set('titular_flag', 't');

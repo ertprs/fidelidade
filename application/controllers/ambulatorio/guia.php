@@ -6416,7 +6416,14 @@ table tr:hover  #achadoERRO{
         $data['paciente_id'] = $paciente_id;
         if($data['empresa'][0]->tipo_declaracao == 2){
             $data['listacontrato'] = $this->paciente->listaridcontrato($paciente_id);
-            $paciente_contrato_id = $data['listacontrato'][0]->paciente_contrato_id;
+            if(count($data['listacontrato']) > 0){
+              @$paciente_contrato_id = $data['listacontrato'][0]->paciente_contrato_id;  
+            }else{
+                $data['listacontratodependente'] = $this->paciente->listaridcontrato_dependente($paciente_id);
+                @$paciente_contrato_id = $data['listacontratodependente'][0]->paciente_contrato_id; 
+                $data['paciente'] = $this->paciente->listardadospaciente($paciente_contrato_id);
+            }
+            
             $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
 
            // var_dump($data['dependente']); die;
