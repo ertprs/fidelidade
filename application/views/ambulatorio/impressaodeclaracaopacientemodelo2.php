@@ -587,9 +587,9 @@
         </tr>
 
         <tr>
-        <td align='center'><b>______________________________ <br>
-                            NOME: <br><br>
-                            CPF: <br><br>
+        <td align='center'><b>__________________________________________ <br>
+                            NOME: <?=$paciente[0]->nome?><br><br>
+                            CPF: <?=$monta_cpf?> <br><br>
                             CONTRATANTE: <br><br>
         </b></td>
         </tr>
