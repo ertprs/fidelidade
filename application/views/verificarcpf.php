@@ -140,7 +140,7 @@
                                                 ?>
                                                 <div>
                                                     <label id="labelUsuario">Proced.</label>
-                                                    &nbsp;  <select name="procedimento_convenio_id" required="">
+                                                    &nbsp;  <select name="procedimento_convenio_id" >
                                                         <option value="">Selecione</option>
                                                         <?php
                                                         foreach ($procedimentos as $item) {
@@ -160,6 +160,9 @@
 
                                             <div style="padding-left: 110px; margin-top: -5%; ">
                                                 <button type="submit" name="btnEnviar">Verificar</button>  
+                                                 <?  if (@$permissao[0]->modificar_verificar == 't') { ?>
+                                                <a href="<?= base_url() ?>home" style="font-size: 15px; border:1px solid white; background-color: white; border-radius: 10px;padding: 6px; font-weight: bold; text-decoration: none;" >Procedimentos</a>
+                                                 <? }  ?>
                                             </div>
 
 

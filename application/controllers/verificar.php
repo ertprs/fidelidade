@@ -115,8 +115,10 @@ class Verificar extends Controller {
             $paciente_informacoes = $this->guia->listarpacientecpf($cpf, $paciente_id, $nome);
             $listadependentes = $this->paciente->listardependentescontrato(@$paciente_informacoes[0]->paciente_contrato_id);
 
-            if ($permissaoempresa[0]->modificar_verificar == 't') {
+            
+            if ($permissaoempresa[0]->modificar_verificar == 't' && $_POST['procedimento_convenio_id'] != "") {
                 $gravarvericadores = $this->guia->gravarverificados($cpf, $paciente_id, $nome);
+             
             }
 
 
@@ -276,7 +278,7 @@ class Verificar extends Controller {
             $nome = @$_POST['nome'];
             $data['titulares'] = $this->guia->listarpacientecpf($cpf, $paciente_id, $nome);
 
-            if (@$permissaoempresa[0]->modificar_verificar == 't') {
+            if (@$permissaoempresa[0]->modificar_verificar == 't'  && $_POST['procedimento_convenio_id'] != "") {
                 $gravarvericadores = $this->guia->gravarverificados($cpf, $paciente_id, $nome);
             }
 
