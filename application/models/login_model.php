@@ -35,6 +35,17 @@ class login_model extends Model {
         return $return;
     }
 
+
+    function email_verificacao($usuario) {
+        // $horario = date("Y-m-d");
+        $this->db->select('p.paciente_id, p.nome, p.cpf, p.cns');
+        $this->db->from('tb_paciente p');
+        $this->db->where('p.cns', $usuario);
+        $this->db->where('p.ativo', 't');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function autenticar($usuario, $senha, $empresa) {
         $this->db->select(' o.operador_id,
                                 o.perfil_id,

@@ -691,6 +691,29 @@ class AppPacienteAPI extends Controller {
 
     }
 
+    function email_verificacao(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        $usuario = $json_post->email;
+        $empresa = 1;
+
+        $resposta = $this->login_m->email_verificacao($usuario);
+        $obj = new stdClass();
+        if(count($resposta) > 0){
+            $obj->status = 200;
+            $obj->usado = true;
+            
+        }else{
+            $obj->status = 200;
+            $obj->usado = false;
+        }
+        echo json_encode($obj); 
+
+    }
+
     function registrar_dispositivo(){
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: content-type");
