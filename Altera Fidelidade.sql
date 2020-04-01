@@ -841,3 +841,7 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN indicacao_id integer;
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN usuario_app text;
 ALTER TABLE ponto.tb_paciente ADD COLUMN senha_app text;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN cadastro boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN whatsapp text;

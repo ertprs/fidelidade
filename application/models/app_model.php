@@ -30,6 +30,11 @@ class app_model extends Model {
         if(count($contadorPaciente)  > 0){
             $paciente_id = $contadorPaciente[0]->paciente_id;
             $nome = $contadorPaciente[0]->nome;
+            $this->db->set('usuario_app', $json_post->usuario_app);
+            $this->db->set('senha_app', md5($json_post->senha_app));
+            // $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('paciente_id', $paciente_id);
+            $this->db->update('tb_paciente');
             return array($paciente_id, $nome);
         }
         $this->db->set('nome', $json_post->nome);

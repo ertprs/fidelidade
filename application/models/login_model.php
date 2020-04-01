@@ -9,6 +9,7 @@ class login_model extends Model {
 
     function autenticarpacienteweb($usuario, $senha) {
         $horario = date("Y-m-d");
+        // die;
         $this->db->select('p.paciente_id, p.nome, p.cpf, p.cns, fp.nome as plano');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_paciente_contrato pc', 'p.paciente_id = pc.paciente_id', 'left');
@@ -16,6 +17,7 @@ class login_model extends Model {
         $this->db->where('p.cns', $usuario);
         $this->db->where('p.senha_app', md5($senha));
         $this->db->where('p.ativo', 't');
+        $this->db->orderby('pc.ativo desc');
         $return = $this->db->get()->result();
 
         if(count($return) == 0 && is_int($usuario)){
@@ -27,10 +29,10 @@ class login_model extends Model {
             $this->db->where('p.ativo', 't');
             $this->db->where('pc.paciente_contrato_id', $senha);
             $this->db->orderby('pc.paciente_contrato_id desc');
+            $return = $this->db->get()->result();
+            
         }
-        
-        $return = $this->db->get();
-        return $return->result();
+        return $return;
     }
 
     function autenticar($usuario, $senha, $empresa) {
