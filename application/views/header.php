@@ -387,9 +387,10 @@ $data['permissao'] = $this->db->get()->result();
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>
                                      <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioprevisaorecebimento">Relatorio Previsão de Recebimento</a></span></ul>
                                     <!--<ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoseguradora">Relatorio Comissão Seguradora</a></span></ul>-->
-                                <? } ?>    
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioparceiroverificar">Relatorio Parceiro Verificar</a></span></ul>
 
-
+                                <? } ?>  
+                        
 
                             </li> 
 
