@@ -4056,6 +4056,13 @@ class paciente_model extends BaseModel {
         $this->db->where('ativo', 't');
         return $this->db->get()->result();
     }
+    function listaridcontrato_dependente($paciente_id) {
+        $this->db->select('paciente_contrato_id');
+        $this->db->from('tb_paciente_contrato_dependente');
+        $this->db->where('paciente_id', $paciente_id);
+        $this->db->where('ativo', 't');
+        return $this->db->get()->result();
+    }
 
     function gravarerrogerencianet($paciente_id, $contrato_id, $message, $code_error) {
         $operador = $this->session->userdata('operador_id');
