@@ -482,6 +482,9 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
     <table align="right">
         <tbody>
             <tr>
+                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+            </tr>
+            <tr>
                 <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
             </tr>
             <tr>

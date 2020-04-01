@@ -13,6 +13,9 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     <table>
         <tbody>
             <tr>
+                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+            </tr>
+            <tr>
                 <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
             <tr>
@@ -39,6 +42,9 @@ if ($permissao[0]->carteira_padao_1 == 't') {
 
 <table border="0">
         <tbody>
+            <tr>
+                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+            </tr>
             <tr>
                 <td colspan="2">NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
