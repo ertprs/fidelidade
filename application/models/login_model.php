@@ -7,6 +7,34 @@ class login_model extends Model {
         parent::Model();
     }
 
+    function autenticarpacienteweb($usuario, $senha) {
+        $horario = date("Y-m-d");
+        // die;
+        $this->db->select('p.paciente_id, p.nome, p.cpf, p.cns, fp.nome as plano');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_paciente_contrato pc', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->where('p.cns', $usuario);
+        $this->db->where('p.senha_app', md5($senha));
+        $this->db->where('p.ativo', 't');
+        $this->db->orderby('pc.ativo desc');
+        $return = $this->db->get()->result();
+
+        if(count($return) == 0 && is_int($usuario)){
+            $this->db->select('pc.paciente_contrato_id, p.paciente_id, p.nome, p.cpf, fp.nome as plano');
+            $this->db->from('tb_paciente_contrato pc');
+            $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+            $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+            $this->db->where('pc.paciente_id', $usuario);
+            $this->db->where('p.ativo', 't');
+            $this->db->where('pc.paciente_contrato_id', $senha);
+            $this->db->orderby('pc.paciente_contrato_id desc');
+            $return = $this->db->get()->result();
+            
+        }
+        return $return;
+    }
+
     function autenticar($usuario, $senha, $empresa) {
         $this->db->select(' o.operador_id,
                                 o.perfil_id,

@@ -172,6 +172,42 @@
                         <input type="text" name="comissao_gerente" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_gerente; ?>" />
                     </dd>
                     <dt>
+                        <label>Comiss&atilde;o Vendedor Externo</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="comissao_vendedor_externo" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor_externo; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Comiss&atilde;o Vendedor Externo Mensal</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="comissao_vendedor_externo_mensal" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor_externo_mensal; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Comiss&atilde;o Vendedor PJ</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="comissao_vendedor_pj" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor_pj; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Comiss&atilde;o Vendedor PJ Mensal</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="comissao_vendedor_pj_mensal" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor_pj_mensal; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Comiss&atilde;o Indicação</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="comissao_indicacao" class="texto02" id="comissao_indicacao" alt="decimal" value="<?= @$obj->_comissao_indicacao; ?>" />
+                    </dd>
+                    <dt>
+                        <label>Comiss&atilde;o Indicação Mensal</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="comissao_indicacao_mensal" class="texto02" id="comissao_indicacao_mensal" alt="decimal" value="<?= @$obj->_comissao_indicacao_mensal; ?>" />
+                    </dd>
+                    <dt>
                         <label>Comiss&atilde;o Seguradora</label>
                     </dt>
                     <dd>

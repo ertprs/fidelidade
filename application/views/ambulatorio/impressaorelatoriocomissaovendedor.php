@@ -60,18 +60,23 @@
                 </tr>
             </thead>
             <hr>
-            <tbody>
-
-                <?php
+            <tbody> 
+                <?php 
                 $valortotal = 0;
+                $npagas= 0;
+                $pagas= 0;
                 foreach ($relatorio as $item) :
-
-
+                      
                     // if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
                         // $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
                     // }else{
                         $valor_comissao = $item->comissao_vendedor_mensal;
-                    // }
+                    // } 
+                    if ($item->ativo == 't') {
+                        $npagas = $npagas + $valor_comissao + $item->comissao_gerente_mensal; 
+                    }else{
+                        $pagas = $pagas + $valor_comissao + $item->comissao_gerente_mensal;
+                    }
                     if ($item->ativo == 'f') {
                         $valortotal = $valortotal + $valor_comissao;
                     }
@@ -116,8 +121,22 @@
         ?>
         <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
     <? }
-    ?>
-
-
+    ?>  
+        <br>
+        <table border="2">
+            <tr>
+                <td>Pago
+                <td>Não pago
+            </tr>
+       
+            <tr>
+                <td>R$ <?= @number_format($pagas, 2, ',', '.'); ?></td>
+                <td>R$ <?= @number_format($npagas, 2, ',', '.'); ?></td>
+            </tr>
+            <tr>
+                 
+                <td colspan="2"> Total: R$ <?= @number_format($pagas + $npagas, 2, ',', '.'); ?></td>
+            </tr>
+</table>
 </div> <!-- Final da DIV content -->
 

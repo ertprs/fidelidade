@@ -270,7 +270,8 @@ if (count($forma_cadastradaTotal) > 0) {
 <?php
 $this->load->library('utilitario');
 // var_dump($this->session->flashdata('message'));die;
-Utilitario::pmf_mensagem($this->session->flashdata('message'));
+$utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
 ?>
 <script type="text/javascript">
 

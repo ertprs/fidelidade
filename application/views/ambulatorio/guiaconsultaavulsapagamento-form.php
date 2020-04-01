@@ -161,7 +161,7 @@
 
                                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                     <div class="bt_link">
-                                                        <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
+                                                        <a onclick="javascript: return confirm('Deseja realmente confirmar a consulta?');" href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
                                                         </a>
                                                     </div>
                                                 </td> 
@@ -245,6 +245,8 @@
                                     } else {
                                         ?>
                                         <td class="<?php echo $estilo_linha; ?>">PAGA</td>
+                                        
+                                        
 
                                         <td  colspan="5" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
             <!--                                            <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
@@ -252,6 +254,18 @@
                                                 </a></div>
                                         </td> -->
                                     <? } ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                        <div class="bt_link">
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/voucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Voucher
+                                            </a>
+                                        </div>
+                                    </td> 
+                                    <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                        <div class="bt_link">
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/statusvoucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Status
+                                            </a>
+                                        </div>
+                                    </td> 
                                 </tr>
                             </tbody>
                             <?

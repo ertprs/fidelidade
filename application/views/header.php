@@ -181,7 +181,9 @@ $data['permissao'] = $this->db->get()->result();
 
     <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    // var_dump($this->session->flashdata('message'));die;
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
 
 
@@ -268,23 +270,23 @@ $data['permissao'] = $this->db->get()->result();
                         <ul>
                             <li><span class="folder">Cadastro</span>
                                 <ul>
-                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 6 || $perfil_id == 5) { ?>
+                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 6 || $perfil_id == 5) { ?>
                                         <? if ($this->session->userdata('cadastro') == 1) { ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novoalternativo">Novo Titular</a></span></li>
-                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {   ?>        
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {   ?>        
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentealternativo">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                         <? } elseif ($this->session->userdata('cadastro') == 2) { ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
-                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {  ?>        
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {  ?>        
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentecompleto">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                         <? } else {
                                             ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
-                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) {  ?>        
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {  ?>        
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependente">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
@@ -296,13 +298,13 @@ $data['permissao'] = $this->db->get()->result();
 
                                     <? } ?>
                                         <?php 
-                                      if ($perfil_id == 4 || $perfil_id == 1 ) {  
+                                      if ($perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 1 || $perfil_id == 7) {  
                                        ?>
                                               <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarprecadastros">Pŕe-cadastro</a></span></li>
                                        <?
                                       }
                                         ?>
-                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4) { ?>                                      
+                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) { ?>                                      
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioadimplentes">Relatorio Adimplentes</a></span></li>
 
@@ -321,6 +323,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/listarautorizacao">Tela de Autorização</a></span></li>                                    
                                         <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
+                                        <li><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/solicitacaoagendamento">Solicitação de Agendamento</a></span></li>
                                     <? } ?>
                                 </ul>
                             </li>
@@ -374,6 +377,12 @@ $data['permissao'] = $this->db->get()->result();
                                 <? if ($perfil_id == 6 || $perfil_id == 5 || $perfil_id == 1) { ?>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissao">Relatorio Comiss&atilde;o</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaovendedor">Relatorio Comissão Mensal</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexterno">Relatorio Comiss&atilde;o Externo</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternomensal">Relatorio Comiss&atilde;o Externo Mensal</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternopj">Relatorio Comiss&atilde;o Externo PJ</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoexternomensalpj">Relatorio Comiss&atilde;o Externo Mensal PJ </a></span></ul>                                    
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoindicacao">Relatorio Comiss&atilde;o Indicação</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoindicacaomensal">Relatorio Comiss&atilde;o Indicação Mensal</a></span></ul>                                        
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaorepresentante">Relatorio Representante Comercial</a></span></ul>
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaogerente">Relatorio Comissão Gerente</a></span></ul>
                                      <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioprevisaorecebimento">Relatorio Previsão de Recebimento</a></span></ul>
@@ -419,6 +428,11 @@ $data['permissao'] = $this->db->get()->result();
                                         <ul><span class="file"><a href="<?= base_url() ?>cadastros/formapagamento/listarformarendimento">Manter Forma Pagamento</a></span></ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>cadastros/parceiro">Manter Parceiros</a></span></ul>
                                     <? } ?>
+                                </li> 
+                                <li><span class="folder">Aplicativo</span>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/listarpostsblog">Informativos</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/listarpesquisaSatisfacao">Pesquisa Satisfação</a></span></ul>
+                                    
                                 </li> 
                                 <li><span class="folder">Administrativas</span>
                                     <? if ($perfil_id == 1) { ?>

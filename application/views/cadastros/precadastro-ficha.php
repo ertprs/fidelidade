@@ -41,17 +41,19 @@
             
             <?php
             
-                    $datalistarvendedor = $this->paciente->listarvendedor();  
+                    $datalistarvendedor = $this->paciente->listarIndicacao();  
                     $vendedor = $this->paciente->dadosvendedor(@$lista[0]->vendedor);  
-                    if ($this->session->userdata('perfil_id') == 1) {                    
+                    //if ($this->session->userdata('perfil_id') == 1) {                    
                       
                     ?>
             
             <div>
-                    <label>Vendedor</label>                    
+                    <label>Indicação
+                   </label>                    
                     <select id="vendedor" name="vendedor">
                             <?php 
                             foreach($datalistarvendedor as $item){
+                                
                                 ?>
                         <option <? if($item->operador_id == @$lista[0]->vendedor){ echo "selected"; }?> value="<?= $item->operador_id ?>" ><?= $item->nome; ?></option>
                         <?  }
@@ -60,9 +62,9 @@
                    
              </div>
             <?
-                    }else{
+                  //  }else{
             ?>
-             <div>
+             <!-- <div>
                     <label>Vendedor</label>
                      <select id="vendedor" name="vendedor">
                             
@@ -70,9 +72,9 @@
                         
                     </select>
                      
-             </div>
+             </div> -->
                 <?php 
-                    }
+                   // }
                 ?>
               
              <div>

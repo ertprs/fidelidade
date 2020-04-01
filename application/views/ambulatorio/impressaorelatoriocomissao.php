@@ -54,7 +54,7 @@
                     <th class="tabela_teste">Plano</th>
                     <th class="tabela_teste">Forma de Pag.</th>
                     <th class="tabela_teste">Comiss&atilde;o</th>
-                    <th class="tabela_teste">Comiss&atilde;o Vendedor</th>
+                    <th class="tabela_teste">Comiss&atilde;o Vendedor Externo</th>
                     <th class="tabela_teste">Comiss&atilde;o Gerente</th>
                     <th class="tabela_teste">Comiss&atilde;o Seguradora</th>
                 </tr>

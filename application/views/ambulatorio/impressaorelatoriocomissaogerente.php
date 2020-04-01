@@ -40,7 +40,14 @@
 
                 <?php
                 $valortotal = 0;
+                $npagas = 0.0;
+                $pagas=  0.0;
                 foreach ($relatorio as $item) :
+                   if ($item->ativo == 't') {
+                        $npagas = $npagas + $item->comissao_gerente_mensal ; 
+                     }else{
+                         $pagas = $pagas + $item->comissao_gerente_mensal;
+                     }
                     if ($item->ativo == 'f') {
                         $valortotal = $valortotal + $item->comissao_gerente_mensal;
                     }
@@ -81,7 +88,22 @@
         ?>
         <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
     <? }
-    ?>
+    ?> 
+     
+        <br>
+        <table border="2">
+            <tr>
+                <td>Pago
+                <td>Não pago
+            </tr> 
+             <tr>
+                <td>R$ <?= @number_format($pagas, 2, ',', '.'); ?></td>
+                <td>R$ <?= @number_format($npagas, 2, ',', '.'); ?></td>
+            </tr>
+            <tr> 
+                <td colspan="2"> Total: R$ <?= @number_format($pagas + $npagas, 2, ',', '.'); ?></td>
+            </tr>
+</table>
 
 
 </div> <!-- Final da DIV content -->

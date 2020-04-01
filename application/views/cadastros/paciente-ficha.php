@@ -58,6 +58,13 @@
                               ?> 
                 </select>
             </div>
+            <?if(@$obj->_situacao == "Dependente"){?>
+                <div>
+                    <label>Carregar *</label>
+                    <button type="button" onclick="carregarEnderecoTitular();">End. Titular</button>
+                </div>
+            <?}?>
+            
             <div>
                 <label>Endere&ccedil;o *</label>
                 <input type="text" id="txtendereco" class="texto10" name="endereco" value="<?= @$obj->_endereco; ?>" required/>
@@ -101,7 +108,10 @@
                 <input type="text" id="txtcbo" class="texto04" name="txtcbo" value="<?= @$obj->_cbo_nome; ?>" />
                 <input type="hidden" id="txtcbohidden" class="texto04" name="txtcbohidden" value="<?= @$obj->_cbo_nome; ?>" />
             </div>
-
+            <div>
+                <label>Rendimentos</label>
+                <input type="text" alt="decimal" id="rendimentos" class="texto02" name="rendimentos" value="<?=  number_format(@$obj->_rendimentos, 2, ',', '.'); ?>" required/>
+            </div>
 
             <div>
                 <label>Indicacao</label>
@@ -373,6 +383,7 @@
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/maskedmoney.js"></script>
 <script type="text/javascript">
                         $("#txtDataEmissao").mask("99/99/9999");
                         $("#txtNascimento").mask("99/99/9999");
@@ -386,7 +397,7 @@
                             $("#cpfcnpj").mask("99.999.999/9999-99");
                         });
 
-
+                        $('#rendimentos').maskMoney({ decimal: ',', thousands: '.', precision: 2 });
 //                        var tamanho = $("#cpfcnpj").val().length;
 //                        if (tamanho < 11) {
 ////                                alert('sdas');
@@ -517,6 +528,22 @@
                             }
 
 
+                        }
+
+                        function carregarEnderecoTitular() {
+                            // cpfcnpj
+                            var paciente_id = $("#txtPacienteId").val();
+                            $.getJSON('<?= base_url() ?>autocomplete/carregarEnderecoTitular', {paciente_id: paciente_id, ajax: true}, function (j) {
+                                if(j.length > 0){
+                                    $("#txtendereco").val(j[0].logradouro);
+                                    $("#txtNumero").val(j[0].numero);
+                                    $("#cep").val(j[0].cep);
+                                    $("#txtComplemento").val(j[0].complemento);
+                                    $("#txtBairro").val(j[0].bairro);
+                                    $("#txtCidade").val(j[0].cidade_desc);
+                                    $("#txtCidadeID").val(j[0].municipio_id);
+                                }
+                            });
                         }
 
 

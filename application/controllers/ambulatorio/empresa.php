@@ -16,6 +16,7 @@ class Empresa extends BaseController {
     function Empresa() {
         parent::Controller();
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+        $this->load->model('app_model', 'app');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -31,6 +32,20 @@ class Empresa extends BaseController {
         $this->loadView('ambulatorio/empresa-lista', $args);
 
 //            $this->carregarView($data);
+    }
+
+    function listarpesquisaSatisfacao() {
+//        $data['guia_id'] = $this->guia->verificaodeclaracao();
+//        $data['impressao'] = $this->empresa->listarconfiguracaoimpressao();
+//        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/pesquisasatisfacao-lista');
+    }
+
+    function solicitacaoagendamento() {
+//        $data['guia_id'] = $this->guia->verificaodeclaracao();
+//        $data['impressao'] = $this->empresa->listarconfiguracaoimpressao();
+//        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/solicitacaoagendamento-lista');
     }
 
     function carregarempresa($exame_empresa_id) {
@@ -49,6 +64,113 @@ class Empresa extends BaseController {
 
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "ambulatorio/empresa");
+    }
+
+    function listarpostsblog() {
+    //        $data['guia_id'] = $this->guia->verificaodeclaracao();
+    //        $data['impressao'] = $this->empresa->listarconfiguracaoimpressao();
+    //        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/configurarpostsblog-lista');
+    }
+
+    function carregarpostsblog($posts_blog_id) {
+        $data['posts_blog_id'] = $posts_blog_id;
+        $data['post'] = $this->empresa->carregarlistarpostsblog($posts_blog_id);
+        $data['planos'] = $this->empresa->listarplanos();
+//        var_dump($data['impressao']); die;
+        $this->loadView('ambulatorio/configurarpostsblog-form', $data);
+    }
+
+    function gravarpostsblog() {
+    //        var_dump($_POST); die;
+        $posts_blog_id = $_POST['posts_blog_id'];
+        if ($this->empresa->gravarpostsblog($posts_blog_id)) {
+            $mensagem = 'Sucesso ao gravar informativo';
+        } else {
+            $mensagem = 'Erro ao gravar informativo. Opera&ccedil;&atilde;o cancelada.';
+        }
+        $this->enviarNotificacao('Um novo informativo foi publicado!', $_POST['plano_id']);
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/listarpostsblog");
+    }
+
+    function enviarNotificacao($mensagem, $plano_id){
+        $resposta = $this->app->buscarHashDispositivoPaciente($plano_id);    
+        $headers = array();
+        // echo '<pre>';
+        // var_dump($resposta); 
+        // die;
+        if(count($resposta) > 0){
+            $hash = '';
+            $hash_array = array();
+            foreach ($resposta as $key => $value) {
+                $hash_array[] = $value->hash;
+            }
+            $hash = json_encode($hash_array);
+            
+            $url = 'https://onesignal.com/api/v1/notifications';
+            $headers[] = 'Content-Type: application/json; charset=utf-8';
+            $headers[] = 'Authorization: Basic ZTVmZTU2NjEtZDU1My00NzQzLTllZTYtMzFkMjJlMmEzZWZi';
+            $ch = curl_init();
+            $body = '{
+                "app_id": "13964cbb-2421-4e58-b040-0ad8f2b2e9fa",
+                "include_player_ids": '. $hash .',
+                "data": {"foo": "bar"},
+                "contents": {"en": "'. "$mensagem" .'"}
+            }';
+            // var_dump($body);
+            // die;
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+
+            $result = curl_exec($ch);
+            // var_dump($result); die;
+            curl_close($ch);
+            
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    function excluirpostsblog($posts_blog_id) {
+        //        var_dump($_POST); die;
+        if ($this->empresa->excluirpostsblog($posts_blog_id)) {
+            $mensagem = 'Sucesso ao excluir post do blog';
+        } else {
+            $mensagem = 'Erro ao gravar post do blog. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/listarpostsblog");
+    }
+
+    function confirmarsolicitacaoagendamento($solicitacao_id) {
+//        var_dump($_POST); die;
+        if ($this->empresa->confirmarsolicitacaoagendamento($solicitacao_id)) {
+            $mensagem = 'Sucesso ao confirmar agendamento';
+        } else {
+            $mensagem = 'Erro ao gravar post do blog. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/solicitacaoagendamento");
+    }
+
+    function excluirsolicitacaoagendamento($solicitacao_id) {
+//        var_dump($_POST); die;
+        if ($this->empresa->excluirsolicitacaoagendamento($solicitacao_id)) {
+            $mensagem = 'Sucesso ao excluir agendamento';
+        } else {
+            $mensagem = 'Erro ao gravar post do blog. Opera&ccedil;&atilde;o cancelada.';
+        }
+
+        $this->session->set_flashdata('message', $mensagem);
+        redirect(base_url() . "ambulatorio/empresa/solicitacaoagendamento");
     }
 
     function gravar() {
@@ -101,8 +223,9 @@ class Empresa extends BaseController {
 
     function carregarempresacadastro($empresa_id = NULL) {
 
-        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
-        //$this->carregarView($data, 'giah/servidor-form');
+        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id); 
+         
+        
         $this->loadView('ambulatorio/empresacadastro-form', $data);
     }
     
@@ -131,6 +254,17 @@ class Empresa extends BaseController {
         
         $this->loadView('ambulatorio/empresacadastrologo-form',$data);
         
+    }
+    function gravarempresacadastro() {
+        $empresa_id = $this->empresa->gravarempresacadastro();
+        if ($empresa_id == "-1") {
+            $data['mensagem'] = 'Erro ao gravar a Empresa. Opera&ccedil;&atilde;o cancelada.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao gravar a Empresa.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']); 
+        redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
+         
     }
 
 }

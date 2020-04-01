@@ -477,6 +477,30 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
     </table>
 
     <?
+} elseif ($data['permissao'][0]->carteira_padao_6 == 't') {
+?>
+    <table align="right">
+        <tbody>
+            <tr>
+                <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
+            </tr>
+            <tr>
+                <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
+            </tr>
+            <? if(@$paciente[0]->paciente_contrato_id == ''){?>
+            <tr>
+            <td >CONTRATO: <b><?= @$contrato[0]->paciente_contrato_id;?></b></td>
+            </tr>
+            <?}else{
+            ?>
+            <tr>
+                <td >CONTRATO: <b><?= @$paciente[0]->paciente_contrato_id;?></b></td>
+            </tr>
+            <?}
+            ?>
+        </tbody>
+    </table>
+<?
 }else{
     
 }

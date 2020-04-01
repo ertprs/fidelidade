@@ -8,11 +8,13 @@
                 <?php 
                 if (@$precadastro_id != "") {
                     ?>                 
-                    <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$lista[0]->nome; ?>" required/>                
+                    <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$lista[0]->nome; ?>" required/>   
+                    <input type ="hidden" name="indicacao_id"  value ="<?= @$lista[0]->vendedor; ?>" id ="indicacao_id">             
                 <?
                 }else{
                 ?>
-                <input type ="hidden" name ="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
+                <input type ="hidden" name="paciente_id"  value ="<?= @$obj->_paciente_id; ?>" id ="txtPacienteId">
+                
                 <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$obj->_nome; ?>" required/>
                 <?php }?>
                 
@@ -110,7 +112,10 @@
                 <input type="hidden" id="txtcboID" class="texto_id" name="txtcboID" value="<?= @$obj->_cbo_ocupacao_id; ?>" readonly="true" />
                 <input type="text" id="txtcbo" class="texto04" name="txtcbo" value="<?= @$obj->_cbo_nome; ?>" />
             </div>
-
+            <div>
+                <label>Rendimentos</label>
+                <input type="text" alt="decimal" id="rendimentos" class="texto02" name="rendimentos" value="<?=  number_format(@$obj->_rendimentos, 2, ',', '.'); ?>" required/>
+            </div>
 
             <div>
                 <label>Indicacao</label>
@@ -353,10 +358,10 @@
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
-
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/maskedmoney.js"></script>
 <script type="text/javascript">
                         $("#txtDataEmissao").mask("99/99/9999");
                         $("#txtNascimento").mask("99/99/9999");
@@ -371,6 +376,7 @@
                             $("#cpfcnpj").mask("99.999.999/9999-99");
                         });
 
+                        $('#rendimentos').maskMoney({ decimal: ',', thousands: '.', precision: 2 });
 //                        var tamanho = $("#cpfcnpj").val().length;
 //                        if (tamanho < 11) {
 ////                                alert('sdas');

@@ -58,6 +58,14 @@
                     <dd>
                         <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" />
                     </dd>
+
+                    <dt>
+                        <label>Complemento</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="txtComplemento" class="texto02" name="complemento" value="<?= @$obj->_complemento; ?>" />
+                    </dd>
+
                     <dt>
                         <label>Bairro</label>
                     </dt>
@@ -107,14 +115,43 @@
                     <dd>
                         <input type="text" id="client_secret" class="texto07" name="client_secret" value="<?= @$obj->_client_secret; ?>" />
                     </dd>
-
-
+                    <dt>
+                        <label>E-Pharma (Usuário)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="usuario_epharma" class="texto07" name="usuario_epharma" value="<?= @$obj->_usuario_epharma; ?>" />
+                    </dd>
+                    <dt>
+                        <label>E-Pharma (Senha)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="senha_epharma" class="texto07" name="senha_epharma" value="<?= @$obj->_senha_epharma; ?>" />
+                    </dd>
+                    <dt>
+                        <label>E-Pharma (URL)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="url_epharma" class="texto07" name="url_epharma" value="<?= @$obj->_url_epharma; ?>" />
+                    </dd>
+                    <dt>
+                        <label>E-Pharma (Código Plano)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="codigo_plano" class="texto07" name="codigo_plano" value="<?= @$obj->_codigo_plano; ?>" />
+                    </dd>
                     <dt>
                         <label>Modelo Carteira</label>
                     </dt>
                     <dd>
                         <input type="text" id="modelo_carteira" class="texto07" name="modelo_carteira" value="<?= @$obj->_modelo_carteira; ?>" />
                     </dd>
+
+                    <!-- <dt>
+                        <label>Modelo Carteira</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="modelo_carteira" class="texto07" name="modelo_carteira" value="<?= @$obj->_modelo_carteira; ?>" />
+                    </dd> -->
 
                     <dt>
                         <label>Banco</label>
@@ -167,10 +204,58 @@
 
                             </select>
                         </dd>
+
+                        <dt>
+                            <label>Modelo de Declaração</label>
+                        </dt>
+                        <dd>
+                            <select name="tipo_declaracao" id="tipo_declaracao" class="size2" selected="<?= @$obj->_tipo_declaracao; ?>">
+                                <option value="1" <?
+                                if (@$obj->_tipo_declaracao == "1"):echo 'selected';
+                                endif;
+                                ?>>Declaração Padrão</option>
+                                <option value="2" <?
+                                if (@$obj->_tipo_declaracao == "2"):echo 'selected';
+                                endif;
+                                ?>>Declaração 2</option>
+
+                            </select>
+                        </dd>
                     <? }
                     ?>
 
                 </dl>  
+                <div><br><br>
+                    <dt>
+                        <label title="Definir os botões no app">Botões do APP</label>
+                    </dt>
+                    <dd>
+                        <?
+                        if (@$obj->_botoes_app != '') {
+                            $botoes_app = json_decode(@$obj->_botoes_app);
+                        } else {
+                            $botoes_app = array();
+                        }
+                        ?>
+                        <select name="botoes_app[]" style="width: 47%;" class="chosen-select" data-placeholder="Selecione os campos..." multiple>
+
+                            <option value="p_hexames" <?= (in_array('p_hexames', $botoes_app)) ? 'selected' : ''; ?>>Histórico Exame</option>
+                            <option value="p_hconsulta" <?= (in_array('p_hconsulta', $botoes_app)) ? 'selected' : ''; ?>>Histórico Consulta</option>
+                            <option value="p_marcar_consulta" <?= (in_array('p_marcar_consulta', $botoes_app)) ? 'selected' : ''; ?>>Marcar Consulta</option>
+                            <option value="p_risco_cirurgico" <?= (in_array('p_risco_cirurgico', $botoes_app)) ? 'selected' : ''; ?>>Risco Cirurgico</option>
+                            <option value="p_carterinha_virtual" <?= (in_array('p_carterinha_virtual', $botoes_app)) ? 'selected' : ''; ?>>Carterinha Virtual</option>
+                            <option value="p_mensalidades" <?= (in_array('p_mensalidades', $botoes_app)) ? 'selected' : ''; ?>>Mensalidades</option>
+                            <option value="p_dicas_saude" <?= (in_array('p_dicas_saude', $botoes_app)) ? 'selected' : ''; ?>>Informativos</option>
+                            <option value="p_como_chegar" <?= (in_array('p_como_chegar', $botoes_app)) ? 'selected' : ''; ?>>Como chegar</option>
+                            <option value="p_convenios" <?= (in_array('p_convenios', $botoes_app)) ? 'selected' : ''; ?>>Convênios</option>
+                            <option value="p_atendimento" <?= (in_array('p_atendimento', $botoes_app)) ? 'selected' : ''; ?>>Atendimento</option>
+                            <option value="p_pesquisa_de_satisfacao" <?= (in_array('p_pesquisa_de_satisfacao', $botoes_app)) ? 'selected' : ''; ?>>Pesquisa de satisfação</option>
+                            <option value="p_solicitar_consulta" <?= (in_array('p_solicitar_consulta', $botoes_app)) ? 'selected' : ''; ?>>Solicitar Consulta</option>
+                            <option value="p_contato" <?= (in_array('p_contato', $botoes_app)) ? 'selected' : ''; ?>>Contato</option>
+                            
+                        </select>
+                    </dd>
+                </div>
                 <br>
                 <br>
                 <br>
@@ -205,6 +290,9 @@
                         <td><input type="checkbox" name="carteira_padao_5"   <? if (@$obj->_carteira_padao_5 == 't') echo "checked"; ?>> 
                             <label  title=" " >Carteira Padrão 5</label>  
                         </td> 
+                        <td><input type="checkbox" name="carteira_padao_6"   <? if (@$obj->_carteira_padao_6 == 't') echo "checked"; ?>> 
+                            <label  title=" " >Carteira Padrão 6</label>  
+                        </td> 
                         <td>
                             <input type="checkbox" name="modificar_verificar"   <? if (@$obj->_modificar_verificar == 't') echo "checked"; ?>> 
                             <label  title="Ao ativar essa flag, a tela de verificar vai necessitar de senha do parceiro que irá poder" >Modificar Verificar</label>  
@@ -229,7 +317,17 @@
     </div>
 </div> <!-- Final da DIV content -->
 
+<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/chosen.css">
+<!--<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/style.css">-->
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/prism.css">
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/chosen.jquery.js"></script>
+<!--<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/prism.js"></script>-->
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/init.js"></script>
 <script type="text/javascript">
     $('#btnVoltar').click(function () {
         $(location).attr('href', '<?= base_url(); ?>ponto/cargo');

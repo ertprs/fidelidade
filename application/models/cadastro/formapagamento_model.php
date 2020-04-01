@@ -458,6 +458,13 @@ class formapagamento_model extends Model {
             $this->db->set('comissao_gerente', str_replace(",", ".", str_replace(".", "", $_POST['comissao_gerente'])));
             $this->db->set('comissao_seguradora', str_replace(",", ".", str_replace(".", "", $_POST['comissao_seguradora'])));
 
+            $this->db->set('comissao_vendedor_externo_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_externo_mensal'])));
+            $this->db->set('comissao_vendedor_externo', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_externo'])));
+            $this->db->set('comissao_vendedor_pj', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_pj'])));
+            $this->db->set('comissao_vendedor_pj_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_vendedor_pj_mensal'])));
+            $this->db->set('comissao_indicacao', str_replace(",", ".", str_replace(".", "", $_POST['comissao_indicacao'])));
+            $this->db->set('comissao_indicacao_mensal', str_replace(",", ".", str_replace(".", "", $_POST['comissao_indicacao_mensal'])));
+
             $this->db->set('valoradcional', str_replace(",", ".", str_replace(".", "", $_POST['valoradcional'])));
             $this->db->set('parcelas', str_replace(".", "", $parcelas));
             $this->db->set('conta_id', $_POST['conta']);
@@ -573,6 +580,12 @@ class formapagamento_model extends Model {
                                comissao_gerente_mensal,
                                comissao_gerente,
                                comissao_seguradora,
+                               comissao_vendedor_externo_mensal,
+                               comissao_vendedor_externo,
+                               comissao_vendedor_pj,
+                               comissao_vendedor_pj_mensal,
+                               comissao_indicacao_mensal,
+                               comissao_indicacao,
                                carencia_exame_mensal,
                                carencia_consulta_mensal,
                                carencia_especialidade_mensal,
@@ -607,6 +620,12 @@ class formapagamento_model extends Model {
             $this->_carencia_especialidade = $return[0]->carencia_especialidade;
             $this->_carencia_exame_mensal = $return[0]->carencia_exame_mensal;
             $this->_carencia_consulta_mensal = $return[0]->carencia_consulta_mensal;
+            $this->_comissao_vendedor_externo_mensal = $return[0]->comissao_vendedor_externo_mensal;
+            $this->_comissao_vendedor_externo = $return[0]->comissao_vendedor_externo;
+            $this->_comissao_indicacao = $return[0]->comissao_indicacao;
+            $this->_comissao_indicacao_mensal = $return[0]->comissao_indicacao_mensal;
+            $this->_comissao_vendedor_pj = $return[0]->comissao_vendedor_pj;
+            $this->_comissao_vendedor_pj_mensal = $return[0]->comissao_vendedor_pj_mensal;
             $this->_carencia_especialidade_mensal = $return[0]->carencia_especialidade_mensal;
             $this->_conta_id = $return[0]->conta_id;
             $this->_valor1 = $return[0]->valor1;

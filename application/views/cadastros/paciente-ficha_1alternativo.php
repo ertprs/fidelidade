@@ -232,6 +232,11 @@
                 <input type="checkbox"  name="reativar" id="reativar">
             </div>
 
+            <div>
+                            <label>Renda Mesal</label>                      
+                            <input type="text" id="rendamesal" name="renda_mesal"  alt="decimal" class="texto02" value=""/>
+                        </div>
+
         </fieldset>
 
         <fieldset>
@@ -339,6 +344,7 @@
                         $("#txtTelefone").mask("(99) 9999-9999");
                         $("#cpfcnpj").mask("999.999.999-99");
 
+
                         $("#seletorcpf").click(function () {
                             $("#cpfcnpj").mask("999.999.999-99");
                             $("#cpfcnpj").val("");
@@ -417,7 +423,6 @@
                             }
 
                         }
-
 
 
 </script>

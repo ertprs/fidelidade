@@ -6,7 +6,8 @@
         <h3 class="singular"><a href="#">Cadastro de Setor</a></h3>
 <?php
     $this->load->library('utilitario');
-    Utilitario::pmf_mensagem($this->session->flashdata('message'));
+    $utilitario = new Utilitario();
+    $utilitario->pmf_mensagem($this->session->flashdata('message'));
     ?>
         <div>
             <form name="form_setor" id="form_setor" action="<?= base_url() ?>ambulatorio/saudeocupacional/gravarsetor" method="post">

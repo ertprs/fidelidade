@@ -198,6 +198,101 @@ class Autocomplete extends Controller {
 //        die;
     }
 
+    function mensalidadesAPI() {
+        header('Access-Control-Allow-Origin: *');
+
+        $paciente_antigo_id = $_GET['paciente_antigo_id'];
+        $cpf = $_GET['cpf'];
+        if ($paciente_antigo_id > 0) {
+            $paciente_informacoes = $this->guia->listarpacientepacienteidantigo($paciente_antigo_id);
+        } else {
+            $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+        }
+        $pagamento = array(0, '');
+        if(count($paciente_informacoes) > 0){
+            $paciente_id = $paciente_informacoes[0]->paciente_id;
+            if ($paciente_informacoes[0]->situacao == 'Dependente') {
+                $dependente = true;
+            } else {
+                $dependente = false;
+            }
+    
+            if ($dependente) {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+                $paciente_titular_id = $retorno[0]->paciente_id;
+    
+            } else {
+                $paciente_titular_id = $paciente_id;
+            }
+            $pagamento = $this->guia->listarparcelaspacienteAPI($paciente_titular_id);
+        }else{
+            $pagamento = array(-1, 'Cliente não encontrado');
+        }
+        echo json_encode($pagamento);
+    }
+    
+
+    function impressaoCarteiraWeb(){
+        $paciente_id = $_GET['paciente_id'];
+        $paciente_antigo_id = $_GET['paciente_id'];
+        $cpf = $_GET['cpf'];
+        $empresa_id = 1;
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $data['permissao'] = $this->empresa_m->listarpermissoesWeb();
+        // var_dump($data['permissao']); die;
+
+        if ($data['permissao'][0]->carteira_padao_2 == 't') {
+            $data['paciente'] = $this->guia->listarpacientecarteirapadrao2($paciente_id);
+        } elseif ($data['permissao'][0]->carteira_padao_6 == 't') {
+
+            $this->load->helper('directory');
+
+        if (!is_dir("./upload/empresalogo")) {
+            mkdir("./upload/empresalogo");
+            $destino = "./upload/empresalogo";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/empresalogo/$empresa_id")) {
+            mkdir("./upload/empresalogo/$empresa_id");
+            $destino = "./upload/empresalogo/$empresa_id";
+            chmod($destino, 0777);
+        }
+
+        $data['arquivo_pasta'] = directory_map("./upload/empresalogo/$empresa_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        //    var_dump($data['arquivo_pasta']); die;
+        }
+
+            $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
+            $data['contrato'] = $this->guia->listarinformacoesContratodepedente($paciente_id);
+        } else {
+            $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
+        }
+        // var_dump($data['contrato']); die;
+        if ($paciente_antigo_id > 0) {
+            $paciente_informacoes = $this->guia->listarpacientepacienteidantigo($paciente_antigo_id);
+        } else {
+            $paciente_informacoes = $this->guia->listarpacientecpf($cpf);
+        }
+        if ($paciente_informacoes[0]->situacao == 'Dependente') {
+            $dependente = true;
+        } else {
+            $dependente = false;
+        }
+        if ($dependente) {
+            $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+            $data['titular_id'] = $retorno[0]->paciente_id;
+        } else {
+            $data['titular_id'] = $paciente_id;
+            $paciente_dependente_id = null;
+        }
+        $html = $this->load->View('ambulatorio/impressaoficharonaldoWeb', $data, true);
+        echo $html;
+        // echo json_encode($html);
+    }
+
     function verificarcarenciaweb() {
         header('Access-Control-Allow-Origin: *');
 
@@ -1056,6 +1151,294 @@ class Autocomplete extends Controller {
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
         }
         echo json_encode($retorno);
+    }
+
+    function enviarCurl($fields, $url, $headers = null, $json = null){
+        
+       
+        $ch = curl_init();
+
+        if($headers != null){
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        if($json != null){
+            // var_dump($json); die;
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        }else{
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
+        }
+        
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $server_output = curl_exec($ch);
+
+        curl_close ($ch);
+        return $server_output;
+    }
+
+    function enviarCurlGet($url, $headers, $qry_str){
+        
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_URL, $url . $qry_str); 
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        $content = curl_exec($ch);
+        curl_close($ch);
+
+        return $content;
+    }
+
+    function requestAuthEpharma(){
+        $empresa = $this->guia->listarempresa();
+        $usuario = $empresa[0]->usuario_epharma;
+        $senha = $empresa[0]->senha_epharma;
+        $url_epharma = $empresa[0]->url_epharma;
+        $url = "$url_epharma/oauth/token";
+        $arrayPOST = array(
+            'grant_type' => 'password',
+            'client_id' => 'etgtIB0O43saFI24MRkm2o3mr3l35UY',
+            'client_secret' => 'etgtIB0O43saFI24MRkm2o3mr3l35UY',
+            'username' => $usuario,
+            'password' => $senha
+        );
+        $retorno_curl = $this->enviarCurl($arrayPOST, $url);
+        $json_decode = json_decode($retorno_curl);
+        // echo '<pre>';
+        // var_dump($json_decode); 
+        // die;
+        if(isset($json_decode->access_token)){
+            $json_token = $json_decode;
+        }else{
+            $json_token = 'error';
+        }
+        return $json_token;
+    }
+
+    function integracaoEpharmaCliente($cliente_id){
+        
+        $paciente = $this->paciente_m->listardados($cliente_id);
+        if(count($paciente) > 0){
+            $paciente_id = $paciente[0]->paciente_id;
+            if ($paciente[0]->situacao == 'Dependente') {
+                $dependente = true;
+            } else {
+                $dependente = false;
+            }
+    
+            if ($dependente) {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+                $cpfTitular = $retorno[0]->cpf;
+    
+            } else {
+                $cpfTitular = $paciente[0]->cpf;
+            }
+        }
+        // var_dump($cpfTitular); die;
+        $empresa = $this->guia->listarempresa();
+        $url = $empresa[0]->url_epharma;
+        $obj_token = $this->requestAuthEpharma();
+        if($obj_token == 'error'){
+            return false;
+        }
+        $access_token = $obj_token->access_token;
+        // var_dump($access_token); die;
+        $url =  $url .'/api/ManutencaoBeneficiario/BeneficiariosCartaoCliente';
+        $obj_geral = new stdClass();
+        $obj_telefones = new stdClass();
+        $obj_endereco = new stdClass();
+        $obj_dadosBeneficiario = new stdClass();
+        
+        // Telefone
+        $obj_endereco->cep = $this->utilitario->onlyNumbers($paciente[0]->cep);
+        $obj_endereco->logradouro = $paciente[0]->logradouro;
+        $obj_endereco->numero = $paciente[0]->numero;
+        $obj_endereco->complemento = $paciente[0]->complemento;
+        $obj_endereco->bairro = $paciente[0]->bairro;
+        $obj_endereco->cidade = $paciente[0]->cidade_desc;
+        $obj_endereco->uf = 'CE';
+        $obj_endereco->tipoEndereco = '';
+
+        // Endereço
+
+        $obj_telefones->celular = $this->utilitario->onlyNumbers($paciente[0]->celular);
+        $obj_telefones->residencial = $this->utilitario->onlyNumbers($paciente[0]->telefone);
+        $obj_telefones->comercial = '';
+
+        // Dados do Beneficiario
+        if($paciente[0]->nascimento != ''){
+            $nascimento = date("d|m|Y", strtotime($paciente[0]->nascimento));
+        }else{
+            $nascimento = '';
+        }
+
+        $obj_dadosBeneficiario->nomeBeneficiario = $paciente[0]->nome;
+        $obj_dadosBeneficiario->cpf = $paciente[0]->cpf;
+        $obj_dadosBeneficiario->rg = $paciente[0]->rg;
+        
+        
+        $obj_dadosBeneficiario->dataNascimento = $nascimento;
+        $obj_dadosBeneficiario->sexo = $paciente[0]->sexo;
+        $obj_dadosBeneficiario->email1 = $paciente[0]->cns;
+        $obj_dadosBeneficiario->email2 = '';
+
+        // Objeto Geral
+        $obj_geral->beneficiario = array();
+        $obj_geral->beneficiario[0] = new stdClass();
+        $obj_geral->beneficiario[0]->cartaoTitular = $this->utilitario->onlyNumbers($cpfTitular);
+        $obj_geral->beneficiario[0]->cartaoUsuario = $this->utilitario->onlyNumbers($paciente[0]->cpf);
+        $obj_geral->beneficiario[0]->planoCodigo = '59941';
+        $obj_geral->beneficiario[0]->inicioVigencia = date("d|m|Y", strtotime(date("Y-m-d")));
+        $obj_geral->beneficiario[0]->fimVigencia = '';
+        if($paciente[0]->situacao == 'Titular'){
+            $obj_geral->beneficiario[0]->tipoBeneficiario = 'T';
+            $obj_geral->beneficiario[0]->grauDependencia = '00';
+        }else{
+            $obj_geral->beneficiario[0]->tipoBeneficiario = 'D';
+            $obj_geral->beneficiario[0]->grauDependencia = '01';
+        }
+        // $obj_geral->beneficiario[0]->fimVigencia = date("d|m|Y", strtotime("+1 year", strtotime(date("Y-m-d"))));
+        $obj_geral->beneficiario[0]->matricula = $paciente[0]->paciente_id;
+        
+        $obj_geral->beneficiario[0]->dadosBeneficiario = $obj_dadosBeneficiario;
+        $obj_geral->beneficiario[0]->endereco = $obj_endereco;
+        $obj_geral->beneficiario[0]->telefones = $obj_telefones;
+
+        $json = json_encode($obj_geral);
+        $json = str_replace('|', '/', $json);
+        // echo '<pre>';
+        // var_dump($json);
+        // die;
+
+        $headers = array();
+        $strlen = strlen($json);
+        $headers[] = "Content-length: $strlen";
+        $headers[] = 'Content-type: application/json';
+        $headers[] = 'Authorization: Bearer '.$access_token;
+        $envio = $this->enviarCurl(array(), $url, $headers, $json);
+        $obj_ret = json_decode($envio);
+        echo '<meta charset="UTF-8">';
+        echo '<pre>';
+        var_dump($obj_ret);
+        die;
+    }
+
+    function integracaoEpharmaLimiteCompra($cliente_id, $valor){
+        
+        $paciente = $this->paciente_m->listardados($cliente_id);
+        if(count($paciente) > 0){
+            $paciente_id = $paciente[0]->paciente_id;
+            if ($paciente[0]->situacao == 'Dependente') {
+                $dependente = true;
+            } else {
+                $dependente = false;
+            }
+    
+            if ($dependente) {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+                $cpfTitular = $retorno[0]->cpf;
+    
+            } else {
+                $cpfTitular = $paciente[0]->cpf;
+            }
+        }
+        // var_dump($cpfTitular); die;
+        $empresa = $this->guia->listarempresa();
+        $url = $empresa[0]->url_epharma;
+        $obj_token = $this->requestAuthEpharma();
+        if($obj_token == 'error'){
+            return false;
+        }
+        $access_token = $obj_token->access_token;
+        // var_dump($access_token); die;
+        $url =  $url .'/api/ManutencaoBeneficiario/BeneficiariosLimiteCompra';
+        $obj_geral = new stdClass();
+        
+      
+        // Objeto Geral
+        $obj_geral->numeroDoCartao = $this->utilitario->onlyNumbers($cpfTitular);
+        $obj_geral->numeroDaMatricula = $paciente[0]->paciente_id;
+        if($paciente[0]->situacao == 'Titular'){
+            $obj_geral->grauDeDependencia = '00';
+        }else{
+            $obj_geral->grauDeDependencia = '01';
+        }
+        $obj_geral->codigoDoPlano = $empresa[0]->codigo_plano;
+        $data = date("d/m/Y", strtotime("+1 days",strtotime(date('Y-m-d')))); 
+        // $data = date('d/m/Y'); 
+        $obj_geral->dataDoLimite = $data;
+        $obj_geral->valor = $this->utilitario->preencherEsquerda($this->utilitario->onlyNumbers($valor), 7, '0');
+
+        $json = json_encode($obj_geral);
+        $json = str_replace('|', '/', $json);
+        // echo '<pre>';
+        // var_dump($json);
+        // die;
+
+        $headers = array();
+        $strlen = strlen($json);
+        $headers[] = "Content-length: $strlen";
+        $headers[] = 'Content-type: application/json';
+        $headers[] = 'Authorization: Bearer '.$access_token;
+        $envio = $this->enviarCurl(array(), $url, $headers, $json);
+        $obj_ret = json_decode($envio);
+        echo '<meta charset="UTF-8">';
+        echo '<pre>';
+        var_dump($obj_ret);
+        die;
+    }
+
+    function integracaoEpharmaSaldoCliente($cliente_id){
+        
+        $paciente = $this->paciente_m->listardados($cliente_id);
+        if(count($paciente) > 0){
+            $paciente_id = $paciente[0]->paciente_id;
+            if ($paciente[0]->situacao == 'Dependente') {
+                $dependente = true;
+            } else {
+                $dependente = false;
+            }
+    
+            if ($dependente) {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+                $cpfTitular = $retorno[0]->cpf;
+    
+            } else {
+                $cpfTitular = $paciente[0]->cpf;
+            }
+        }
+        // var_dump($cpfTitular); die;
+        $empresa = $this->guia->listarempresa();
+        $url = $empresa[0]->url_epharma;
+        $obj_token = $this->requestAuthEpharma();
+        if($obj_token == 'error'){
+            return false;
+        }
+        $access_token = $obj_token->access_token;
+        // var_dump($access_token); die;
+        $url =  $url . "/api/Beneficiario/SaldoOnline";
+        $json = '';
+        // echo '<pre>';
+        // var_dump($access_token);
+        // die;
+
+        $headers = array();
+        $strlen = strlen($json);
+        // $headers[] = "Content-length: $strlen";
+        $headers[] = 'Content-type: application/json';
+        $headers[] = 'Authorization: Bearer '.$access_token;
+        $qry_str = "?IdPlano=59941&strCartao=$cpfTitular";
+        $envio = $this->enviarCurlGet($url, $headers, $qry_str);
+        $obj_ret = json_decode($envio);
+        echo '<meta charset="UTF-8">';
+        echo '<pre>';
+        // var_dump($obj_ret);
+        // die;
+        
     }
 
     function unidadeleito() {
@@ -2536,6 +2919,29 @@ class Autocomplete extends Controller {
             $retorno['endereco'] = $item->logradouro . " - " . $item->numero;
             $var[] = $retorno;
         }
+        echo json_encode($var);
+    }
+
+    function carregarEnderecoTitular() {
+        $var = array();
+        $result = $this->paciente_m->listarEnderecoTitular($_GET['paciente_id']);
+        if(count($result) > 0){
+            $paciente_id = $result[0]->titular_id;
+            $result2 = $this->paciente_m->listardadospaciente($paciente_id);
+
+            foreach ($result2 as $item) {
+                
+                $retorno['logradouro'] = $item->logradouro;
+                $retorno['numero'] = $item->numero;
+                $retorno['cep'] = $item->cep;
+                $retorno['complemento'] = $item->complemento;
+                $retorno['bairro'] = $item->bairro;
+                $retorno['cidade_desc'] = $item->cidade_desc;
+                $retorno['municipio_id'] = $item->cidade_cod;
+                $var[] = $retorno;
+            }
+        }
+        
         echo json_encode($var);
     }
 

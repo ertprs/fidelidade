@@ -186,7 +186,7 @@ if (@$paciente[0]->logradouro != "") {
             <tr  >
                 <td colspan="2" ><?
                     if (@$empresa[0]->municipio != "") {
-                        echo @$empresa[0]->municipio;
+                        echo @$empresa[0]->municipio . ' - ' . @$empresa[0]->estado;
                     } else {
                         echo "____________________";
                     }

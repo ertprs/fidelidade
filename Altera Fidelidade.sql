@@ -368,6 +368,38 @@ ALTER TABLE ponto.tb_procedimentos_plano
 
 --02/08/2019
 
+CREATE TABLE ponto.tb_paciente_contrato_parcelas_gerencianet
+(
+  paciente_contrato_parcelas_gerencianet_id serial NOT NULL,
+  paciente_contrato_parcelas_id integer,
+  link text,
+  pdf text,
+  charge_id text,
+  data date,
+  ativo boolean DEFAULT true,
+  situacao boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  status text,
+  empresa_id integer,
+  carne boolean DEFAULT false,
+  link_carne text,
+  cover_carne text,
+  pdf_carnet text,
+  pdf_cover_carne text,
+  carnet_id integer,
+  num_carne integer,
+  CONSTRAINT tb_paciente_contrato_parcelas_gerencianet_id_pkey PRIMARY KEY (paciente_contrato_parcelas_gerencianet_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet
+  OWNER TO postgres;
+
+
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN carne boolean;
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ALTER COLUMN carne SET DEFAULT false;
 ALTER TABLE ponto.tb_paciente_contrato_parcelas_gerencianet ADD COLUMN link_carne text;
@@ -506,3 +538,310 @@ ALTER TABLE ponto.tb_precadastro
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN forma_dependente boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN forma_dependente SET DEFAULT false;
+ 
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_1 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_1 SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_2 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_2 SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_3 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_3 SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_4 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_4 SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_5 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_5 SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN carteira_padao_6 boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN carteira_padao_6 SET DEFAULT false;
+ 
+ALTER TABLE ponto.tb_empresa ADD COLUMN renovar_contrato_automatico boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN renovar_contrato_automatico SET DEFAULT true;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN cadastroempresa boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN cadastroempresa SET DEFAULT false;
+
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN usuario_epharma text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN senha_epharma text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN url_epharma text;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN botoes_app text;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN codigo_plano text;
+
+
+
+ALTER TABLE ponto.tb_entradas ADD COLUMN empresa_cadastro_id integer;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN cadastro_empresa_flag boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN cadastro_empresa_flag SET DEFAULT false;
+
+
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN titular_flag boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN titular_flag SET DEFAULT false;
+
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN alterar_contrato boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN alterar_contrato SET DEFAULT false;
+
+
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN confirm_outra_data boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN confirm_outra_data SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN financeiro_maior_zero boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN financeiro_maior_zero SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN excluir_entrada_saida boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN excluir_entrada_saida SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN client_id character varying(222);
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN client_secret character varying(222);
+
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN qtd_dias integer;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN qtd_dias SET DEFAULT 365;
+
+
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN nome_impressao text;
+
+ALTER TABLE ponto.tb_entradas ADD COLUMN paciente_contrato_parcelas_id integer;
+
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN empresa_iugu boolean;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ALTER COLUMN empresa_iugu SET DEFAULT false;
+
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN parcela_verificadora boolean;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ALTER COLUMN parcela_verificadora SET DEFAULT false;
+
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN debito boolean;
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ALTER COLUMN debito SET DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_iugu ADD COLUMN empresa_id integer;
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN vendedor_id integer;
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN pago_todos_iugu boolean;
+ALTER TABLE ponto.tb_paciente_contrato ALTER COLUMN pago_todos_iugu SET DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN empresa_cadastro_id integer;
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN nao_renovar boolean;
+ALTER TABLE ponto.tb_paciente_contrato ALTER COLUMN nao_renovar SET DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN forma_rendimento_id integer;
+
+ALTER TABLE ponto.tb_paciente_contrato_dependente ADD COLUMN contador_impressao integer;
+ALTER TABLE ponto.tb_paciente_contrato_dependente ALTER COLUMN contador_impressao SET DEFAULT 0;
+
+ALTER TABLE ponto.tb_paciente_contrato_dependente ADD COLUMN data_ultima_impressao timestamp without time zone;
+
+ALTER TABLE ponto.tb_paciente_contrato_dependente ADD COLUMN ultimo_operador_impressao integer;
+ 
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN "link_GN" text;
+  
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN "charge_id_GN" text;
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN "pdf_GN" text;
+ 
+ALTER TABLE ponto.tb_paciente ADD COLUMN empresa_id integer;
+
+
+
+CREATE TABLE ponto.tb_qtd_funcionarios_empresa
+(
+  qtd_funcionarios_empresa_id serial NOT NULL,
+  forma_pagamento_id integer,
+  valor double precision,
+  parcelas integer,
+  qtd_funcionarios character varying(222),
+  empresa_id integer,
+  operador_cadastro integer,
+  data_cadastro timestamp without time zone,
+  operador_atualizacao integer,
+  data_atualizacao timestamp without time zone,
+  ativo boolean DEFAULT true,
+  CONSTRAINT tb_qtd_funcionarios_empresa_pkey PRIMARY KEY (qtd_funcionarios_empresa_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_qtd_funcionarios_empresa
+  OWNER TO postgres;
+
+
+
+
+--16/03/2020
+
+CREATE TABLE ponto.tb_empresa_cadastro
+(
+  empresa_cadastro_id serial NOT NULL,
+  razao_social character varying(200),
+  nome character varying(200),
+  cnpj character varying(20),
+  cep character varying(9),
+  logradouro character varying(200),
+  numero character varying(20),
+  complemento character varying(100),
+  bairro character varying(100),
+  municipio_id integer,
+  celular character varying(15),
+  telefone character varying(15),
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  tipo_logradouro_id integer,
+  tipo_carencia text,
+  modelo_carteira integer,
+  email text,
+  cnes character varying(20),
+  CONSTRAINT tb_empresa_cadastro_pkey PRIMARY KEY (empresa_cadastro_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_empresa_cadastro
+  OWNER TO postgres;
+
+
+INSERT INTO ponto.tb_perfil(perfil_id, nome, ativo) VALUES (7, 'INDICACAO', TRUE);
+INSERT INTO ponto.tb_perfil(perfil_id, nome, ativo) VALUES (8, 'VENDEDOR EXTERNO', TRUE);
+INSERT INTO ponto.tb_perfil(perfil_id, nome, ativo) VALUES (9, 'VENDEDOR EXTERNO PJ', TRUE);
+
+CREATE TABLE ponto.tb_posts_blog
+(
+  posts_blog_id serial NOT NULL,
+  titulo character varying(200),
+  breve_descricao text,
+  thumbnail text,
+  corpo_html text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_posts_blog_pkey PRIMARY KEY (posts_blog_id)
+);
+  
+
+CREATE TABLE ponto.tb_paciente_risco_cirurgico
+(
+  paciente_risco_cirurgico_id serial NOT NULL,
+  paciente_id integer,
+  questionario text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_risco_cirurgico_pkey PRIMARY KEY (paciente_risco_cirurgico_id)
+);
+  
+
+CREATE TABLE ponto.tb_paciente_pesquisa_satisfacao
+(
+  paciente_pesquisa_satisfacao_id serial NOT NULL,
+  paciente_id integer,
+  questionario text,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_pesquisa_satisfacao_pkey PRIMARY KEY (paciente_pesquisa_satisfacao_id)
+);
+
+
+
+CREATE TABLE ponto.tb_paciente_solicitar_agendamento
+(
+  paciente_solicitar_agendamento_id serial,
+  paciente_id integer,
+  data text,
+  hora text,
+  convenio_id integer,
+  procedimento_convenio_id integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_paciente_solicitar_agendamento_pkey PRIMARY KEY (paciente_solicitar_agendamento_id)
+);
+
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN confirmado boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN procedimento_text text;
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN convenio_text text;
+
+ALTER TABLE ponto.tb_posts_blog ADD COLUMN plano_id integer;
+
+
+CREATE TABLE ponto.tb_registro_dispositivo
+(
+  registro_dispositivo_id serial NOT NULL,
+  hash text,
+  medico_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  ativo boolean DEFAULT true,
+  confirmado boolean DEFAULT true,
+  CONSTRAINT tb_registro_dispositivo_pkey PRIMARY KEY (registro_dispositivo_id)
+);
+
+ALTER TABLE ponto.tb_registro_dispositivo ADD COLUMN paciente_id integer;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN rendimentos numeric(10,2);
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_externo_mensal numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_externo numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_pj numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_vendedor_pj_mensal numeric(10,2);
+
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN data_cadastro timestamp without time zone;
+ALTER TABLE ponto.tb_paciente_solicitar_agendamento ADD COLUMN operador_cadastro integer;
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao numeric(10,2);
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN comissao_indicacao_mensal numeric(10,2);
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN tipo_declaracao INTEGER;
+
+CREATE TABLE ponto.tb_voucher_consulta
+(
+  voucher_consulta_id serial NOT NULL,
+  data date,
+  horario time without time zone,
+  consulta_avulsa_id integer,
+  ativo boolean DEFAULT true,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer,
+  CONSTRAINT tb_voucher_consulta_pkey PRIMARY KEY (voucher_consulta_id)
+);
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_id integer;
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN utilizada boolean DEFAULT false;
+
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN indicacao_id integer;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN usuario_app text;
+ALTER TABLE ponto.tb_paciente ADD COLUMN senha_app text;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN cadastro boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN whatsapp text;
