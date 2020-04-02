@@ -11014,8 +11014,12 @@ ORDER BY ae.agenda_exames_id)";
             $query = $this->db->get();
             $return = $query->result();
 
-
-            $dia_menos_um = date('d') - 1;
+            if(date('d') > 1){
+                 $dia_menos_um = date('d') - 1;          
+            }else{
+                 $dia_menos_um = date('d');
+            }
+           
             $data_verificadora = date('Y-m-' . $dia_menos_um . '');
 //          echo $data_verificadora;die; 
             $this->db->set('valor', 0.00);
