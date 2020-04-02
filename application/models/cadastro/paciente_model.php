@@ -1539,10 +1539,15 @@ class paciente_model extends BaseModel {
                 $this->db->set('cpfresp', 'f');
             }
             
-            $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
-
-            $this->db->set('outro_documento', $_POST['outro_documento']);
-            $this->db->set('numero_documento', $_POST['numero_documento']);
+            if(isset($_POST['rendimentos']) && $_POST['rendimentos'] != ""){
+              $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
+            }
+             if(isset($_POST['outro_documento']) && $_POST['outro_documento'] != ""){
+               $this->db->set('outro_documento', $_POST['outro_documento']);
+             }
+             if(isset($_POST['numero_documento']) && $_POST['numero_documento'] != ""){
+               $this->db->set('numero_documento', $_POST['numero_documento']);
+             }             
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
             $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));

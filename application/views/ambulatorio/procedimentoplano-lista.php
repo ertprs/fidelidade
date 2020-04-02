@@ -205,18 +205,22 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                                 <? if ($perfil_id != 10) { ?>
                                     <? if (@$item->agrupador != 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                              <?php     if (@$this->session->userdata('autenticado_parceiro') != true) {?>
                                             <div class="bt_link">
                                             <a onclick="javascript: return confirm('Deseja realmente excluir o procedimento? ');" target="_blank"
                                                href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id ?>">
                                                 Excluir
                                             </a></div>
+                                              <?php } ?>
                 <!--                                    href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id; ?>"-->
                                         </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;"> 
+                               <?php     if (@$this->session->userdata('autenticado_parceiro') != true) {?>
                                             <div class="bt_link">
                                             <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplano/<?= $item->procedimento_convenio_id ?>">
                                                 Editar
                                             </a></div>
+                               <?php } ?>
                                         </td>
                 <!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
                                             <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoformapagamento/<?= $item->procedimento_convenio_id ?>">

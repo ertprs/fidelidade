@@ -6470,6 +6470,21 @@ table tr:hover  #achadoERRO{
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
     
+    
+    function relatorioparceiroverificar(){
+         $data['listarparceiro'] = $this->paciente->listarparceiros();
+         $this->loadView('ambulatorio/relatorioparceiroverificar',$data);
+    }
+    
+    
+      function gerarelatorioparceiroverificar() { 
+        $empresa_id =  $this->session->userdata('empresa_id'); 
+        $data['empresa'] = $this->guia->listarempresa($empresa_id); 
+        $data['relatorio'] = $this->guia->relatorioparceiroverificar();
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $this->load->View('ambulatorio/impressaorelatorioparceiroverificar', $data);
+    }
 }
 
 /* End of file welcome.php */

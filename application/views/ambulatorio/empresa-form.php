@@ -251,6 +251,7 @@
                             <option value="p_atendimento" <?= (in_array('p_atendimento', $botoes_app)) ? 'selected' : ''; ?>>Atendimento</option>
                             <option value="p_pesquisa_de_satisfacao" <?= (in_array('p_pesquisa_de_satisfacao', $botoes_app)) ? 'selected' : ''; ?>>Pesquisa de satisfação</option>
                             <option value="p_solicitar_consulta" <?= (in_array('p_solicitar_consulta', $botoes_app)) ? 'selected' : ''; ?>>Solicitar Consulta</option>
+                            <option value="p_contato" <?= (in_array('p_contato', $botoes_app)) ? 'selected' : ''; ?>>Contato</option>
                             
                         </select>
                     </dd>

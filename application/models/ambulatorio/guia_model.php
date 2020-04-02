@@ -12096,6 +12096,28 @@ ORDER BY ae.agenda_exames_id)";
             return true;
     }
     
+    
+    function relatorioparceiroverificar(){
+        $this->db->select('pd.nome as dependente,p.nome as titular,fp.fantasia,pc.valortotal,pt.nome as procedimento');
+        $this->db->from('tb_paciente_verificados pv');
+        $this->db->join('tb_paciente pd','pd.paciente_id = pv.dependente','left');
+        $this->db->join('tb_paciente p','p.paciente_id = pv.titular_id','left');
+        $this->db->join('tb_procedimento_convenio pc','pc.procedimento_convenio_id = pv.procedimento_convenio_id','left');
+        $this->db->join('tb_procedimento_tuss pt','pt.procedimento_tuss_id = pc.procedimento_tuss_id','left');
+        $this->db->join('tb_financeiro_parceiro fp','fp.financeiro_parceiro_id =  pv.financeiro_parceiro_id','left');
+        $this->db->where('pv.excluido','f');
+        $this->db->where('pv.ativo','t');
+        if($_POST['parceiro'] != "0"){
+           $this->db->where('pv.financeiro_parceiro_id',$_POST['parceiro']);  
+        }
+        $this->db->where('pv.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
+        $this->db->where('pv.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+       $this->db->orderby('pd.nome');
+        return $this->db->get()->result();
+        
+    }
+    
+    
 }
 
 ?>
