@@ -701,6 +701,8 @@ class paciente_model extends BaseModel {
             $this->_cns = $return[0]->cns;
             $this->_reativar = $return[0]->reativar;
             $this->_credor_devedor_id = $return[0]->credor_devedor_id;
+            $this->_usuario_app = $return[0]->usuario_app;
+            $this->_senha_app = $return[0]->senha_app;
         }
     }
 
@@ -983,6 +985,9 @@ class paciente_model extends BaseModel {
             $this->db->set('numero_documento', $_POST['numero_documento']);
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
+
+            $this->db->set('usuario_app', $_POST['txtUsuarioapp']);
+            $this->db->set('senha_app', md5($_POST['txtSenhaapp']));
 
             $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
 
