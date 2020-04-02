@@ -845,3 +845,5 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN senha_app text;
 ALTER TABLE ponto.tb_empresa ADD COLUMN cadastro boolean DEFAULT false;
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN whatsapp text;
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN data_declaracao timestamp without time zone;

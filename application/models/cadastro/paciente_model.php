@@ -4060,12 +4060,21 @@ class paciente_model extends BaseModel {
     }
 
     function listaridcontrato($paciente_id) {
-        $this->db->select('paciente_contrato_id');
+        $this->db->select('paciente_contrato_id, data_cadastro, paciente_id');
         $this->db->from('tb_paciente_contrato');
         $this->db->where('paciente_id', $paciente_id);
         $this->db->where('ativo', 't');
         return $this->db->get()->result();
     }
+
+    function listaridcontrato2($paciente_id) {
+        $this->db->select('paciente_contrato_id, data_cadastro, paciente_id');
+        $this->db->from('tb_paciente_contrato');
+        $this->db->where('paciente_contrato_id', $paciente_id);
+        $this->db->where('ativo', 't');
+        return $this->db->get()->result();
+    }
+
     function listaridcontrato_dependente($paciente_id) {
         $this->db->select('paciente_contrato_id');
         $this->db->from('tb_paciente_contrato_dependente');

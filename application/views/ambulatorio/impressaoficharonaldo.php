@@ -24,9 +24,9 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
                 <td >NASCIMENTO: <b><?= substr(@$paciente[0]->nascimento, 8, 2) . '/' . substr(@$paciente[0]->nascimento, 5, 2) . '/' . substr(@$paciente[0]->nascimento, 0, 4); ?></b></td>
             </tr>
 
-            <tr>
+            <!-- <tr>
                 <td><?= $empresa[0]->razao_social; ?>: <b><?= "(" . substr(@$empresa[0]->telefone, 0, 2) . ")" . substr(@$empresa[0]->telefone, 3, 4) . "-" . substr(@$empresa[0]->telefone, 7, 4); ?></b></td>
-            </tr>
+            </tr> -->
 
         </tbody>
     </table>
