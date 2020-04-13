@@ -1438,7 +1438,7 @@ class paciente_model extends BaseModel {
 
             // $this->db->set('paciente_id',$_POST['txtPacienteId'] );
 
-            if ($_POST['paciente_id'] == "") {// insert
+            if (@$_POST['paciente_id'] == "") {// insert
                 $this->db->set('data_cadastro', $data);
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->insert('tb_paciente');
@@ -1448,7 +1448,7 @@ class paciente_model extends BaseModel {
                 } else
                     $paciente_id = $this->db->insert_id();
             } else { // update
-                $paciente_id = $_POST['paciente_id'];
+                $paciente_id = @$_POST['paciente_id'];
                 $this->db->set('data_atualizacao', $data);
                 $this->db->set('operador_atualizacao', $operador_id);
                 $this->db->where('paciente_id', $paciente_id);

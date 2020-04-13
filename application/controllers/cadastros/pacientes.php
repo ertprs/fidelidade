@@ -473,10 +473,10 @@ class pacientes extends BaseController {
 
         $contrato_id = $this->paciente->listarcontratotitular();
 
-        if ($this->session->userdata('cadastro') == 2) {
+        // if ($this->session->userdata('cadastro') == 2) {
 
-            $this->guia->geraparcelasdependente($paciente_id, $contrato_id);
-        }
+        //     $this->guia->geraparcelasdependente($paciente_id, $contrato_id);
+        // }
 
         if ($_POST['financeiro_parceiro_id'] > 0) {
 
