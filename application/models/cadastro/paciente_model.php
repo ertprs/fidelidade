@@ -3792,12 +3792,9 @@ class paciente_model extends BaseModel {
                 $this->db->set('vendedor_id', @$_POST['vendedor']);
             }
             $this->db->set('empresa_cadastro_id', $_POST['empresa_id']);
-
             $this->db->insert('tb_paciente_contrato');
             $erro = $this->db->_error_message();
-
             $paciente_contrato_id = $this->db->insert_id();
-
             return $paciente_contrato_id;
         } catch (Exception $exc) {
             return -1;

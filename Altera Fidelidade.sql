@@ -851,3 +851,23 @@ ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN data_declaracao timestamp with
 --14/04/2020
 
 ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_cadastro_id integer;
+
+CREATE TABLE ponto.tb_impressoes_contratro_dependente
+(
+  impressoes_contratro_dependente_id  serial NOT NULL,
+  paciente_contrato_dependente_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  paciente_id integer,
+  paciente_contrato_id integer,
+  CONSTRAINT tb_impressoes_contratro_dependente_pkey PRIMARY KEY (impressoes_contratro_dependente_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_impressoes_contratro_dependente
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_impressoes_contratro_dependente ADD COLUMN ativo boolean;
+ALTER TABLE ponto.tb_impressoes_contratro_dependente ALTER COLUMN ativo SET DEFAULT true;
+
