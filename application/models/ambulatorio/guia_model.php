@@ -10777,33 +10777,74 @@ ORDER BY ae.agenda_exames_id)";
     }
 
     function gravarparcelacontratoempresa($paciente_contrato_id = NULL) {
-
+   
+             $operador_id = $this->session->userdata('operador_id');
+            $horario = date('Y-m-d H:i:s');
 
         $empresa_cadastro_id = $_POST['empresa_id'];
-        $this->db->select('');
-        $this->db->from('tb_qtd_funcionarios_empresa');
-        $this->db->where('ativo', 't');
-        $this->db->where('empresa_id', $empresa_cadastro_id);
+        $this->db->select('afe.*,f.nome as plano,f.taxa_adesao,f.valor_adesao');
+        $this->db->from('tb_qtd_funcionarios_empresa afe');
+        $this->db->from('tb_forma_pagamento f','f.forma_pagamento_id = afe.forma_pagamento_id','left');
+        $this->db->where('afe.ativo', 't');
+        $this->db->where('afe.empresa_id', $empresa_cadastro_id);
         $retorno = $this->db->get()->result();
-
+        
+    //    echo "<pre>"; 
+      //print_r($retorno);
+  //      die();
+        
         foreach ($retorno as $item) {
-            $qtd_parcela = $item->parcelas;
-            $valor = $item->valor;
-            $qtd_funcionarios = $item->qtd_funcionarios;
-            @$valor_total += ($qtd_parcela * $valor) * $qtd_funcionarios;
+            
+         
+            
+            
+            $dia = (int) $_POST['vencimento'];            
+            if ((int) $_POST['vencimento'] < 10) {
+                 $dia = str_replace('0', '', $dia);
+                 $dia = "0" . $dia;
+             }           
+            $qtd_parcela = (int)$item->parcelas;
+            $data_receber = date("Y-m-").$dia;       
+            
+            if($item->taxa_adesao == "t"){  
+                $ajuste = $item->valor_adesao;
+                $this->db->set('taxa_adesao', 't');
+                $this->db->set('valor', $ajuste);
+                if ($ajuste == 0.00) {
+                    $this->db->set('ativo', 'f');
+                    $this->db->set('manual', 't');
+                }
+                $this->db->set('parcela', 0);
+                $this->db->set('paciente_contrato_id', $paciente_contrato_id);
+                $this->db->set('data', $data_receber);
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->insert('tb_paciente_contrato_parcelas');
+            }
+            
+            for($i = 1; $i <=  $item->parcelas; $i++){
+                $parcelas = (int) $parcelas;  
+                if (date("d", strtotime($data_receber)) == '30' && date("m", strtotime($data_receber)) == '01') {
+                      $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
+                      $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                } elseif (date("d", strtotime($data_receber)) == '29' && date("m", strtotime($data_receber)) == '01') {
+                    $data_receber = date("Y-m-d", strtotime("-1 days", strtotime($data_receber)));
+                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));                
+                } else {
+                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));   
+                }          
+                $this->db->set('valor', $item->valor*$item->qtd_funcionarios);
+                $this->db->set('parcela', $i);
+                $this->db->set('paciente_contrato_id', $paciente_contrato_id);
+                $this->db->set('data', $data_receber);
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->insert('tb_paciente_contrato_parcelas');
+             
+            }
         }
-
-        $operador_id = $this->session->userdata('operador_id');
-        $horario = date('Y-m-d H:i:s');
-        $dia_vencimento = $_POST['vencimento'];
-        $data_receber = date('Y-m-' . $dia_vencimento . '');
-        $this->db->set('valor', $valor_total);
-        $this->db->set('parcela', 1);
-        $this->db->set('paciente_contrato_id', $paciente_contrato_id);
-        $this->db->set('data', $data_receber);
-        $this->db->set('data_cadastro', $horario);
-        $this->db->set('operador_cadastro', $operador_id);
-        $this->db->insert('tb_paciente_contrato_parcelas');
+   
+       
     }
 
     function gravarintegracaoiuguempresacadastro($url, $invoice_id, $paciente_contrato_parcelas_id, $empresa_id = NULL) {

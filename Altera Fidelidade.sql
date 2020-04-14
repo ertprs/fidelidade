@@ -612,6 +612,7 @@ ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN qtd_dias SET DEFAULT 365;
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN nome_impressao text;
 
 ALTER TABLE ponto.tb_entradas ADD COLUMN paciente_contrato_parcelas_id integer;
+ALTER TABLE ponto.tb_saldo ADD COLUMN paciente_contrato_parcelas_id integer;
 
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN empresa_iugu boolean;
@@ -845,3 +846,6 @@ ALTER TABLE ponto.tb_paciente ADD COLUMN senha_app text;
 ALTER TABLE ponto.tb_empresa ADD COLUMN cadastro boolean DEFAULT false;
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN whatsapp text;
+--14/04/2020
+
+ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_cadastro_id integer;
