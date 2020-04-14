@@ -6420,13 +6420,19 @@ table tr:hover  #achadoERRO{
               @$paciente_contrato_id = $data['listacontrato'][0]->paciente_contrato_id;  
             }else{
                 $data['listacontratodependente'] = $this->paciente->listaridcontrato_dependente($paciente_id);
-                @$paciente_contrato_id = $data['listacontratodependente'][0]->paciente_contrato_id; 
-                $data['paciente'] = $this->paciente->listardadospaciente($paciente_contrato_id);
+
+                @$paciente_contrato_id = $data['listacontratodependente'][0]->paciente_contrato_id;
+
+                $data['listacontrato'] = $this->paciente->listaridcontrato2($paciente_contrato_id);
+                @$paciente = $data['listacontrato'][0]->paciente_id;
+
+                $data['paciente'] = $this->paciente->listardadospaciente($paciente);
+
+                
             }
             
             $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
 
-           // var_dump($data['dependente']); die;
 
             $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
         }else{
