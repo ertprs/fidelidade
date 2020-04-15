@@ -71,11 +71,15 @@ $perfil_id = $this->session->userdata('perfil_id');
                 </thead>
                 <tbody>
                     <?
+                    $valor_total_parcelas = 0;
+                    $quantidade_funcionarios_num = 0;
+                    $estilo_linha = "tabela_content01";
                     foreach ($quantidade_funcionarios as $item):
-                        (@$estilo_linha == "tabela_content01") ? @$estilo_linha = "tabela_content02" : @$estilo_linha = "tabela_content01";
+                        ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
 
-                        @$valor_total_parcelas += ($item->parcelas * $item->valor) * $item->qtd_funcionarios;
-                        @$quantidade_funcionarios_num += $item->qtd_funcionarios;
+                        
+                        $valor_total_parcelas += ($item->parcelas * $item->valor) * $item->qtd_funcionarios;
+                        $quantidade_funcionarios_num += $item->qtd_funcionarios;
 
                         @$valor_mensal += $item->valor;
                         ?>
@@ -239,28 +243,10 @@ $perfil_id = $this->session->userdata('perfil_id');
                 </table>
 
             </form>
-
-
-
-
-
-
-
-
         </div>
-
     </div>
 
-
-
-
-
-
-
-
     <div class="content ficha_ceatox" style="margin-left:-1%;"> 
-
-
         <fieldset>
             <legend>Funcionários</legend>
             <table>
@@ -285,10 +271,19 @@ $perfil_id = $this->session->userdata('perfil_id');
                     ?>
                     <tbody>
                         <?php
+                        $valor_dependentes = 0;
                         foreach ($funcionarios as $item) {
+                            $ii = 0;
+                             $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
+                             foreach($dependentes as $item2){
+                                 if($item2->situacao == "Dependente"){
+                                     $ii++;
+                                 $valor_dependentes += $item2->valoradcional;
+                                 }
+                             }
+                             
                             $resultado = $this->paciente->somarparcelasdefuncionarios($item->paciente_id);
                             foreach ($resultado as $value) {
-
                                 @$total_p += $value->valor;
                             }
                             (@$estilo_linha == "tabela_content01") ? @$estilo_linha = "tabela_content02" : @$estilo_linha = "tabela_content01";
@@ -319,7 +314,7 @@ $perfil_id = $this->session->userdata('perfil_id');
                                 <td  class="<?php echo @$estilo_linha; ?>">
                                     <div class="bt_link">
                                         <a     href="<?= base_url() ?>ambulatorio/guia/listardependentes/<?= $item->paciente_id; ?>/<?= $item->paciente_contrato_id; ?>">
-                                            Dependentes
+                                            Dependentes 
                                         </a> 
                                     </div>
                                 </td> 
@@ -342,7 +337,7 @@ $perfil_id = $this->session->userdata('perfil_id');
                 <tfoot>
                     <tr>
                         <th class="tabela_footer" colspan="6">
-                            <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
+                           
                             Total de registros: <?php echo $total; ?>
                         </th>
 
@@ -353,30 +348,13 @@ $perfil_id = $this->session->userdata('perfil_id');
             <br>
             Total 
             <table>
-
-                <?
-                foreach ($quantidade_funcionarios as $item):
-                    ?>
-
+                <? foreach ($quantidade_funcionarios as $item): ?>
                     <tr>
                         <td>
-    <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . ($item->qtd_funcionarios * $item->valor); ?>
+     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format($valor_dependentes, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+$valor_dependentes, 2, ',', '.'); ?>
                         </td>
                     </tr>
-
-
-
-    <?
-endforeach;
-
-//              
-//            if (@$valor_total_parcelas == "") {
-//                echo "0,00";
-//            } else {
-//                echo number_format($valor_total_parcelas, 2, ',', '.');
-//            }
-?>
-
+     <? endforeach; ?>
             </table>
             <br>
             <br>

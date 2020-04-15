@@ -10784,20 +10784,25 @@ ORDER BY ae.agenda_exames_id)";
         $empresa_cadastro_id = $_POST['empresa_id'];
         $this->db->select('afe.*,f.nome as plano,f.taxa_adesao,f.valor_adesao');
         $this->db->from('tb_qtd_funcionarios_empresa afe');
-        $this->db->from('tb_forma_pagamento f','f.forma_pagamento_id = afe.forma_pagamento_id','left');
+        $this->db->join('tb_forma_pagamento f','f.forma_pagamento_id = afe.forma_pagamento_id','left');
         $this->db->where('afe.ativo', 't');
         $this->db->where('afe.empresa_id', $empresa_cadastro_id);
         $retorno = $this->db->get()->result();
+      
         
-    //    echo "<pre>"; 
-      //print_r($retorno);
-  //      die();
-        
-        foreach ($retorno as $item) {
-            
-         
-            
-            
+        $valor_dependentes = 0;
+        $funcionarios = $this->listarfuncionariosempresacadastro($_POST['empresa_id']);
+        foreach($funcionarios as $value){
+             $dependentes = $this->listardependentescontrato($value->paciente_contrato_id);
+                 foreach($dependentes as $item2){
+                     if($item2->situacao == "Dependente"){
+                      $valor_dependentes += $item2->valoradcional;
+                     }
+                 }
+        }
+      
+        foreach ($retorno as $item) { 
+            $ajuste = ($item->valor*$item->qtd_funcionarios)+$valor_dependentes;
             $dia = (int) $_POST['vencimento'];            
             if ((int) $_POST['vencimento'] < 10) {
                  $dia = str_replace('0', '', $dia);
@@ -10807,7 +10812,7 @@ ORDER BY ae.agenda_exames_id)";
             $data_receber = date("Y-m-").$dia;       
             
             if($item->taxa_adesao == "t"){  
-                $ajuste = $item->valor_adesao;
+              
                 $this->db->set('taxa_adesao', 't');
                 $this->db->set('valor', $ajuste);
                 if ($ajuste == 0.00) {
@@ -10833,7 +10838,7 @@ ORDER BY ae.agenda_exames_id)";
                 } else {
                     $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));   
                 }          
-                $this->db->set('valor', $item->valor*$item->qtd_funcionarios);
+                $this->db->set('valor', $ajuste);
                 $this->db->set('parcela', $i);
                 $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                 $this->db->set('data', $data_receber);
@@ -12162,6 +12167,32 @@ ORDER BY ae.agenda_exames_id)";
         
     }
     
+      function listarfuncionariosempresacadastro($empresa_id = NULL) {
+
+        $this->db->select('fp.forma_pagamento_id,pc.paciente_contrato_id,p.nome as paciente, fp.nome as forma_pagamento,p.paciente_id,fp.valor1,fp.valor6,fp.valor12,fp.valor5,fp.valor10,fp.valor11');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->where('p.empresa_id', $empresa_id);
+        $this->db->where('pc.ativo', 't');
+        $this->db->where('p.ativo', 't');
+        $this->db->where('p.empresa_id is not null');
+        return $this->db->get()->result();
+    }
+    
+      function listardependentescontrato($contrato_id) {
+        $this->db->select('o.nome as operador_ultima_impressao,p.nome, p.nascimento, p.paciente_id, situacao,contador_impressao,data_ultima_impressao,pcd.paciente_contrato_dependente_id,fp.valoradcional');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
+        $this->db->join('tb_paciente_contrato pt','pt.paciente_contrato_id = pcd.paciente_contrato_id','left');
+        $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pt.plano_id','left');
+        $this->db->join('tb_operador o', 'o.operador_id = pcd.ultimo_operador_impressao', 'left');
+        $this->db->where("pcd.paciente_contrato_id", $contrato_id);
+        $this->db->where("pcd.ativo", "t");
+        $this->db->order_by('situacao', 'desc');
+        $return = $this->db->get();
+        return $return->result();
+    }
     
 }
 

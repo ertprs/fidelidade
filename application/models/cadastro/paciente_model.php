@@ -205,9 +205,11 @@ class paciente_model extends BaseModel {
 
     function listardependentescontrato($contrato_id) {
 
-        $this->db->select('o.nome as operador_ultima_impressao,p.nome, p.nascimento, p.paciente_id, situacao,contador_impressao,data_ultima_impressao,pcd.paciente_contrato_dependente_id');
+        $this->db->select('o.nome as operador_ultima_impressao,p.nome, p.nascimento, p.paciente_id, situacao,contador_impressao,data_ultima_impressao,pcd.paciente_contrato_dependente_id,fp.valoradcional');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
+        $this->db->join('tb_paciente_contrato pt','pt.paciente_contrato_id = pcd.paciente_contrato_id','left');
+        $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pt.plano_id','left');
         $this->db->join('tb_operador o', 'o.operador_id = pcd.ultimo_operador_impressao', 'left');
         $this->db->where("pcd.paciente_contrato_id", $contrato_id);
         $this->db->where("pcd.ativo", "t");
@@ -3829,11 +3831,13 @@ class paciente_model extends BaseModel {
                             cp.paciente_contrato_id, 
                             cp.paciente_contrato_parcelas_id,
                             paciente_contrato_parcelas_iugu_id, 
-                            cp.empresa_iugu
+                            cp.empresa_iugu,
+                            fr.nome as forma_pagamento
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_forma_rendimento fr','fr.forma_rendimento_id = pc.forma_rendimento_id','left');
 //        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->where("cp.paciente_contrato_id", $contrato_id);
 //        $this->db->where('p.empresa_id', $empresa_id); 
@@ -4311,6 +4315,14 @@ class paciente_model extends BaseModel {
         
     }
     
+    
+    function listadadosempresacadastro($empresa_id){        
+        $this->db->select('e.*,m.codigo_ibge');
+        $this->db->from('tb_empresa_cadastro e');
+        $this->db->join("tb_municipio m", 'm.municipio_id = e.municipio_id', 'left');
+        $this->db->where('empresa_cadastro_id', $empresa_id);
+        return $this->db->get()->result();
+    }
     
     
 }

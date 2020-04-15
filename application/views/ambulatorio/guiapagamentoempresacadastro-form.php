@@ -53,74 +53,20 @@
                 <? if (count($listarpagamentoscontrato) > 0) { ?>
                     <table id="table_justa" >
                         <thead>
-
                             <tr>
                                 <th width="70px;" class="tabela_header">Parcela</th>
                                 <th width="70px;" class="tabela_header">Data</th>
                                 <th width="70px;" class="tabela_header">Valor</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
                                 <th width="70px;" class="tabela_header">Observações</th>
-    <!--                                <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
-                                <th width="70px;" colspan="2" class="tabela_header">FORMA DE PAGAMETO: <?= @$paciente['0']->pagamento; ?></th>
-
+    <!--                        <th width="70px;" class="tabela_header">Taxa de Adesão</th>-->
+                                <th width="70px;" colspan="2" class="tabela_header">FORMA DE PAGAMETO: <?= @$listarpagamentoscontrato['0']->forma_pagamento; ?></th>
                                 <? if (@$listarpagamentoscontrato[0]->contrato == 't') { ?>
-
                                     <th class="tabela_header" colspan="1">
-
-                                        <?
-                                        if (@$paciente[0]->empresa_id != ""):
-                                            if ($this->session->userdata('empresa_id') == @$paciente[0]->empresa_id):
-                                                ?>
-
-
-                                                <?
-                                            else:
-
-                                            endif;
-
-                                        else:
-                                            ?>
-
-
-                                            <!--                                            <div class="bt_link" id="botaogerartodos">
-                                                                                            <a href="<?= base_url() ?>ambulatorio/guia/gerartodosiugu/ <?= @$contrato_id ?>">Gerar Todos Iugu
-                                            
-                                            
-                                            
-                                                                                            </a>
-                                                                                        </div> -->
-
-
-
-                                        <?
-                                        endif;
-                                        ?>
-
+                                        
 
                                     </th>
                                     <th class="tabela_header" colspan="1">
-
-
-                                        <?
-                                        if (@$paciente[0]->empresa_id != ""):
-                                            if ($this->session->userdata('empresa_id') == @$paciente[0]->empresa_id):
-                                                ?> 
-                                                <?
-                                            else:
-                                            endif;
-
-                                        else:
-                                            ?>
-
-                                            <!--                                                <div class="bt_link">
-                                                                                                <a href="<?= base_url() ?>ambulatorio/guia/pagamentocartaoiugu/ <?= @$contrato_id ?>">Pag. Cartão Agendado
-                                                                                                </a>
-                                                                                            </div> -->
-
-                                        <? endif; ?>
-
-
-
 
                                     </th>
                                     <th class="tabela_header" colspan="1">
