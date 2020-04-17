@@ -988,8 +988,11 @@ class paciente_model extends BaseModel {
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
 
-            $this->db->set('usuario_app', $_POST['txtUsuarioapp']);
-            $this->db->set('senha_app', md5($_POST['txtSenhaapp']));
+            $this->db->set('cns', $_POST['txtUsuario']);
+            
+            if($_POST['txtSenha'] != ''){
+                $this->db->set('senha_app', md5($_POST['txtSenha']));
+            }
 
             $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
 

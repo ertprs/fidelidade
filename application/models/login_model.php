@@ -20,7 +20,8 @@ class login_model extends Model {
         $this->db->orderby('pc.ativo desc');
         $return = $this->db->get()->result();
 
-        if(count($return) == 0 && is_int($usuario)){
+        if(count($return) == 0 && preg_replace("/[^0-9]/", "", $usuario) > 0){
+            // die;
             $this->db->select('pc.paciente_contrato_id, p.paciente_id, p.nome, p.cpf, fp.nome as plano');
             $this->db->from('tb_paciente_contrato pc');
             $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
