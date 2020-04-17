@@ -871,3 +871,13 @@ ALTER TABLE ponto.tb_impressoes_contratro_dependente
 ALTER TABLE ponto.tb_impressoes_contratro_dependente ADD COLUMN ativo boolean;
 ALTER TABLE ponto.tb_impressoes_contratro_dependente ALTER COLUMN ativo SET DEFAULT true;
 
+--16/04/2020
+
+ALTER TABLE ponto.tb_empresa_cadastro ADD COLUMN financeiro_credor_devedor_id integer;
+ALTER TABLE ponto.tb_financeiro_credor_devedor ADD COLUMN empresa_cadastro_id integer;
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN confirmado boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN horario_uso timestamp without time zone;
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_atualizacao integer;

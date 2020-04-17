@@ -3266,7 +3266,6 @@ class paciente_model extends BaseModel {
     }
 
     function listarfuncionariosempresacadastro($empresa_id = NULL) {
-
         $this->db->select('fp.forma_pagamento_id,pc.paciente_contrato_id,p.nome as paciente, fp.nome as forma_pagamento,p.paciente_id,fp.valor1,fp.valor6,fp.valor12,fp.valor5,fp.valor10,fp.valor11');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
@@ -3275,6 +3274,7 @@ class paciente_model extends BaseModel {
         $this->db->where('pc.ativo', 't');
         $this->db->where('p.ativo', 't');
         $this->db->where('p.empresa_id is not null');
+        $this->db->orderby('fp.nome,p.nome');
         return $this->db->get()->result();
     }
 
@@ -4324,6 +4324,21 @@ class paciente_model extends BaseModel {
         return $this->db->get()->result();
     }
     
+    function listarvoucherconsultaavulsa($paciente_id) {
+        $this->db->select('vc.voucher_consulta_id,vc.data,vc.horario,vc.confirmado,vc.horario_uso');
+        $this->db->from('tb_consultas_avulsas cp');
+        $this->db->join('tb_voucher_consulta vc','vc.consulta_avulsa_id = cp.consultas_avulsas_id','left');
+        $this->db->where("cp.paciente_id", $paciente_id);
+        $this->db->where("cp.excluido", 'f');
+        $this->db->where("vc.ativo", 't');
+        $this->db->where("cp.tipo", 'EXTRA');        
+        if($this->session->userdata('financeiro_parceiro_id') != ""){
+           $this->db->where("vc.parceiro_id", $this->session->userdata('financeiro_parceiro_id'));  
+        }
+        $this->db->orderby("vc.data_cadastro desc");
+        $return = $this->db->get();
+        return $return->result();
+    }
     
 }
 

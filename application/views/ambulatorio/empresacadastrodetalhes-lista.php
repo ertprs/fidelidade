@@ -271,14 +271,14 @@ $perfil_id = $this->session->userdata('perfil_id');
                     ?>
                     <tbody>
                         <?php
-                        $valor_dependentes = 0;
+                      
                         foreach ($funcionarios as $item) {
                             $ii = 0;
                              $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
                              foreach($dependentes as $item2){
                                  if($item2->situacao == "Dependente"){
                                      $ii++;
-                                 $valor_dependentes += $item2->valoradcional;
+                                 @$valor_dependentes{$item->forma_pagamento_id} += $item2->valoradcional;
                                  }
                              }
                              
@@ -351,7 +351,7 @@ $perfil_id = $this->session->userdata('perfil_id');
                 <? foreach ($quantidade_funcionarios as $item): ?>
                     <tr>
                         <td>
-     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format($valor_dependentes, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+$valor_dependentes, 2, ',', '.'); ?>
+     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.'); ?>
                         </td>
                     </tr>
      <? endforeach; ?>

@@ -3129,7 +3129,7 @@ class Autocomplete extends Controller {
 //                var_dump($retorno);
 //                die;
                 if ($retorno['status'] == 'paid') {
-                    $this->guia->confirmarpagamentoautomaticoiuguempresa($item->paciente_contrato_parcelas_id);
+                    $this->guia->confirmarpagamentoautomaticoiuguempresa($item->paciente_contrato_parcelas_id,"true");
                 }
                 if ($retorno['status'] == 'expired') {
                     //$this->guia->excluirpagamentoautomaticoiugu($item->paciente_contrato_parcelas_id);

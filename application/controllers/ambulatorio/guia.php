@@ -6407,7 +6407,7 @@ table tr:hover  #achadoERRO{
     }
     
     
-      function gerarelatorioprevisaorecebimento() { 
+     function gerarelatorioprevisaorecebimento() { 
         $empresa_id =  $this->session->userdata('empresa_id'); 
         $data['empresa'] = $this->guia->listarempresa($empresa_id); 
         $data['relatorio'] = $this->guia->relatorioprevisaorecebimento();
@@ -6441,6 +6441,58 @@ table tr:hover  #achadoERRO{
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $this->load->View('ambulatorio/impressaorelatorioparceiroverificar', $data);
     }
+    
+    function listarvoucher($paciente_id){
+     $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);
+     $this->load->View('ambulatorio/listarvoucher',$data);
+    }
+    
+    function confirmarvoucher(){
+       $this->guia->confirmarvoucher();   
+       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    function selecionardatavoucher($voucher_consulta_id){
+    $data['voucher_consulta_id'] = $voucher_consulta_id;
+     $this->load->View('ambulatorio/selecionardatavoucher',$data);
+    }
+    
+     function alterarpagamentoempresa($paciente_contrato_parcelas_id) {                                          
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+        $data['contas'] = $this->guia->listarcontas();
+        $this->load->View('ambulatorio/alterarpagamentoempresa-form', $data);
+    }
+    
+    
+    function gravaralterarpagamentoempresa($paciente_contrato_parcelas_id){
+         $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
+         $this->guia->confirmarpagamentoautomaticoiuguempresa($paciente_contrato_parcelas_id);
+         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    
+    
+    function relatorioparcelasempresa(){
+        $data['empresas'] = $this->guia->listarempresacadastro();        
+        $this->loadView('ambulatorio/relatorioparcelasempresa', $data);
+    }
+    
+    
+    
+     function gerarelatorioparcelasempresa() {   
+        $data['empresa'] = $this->guia->listarempresacadastro($_POST['empresa_cadastro_id']);
+        $data['mes'] = $_POST['mes'];
+        $data['relatorio'] = $this->guia->relatorioparcelasempresa();    
+        $this->load->View('ambulatorio/impressaorelatorioparcelasempresa', $data);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 /* End of file welcome.php */

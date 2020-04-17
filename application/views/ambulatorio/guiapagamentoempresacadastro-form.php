@@ -69,6 +69,9 @@
                                     <th class="tabela_header" colspan="1">
 
                                     </th>
+                                     <th class="tabela_header" colspan="1">
+
+                                    </th>
                                     <th class="tabela_header" colspan="1">
                                         <?
                                         if (@$paciente[0]->empresa_id != ""):
@@ -211,27 +214,25 @@
                                             ?>
 
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                <?
-                                                if ($empresapermissao[0]->confirm_outra_data == 't') {
+                                 <?
+                                   if ($empresapermissao[0]->confirm_outra_data == 't') {
 
 
-                                                    if ($excluir_somente_empresa == True):
-                                                        if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                            ?>
+                                        if ($excluir_somente_empresa == True):
+                                                 if ($this->session->userdata('empresa_id') == $item->empresa_id):
+                                                     ?>
 
-                                                        <td colspan="2"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                        </td>
+                                                 <td colspan="2"  class="<?php echo $estilo_linha; ?>">                                                       
+                                                 </td>
 
-                                                        <?
-                                                    endif;
-                                                else:
-                                                    ?>
+                                                 <?
+                                             endif;
+                                         else: ?>
                                             <div class="bt_link">
-                                                <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoempresa/<?= @$item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>" target="_blank">Confirmar 
-                                                </a>
+                                                  <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoempresa/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                Confirmar
+                                            </a>
                                             </div>
-
-
                                         <?
                                         endif;
                                         ?>
@@ -240,7 +241,7 @@
                                     }else {
                                         ?>
 
-                                        <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                        <td class="<?php echo $estilo_linha; ?>" width="60px;" >
 
                                             <div class="bt_link">
                                                 <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoempresa/<?= @$item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>" target="_blank">Confirmar
@@ -334,7 +335,7 @@
                                         <? } ?>
 
 
-                                        <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 120px;" class="bt_link">
+                                        <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 120px;" class="bt_link" >
                                                 <a id="" href="<?= base_url() ?>ambulatorio/guia/cancelaragendamentocartao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Cancelar Agen.
                                                 </a></div> 
 
@@ -441,7 +442,7 @@
                                 } elseif ($item->empresa_iugu == 't') {
                                     echo 'Boleto Empresa';
                                 } else {
-                                    echo 'Boleto';
+                                    echo 'Manual';
                                 }
                                 ?>)
                             </td>
@@ -465,12 +466,6 @@
                             else:
                                 ?>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                    <div class="bt_link">
-                                        <a href="<?= base_url() ?>ambulatorio/guia/impressaorecibo/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo
-                                        </a>
-                                    </div>
-                                </td>
 
 
                 <? endif; ?>
@@ -525,7 +520,7 @@
 
                         </td>
 
-                        <td   class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
+                        <td   class="<?php echo $estilo_linha; ?>" colspan="2"><div style="width: 50px;" class="bt_link">
                                 <a id="" onclick="javascript: return confirm('Deseja realmente Cancelar a parcela?');" href="<?= base_url() ?>ambulatorio/guia/cancelarparcelaempresa/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">Cancelar
                                 </a></div> 
 

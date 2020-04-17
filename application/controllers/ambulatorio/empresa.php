@@ -16,6 +16,7 @@ class Empresa extends BaseController {
     function Empresa() {
         parent::Controller();
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+        $this->load->model('ambulatorio/guia_model', 'guia');
         $this->load->model('app_model', 'app');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
@@ -261,6 +262,7 @@ class Empresa extends BaseController {
             $data['mensagem'] = 'Erro ao gravar a Empresa. Opera&ccedil;&atilde;o cancelada.';
         } else {
             $data['mensagem'] = 'Sucesso ao gravar a Empresa.';
+            $this->guia->criarcredordevedorempresa($empresa_id);
         }
         $this->session->set_flashdata('message', $data['mensagem']); 
         redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
