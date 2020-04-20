@@ -6487,7 +6487,14 @@ table tr:hover  #achadoERRO{
     
     
     
-    
+    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id){
+        $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
+        
+       $data['paciente_id'] = $paciente_id;
+      $data['paciente'] = $this->paciente->listardados($paciente_id);
+      $this->loadView('ambulatorio/guiapagamentoempresa-form', $data);
+        
+    }
     
     
     

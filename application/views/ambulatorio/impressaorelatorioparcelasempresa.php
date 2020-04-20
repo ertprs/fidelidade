@@ -29,12 +29,14 @@
             foreach($relatorio as $item){
                 $valor_dependentes = 0;
                  $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
-                             foreach($dependentes as $item2){
-                                 if($item2->situacao == "Dependente"){                                  
-                                    $valor_dependentes += $item2->valoradcional;
-                                 }
-                             }
-                        $valor_total   += ($item->valor + $valor_dependentes ) * $mes; 
+            $i = 0;
+                    foreach($dependentes as $item2){
+                        if($item2->situacao == "Dependente"){  
+                               $i++;
+                           $valor_dependentes += $item2->valoradcional;
+                        }
+                    }
+                  $valor_total   += ($item->valor + $valor_dependentes ) * $mes; 
                 ?>
             <tr>
                 <td><?= $item->paciente ?></td>
@@ -42,10 +44,21 @@
                 $cnpj_cpf = preg_replace("/\D/", '', $item->cpf);
                 echo @preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $cnpj_cpf); ?>
                 </td>
-                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor + $valor_dependentes, 2, ',', '.'); ?> x <?= $mes ?>  </td>
+                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor + $valor_dependentes, 2, ',', '.'); ?> (<?=$i;?>) </td>
                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format(($item->valor + $valor_dependentes)*$mes, 2, ',', '.'); ?></td>
-            </tr>
+            </tr>            
             <?
+             foreach($dependentes as $item2){
+                        if($item2->situacao == "Dependente"){  
+                            ?> 
+            <tr>
+                <td style="color:green;" colspan="4"><?= $item2->nome; ?></td>
+            </tr>
+                            <?
+                        }
+                    }                    
+                 
+            
             }
 ?>
             <tr>
