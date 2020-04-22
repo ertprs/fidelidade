@@ -4710,54 +4710,38 @@ class Guia extends BaseController {
 //        $retorno_parcelas = $this->paciente->listarparcelaspacienteempresacadastro($empresa_id);
         $retorno_parcelas = $this->paciente->listarpagamentoscontratoiuguempresa($contrato_id);
 
-//        foreach ($retorno_parcelas as $item) {
-//        @$pagamento = $this->paciente->listarpagamentoscontratoparcelaiuguempresa($item->paciente_contrato_parcelas_id);
-
         @$pagamento = $this->paciente->listarpagamentoscontratoiuguempresa($contrato_id);
 
-        @$valor += $pagamento[0]->valor;
-//        }
+      
+ $listarpagamentoscontrato= $this->paciente->listarpagamentoscontratoempresacontrato($contrato_id);
+         
 
+        $empresa1 = $this->paciente->listadadosempresacadastro($empresa_id);
 
-        $valor = $valor * 100;
-
-//        echo "<pre>";
-//        print_r($retorno_parcelas);
-//        die;
-
-        $empresa1 = $this->paciente->listardadosempresa($empresa_id);
-
-//  echo "<pre>";
-//  print_r($empresa1);
 //        $celular = preg_replace('/[^\d]+/', '', $empresa[0]->celular);
-        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 2, 50);
+        @$celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 2, 50);
         @$prefixo = substr(preg_replace('/[^\d]+/', '', $empresa1[0]->celular), 0, 2);
-        $codigoUF = $this->utilitario->codigo_uf($empresa1[0]->codigo_ibge);
+        @$codigoUF = $this->utilitario->codigo_uf($empresa1[0]->codigo_ibge);
 //
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
-//
-//        $pagamento = $this->paciente->listarpagamentoscontratoparcela($item->paciente_contrato_parcelas_id);
-//        
-//        
-//        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($item->paciente_contrato_parcelas_id);
-//        $valor = $pagamento[0]->valor * 100;
+
         $data = date('d/m/Y', strtotime($pagamento[0]->data));
-////        var_dump($prefixo); 
-////        var_dump($celular_s_prefixo); 
+
         $description = $empresa[0]->nome;
-////        echo '<pre>';
-        $cpfcnpj = str_replace('/', '', $empresa1[0]->cnpj);
-////        var_dump($cpfcnpj); 
-////        die;
-//
+
+        @$cpfcnpj = str_replace('/', '', $empresa1[0]->cnpj);
+        
+       foreach($listarpagamentoscontrato as $item){
+          $valor = $item->valor * 100;
+                         
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastra nas configurações da empresa
 ////        die;
 //        //GERANDO A COBRANÇA
 //        if (count($pagamento_iugu) == 0) {
 //
         $gerar = Iugu_Invoice::create(Array(
-                    "email" => $empresa1[0]->email,
+                    "email" => @$empresa1[0]->email,
                     "due_date" => $data,
                     "items" => Array(
                         Array(
@@ -4785,58 +4769,25 @@ class Guia extends BaseController {
                     )
         ));
 
-//        echo '<pre>';
-//        var_dump($gerar);
-//        die;
+
         if (count($gerar["errors"]) > 0) {
 
             $mensagem = 'Erro ao gerar pagamento: \n';
-//                   
-//                
-            foreach ($gerar["errors"] as $key => $item) {
-////                var_dump($item[0]);
-////                if(){
-////                    
-////                }
-//                    $mensagem .= $empresa1[0]->nome.'\n';
-
-                $mensagem = $mensagem . "$key $item[0]" . '\n';
+               
+            foreach ($gerar["errors"] as $key => $item2) {
+                $mensagem = $mensagem . "$key $item2[0]" . '\n';
             }
-////                echo '<pre>';
-////                var_dump($gerar);
-////                die;
         } else {
-//            echo "<pre>";
-//            print_r($retorno_parcelas);    
-//            foreach ($retorno_parcelas as $item) {
-            $gravar = $this->guia->gravarintegracaoiuguempresacadastro($gerar["secure_url"], $gerar["id"], $retorno_parcelas[0]->paciente_contrato_parcelas_id, $empresa_id);
-            $this->guia->pagamentoiuguempresa($retorno_parcelas[0]->paciente_contrato_parcelas_id, $empresa_id);
-//            }
-
-
+            $gravar = $this->guia->gravarintegracaoiuguempresacadastro($gerar["secure_url"], $gerar["id"], $item->paciente_contrato_parcelas_id, $empresa_id);
+            $this->guia->pagamentoiuguempresa($item->paciente_contrato_parcelas_id, $empresa_id);
             $mensagem = 'Cobrança gerada com sucesso';
         }
-//        } else {
-//            
-////            $mensagem = 'Cobrança já gerada';
-//            
-//        }
-//
-////        echo $mensagem;
-////        die;
-//        $this->session->set_flashdata('message', $mensagem);
-//        
-//        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
-//        
-
+     }
         $this->session->set_flashdata('message', $mensagem);
 
         redirect(base_url() . "cadastros/pacientes/novofuncionario/" . $empresa_id);
 
 
-//        $this->session->set_flashdata('message', $mensagem);
-//        
-//          redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
     }
 
     function excluirparcelacontratoempresa($paciente_id, $contrato_id, $parcela_id, $empresa_id = NULL) {
@@ -5185,7 +5136,6 @@ table tr:hover  #achadoERRO{
     }
 
     function listarpagamentosempresa($paciente_contrato_id = NULL, $empresa_cadastro_id = NULL) {
-
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontratoempresacontrato($paciente_contrato_id);
         $data['empresa_cadastro_id'] = $empresa_cadastro_id;
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
@@ -6457,7 +6407,7 @@ table tr:hover  #achadoERRO{
     }
     
     
-      function gerarelatorioprevisaorecebimento() { 
+     function gerarelatorioprevisaorecebimento() { 
         $empresa_id =  $this->session->userdata('empresa_id'); 
         $data['empresa'] = $this->guia->listarempresa($empresa_id); 
         $data['relatorio'] = $this->guia->relatorioprevisaorecebimento();
@@ -6491,6 +6441,65 @@ table tr:hover  #achadoERRO{
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $this->load->View('ambulatorio/impressaorelatorioparceiroverificar', $data);
     }
+    
+    function listarvoucher($paciente_id){
+     $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);
+     $this->load->View('ambulatorio/listarvoucher',$data);
+    }
+    
+    function confirmarvoucher(){
+       $this->guia->confirmarvoucher();   
+       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    function selecionardatavoucher($voucher_consulta_id){
+    $data['voucher_consulta_id'] = $voucher_consulta_id;
+     $this->load->View('ambulatorio/selecionardatavoucher',$data);
+    }
+    
+     function alterarpagamentoempresa($paciente_contrato_parcelas_id) {                                          
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+        $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+        $data['contas'] = $this->guia->listarcontas();
+        $this->load->View('ambulatorio/alterarpagamentoempresa-form', $data);
+    }
+    
+    
+    function gravaralterarpagamentoempresa($paciente_contrato_parcelas_id){
+         $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
+         $this->guia->confirmarpagamentoautomaticoiuguempresa($paciente_contrato_parcelas_id);
+         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
+    
+    
+    function relatorioparcelasempresa(){
+        $data['empresas'] = $this->guia->listarempresacadastro();        
+        $this->loadView('ambulatorio/relatorioparcelasempresa', $data);
+    }
+    
+    
+    
+     function gerarelatorioparcelasempresa() {   
+        $data['empresa'] = $this->guia->listarempresacadastro($_POST['empresa_cadastro_id']);
+        $data['mes'] = $_POST['mes'];
+        $data['relatorio'] = $this->guia->relatorioparcelasempresa();    
+        $this->load->View('ambulatorio/impressaorelatorioparcelasempresa', $data);
+    }
+    
+    
+    
+    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id){
+        $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
+        
+       $data['paciente_id'] = $paciente_id;
+      $data['paciente'] = $this->paciente->listardados($paciente_id);
+      $this->loadView('ambulatorio/guiapagamentoempresa-form', $data);
+        
+    }
+    
+    
+    
+    
+    
 }
 
 /* End of file welcome.php */

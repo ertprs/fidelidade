@@ -612,6 +612,7 @@ ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN qtd_dias SET DEFAULT 365;
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN nome_impressao text;
 
 ALTER TABLE ponto.tb_entradas ADD COLUMN paciente_contrato_parcelas_id integer;
+ALTER TABLE ponto.tb_saldo ADD COLUMN paciente_contrato_parcelas_id integer;
 
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN empresa_iugu boolean;
@@ -847,3 +848,36 @@ ALTER TABLE ponto.tb_empresa ADD COLUMN cadastro boolean DEFAULT false;
 ALTER TABLE ponto.tb_paciente ADD COLUMN whatsapp text;
 
 ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN data_declaracao timestamp without time zone;
+--14/04/2020
+
+ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_cadastro_id integer;
+
+CREATE TABLE ponto.tb_impressoes_contratro_dependente
+(
+  impressoes_contratro_dependente_id  serial NOT NULL,
+  paciente_contrato_dependente_id integer,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  paciente_id integer,
+  paciente_contrato_id integer,
+  CONSTRAINT tb_impressoes_contratro_dependente_pkey PRIMARY KEY (impressoes_contratro_dependente_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_impressoes_contratro_dependente
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_impressoes_contratro_dependente ADD COLUMN ativo boolean;
+ALTER TABLE ponto.tb_impressoes_contratro_dependente ALTER COLUMN ativo SET DEFAULT true;
+
+--16/04/2020
+
+ALTER TABLE ponto.tb_empresa_cadastro ADD COLUMN financeiro_credor_devedor_id integer;
+ALTER TABLE ponto.tb_financeiro_credor_devedor ADD COLUMN empresa_cadastro_id integer;
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN confirmado boolean DEFAULT false;
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN horario_uso timestamp without time zone;
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_atualizacao integer;

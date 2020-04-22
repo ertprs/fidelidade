@@ -368,19 +368,18 @@
                     </a></div>
         </fieldset>
         <fieldset>
-                <legend>Acesso</legend>
-                <div>
-                    <label>Nome usu&aacute;rio App</label>
+            <legend>Acesso</legend>
+            <div>
+                <label>Email</label>
 
-                    <input type="text" id="txtUsuario" name="txtUsuarioapp"  class="texto04" value="<?= @$obj->_usuario_app; ?>" />
-                </div>
-                <div>
-                    <label>Senha App</label>
+                <input type="text" id="txtUsuario" name="txtUsuario"  class="texto04" value="<?= @$obj->_cns; ?>" />
+            </div>
+            <div>
+                <label>Senha App</label>
+                <input type="password" name="txtSenha" id="txtSenha" class="texto04" value="" />
+            </div>
 
-                    <input type="password" name="txtSenha" id="txtSenhaapp" class="texto04" value="<?= @$obj->_senha_app; ?>" />
-                </div>
-
-            </fieldset>
+        </fieldset>
         <button type="submit">Enviar</button>
         <button type="reset">Limpar</button>
 

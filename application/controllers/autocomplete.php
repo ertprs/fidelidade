@@ -237,15 +237,11 @@ class Autocomplete extends Controller {
         $paciente_antigo_id = $_GET['paciente_id'];
         $cpf = $_GET['cpf'];
         $empresa_id = 1;
+        $data['empresa_id'] = $empresa_id;
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['permissao'] = $this->empresa_m->listarpermissoesWeb();
         // var_dump($data['permissao']); die;
-
-        if ($data['permissao'][0]->carteira_padao_2 == 't') {
-            $data['paciente'] = $this->guia->listarpacientecarteirapadrao2($paciente_id);
-        } elseif ($data['permissao'][0]->carteira_padao_6 == 't') {
-
-            $this->load->helper('directory');
+        $this->load->helper('directory');
 
         if (!is_dir("./upload/empresalogo")) {
             mkdir("./upload/empresalogo");
@@ -262,8 +258,13 @@ class Autocomplete extends Controller {
         $data['arquivo_pasta'] = directory_map("./upload/empresalogo/$empresa_id/");
         if ($data['arquivo_pasta'] != false) {
             sort($data['arquivo_pasta']);
-        //    var_dump($data['arquivo_pasta']); die;
+           
         }
+        // var_dump($data['arquivo_pasta']); die;
+        if ($data['permissao'][0]->carteira_padao_2 == 't') {
+           
+            $data['paciente'] = $this->guia->listarpacientecarteirapadrao2($paciente_id);
+        } elseif ($data['permissao'][0]->carteira_padao_6 == 't') {
 
             $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
             $data['contrato'] = $this->guia->listarinformacoesContratodepedente($paciente_id);
@@ -3129,7 +3130,7 @@ class Autocomplete extends Controller {
 //                var_dump($retorno);
 //                die;
                 if ($retorno['status'] == 'paid') {
-                    $this->guia->confirmarpagamentoautomaticoiuguempresa($item->paciente_contrato_parcelas_id);
+                    $this->guia->confirmarpagamentoautomaticoiuguempresa($item->paciente_contrato_parcelas_id,"true");
                 }
                 if ($retorno['status'] == 'expired') {
                     //$this->guia->excluirpagamentoautomaticoiugu($item->paciente_contrato_parcelas_id);

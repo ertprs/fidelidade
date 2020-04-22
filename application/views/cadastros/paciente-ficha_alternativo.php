@@ -372,6 +372,19 @@
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>
         </fieldset>
+        <fieldset>
+            <legend>Acesso</legend>
+            <div>
+                <label>Email</label>
+
+                <input type="text" id="txtUsuario" name="txtUsuario"  class="texto04" value="<?= @$obj->_cns; ?>" />
+            </div>
+            <div>
+                <label>Senha App</label>
+                <input type="password" name="txtSenha" id="txtSenha" class="texto04" value="" />
+            </div>
+
+        </fieldset>
         <button type="submit">Enviar</button>
         <button type="reset">Limpar</button>
 

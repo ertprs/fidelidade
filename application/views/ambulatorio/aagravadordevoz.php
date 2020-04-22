@@ -18,8 +18,6 @@ $session_id = '1';
 //}
 
 
-
-
 ?>
 <!DOCTYPE html>
 <html>

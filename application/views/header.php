@@ -341,6 +341,9 @@ $data['permissao'] = $this->db->get()->result();
                                     <ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/empresacadastrolista">Cadastro de Empresa</a></span></ul>
                                     </ul>
+                                     <ul>
+                                        <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioparcelasempresa">Relatório Empresa</a></span></ul>
+                                    </ul>
                                 </li>
                             <? endif; ?>
                         </ul>
