@@ -300,7 +300,11 @@
                          <td>
                             <input type="checkbox" name="forma_dependente"   <? if (@$obj->_forma_dependente == 't') echo "checked"; ?>> 
                             <label  title="Ao ativar essa flag no cadastro do dependente irá aparecer a forma de pagamento" >F. Pagamento Dependente</label>  
-                        </td>  
+                        </td>
+                        <td>
+                            <input type="checkbox" name="relacao_carencia"   <? if (@$obj->_relacao_carencia == 't') echo "checked"; ?>> 
+                            <label>Situação de pagamento em relação a carência</label>  
+                        </td> 
                     </tr>
                 </table> 
                 <br>

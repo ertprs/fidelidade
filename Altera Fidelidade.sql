@@ -881,3 +881,8 @@ ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN confirmado boolean DEFAULT fals
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN horario_uso timestamp without time zone;
 
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN parceiro_atualizacao integer;
+
+-- 23/04/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN relacao_carencia boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN relacao_carencia SET DEFAULT false;
+

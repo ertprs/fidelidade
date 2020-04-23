@@ -9,6 +9,7 @@ class filaacolhimento extends BaseController {
         $this->load->model('emergencia/solicita_acolhimento_model', 'acolhimento');
         $this->load->model('cadastro/paciente_model', 'paciente');
         $this->load->model('ambulatorio/guia_model', 'guia');
+        $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->library('utilitario');
     }
 
@@ -26,6 +27,9 @@ class filaacolhimento extends BaseController {
 
     function novo($paciente_id) {
         $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
+        // print_r($data['empresa'][0]->relacao_carencia); // == 't'
         $data['paciente_id'] = $paciente_id;
         $horario = date(" Y-m-d H:i:s");
         $hour = substr($horario, 11, 3);
