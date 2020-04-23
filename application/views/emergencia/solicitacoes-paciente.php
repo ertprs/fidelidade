@@ -24,7 +24,7 @@
     if ($dependente == true) {
         $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
 //        $paciente_id = $retorno[0]->paciente_id;
-        @$paciente_titular_id = $retorno[0]->paciente_id;
+        @$paciente_titular_id = $retorno[0]->titular_id;
         @$paciente_contrato_id = $retorno[0]->paciente_contrato_id;
         $paciente_dependente_id = $paciente_id;
     } else {
@@ -43,8 +43,9 @@
 
 
     $parcelas = $this->guia->listarparcelaspaciente($paciente_titular_id);
+    // print_r($parcelas);
     $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);
-
+    // print_r($carencia);
 
 
     if ($empresa_p[0]->tipo_carencia == "SOUDEZ") {
