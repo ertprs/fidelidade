@@ -2273,10 +2273,10 @@ class Guia extends BaseController {
         $contrato_id = $_POST['txtcontrato_id'];
 
         $ambulatorio_guia_id = $this->guia->gravardependentes($paciente_id, $contrato_id);
-        if ($this->session->userdata('cadastro') == 2) {
-            $dependente_id = $_POST['dependente'];
-            $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
-        }
+        // if ($this->session->userdata('cadastro') == 2) {
+        //     $dependente_id = $_POST['dependente'];
+        //     $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
+        // }
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar a dependente. Opera&ccedil;&atilde;o cancelada.';
         } else {
@@ -6487,7 +6487,14 @@ table tr:hover  #achadoERRO{
     
     
     
-    
+    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id){
+        $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
+        
+       $data['paciente_id'] = $paciente_id;
+      $data['paciente'] = $this->paciente->listardados($paciente_id);
+      $this->loadView('ambulatorio/guiapagamentoempresa-form', $data);
+        
+    }
     
     
     

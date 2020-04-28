@@ -517,7 +517,8 @@ class guia_model extends Model {
                             fp.valor_carteira as valor,
                             fp.valor_carteira_titular as valor_carteira_titular,
                             fp.conta_id,
-                            pc.data_cadastro');
+                            pc.data_cadastro,
+                            fp.forma_pagamento_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
@@ -12284,8 +12285,29 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             ";  
           return $this->db->query($sql)->result(); 
           
+    }
+    
+    
+    
+    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id){
+        
+          $sql = "SELECT qtd.*
+          FROM ponto.tb_empresa_cadastro ec
+          LEFT JOIN ponto.tb_paciente_contrato pc  ON ec.empresa_cadastro_id = pc.empresa_cadastro_id
+          LEFT JOIN ponto.tb_paciente p ON p.empresa_id = ec.empresa_cadastro_id
+       
+          LEFT JOIN ponto.tb_qtd_funcionarios_empresa qtd ON qtd.empresa_id  = ec.empresa_cadastro_id
+          WHERE ec.empresa_cadastro_id = $empresa_id  
+          AND pc.ativo_admin = 'true'
+          AND pc.ativo = 'true'
+          AND p.paciente_id = $paciente_id
+        
+          AND qtd.ativo = 'true'
+          AND qtd.forma_pagamento_id  = $plano_id
           
-         
+            ";  
+          return $this->db->query($sql)->result(); 
+          
     }
     
     

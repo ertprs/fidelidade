@@ -6,7 +6,6 @@
     <body style="background-color: silver;">
         <h3>Voucher</h3>
        
-       <input hidden="" value="<?= $vouchers[0]->voucher_consulta_id; ?>" id="voucher_consulta_id" name="voucher_consulta_id">
         <table  border=1 cellspacing=0 cellpadding=2>
             <tr>
                 <td>Horario</td>

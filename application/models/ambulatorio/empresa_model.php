@@ -454,6 +454,12 @@ class empresa_model extends Model {
                 $this->db->set('forma_dependente', 'f');
             }
 
+            if (isset($_POST['relacao_carencia'])) {
+                $this->db->set('relacao_carencia', 't');
+            } else {
+                $this->db->set('relacao_carencia', 'f');
+            }
+
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
@@ -528,7 +534,8 @@ class empresa_model extends Model {
                                f.modificar_verificar,
                                f.forma_dependente,
                                f.tipo_declaracao,
-                               f.carteira_padao_6,');
+                               f.carteira_padao_6,
+                               f.relacao_carencia');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -579,7 +586,8 @@ class empresa_model extends Model {
             $this->_client_id = $return[0]->client_id;
             $this->_client_secret = $return[0]->client_secret;
             $this->_modificar_verificar = $return[0]->modificar_verificar;
-            $this->_forma_dependente = $return[0]->forma_dependente; 
+            $this->_forma_dependente = $return[0]->forma_dependente;
+            $this->_relacao_carencia = $return[0]->relacao_carencia; 
         } else {
             $this->_empresa_id = null;
         }

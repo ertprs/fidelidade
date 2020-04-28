@@ -1,6 +1,5 @@
 
 <?
- 
 if (count($exames) > 0) {
 
     foreach ($exames as $item) {
@@ -131,13 +130,23 @@ if (count($exames) > 0) {
                                             </a>
                                         </div>
                                     </td>
+                                <?php if($paciente['0']->empresa_id != "") {?>
+                                  <td class="<?php echo $estilo_linha; ?>" >       
+                                        <div class="bt_link_new" style="width: 100px;">
+                                            <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentofuncionariosempresa/" . @$paciente['0']->paciente_id."/".$paciente['0']->empresa_id."/".$item->forma_pagamento_id;?>">
+                                                Pagamento 
+                                            </a>
+                                        </div>
+                                    </td>
+                                 <?php }else{?>
                                     <td class="<?php echo $estilo_linha; ?>" >       
                                         <div class="bt_link_new" style="width: 100px;">
                                             <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentos/" . @$paciente['0']->paciente_id . "/" . @$item->paciente_contrato_id ?>">
                                                 Pagamento
                                             </a>
                                         </div>
-                                    </td>
+                                    </td>                                    
+                                                <?php }?>
                                     <td class="<?php echo $estilo_linha; ?>" >       
                                         <div class="bt_link_new" style="width: 100px;">
                                             <a target="_blank" href="<?= base_url() . "ambulatorio/guia/anexararquivoscontrato/" . @$item->paciente_contrato_id ?>">
