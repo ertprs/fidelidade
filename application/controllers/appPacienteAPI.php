@@ -15,7 +15,168 @@ class AppPacienteAPI extends Controller {
         echo json_encode('WebService');
     }
 
+    function redefinir_senha(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        $empresa = $this->guia->listarempresa(1);
+        $resposta = $this->app->emailPaciente($json_post);
+        $link = base_url() . "appPacienteAPI/reset_senha/$json_post->paciente_id";
+       
+        $mensagem_email = "Para redefinir sua senha é necessário acessar o link a seguir:  <br>
+                          LinK: $link";
+        // $mensagem_email = "Entre no link a seguir para redefinir sua senha! $json_post->link_senha";
+        if(count($empresa) > 0){
+            $empresa_nome = $empresa[0]->razao_social;
+            if($empresa[0]->email != ''){
+                $empresa_email = $empresa[0]->email;
+            }else{
+                $empresa_email = 'contato@stgsaude.com.br';
+            }
+            
+        }else{
+            $empresa_email = 'STG Saúde APP';
+            $empresa_email = 'contato@stgsaude.com.br';
+        }
+
+        $this->load->library('email');
+
+        $config['protocol'] = 'smtp';
+        $config['smtp_host'] = 'ssl://smtp.gmail.com';
+        $config['smtp_port'] = '465';
+        $config['smtp_user'] = 'equipe2016gcjh@gmail.com';
+        $config['smtp_pass'] = 'aramis*123@';
+        $config['validate'] = TRUE;
+        $config['mailtype'] = 'html';
+        $config['charset'] = 'utf-8';
+        $config['newline'] = "\r\n";
+        $this->email->initialize($config);
+        $this->email->from($empresa_email, $empresa_nome);
+        $this->email->to($resposta[1]);
+        $this->email->subject('Redefinição de senha Parte 1');
+        $this->email->message($mensagem_email);
+        if ($this->email->send()) {
+            $mensagem = "Email enviado com sucesso.";
+        } else {
+            $mensagem = "Envio de Email malsucedido.";
+        }
+
+        $obj = new stdClass();
+        $obj->status = 200;
+        $obj->nome = $mensagem;
+        
+        echo json_encode($obj); 
+
+    }
     
+    function reset_senha($paciente_id){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        $empresa = $this->guia->listarempresa(1);
+        $resposta = $this->app->resetarSenhaPaciente($paciente_id);
+        $mensagem_email = "A sua nova senha é: $resposta[1] <br> Não se esqueça de redefinir sua senha ao entrar no aplicativo novamente";
+        // $mensagem_email = "Entre no link a seguir para redefinir sua senha! $json_post->link_senha";
+        if(count($empresa) > 0){
+            $empresa_nome = $empresa[0]->razao_social;
+            if($empresa[0]->email != ''){
+                $empresa_email = $empresa[0]->email;
+            }else{
+                $empresa_email = 'contato@stgsaude.com.br';
+            }
+            
+        }else{
+            $empresa_email = 'STG Saúde APP';
+            $empresa_email = 'contato@stgsaude.com.br';
+        }
+
+        $this->load->library('email');
+
+        $config['protocol'] = 'smtp';
+        $config['smtp_host'] = 'ssl://smtp.gmail.com';
+        $config['smtp_port'] = '465';
+        $config['smtp_user'] = 'equipe2016gcjh@gmail.com';
+        $config['smtp_pass'] = 'aramis*123@';
+        $config['validate'] = TRUE;
+        $config['mailtype'] = 'html';
+        $config['charset'] = 'utf-8';
+        $config['newline'] = "\r\n";
+        $this->email->initialize($config);
+        $this->email->from($empresa_email, $empresa_nome);
+        $this->email->to($resposta[2]);
+        $this->email->subject('Redefinição de senha Parte 2');
+        $this->email->message($mensagem_email);
+        if ($this->email->send()) {
+            $mensagem = "Email enviado com sucesso.";
+        } else {
+            $mensagem = "Envio de Email malsucedido.";
+        }
+
+        $obj = new stdClass();
+        $obj->status = 200;
+        $obj->nome = $mensagem;
+         
+        echo "<html>
+            <meta charset='UTF-8'>
+        <script type='text/javascript'>
+        alert('Sua nova senha foi enviada para seu email!');
+        
+            </script>
+            </html>";
+
+    }
+    
+    function editar_paciente(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        // $usuario = $json_post->user;
+        // $senha = $json_post->password;
+        $empresa = 1;
+        if(!isset($json_post->nome)){
+            $obj = new stdClass();
+            $obj->message = 'Campo nome em branco';
+            echo json_encode($obj); 
+            die;
+        }
+        $resposta = $this->app->editarCadastroPaciente($json_post);
+        $obj = new stdClass();
+        if($resposta > 0){
+            $obj->status = 200;
+            $obj->paciente_id = $resposta[0];
+            $obj->nome = $resposta[1];
+            
+        }else{
+            $obj->status = 404;
+            $obj->paciente_id = 0;
+        }
+        echo json_encode($obj); 
+
+    }
+
+    function editar_senha_paciente(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        // $usuario = $json_post->user;
+        // $senha = $json_post->password;
+        $resposta = $this->app->editarSenhaPaciente($json_post);
+        $obj = new stdClass();
+        $obj->status = 200;
+        $obj->mensagem = 'Senha atualizada';
+        $obj->paciente_id = $json_post->paciente_id;
+        
+        echo json_encode($obj); 
+
+    }
 
     function login(){
         header('Access-Control-Allow-Origin: *');

@@ -51,6 +51,76 @@ class app_model extends Model {
         return array($paciente_id, $json_post->nome);
     }
 
+    function editarCadastroPaciente($json_post){
+        $horario = date("Y-m-d H:i:s");
+        
+        $this->db->set('nome', $json_post->nome);
+        $this->db->set('cns', $json_post->email);
+        $this->db->set('cpf', str_replace(".", "", str_replace("-", "", $json_post->cpf)));
+        $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->telefone))));
+        $this->db->set('whatsapp', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->whatsapp))));
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', 1);
+        $this->db->where('paciente_id', $json_post->paciente_id);
+        $this->db->update('tb_paciente');
+       
+        return array($json_post->paciente_id, $json_post->nome);
+    }
+
+    function editarSenhaPaciente($json_post){
+        $horario = date("Y-m-d H:i:s");
+        
+        $this->db->set('senha_app', md5($json_post->senha_app));
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', 1);
+        $this->db->where('paciente_id', $json_post->paciente_id);
+        $this->db->update('tb_paciente');
+        return array($json_post->paciente_id);
+    }
+
+    function emailPaciente($json_post){
+        $horario = date("Y-m-d H:i:s");
+
+        $this->db->select('paciente_id, nome, cns as email');
+        $this->db->from('tb_paciente');
+        // $this->db->where('nome', $json_post->nome);
+        $this->db->where('paciente_id', $json_post->paciente_id);
+        $this->db->orderby('paciente_id');
+        $contadorPaciente = $this->db->get()->result();
+
+        return array($json_post->paciente_id, $contadorPaciente[0]->email);
+    }
+    
+    function resetarSenhaPaciente($paciente_id){
+        $horario = date("Y-m-d H:i:s");
+        $senha_nova = $this->generateRandomString(10);
+        // var_dump($senha_nova); die;
+        
+        $this->db->set('senha_app', md5($senha_nova));
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', 1);
+        $this->db->where('paciente_id', $paciente_id);
+        $this->db->update('tb_paciente');
+
+        $this->db->select('paciente_id, nome, cns as email');
+        $this->db->from('tb_paciente');
+        // $this->db->where('nome', $json_post->nome);
+        $this->db->where('paciente_id', $paciente_id);
+        $this->db->orderby('paciente_id');
+        $contadorPaciente = $this->db->get()->result();
+
+        return array($paciente_id, $senha_nova, $contadorPaciente[0]->email);
+    }
+
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
 
     function listarBotoes($empresa_id = null) {
         if ($empresa_id == null) {
