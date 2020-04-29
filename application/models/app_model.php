@@ -107,11 +107,15 @@ class app_model extends Model {
         $this->db->select('paciente_id, nome, cns as email');
         $this->db->from('tb_paciente');
         // $this->db->where('nome', $json_post->nome);
-        $this->db->where('paciente_id', $json_post->paciente_id);
+        $this->db->where('cns', $json_post->email);
         $this->db->orderby('paciente_id');
         $contadorPaciente = $this->db->get()->result();
-
-        return array($json_post->paciente_id, $contadorPaciente[0]->email);
+        if(count($contadorPaciente) > 0){
+            return array($contadorPaciente[0]->paciente_id, $json_post->email);
+        }else{
+            return array('', $json_post->email);
+        }
+       
     }
     
     function resetarSenhaPaciente($paciente_id){

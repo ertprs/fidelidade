@@ -23,7 +23,15 @@ class AppPacienteAPI extends Controller {
         // die;
         $empresa = $this->guia->listarempresa(1);
         $resposta = $this->app->emailPaciente($json_post);
-        $link = base_url() . "appPacienteAPI/reset_senha/$json_post->paciente_id";
+        if($resposta[0] == ''){
+            $obj = new stdClass();
+            $obj->status = 200;
+            $obj->mensagem = 'Email não encontrado';
+            
+            echo json_encode($obj); 
+            die;
+        }
+        $link = base_url() . "appPacienteAPI/reset_senha/{$resposta[0]}";
        
         $mensagem_email = "Para redefinir sua senha é necessário acessar o link a seguir:  <br>
                           LinK: $link";
@@ -65,9 +73,10 @@ class AppPacienteAPI extends Controller {
 
         $obj = new stdClass();
         $obj->status = 200;
-        $obj->nome = $mensagem;
+        $obj->mensagem = $mensagem;
         
         echo json_encode($obj); 
+        die;
 
     }
     
