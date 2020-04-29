@@ -160,6 +160,32 @@ class AppPacienteAPI extends Controller {
 
     }
 
+    function buscar_paciente(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        $json_post = json_decode(file_get_contents("php://input"));
+        //var_dump($_GET); 
+        //die;
+        $resposta = $this->app->buscarpaciente($json_post);        
+        // echo '<pre>';
+        // var_dump($resposta); 
+        // die;
+
+        $obj = new stdClass();
+        if(count($resposta) > 0){
+            $obj->status = 200;
+            $obj->data = $resposta;
+        }else{
+            $obj->status = 404;
+            $obj->data = [];
+        }
+        // echo '<pre>';
+        // var_dump($obj); 
+        // die;
+
+        echo json_encode($obj); 
+    }
+    
     function editar_senha_paciente(){
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: content-type");

@@ -67,6 +67,22 @@ class app_model extends Model {
         return array($json_post->paciente_id, $json_post->nome);
     }
 
+    function buscarpaciente($json_post) {
+        $this->db->select('p.nome,
+                            p.cns as email,
+                            p.cpf,
+                            p.telefone,
+                            p.whatsapp,
+                            ');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
+        $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
+        $this->db->where("p.paciente_id", $json_post->paciente_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function editarSenhaPaciente($json_post){
         $horario = date("Y-m-d H:i:s");
         
