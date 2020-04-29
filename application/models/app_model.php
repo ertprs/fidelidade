@@ -42,6 +42,9 @@ class app_model extends Model {
         $this->db->set('usuario_app', $json_post->usuario_app);
         $this->db->set('senha_app', md5($json_post->senha_app));
         $this->db->set('cpf', str_replace(".", "", str_replace("-", "", $json_post->cpf)));
+        if($json_post->data_nascimento != ''){
+            $this->db->set('nascimento', date("Y-m-d", strtotime(str_replace("/", "-", $json_post->data_nascimento))));
+        }
         $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->telefone))));
         $this->db->set('whatsapp', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->whatsapp))));
         $this->db->set('data_cadastro', $horario);
@@ -56,6 +59,9 @@ class app_model extends Model {
         
         $this->db->set('nome', $json_post->nome);
         $this->db->set('cns', $json_post->email);
+        if($json_post->data_nascimento != ''){
+            $this->db->set('nascimento', date("Y-m-d", strtotime(str_replace("/", "-", $json_post->data_nascimento))));
+        }
         $this->db->set('cpf', str_replace(".", "", str_replace("-", "", $json_post->cpf)));
         $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->telefone))));
         $this->db->set('whatsapp', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->whatsapp))));
@@ -73,6 +79,7 @@ class app_model extends Model {
                             p.cpf,
                             p.telefone,
                             p.whatsapp,
+                            p.nascimento as data_nascimento,
                             ');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
