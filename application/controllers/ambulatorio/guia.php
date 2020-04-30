@@ -6481,7 +6481,10 @@ table tr:hover  #achadoERRO{
      function gerarelatorioparcelasempresa() {   
         $data['empresa'] = $this->guia->listarempresacadastro($_POST['empresa_cadastro_id']);
         $data['mes'] = $_POST['mes'];
-        $data['relatorio'] = $this->guia->relatorioparcelasempresa();    
+        $data['relatorio'] = $this->guia->relatorioparcelasempresa();
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
         $this->load->View('ambulatorio/impressaorelatorioparcelasempresa', $data);
     }
     
