@@ -261,7 +261,7 @@
 
             </fieldset>
             <?
-            if($empresa[0]->relacao_carencia == 't'){
+            // if($empresa[0]->relacao_carencia == 't'){
             ?>
             <fieldset>
                 <legend>Situação de pagamento em relação a carência</legend>
@@ -293,7 +293,9 @@
                 </table>
 
             </fieldset>
-            <? } ?>
+            <? 
+        // } 
+        ?>
             <fieldset>
                 <legend>Documentos</legend>
                 <div>
