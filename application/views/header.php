@@ -336,14 +336,16 @@ $data['permissao'] = $this->db->get()->result();
                                     <? } ?>
                                 </ul>
                             </li> 
-                            <? if ($data['permissao'][0]->cadastro_empresa_flag == 't' || $this->session->userdata('perfil_id') == 1): ?>
+                            <? if ($data['permissao'][0]->cadastro_empresa_flag == 't' || $this->session->userdata('perfil_id') == 1 || $this->session->userdata('perfil_id') == 5 || $this->session->userdata('perfil_id') == 4|| $this->session->userdata('perfil_id') == 8|| $this->session->userdata('perfil_id') == 9): ?>
                                 <li><span class="folder">Empresa</span>
                                     <ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/empresacadastrolista">Cadastro de Empresa</a></span></ul>
                                     </ul>
+                                    <? if($data['permissao'][0]->cadastro_empresa_flag == 't' || ($this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9)){?>
                                      <ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioparcelasempresa">Relatório Empresa</a></span></ul>
                                     </ul>
+                                    <? } ?>
                                 </li>
                             <? endif; ?>
                         </ul>
@@ -391,6 +393,7 @@ $data['permissao'] = $this->db->get()->result();
                                      <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioprevisaorecebimento">Relatorio Previsão de Recebimento</a></span></ul>
                                     <!--<ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocomissaoseguradora">Relatorio Comissão Seguradora</a></span></ul>-->
                                     <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioparceiroverificar">Relatorio Parceiro Verificar</a></span></ul>
+                                    <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriovoucher">Relatorio Voucher</a></span></ul>
 
                                 <? } ?>  
                         

@@ -45,15 +45,21 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cnpj; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td> 
+                                <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresacadastro/<?= $item->empresa_cadastro_id ?>">Editar</a></div>
                                 </td> 
+                                <? } ?>
+                                <? if($this->session->userdata('perfil_id') != 5){
+                                    ?>
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/pacientes/novofuncionario/<?= $item->empresa_cadastro_id ?>">Detalhes</a></div>   
-                                </td>                                
+                                </td>
+                                <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                         <a  onclick="javascript: return confirm('Deseja realmente excluir essa Empresa?');"   href="<?= base_url() ?>cadastros/pacientes/excluirempresacadastro/<?= $item->empresa_cadastro_id ?>">Excluir</a></div> 
                                 </td> 
+                                <?} } ?>
                                 
                                 
                             </tr>

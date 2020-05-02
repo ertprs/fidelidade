@@ -699,12 +699,13 @@ class guia_model extends Model {
         $this->db->select('vc.data,
                             vc.horario,
                             vc.parceiro_id,
-                            fp.logradouro,
+                               fp.logradouro,
                             fp.numero,
                             fp.bairro,
                             m.nome as municipio,
                             fp.razao_social as parceiro,
-                            vc.data_cadastro');
+                            vc.data_cadastro,
+                            vc.gratuito');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = vc.parceiro_id', 'left');
         $this->db->join('tb_municipio m', 'm.municipio_id = fp.municipio_id', 'left');
@@ -6571,6 +6572,13 @@ AND data <= '$data_fim'";
             $this->db->set('horario', $hora);
             $this->db->set('consulta_avulsa_id', $consulta_avulsa_id);
             $this->db->set('parceiro_id', $_POST['parceiro_id']);
+
+            if (isset($_POST['gratuito'])) {
+                $this->db->set('gratuito', 't');
+            } else {
+                $this->db->set('gratuito', 'f');
+            }
+
             $this->db->set('data_cadastro', $cadastro);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_voucher_consulta');
@@ -12171,6 +12179,29 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->where('pv.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
         $this->db->where('pv.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
        $this->db->orderby('pd.nome');
+        return $this->db->get()->result();
+        
+    }
+
+
+    function relatoriovoucher(){
+        $this->db->select('p.nome as paciente,
+                            vc.data, vc.horario,
+                            vc.data_cadastro,
+                            vc.operador_cadastro, 
+                            ca.valor,
+                            pa.fantasia,
+                            o.nome as operador,
+                            vc.gratuito');
+        $this->db->from('tb_voucher_consulta vc');
+        $this->db->join('tb_consultas_avulsas ca','vc.consulta_avulsa_id = ca.consultas_avulsas_id','left');
+        $this->db->join('tb_paciente p','p.paciente_id = ca.paciente_id','left');
+        $this->db->join('tb_financeiro_parceiro pa','pa.financeiro_parceiro_id = vc.parceiro_id','left');
+        $this->db->join('tb_operador o','o.operador_id = vc.operador_cadastro','left');
+        $this->db->where('vc.ativo','t');
+        $this->db->where('vc.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
+        $this->db->where('vc.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        $this->db->orderby('vc.data_cadastro, paciente');
         return $this->db->get()->result();
         
     }

@@ -6431,6 +6431,10 @@ table tr:hover  #achadoERRO{
          $data['listarparceiro'] = $this->paciente->listarparceiros();
          $this->loadView('ambulatorio/relatorioparceiroverificar',$data);
     }
+
+    function relatoriovoucher(){
+        $this->loadView('ambulatorio/relatoriovoucher');
+   }
     
     
       function gerarelatorioparceiroverificar() { 
@@ -6440,6 +6444,18 @@ table tr:hover  #achadoERRO{
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $this->load->View('ambulatorio/impressaorelatorioparceiroverificar', $data);
+    }
+
+    function gerarelatoriovoucher() { 
+        $empresa_id =  $this->session->userdata('empresa_id'); 
+        $data['empresa'] = $this->guia->listarempresa($empresa_id); 
+        $data['relatorio'] = $this->guia->relatoriovoucher();
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
+        $this->load->View('ambulatorio/impressaorelatoriovoucher', $data);
     }
     
     function listarvoucher($paciente_id){

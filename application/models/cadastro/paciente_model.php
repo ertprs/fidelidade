@@ -4328,7 +4328,7 @@ class paciente_model extends BaseModel {
     }
     
     function listarvoucherconsultaavulsa($paciente_id) {
-        $this->db->select('vc.voucher_consulta_id,vc.data,vc.horario,vc.confirmado,vc.horario_uso');
+        $this->db->select('vc.voucher_consulta_id,vc.data,vc.horario,vc.confirmado,vc.horario_uso, vc.gratuito');
         $this->db->from('tb_consultas_avulsas cp');
         $this->db->join('tb_voucher_consulta vc','vc.consulta_avulsa_id = cp.consultas_avulsas_id','left');
         $this->db->where("cp.paciente_id", $paciente_id);
