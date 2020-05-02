@@ -4772,7 +4772,6 @@ ORDER BY p.nome";
             $this->db->set('parceiro_id', $parceiro_gravar_id);
             $this->db->set('parceiro_convenio_id', $parceiro_id);
             $this->db->set('valor', $valor);
-
             if ($tipo_consulta != '') {
                 $this->db->set('consulta_tipo', $tipo_consulta);
                 $this->db->set('consulta_avulsa', 't');

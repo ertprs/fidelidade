@@ -112,6 +112,8 @@ class parceiro_model extends Model {
             }
             $this->db->set('fantasia', $_POST['txtfantasia']);
             $this->db->set('endereco_ip', $_POST['txtendereco_ip']);
+            $this->db->set('enderecomed_ip', $_POST['txtenderecoMed_ip']);
+            $this->db->set('parceriamed_id', $_POST['parceriaMed_id']);
             $this->db->set('logradouro', $_POST['endereco']);
             $this->db->set('numero', $_POST['numero']);
             $this->db->set('convenio_id', $_POST['convenio_id']);
@@ -169,7 +171,9 @@ class parceiro_model extends Model {
                                c.estado,
                                cep,
                                f.usuario,
-                               f.senha');
+                               f.senha,
+                               f.enderecomed_ip,
+                               f.parceriamed_id');
             $this->db->from('tb_financeiro_parceiro f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("financeiro_parceiro_id", $financeiro_parceiro_id);
@@ -195,6 +199,8 @@ class parceiro_model extends Model {
             $this->_cep = $return[0]->cep;
             $this->_usuario = $return[0]->usuario;
             $this->_senha = $return[0]->senha;
+            $this->_enderecomed_ip = $return[0]->enderecomed_ip;
+            $this->_parceriamed_id = $return[0]->parceriamed_id;
         } else {
             $this->_financeiro_parceiro_id = null;
         }

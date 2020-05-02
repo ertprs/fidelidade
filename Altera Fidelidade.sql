@@ -890,3 +890,7 @@ ALTER TABLE ponto.tb_empresa ALTER COLUMN relacao_carencia SET DEFAULT false;
 -- 02/05/2020
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN gratuito boolean;
 ALTER TABLE ponto.tb_voucher_consulta ALTER COLUMN gratuito SET DEFAULT false;
+--30/04/2020
+
+ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN enderecomed_ip character varying(200);
+ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriamed_id integer;
