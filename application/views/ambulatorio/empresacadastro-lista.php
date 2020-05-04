@@ -1,9 +1,11 @@
 
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_new">
+    <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
         <a href="<?php echo base_url() ?>ambulatorio/empresa/carregarempresacadastro/0">
             Nova Empresa
         </a>
+    <? } ?>
     </div>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Empresa</a></h3>
