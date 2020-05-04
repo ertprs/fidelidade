@@ -18,6 +18,7 @@
         <table border=1 cellspacing=0 cellpadding=2 width="100%">
             <tr>
                 <th>Nome</th>
+                <th>Parceiro</th>
                 <th>Valor Voucher</th>
                 <th>Data e Hora (Voucher)</th>
                 <th>Operador Cadastro</th>
@@ -30,6 +31,7 @@
                 ?>
                 <tr class="corverde">
                 <td><?= $item->paciente; ?></td>
+                <td><?= $item->fantasia; ?></td>
                 <td>GRATUITO</td>
                 <td><?= $data .' - '.$item->horario; ?></td>
                 <td><?= $item->operador; ?></td>
@@ -39,6 +41,7 @@
                 ?>
             <tr>
                 <td><?= $item->paciente; ?></td>
+                <td><?= $item->fantasia; ?></td>
                 <td>R$ <?= number_format($item->valor, 2, ',', '.'); ?></td>
                 <td><?= $data .' - '.$item->horario; ?></td>
                 <td><?= $item->operador; ?></td>

@@ -894,3 +894,6 @@ ALTER TABLE ponto.tb_voucher_consulta ALTER COLUMN gratuito SET DEFAULT false;
 
 ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN enderecomed_ip character varying(200);
 ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriamed_id integer;
+
+--04/05/2020
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN rendimento_id INTEGER;

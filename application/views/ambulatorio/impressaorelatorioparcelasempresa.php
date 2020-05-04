@@ -38,7 +38,7 @@
                     foreach($dependentes as $item2){
 
                         if($item2->situacao == "Dependente"){
-                            if($a > 4){
+                            if($a > 3){
                            $valor_dependentes += $item2->valoradcional;
                             }
                             $a++;

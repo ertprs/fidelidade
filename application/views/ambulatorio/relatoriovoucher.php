@@ -20,6 +20,57 @@
                     <dd>
                         <input id="txtdata_fim" name="txtdata_fim" required="">                        
                     </dd>
+                    <dt>
+                        <label> Parceiro</label>
+                     </dt>
+                    <dd>
+                    <select name="parceiro_id" id="parceiro_id" class="size2" required>
+                                        <option value='0' >TODOS</option>
+                                        <?php foreach ($listarparceiro as $item) {?>
+                                            <option   value =<?php echo $item->financeiro_parceiro_id; ?>>
+                                                <?php echo $item->fantasia; ?>
+                                            </option>
+                                        <? }?> 
+                                                
+                                            
+                                    </select>                   
+                    </dd>
+                    <dt>
+                        <label> Confirmado?</label>
+                     </dt>
+                    <dd>
+                    <select name="confirmacao" id="confirmacao" class="size2">
+                        <option value="NAO">NÃO</option>
+                        <option value="SIM">SIM</option>
+                    </select>                   
+                    </dd>
+
+                    <dt>
+                        <label> Gratuito?</label>
+                     </dt>
+                    <dd>
+                    <select name="gratuito" id="gratuito" class="size2">
+                        <option value="0">TODOS</option>                
+                        <option value="NAO">NÃO</option>
+                        <option value="SIM">SIM</option>
+                    </select>                   
+                    </dd>
+
+                    <dt>
+                        <label> Forma Pagamento</label>
+                     </dt>
+                    <dd>
+                    <select name="pagamento_id" id="pagamento_id" class="size2" title="A forma de pagamento só aparece após a confirmação do Voucher" required>
+                                        <option value='0' >TODOS</option>
+                                        <?php foreach ($pagamentos as $item) {?>
+                                            <option   value =<?php echo $item->forma_rendimento_id; ?>>
+                                                <?php echo $item->nome; ?>
+                                            </option>
+                                        <? }?> 
+                                                
+                                            
+                                    </select>                   
+                    </dd>
 
                 </dl>
                 <button type="submit" >Pesquisar</button>

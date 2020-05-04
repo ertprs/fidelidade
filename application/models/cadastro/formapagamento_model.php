@@ -57,6 +57,14 @@ class formapagamento_model extends Model {
         return $this->db;
     }
 
+    function listarformapagamento(){
+        $this->db->select('forma_rendimento_id, nome');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('ativo', 'true');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function carregarformarendimento($formarendimento_id) {
         $this->db->select('forma_rendimento_id,
                             nome, 

@@ -12200,6 +12200,27 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->where('vc.ativo','t');
         $this->db->where('vc.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
         $this->db->where('vc.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        
+        if($_POST['parceiro_id'] != '0'){
+            $this->db->where('vc.parceiro_id',$_POST['parceiro_id']);
+        }
+
+        if($_POST['confirmacao'] == 'SIM'){
+            $this->db->where('vc.confirmado','t');
+        }
+
+        if($_POST['gratuito'] == 'SIM'){
+            $this->db->where('vc.gratuito','t');
+        }else if($_POST['gratuito'] == 'NAO'){
+            $this->db->where("(vc.gratuito is null or vc.gratuito = 'f')"); 
+        }else{
+            
+        }
+
+        if($_POST['pagamento_id'] != '0'){
+            $this->db->where('vc.rendimento_id',$_POST['pagamento_id']);
+        }
+
         $this->db->orderby('vc.data_cadastro, paciente');
         return $this->db->get()->result();
         
@@ -12275,6 +12296,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->set('parceiro_atualizacao',$operador);
         $this->db->set('data_atualizacao',$horario);
         $this->db->set('horario_uso',date("Y-m-d", strtotime(str_replace('/', '-', $_POST['data_uso'])))." 00:00:00");
+        $this->db->set('rendimento_id', $_POST['pagamento_id']);
         $this->db->where('voucher_consulta_id',$_POST['voucher_consulta_id']);
         $this->db->update('tb_voucher_consulta');
         

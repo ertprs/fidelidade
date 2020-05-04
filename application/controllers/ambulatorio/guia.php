@@ -6433,7 +6433,9 @@ table tr:hover  #achadoERRO{
     }
 
     function relatoriovoucher(){
-        $this->loadView('ambulatorio/relatoriovoucher');
+        $data['listarparceiro'] = $this->paciente->listarparceiros();
+        $data['pagamentos'] = $this->formapagamento->listarformapagamento();
+        $this->loadView('ambulatorio/relatoriovoucher', $data);
    }
     
     
@@ -6447,6 +6449,9 @@ table tr:hover  #achadoERRO{
     }
 
     function gerarelatoriovoucher() { 
+        // echo '<pre>';
+        // print_r($_POST);
+        // die;
         $empresa_id =  $this->session->userdata('empresa_id'); 
         $data['empresa'] = $this->guia->listarempresa($empresa_id); 
         $data['relatorio'] = $this->guia->relatoriovoucher();
@@ -6467,8 +6472,10 @@ table tr:hover  #achadoERRO{
        $this->guia->confirmarvoucher();   
        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
+
     function selecionardatavoucher($voucher_consulta_id){
     $data['voucher_consulta_id'] = $voucher_consulta_id;
+    $data['pagamentos'] = $this->formapagamento->listarformapagamento();
      $this->load->View('ambulatorio/selecionardatavoucher',$data);
     }
     
