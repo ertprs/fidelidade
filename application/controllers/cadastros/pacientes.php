@@ -392,13 +392,13 @@ class pacientes extends BaseController {
             $url_med = "http://" . $value->enderecomed_ip . "/autocomplete/gravarpacientefidelidade";
            
             if($_POST['parceiro_id'] == $value->financeiro_parceiro_id){
-                $parceiro_id = $value->parceriamed_id;
+                $parceiro_id = $value->convenio_id;
             }
-            // var_dump($url); die;
+            
             $postdata = http_build_query(
                     array(
                         'body' => $json_paciente,
-                        'parceriamed_id' => $value->parceriamed_id
+                        'parceriamed_id' => $parceiro_id
                     )
             );
             $opts = array('http' =>
@@ -413,8 +413,8 @@ class pacientes extends BaseController {
             }elseif($value->enderecomed_ip != ""){
               $result = file_get_contents($url_med, false, $context);
             }
-            
-            //var_dump($result); die;
+        
+          // var_dump($result); die;
         }
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
