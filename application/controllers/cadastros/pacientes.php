@@ -380,8 +380,7 @@ class pacientes extends BaseController {
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         
           $parceiros = $this->paciente->listarparceirosurl();
-       
-               
+      
         foreach ($parceiros as $key => $value) {
             $parceiro_id = "";
             $retorno_paciente = $this->paciente->listardados($paciente_id);
@@ -389,8 +388,7 @@ class pacientes extends BaseController {
             // $fields = array('' => $_POST['body']);
             
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
-            $url_med = "http://" . $value->enderecomed_ip . "/autocomplete/gravarpacientefidelidade";
-           
+         
             if($_POST['parceiro_id'] == $value->financeiro_parceiro_id){
                 $parceiro_id = $value->convenio_id;
             }
@@ -410,12 +408,11 @@ class pacientes extends BaseController {
             $context = stream_context_create($opts);
             if($value->endereco_ip != ""){
               $result = file_get_contents($url, false, $context);
-            }elseif($value->enderecomed_ip != ""){
-              $result = file_get_contents($url_med, false, $context);
             }
         
-          // var_dump($result); die;
+        //  var_dump($result); die;
         }
+       // die();
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
         } else {
