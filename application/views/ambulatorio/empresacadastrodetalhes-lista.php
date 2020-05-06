@@ -102,24 +102,12 @@ $perfil_id = $this->session->userdata('perfil_id');
 
                             <td class="<?php echo @$estilo_linha; ?>"><?= $item->plano ?></td>
                             <td class="<?php echo @$estilo_linha; ?>"> <?= $item->parcelas ?> x <?= $item->valor ?> </td>
-                            <td class="<?php echo @$estilo_linha; ?>" >
-
-
-                                <?
-                                if (count($contratos) <= 0) {
-                                    ?>
-                                    <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/editarquantidade/" . $item->qtd_funcionarios_empresa_id . "/" . $item->forma_pagamento_id . "/" . $empresa_id ?> ', '_blank', 'width=600,height=300 ');">
-                                        Editar Quantidade
-                                    </a> 
-                                    <?
-                                } else {
-                                    
-                                }
-                                ?>
-
+                            <td class="<?php echo @$estilo_linha; ?>" >  
+                                <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/editarquantidade/" . $item->qtd_funcionarios_empresa_id . "/" . $item->forma_pagamento_id . "/" . $empresa_id ?> ', '_blank', 'width=600,height=300 ');">
+                                    Editar Quantidade
+                                </a> 
                             </td>
                             <td class="<?php echo @$estilo_linha; ?>" >
-
                                 <a onclick="javascript: return confirm('Deseja realmente excluir o Funcionário?');"    href="<?= base_url() ?>cadastros/pacientes/excluirfuncionarioqtd/<?= $item->qtd_funcionarios_empresa_id; ?>" target="_blank">
                                     Excluir
                                 </a>
@@ -353,12 +341,17 @@ $perfil_id = $this->session->userdata('perfil_id');
                 <? foreach ($quantidade_funcionarios as $item): ?>
                     <tr>
                         <td>
-     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.'); ?>
+     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.');
+     $valortotalempresa = ($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id};
+     ?>
                         </td>
                     </tr>
      <? endforeach; ?>
             </table>
-                <? } ?>
+                <?
+      $this->paciente->atualizarfuncionarioadicionado($empresa_id,$valortotalempresa);   
+       
+     } ?>
             <br>
             <br>
             <table>

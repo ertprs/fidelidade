@@ -3918,9 +3918,9 @@ class paciente_model extends BaseModel {
         $this->db->where('pc.empresa_cadastro_id', $empresa_cadastro_id);
         $return = $this->db->get()->result();
 
-        $this->db->set('valor', $valor_total);
-        $this->db->where('paciente_contrato_parcelas_id', $return[0]->paciente_contrato_parcelas_id);
-        $this->db->update('tb_paciente_contrato_parcelas');
+      //  $this->db->set('valor', $valor_total);
+      //  $this->db->where('paciente_contrato_parcelas_id', $return[0]->paciente_contrato_parcelas_id);
+      //  $this->db->update('tb_paciente_contrato_parcelas');
     }
 
     function listartodospacientes() {
@@ -4342,6 +4342,25 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
+    
+    function atualizarfuncionarioadicionado($empresa_cadastro_id,$valor){
+        
+        $this->db->select('pcp.paciente_contrato_parcelas_id');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+        $this->db->where('pcp.ativo', 't');
+        $this->db->where('pcp.excluido', 'f');
+        $this->db->where('pc.ativo', 't');
+        $this->db->where('pc.empresa_cadastro_id', $empresa_cadastro_id);
+        $return  = $this->db->get()->result();
+       foreach($return as $value){
+            $this->db->set('valor',$valor);
+            $this->db->where('paciente_contrato_parcelas_id',$value->paciente_contrato_parcelas_id);
+            $this->db->update('tb_paciente_contrato_parcelas');
+       }
+       
+    }
+    
     
 }
 
