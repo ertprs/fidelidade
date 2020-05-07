@@ -500,6 +500,11 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriotitularesexcluidos');
     }
 
+    function relatoriotitularsemcontrato() {
+        //        $data['empresa'] = $this->guia->listarempresas();
+                $this->loadView('ambulatorio/relatoriotitularsemcontrato');
+            }
+
     function gerarelatoriocontratosinativos() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
@@ -514,6 +519,11 @@ class Guia extends BaseController {
 
         $this->load->View('ambulatorio/impressaorelatoriotitularesexcluidos', $data);
     }
+
+    function gerarelatoriotitularsemcontrato() {
+                $data['relatorio'] = $this->guia->gerarelatoriotitularsemcontrato();
+                $this->load->View('ambulatorio/impressaorelatoriotitularsemcontrato', $data);
+            }
 
     function relatoriodependentes() {
 //        $data['empresa'] = $this->guia->listarempresas();
@@ -2047,6 +2057,8 @@ class Guia extends BaseController {
 
     function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id, $carnet_id = NULL, $num_carne = NULL) {
 
+        $this->cancelarparcelaexcluir($paciente_id, $contrato_id, $parcela_id);
+        
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
         $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoparcelagerencianet($parcela_id);
         $empresa = $this->guia->listarempresa();
@@ -5113,6 +5125,13 @@ table tr:hover  #achadoERRO{
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
+    function cancelarparcelaexcluir($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $this->guia->cancelarparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id);
+    }
+
+
+
     function excluircontratoempresaadmin($contrato_id) {
 
         $ambulatorio_guia_id = $this->guia->excluircontratoempresaadmin($contrato_id);
@@ -6359,8 +6378,9 @@ table tr:hover  #achadoERRO{
         }
         $data['empresa_id'] = $empresa_id;
 
-        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
-        //var_dump($data['empresa']); die;
+        $data['empresa'] = $this->empresa->listardadosempresa($empresa_id);
+        // echo '<pre>';
+        // var_dump($data['empresa']); die;
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
         $data['paciente_id'] = $paciente_id;

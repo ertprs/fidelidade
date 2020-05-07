@@ -405,6 +405,22 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function gerarelatoriotitularsemcontrato(){
+
+        // SELECT * FROM teste WHERE teste_id NOT IN(select teste_id from nova);
+        $sql = "SELECT pc.paciente_id, p.nome as paciente, o.nome as operador_cadastro, v.nome as vendedor, pc.data_atualizacao FROM ponto.tb_paciente_contrato pc
+        LEFT JOIN ponto.tb_paciente p ON pc.paciente_id = p.paciente_id
+        LEFT JOIN ponto.tb_operador o ON o.operador_id = pc.operador_cadastro
+        LEFT JOIN ponto.tb_operador v ON v.operador_id = pc.vendedor_id
+                WHERE pc.ativo = false
+                AND pc.paciente_id is not null 
+                AND pc.paciente_id NOT IN(SELECT paciente_id FROM ponto.tb_paciente_contrato pcc WHERE pcc.ativo = true and pcc.paciente_id is not null)
+                ORDER BY pc.data_atualizacao desc";
+
+        return $this->db->query($sql)->result(); 
+    }
+
+
     function relatoriovendedores() {
         $this->db->select('o.operador_id, o.nome');
         $this->db->from('tb_operador o');
@@ -788,7 +804,8 @@ class guia_model extends Model {
                             pc.data_cadastro,
                             p.empresa_id,
                             pcp.financeiro_credor_devedor_id as financeiro_credor_devedor_id_dependente,
-                            pcp.paciente_dependente_id');
+                            pcp.paciente_dependente_id,
+                            pcp.taxa_adesao');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = pcp.financeiro_credor_devedor_id', 'left');
@@ -5436,7 +5453,12 @@ ORDER BY p.nome";
 
             $this->db->set('data', $data_parcela);
             $this->db->set('tipo', $plano);
-            $this->db->set('classe', 'PARCELA');
+            if($parcela[0]->taxa_adesao == 't'){
+                $this->db->set('classe', 'ADESÃO');
+            }else{
+                $this->db->set('classe', 'PARCELA'); 
+            }
+            // $this->db->set('classe', 'PARCELA');
             $this->db->set('nome', $credor);
             $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
 //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
@@ -7332,8 +7354,16 @@ AND data <= '$data_fim'";
 //        echo '<pre>';
 //        var_dump($return[0]->taxa_adesao); die;
         if ($return[0]->taxa_adesao == 't') {
+            $forma_pagamento = $this->paciente->listaforma_pagamento($_POST['plano']);
+            $valor_adesao =  $forma_pagamento[0]->valor_adesao;
             $this->db->set('taxa_adesao', 't');
-            $this->db->set('valor', $ajuste);
+
+            if ($valor_adesao >= 0) {
+                $this->db->set('valor', $valor_adesao);
+            } else {
+                $this->db->set('valor', $ajuste);
+            }
+
             if ($ajuste == 0.00) {
                 $this->db->set('ativo', 'f');
                 $this->db->set('manual', 't');
