@@ -628,6 +628,14 @@ class empresa_model extends Model {
         return $this->db->get()->result();
     }
 
+    function listardadosempresa($empresa_id = NULL) { 
+        $this->db->select('f.*, c.nome as municipio,c.municipio_id, c.estado');
+        $this->db->from('tb_empresa f');
+        $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
+        $this->db->where('empresa_id', $empresa_id);
+        return $this->db->get()->result();
+    }
+
     function listarempresasprocedimento() {
 
         $empresa_id = $this->session->userdata('empresa_id');
