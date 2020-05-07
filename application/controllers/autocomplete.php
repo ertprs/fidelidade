@@ -309,10 +309,10 @@ class Autocomplete extends Controller {
         @$convenio_id = $parceiro[0]->convenio_id;
 
 
-
         $parceiro = $this->parceiro->listarparceiroendereco($parceiro_id);
         @$endereco = $parceiro[0]->endereco_ip;
         @$parceiro_gravar_id = $parceiro[0]->financeiro_parceiro_id;
+      
         // BUSCANDO O GRUPO DO PROCEDIMENTO NA CLINICA
 
         $grupo_busca = file_get_contents("http://{$endereco}/autocomplete/listargrupoagendamentoweb?procedimento_convenio_id={$_GET['procedimento']}");

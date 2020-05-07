@@ -897,3 +897,6 @@ ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriamed_id integer;
 
 --04/05/2020
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN rendimento_id INTEGER;
+
+--07/05/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN plano_id integer;

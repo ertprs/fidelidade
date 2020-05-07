@@ -50,7 +50,7 @@ class parceiro_model extends Model {
     }
 
     function listarparceiroendereco($financeiro_parceiro_id) {
-        $this->db->select('endereco_ip, convenio_id, financeiro_parceiro_id');
+        $this->db->select('endereco_ip,enderecomed_ip, convenio_id, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');
         $this->db->where("financeiro_parceiro_id", $financeiro_parceiro_id);
         $return = $this->db->get();

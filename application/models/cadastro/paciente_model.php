@@ -547,12 +547,14 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
-    function listarparceirosurl() {
-        $this->db->select('endereco_ip,enderecomed_ip,parceriamed_id, financeiro_parceiro_id');
+    function listarparceirosurl($parceiro_id = null) {
+        $this->db->select('endereco_ip, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');
         $this->db->where("ativo", 't');
-        $this->db->where("(endereco_ip is not null or enderecomed_ip  is not null )");
-        // $this->db->where("financeiro_parceiro_id ", $parceiro_id);
+        $this->db->where("endereco_ip !=", '');
+        if($parceiro_id > 0){
+            $this->db->where("financeiro_parceiro_id ", $parceiro_id);
+        }
         $return = $this->db->get();
         return $return->result();
     }
@@ -3423,9 +3425,6 @@ class paciente_model extends BaseModel {
             return -1;
         }
 
-
-
-
         $horario = date("Y-m-d H:i:s");
         $this->db->where('qtd_funcionarios_empresa_id', $_POST['qtd_funcionarios_empresa_id']);
         $this->db->set('qtd_funcionarios', $_POST['quantidade_fun']);
@@ -3918,9 +3917,9 @@ class paciente_model extends BaseModel {
         $this->db->where('pc.empresa_cadastro_id', $empresa_cadastro_id);
         $return = $this->db->get()->result();
 
-        $this->db->set('valor', $valor_total);
-        $this->db->where('paciente_contrato_parcelas_id', $return[0]->paciente_contrato_parcelas_id);
-        $this->db->update('tb_paciente_contrato_parcelas');
+      //  $this->db->set('valor', $valor_total);
+      //  $this->db->where('paciente_contrato_parcelas_id', $return[0]->paciente_contrato_parcelas_id);
+      //  $this->db->update('tb_paciente_contrato_parcelas');
     }
 
     function listartodospacientes() {
@@ -4342,6 +4341,30 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
+    
+    function atualizarfuncionarioadicionado($empresa_cadastro_id,$valor,$plano_id=NULL){
+        
+        $this->db->select('pcp.paciente_contrato_parcelas_id,pcp.plano_id');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+        $this->db->where('pcp.ativo', 't');
+        $this->db->where('pcp.excluido', 'f');
+        $this->db->where('pc.ativo', 't');
+        $this->db->where('pc.empresa_cadastro_id', $empresa_cadastro_id);
+        if($plano_id != ""){
+          $this->db->where("(pcp.plano_id = $plano_id or pcp.plano_id is null)");
+        }
+        $return = $this->db->get()->result();
+        
+        
+       foreach($return as $value){
+            $this->db->set('valor',$valor);
+            $this->db->where('paciente_contrato_parcelas_id',$value->paciente_contrato_parcelas_id);
+            $this->db->update('tb_paciente_contrato_parcelas');
+       }
+       
+    }
+    
     
 }
 

@@ -31,18 +31,7 @@
                     <dd>
                         <input type="text" name="txtendereco_ip" class="texto10" value="<?= @$obj->_endereco_ip; ?>" />
                     </dd>
-                    <dt>
-                    <label>ID no Parceiro (Med)</label>
-                    </dt>
-                    <dd>
-                        <input type="number" name="parceriaMed_id" class="texto10" value="<?= @$obj->_parceriamed_id; ?>" />
-                    </dd>
-                    <dt>
-                        <label title="(DDNS OU IP FIXO)">Endereço Web (Med)</label>
-                    </dt>
-                    <dd>
-                        <input type="text" name="txtenderecoMed_ip" class="texto10" value="<?= @$obj->_enderecomed_ip; ?>" />
-                    </dd>
+                    
                     <dt>
                     <label>CNPJ</label>
                     </dt>

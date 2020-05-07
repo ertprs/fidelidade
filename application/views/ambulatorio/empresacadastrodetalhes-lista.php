@@ -1,8 +1,12 @@
+
+   
 <?
 $empresa = $this->guia->listarempresa();
 $operador_id = $this->session->userdata('operador_id');
 //$empresa_id = $this->session->userdata('empresa_id');
 $perfil_id = $this->session->userdata('perfil_id');
+
+
 ?>
 <div class="content"> <!-- Inicio da DIV content -->
 
@@ -102,24 +106,12 @@ $perfil_id = $this->session->userdata('perfil_id');
 
                             <td class="<?php echo @$estilo_linha; ?>"><?= $item->plano ?></td>
                             <td class="<?php echo @$estilo_linha; ?>"> <?= $item->parcelas ?> x <?= $item->valor ?> </td>
-                            <td class="<?php echo @$estilo_linha; ?>" >
-
-
-                                <?
-                                if (count($contratos) <= 0) {
-                                    ?>
-                                    <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/editarquantidade/" . $item->qtd_funcionarios_empresa_id . "/" . $item->forma_pagamento_id . "/" . $empresa_id ?> ', '_blank', 'width=600,height=300 ');">
-                                        Editar Quantidade
-                                    </a> 
-                                    <?
-                                } else {
-                                    
-                                }
-                                ?>
-
+                            <td class="<?php echo @$estilo_linha; ?>" >  
+                                <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/editarquantidade/" . $item->qtd_funcionarios_empresa_id . "/" . $item->forma_pagamento_id . "/" . $empresa_id ?> ', '_blank', 'width=600,height=300 ');">
+                                    Editar Quantidade
+                                </a> 
                             </td>
                             <td class="<?php echo @$estilo_linha; ?>" >
-
                                 <a onclick="javascript: return confirm('Deseja realmente excluir o Funcionário?');"    href="<?= base_url() ?>cadastros/pacientes/excluirfuncionarioqtd/<?= $item->qtd_funcionarios_empresa_id; ?>" target="_blank">
                                     Excluir
                                 </a>
@@ -350,15 +342,28 @@ $perfil_id = $this->session->userdata('perfil_id');
             <br>
             Total 
             <table>
-                <? foreach ($quantidade_funcionarios as $item): ?>
+                <?
+                $planos = Array();
+                foreach ($quantidade_funcionarios as $item): ?>
                     <tr>
                         <td>
-     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.'); ?>
+     <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.');
+     @$valortotalempresa{$item->forma_pagamento_id} = ($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id};
+    
+     $planos[] = Array('plano_id'=>$item->forma_pagamento_id, 'total'=>@$valortotalempresa{$item->forma_pagamento_id});
+     
+     ?>
                         </td>
                     </tr>
      <? endforeach; ?>
             </table>
-                <? } ?>
+                <?
+               
+        foreach($planos as $value){
+           $r =  $this->paciente->atualizarfuncionarioadicionado($empresa_id,$value['total'],$value['plano_id']); 
+        }
+       
+     } ?>
             <br>
             <br>
             <table>
@@ -616,7 +621,7 @@ if (count($contratos) > 0) {
 
 <script type="text/javascript">
 <?php if ($this->session->flashdata('message') != ''): ?>
-                                alert("<? echo $this->session->flashdata('message') ?>");
+  alert("<? echo $this->session->flashdata('message') ?>");
 <? endif; ?>
 
 

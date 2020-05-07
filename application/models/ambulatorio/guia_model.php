@@ -10802,8 +10802,8 @@ ORDER BY ae.agenda_exames_id)";
 
     function gravarparcelacontratoempresa($paciente_contrato_id = NULL) {
    
-             $operador_id = $this->session->userdata('operador_id');
-            $horario = date('Y-m-d H:i:s');
+        $operador_id = $this->session->userdata('operador_id');
+        $horario = date('Y-m-d H:i:s');
 
         $empresa_cadastro_id = $_POST['empresa_id'];
         $this->db->select('afe.*,f.nome as plano,f.taxa_adesao,f.valor_adesao,afe.forma_pagamento_id');
@@ -10848,6 +10848,7 @@ ORDER BY ae.agenda_exames_id)";
                 $this->db->set('data', $data_receber);
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
+                $this->db->set('plano_id',$item->forma_pagamento_id);
                 $this->db->insert('tb_paciente_contrato_parcelas');
             }
             
@@ -10868,6 +10869,7 @@ ORDER BY ae.agenda_exames_id)";
                 $this->db->set('data', $data_receber);
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
+                $this->db->set('plano_id',$item->forma_pagamento_id);
                 $this->db->insert('tb_paciente_contrato_parcelas');
              
             }
