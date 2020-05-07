@@ -407,17 +407,25 @@ class pacientes extends BaseController {
         @$empresa_id = @$_POST['empresa_cadastro_id'];
         $paciente_id = $this->paciente->gravar2($paciente_id);
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
-        $parceiros = $this->paciente->listarparceirosurl();
-        // var_dump($situacao); die;       
+        
+          $parceiros = $this->paciente->listarparceirosurl();
+      
         foreach ($parceiros as $key => $value) {
+            $parceiro_id = "";
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
             // $fields = array('' => $_POST['body']);
+            
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
-            // var_dump($url); die;
+         
+            if($_POST['parceiro_id'] == $value->financeiro_parceiro_id){
+                $parceiro_id = $value->convenio_id;
+            }
+            
             $postdata = http_build_query(
                     array(
-                        'body' => $json_paciente
+                        'body' => $json_paciente,
+                        'parceriamed_id' => $parceiro_id
                     )
             );
             $opts = array('http' =>
@@ -427,9 +435,13 @@ class pacientes extends BaseController {
                     'content' => $postdata
             ));
             $context = stream_context_create($opts);
-            $result = file_get_contents($url, false, $context);
-            // var_dump($result); die;
+            if($value->endereco_ip != ""){
+              $result = file_get_contents($url, false, $context);
+            }
+        
+        //  var_dump($result); die;
         }
+       // die();
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
         } else {

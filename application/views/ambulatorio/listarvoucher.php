@@ -17,7 +17,7 @@
             <tr id="<?= $item->voucher_consulta_id; ?>" >
                 <td><?= $item->horario; ?></td>
                 <td><?= date('d/m/Y',strtotime($item->data)); ?></td>   
-                <td><?= ($item->horario_uso != "") ?date('d/m/Y',strtotime($item->horario_uso)) : ""; ?></td>   
+                <td><?= ($item->horario_uso != "") ?date('d/m/Y',strtotime($item->horario_uso)) : ""; ?></td>  
                 <td><b onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/selecionardatavoucher/<?= $item->voucher_consulta_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=400,height=320');"><button>Confirmar</a></button></b></td>
             </tr>
             <?php }?>

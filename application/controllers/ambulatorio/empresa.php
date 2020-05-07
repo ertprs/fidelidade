@@ -224,9 +224,8 @@ class Empresa extends BaseController {
 
     function carregarempresacadastro($empresa_id = NULL) {
 
-        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id); 
+        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
          
-        
         $this->loadView('ambulatorio/empresacadastro-form', $data);
     }
     
@@ -264,9 +263,16 @@ class Empresa extends BaseController {
             $data['mensagem'] = 'Sucesso ao gravar a Empresa.';
             $this->guia->criarcredordevedorempresa($empresa_id);
         }
-        $this->session->set_flashdata('message', $data['mensagem']); 
-        redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id");
-         
+
+        // if($this->session->userdata('perfil_id') == 5){
+        //     $this->session->set_flashdata('message', $data['mensagem']); 
+        //     redirect(base_url() . "ambulatorio/empresa/empresacadastrolista");
+        // }
+            $this->session->set_flashdata('message', $data['mensagem']); 
+            redirect(base_url() . "cadastros/pacientes/novofuncionario/$empresa_id"); 
+
+        
+        
     }
 
 }

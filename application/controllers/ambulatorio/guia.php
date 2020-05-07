@@ -6431,6 +6431,12 @@ table tr:hover  #achadoERRO{
          $data['listarparceiro'] = $this->paciente->listarparceiros();
          $this->loadView('ambulatorio/relatorioparceiroverificar',$data);
     }
+
+    function relatoriovoucher(){
+        $data['listarparceiro'] = $this->paciente->listarparceiros();
+        $data['pagamentos'] = $this->formapagamento->listarformapagamento();
+        $this->loadView('ambulatorio/relatoriovoucher', $data);
+   }
     
     
       function gerarelatorioparceiroverificar() { 
@@ -6440,6 +6446,21 @@ table tr:hover  #achadoERRO{
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $this->load->View('ambulatorio/impressaorelatorioparceiroverificar', $data);
+    }
+
+    function gerarelatoriovoucher() { 
+        // echo '<pre>';
+        // print_r($_POST);
+        // die;
+        $empresa_id =  $this->session->userdata('empresa_id'); 
+        $data['empresa'] = $this->guia->listarempresa($empresa_id); 
+        $data['relatorio'] = $this->guia->relatoriovoucher();
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
+        $this->load->View('ambulatorio/impressaorelatoriovoucher', $data);
     }
     
     function listarvoucher($paciente_id){
@@ -6451,8 +6472,10 @@ table tr:hover  #achadoERRO{
        $this->guia->confirmarvoucher();   
        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
+
     function selecionardatavoucher($voucher_consulta_id){
     $data['voucher_consulta_id'] = $voucher_consulta_id;
+    $data['pagamentos'] = $this->formapagamento->listarformapagamento();
      $this->load->View('ambulatorio/selecionardatavoucher',$data);
     }
     
@@ -6481,7 +6504,10 @@ table tr:hover  #achadoERRO{
      function gerarelatorioparcelasempresa() {   
         $data['empresa'] = $this->guia->listarempresacadastro($_POST['empresa_cadastro_id']);
         $data['mes'] = $_POST['mes'];
-        $data['relatorio'] = $this->guia->relatorioparcelasempresa();    
+        $data['relatorio'] = $this->guia->relatorioparcelasempresa();
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
         $this->load->View('ambulatorio/impressaorelatorioparcelasempresa', $data);
     }
     

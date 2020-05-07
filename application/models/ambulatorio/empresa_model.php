@@ -622,9 +622,9 @@ class empresa_model extends Model {
 
     function listardadosempresacadastro($empresa_id = NULL) { 
         $this->db->select('f.*, c.nome as municipio,c.municipio_id, c.estado');
-        $this->db->from('tb_empresa f');
+        $this->db->from('tb_empresa_cadastro f');
         $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
-        $this->db->where('empresa_id', $empresa_id);
+        $this->db->where('empresa_cadastro_id', $empresa_id);
         return $this->db->get()->result();
     }
 

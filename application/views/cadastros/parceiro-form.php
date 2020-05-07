@@ -31,6 +31,7 @@
                     <dd>
                         <input type="text" name="txtendereco_ip" class="texto10" value="<?= @$obj->_endereco_ip; ?>" />
                     </dd>
+                    
                     <dt>
                     <label>CNPJ</label>
                     </dt>

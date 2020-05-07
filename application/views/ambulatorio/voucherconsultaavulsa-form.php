@@ -71,6 +71,10 @@
                                     </select>
                                 </td>
                             </tr>
+                            <tr>
+                            <td>Gratuito?</td>
+                            <td><input type="checkbox" name="gratuito" <? if (@$voucher[0]->gratuito == 't') echo "checked"; ?>></td>
+                            </tr>
                         </table>
                             
                         

@@ -463,7 +463,7 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
                 <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
             <tr>
-                <td >MATRICULA: <b>000<?= @$paciente[0]->paciente_id; ?></b></td>
+                <td >MATRICULA: <b>000<?= @$titular_id; ?></b></td>
             </tr>
             <tr>
                 <td >NASCIMENTO: <b><?= substr(@$paciente[0]->nascimento, 8, 2) . '/' . substr(@$paciente[0]->nascimento, 5, 2) . '/' . substr(@$paciente[0]->nascimento, 0, 4); ?></b></td>

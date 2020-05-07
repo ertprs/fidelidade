@@ -26,14 +26,23 @@
             
             <?
             $valor_total = 0;
+            $contador_total = 0;
             foreach($relatorio as $item){
                 $valor_dependentes = 0;
                  $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
+                //  echo '<pre>';
+                //  print_r($dependentes);
+                //  die;
             $i = 0;
+            $a = 1;
                     foreach($dependentes as $item2){
-                        if($item2->situacao == "Dependente"){  
-                               $i++;
+
+                        if($item2->situacao == "Dependente"){
+                            if($a > 3){
                            $valor_dependentes += $item2->valoradcional;
+                            }
+                            $a++;
+                            $i++;
                         }
                     }
                   $valor_total   += ($item->valor + $valor_dependentes ) * $mes; 
@@ -46,6 +55,10 @@
                 </td>
                 <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor + $valor_dependentes, 2, ',', '.'); ?> (<?=$i;?>) </td>
                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format(($item->valor + $valor_dependentes)*$mes, 2, ',', '.'); ?></td>
+               <? 
+               $total_titular = ($item->valor + $valor_dependentes)*$mes;
+               $contador_total = $contador_total + $total_titular;
+               ?>
             </tr>            
             <?
              foreach($dependentes as $item2){
