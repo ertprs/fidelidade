@@ -804,7 +804,8 @@ class guia_model extends Model {
                             pc.data_cadastro,
                             p.empresa_id,
                             pcp.financeiro_credor_devedor_id as financeiro_credor_devedor_id_dependente,
-                            pcp.paciente_dependente_id');
+                            pcp.paciente_dependente_id,
+                            pcp.taxa_adesao');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = pcp.financeiro_credor_devedor_id', 'left');
@@ -5452,7 +5453,12 @@ ORDER BY p.nome";
 
             $this->db->set('data', $data_parcela);
             $this->db->set('tipo', $plano);
-            $this->db->set('classe', 'PARCELA');
+            if($parcela[0]->taxa_adesao == 't'){
+                $this->db->set('classe', 'ADESÃO');
+            }else{
+                $this->db->set('classe', 'PARCELA'); 
+            }
+            // $this->db->set('classe', 'PARCELA');
             $this->db->set('nome', $credor);
             $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
 //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
@@ -7348,8 +7354,16 @@ AND data <= '$data_fim'";
 //        echo '<pre>';
 //        var_dump($return[0]->taxa_adesao); die;
         if ($return[0]->taxa_adesao == 't') {
+            $forma_pagamento = $this->paciente->listaforma_pagamento($_POST['plano']);
+            $valor_adesao =  $forma_pagamento[0]->valor_adesao;
             $this->db->set('taxa_adesao', 't');
-            $this->db->set('valor', $ajuste);
+
+            if ($valor_adesao >= 0) {
+                $this->db->set('valor', $valor_adesao);
+            } else {
+                $this->db->set('valor', $ajuste);
+            }
+
             if ($ajuste == 0.00) {
                 $this->db->set('ativo', 'f');
                 $this->db->set('manual', 't');

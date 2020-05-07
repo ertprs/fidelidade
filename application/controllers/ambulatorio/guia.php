@@ -2057,6 +2057,8 @@ class Guia extends BaseController {
 
     function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id, $carnet_id = NULL, $num_carne = NULL) {
 
+        $this->cancelarparcelaexcluir($paciente_id, $contrato_id, $parcela_id);
+        
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
         $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoparcelagerencianet($parcela_id);
         $empresa = $this->guia->listarempresa();
@@ -5122,6 +5124,13 @@ table tr:hover  #achadoERRO{
 
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
+
+    function cancelarparcelaexcluir($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $this->guia->cancelarparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id);
+    }
+
+
 
     function excluircontratoempresaadmin($contrato_id) {
 

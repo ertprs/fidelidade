@@ -55,6 +55,7 @@
                         <select name="classe" id="classe" class="size2">
                             <option value="">TODOS</option>    
                             <option value="PARCELA">PARCELA</option>
+                            <option value="ADESÃO">ADESÃO</option>
                             <option value="CARTEIRA">CARTEIRA</option>
                         </select>
                     </dd>
