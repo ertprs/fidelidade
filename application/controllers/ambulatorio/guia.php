@@ -500,6 +500,11 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriotitularesexcluidos');
     }
 
+    function relatoriotitularsemcontrato() {
+        //        $data['empresa'] = $this->guia->listarempresas();
+                $this->loadView('ambulatorio/relatoriotitularsemcontrato');
+            }
+
     function gerarelatoriocontratosinativos() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
@@ -514,6 +519,11 @@ class Guia extends BaseController {
 
         $this->load->View('ambulatorio/impressaorelatoriotitularesexcluidos', $data);
     }
+
+    function gerarelatoriotitularsemcontrato() {
+                $data['relatorio'] = $this->guia->gerarelatoriotitularsemcontrato();
+                $this->load->View('ambulatorio/impressaorelatoriotitularsemcontrato', $data);
+            }
 
     function relatoriodependentes() {
 //        $data['empresa'] = $this->guia->listarempresas();

@@ -405,6 +405,22 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function gerarelatoriotitularsemcontrato(){
+
+        // SELECT * FROM teste WHERE teste_id NOT IN(select teste_id from nova);
+        $sql = "SELECT pc.paciente_id, p.nome as paciente, o.nome as operador_cadastro, v.nome as vendedor, pc.data_atualizacao FROM ponto.tb_paciente_contrato pc
+        LEFT JOIN ponto.tb_paciente p ON pc.paciente_id = p.paciente_id
+        LEFT JOIN ponto.tb_operador o ON o.operador_id = pc.operador_cadastro
+        LEFT JOIN ponto.tb_operador v ON v.operador_id = pc.vendedor_id
+                WHERE pc.ativo = false
+                AND pc.paciente_id is not null 
+                AND pc.paciente_id NOT IN(SELECT paciente_id FROM ponto.tb_paciente_contrato pcc WHERE pcc.ativo = true and pcc.paciente_id is not null)
+                ORDER BY pc.data_atualizacao desc";
+
+        return $this->db->query($sql)->result(); 
+    }
+
+
     function relatoriovendedores() {
         $this->db->select('o.operador_id, o.nome');
         $this->db->from('tb_operador o');
