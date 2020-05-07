@@ -547,12 +547,14 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
-    function listarparceirosurl() {
-        $this->db->select('endereco_ip,enderecomed_ip,parceriamed_id,convenio_id, financeiro_parceiro_id');
+    function listarparceirosurl($parceiro_id = null) {
+        $this->db->select('endereco_ip, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');
         $this->db->where("ativo", 't');
-        $this->db->where("(endereco_ip is not null or enderecomed_ip  is not null )");
-        // $this->db->where("financeiro_parceiro_id ", $parceiro_id);
+        $this->db->where("endereco_ip !=", '');
+        if($parceiro_id > 0){
+            $this->db->where("financeiro_parceiro_id ", $parceiro_id);
+        }
         $return = $this->db->get();
         return $return->result();
     }
