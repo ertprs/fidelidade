@@ -548,7 +548,7 @@ class paciente_model extends BaseModel {
     }
 
     function listarparceirosurl($parceiro_id = null) {
-        $this->db->select('endereco_ip, financeiro_parceiro_id');
+        $this->db->select('endereco_ip, financeiro_parceiro_id,convenio_id');
         $this->db->from('tb_financeiro_parceiro');
         $this->db->where("ativo", 't');
         $this->db->where("endereco_ip !=", '');
