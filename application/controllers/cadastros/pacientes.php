@@ -1133,10 +1133,7 @@ class pacientes extends BaseController {
     function atualizarquantidadefuncionarios() {
 
         $empresa_cadastro_id = $_POST['empresa_id'];
-
-
         $retorno = $this->paciente->atualizarquantidadefuncionarios();
-
         $this->paciente->atualizarvalorcontratoempresa($empresa_cadastro_id);
 
         if ($retorno != '-1') {
