@@ -414,6 +414,7 @@ class guia_model extends Model {
         LEFT JOIN ponto.tb_operador v ON v.operador_id = pc.vendedor_id
                 WHERE pc.ativo = false
                 AND pc.paciente_id is not null 
+                AND p.ativo = true
                 AND pc.paciente_id NOT IN(SELECT paciente_id FROM ponto.tb_paciente_contrato pcc WHERE pcc.ativo = true and pcc.paciente_id is not null)
                 ORDER BY pc.data_atualizacao desc";
 
