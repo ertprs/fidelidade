@@ -900,3 +900,8 @@ ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN rendimento_id INTEGER;
 
 --07/05/2020
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN plano_id integer;
+
+
+--08/05/2020
+ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriapadrao boolean;
+ALTER TABLE ponto.tb_financeiro_parceiro ALTER COLUMN parceriapadrao SET DEFAULT false;

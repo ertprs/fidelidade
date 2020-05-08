@@ -31,6 +31,12 @@
                     <dd>
                         <input type="text" name="txtendereco_ip" class="texto10" value="<?= @$obj->_endereco_ip; ?>" />
                     </dd>
+                    <dt>
+                        <label title="Caso não seja escolhida nenhuma parceria no cadastro, essa parceria irá ser padrão">Parceria padrão</label>
+                    </dt>
+                    <dd >
+                        <input type="checkbox" class="texto01"  style="text-align: left;" name="txtparceriapadrao" id="txtparceriapadrao" class="texto10" <?= (@$obj->_parceriapadrao == 't')? "checked":""; ?> />
+                    </dd>
                     
                     <dt>
                     <label>CNPJ</label>
