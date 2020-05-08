@@ -4,16 +4,7 @@
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatoriotitularsemcontrato">
                
-               <dl>
 
-                    <dd>
-                       <select name="opcao">
-                        <option value="1">Sem Contratos</option>
-                        <option value="2">Contratos Inativo</option>
-                       </select>
-                    </dd>
-                    
-                </dl>
 
                 <button type="submit" >Pesquisar</button>
 
