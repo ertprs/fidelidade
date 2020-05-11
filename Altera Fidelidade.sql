@@ -897,3 +897,9 @@ ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriamed_id integer;
 
 --04/05/2020
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN rendimento_id INTEGER;
+
+
+ALTER TABLE ponto.tb_precadastro ADD COLUMN email text;
+ALTER TABLE ponto.tb_precadastro ADD COLUMN senha_app text;
+ALTER TABLE ponto.tb_precadastro ADD COLUMN whatsapp text;
+ALTER TABLE ponto.tb_precadastro ADD COLUMN nascimento date;

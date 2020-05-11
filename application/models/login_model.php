@@ -20,7 +20,7 @@ class login_model extends Model {
         $this->db->orderby('pc.ativo desc');
         $return = $this->db->get()->result();
 
-        if(count($return) == 0 && preg_replace("/[^0-9]/", "", $usuario) > 0){
+        if(count($return) == 0 && is_int($usuario)){
             // die;
             $this->db->select('pc.paciente_contrato_id, p.paciente_id, p.nome, p.cpf, fp.nome as plano');
             $this->db->from('tb_paciente_contrato pc');
@@ -33,6 +33,17 @@ class login_model extends Model {
             $return = $this->db->get()->result();
             
         }
+
+        if(count($return) == 0){
+            $this->db->select("0 as paciente_id, p.nome, p.cpf, p.email as cns, '' as plano", false);
+            $this->db->from('tb_precadastro p');
+            $this->db->where('p.email', $usuario);
+            $this->db->where('p.senha_app', md5($senha));
+            $this->db->where('p.ativo', 't');
+            $return = $this->db->get()->result();
+            // var_dump($return); die;
+        }
+
         return $return;
     }
 

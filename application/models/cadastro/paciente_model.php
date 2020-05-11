@@ -1105,6 +1105,15 @@ class paciente_model extends BaseModel {
             if ($_POST['parceiro_id'] != '') {
                 $this->db->set('parceiro_id', $_POST['parceiro_id']);
             }
+            if ($_POST['email'] != '') {
+                $this->db->set('cns', $_POST['email']);
+            }
+            if ($_POST['senha_app'] != '') {
+                $this->db->set('senha_app', $_POST['senha_app']);
+            }
+            if ($_POST['whatsapp'] != '') {
+                $this->db->set('whatsapp', $_POST['whatsapp']);
+            }
 
             if (@$_POST['indicacao_id'] > 0) {
                 $this->db->set('indicacao_id', $_POST['indicacao_id']);

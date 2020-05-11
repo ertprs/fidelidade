@@ -9,7 +9,10 @@
                 if (@$precadastro_id != "") {
                     ?>                 
                     <input type="text" id="txtNome" name="nome" class="texto10"  value="<?= @$lista[0]->nome; ?>" required/>   
-                    <input type ="hidden" name="indicacao_id"  value ="<?= @$lista[0]->vendedor; ?>" id ="indicacao_id">             
+                    <input type ="hidden" name="email" value ="<?= @$lista[0]->email; ?>" id ="email">             
+                    <input type ="hidden" name="senha_app"  value ="<?= @$lista[0]->senha_app; ?>" id ="senha_app">             
+                    <input type ="hidden" name="whatsapp"  value ="<?= @$lista[0]->whatsapp; ?>" id ="whatsapp">             
+                    <input type ="hidden" name="nascimento"  value ="<?= @$lista[0]->nascimento; ?>" id ="nascimento">             
                 <?
                 }else{
                 ?>
@@ -20,8 +23,18 @@
                 
             </div>
             <div>
+                <?if(count(@$lista) > 0){
+                    $nascimento = @$lista[0]->nascimento;
+                    $email = @$lista[0]->email;
+                }else{
+                    $nascimento = @$obj->_nascimento;
+                    $email = @$obj->_cns;
+                }
+                // var_dump($nascimento); die;
+                ?>
+                
                 <label>Nascimento *</label>
-                <input type="text" name="nascimento" id="txtNascimento" class="texto02" alt="date" value="<?php echo substr(@$obj->_nascimento, 8, 2) . '/' . substr(@$obj->_nascimento, 5, 2) . '/' . substr(@$obj->_nascimento, 0, 4); ?>" required/>
+                <input type="text" name="nascimento" id="txtNascimento" class="texto02" alt="date" value="<?php echo substr(@$nascimento, 8, 2) . '/' . substr(@$nascimento, 5, 2) . '/' . substr(@$nascimento, 0, 4); ?>" required/>
             </div>
             <div>
                 <label>Nome da M&atilde;e</label>
@@ -318,7 +331,7 @@
                 </div> 
                 <div>
                     <label>Email</label>
-                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>"  />
+                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$email; ?>"  />
                 </div>
                 <div>
                     <label>Telefone</label>
