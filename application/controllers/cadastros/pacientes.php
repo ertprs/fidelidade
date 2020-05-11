@@ -17,6 +17,7 @@ class pacientes extends BaseController {
         $this->load->model('ambulatorio/guia_model', 'guia');
         $this->load->model('ambulatorio/indicacao_model', 'indicacao');
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+        $this->load->model('cadastro/parceiro_model', 'parceiro');
         $this->load->library('utilitario');
         $this->load->library('email');
         $this->load->library('mensagem');
@@ -409,19 +410,32 @@ class pacientes extends BaseController {
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         
           $parceiros = $this->paciente->listarparceirosurl();
-      
+          if($_POST['parceiro_id'] != ""){
+             $parceiro_post = $_POST['parceiro_id'];
+          }else{
+             $parceiropadrao =  $this->parceiro->parceiropadrao(); 
+             if(count($parceiropadrao) > 0){
+             $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+             }else{
+               $parceiro_post = 0;  
+             }
+          }
+         
+          
         foreach ($parceiros as $key => $value) {
-            $parceiro_id = "";
+            $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
             // $fields = array('' => $_POST['body']);
             
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
          
-            if($_POST['parceiro_id'] == $value->financeiro_parceiro_id){
+            if($parceiro_post == $value->financeiro_parceiro_id){
                 $parceiro_id = $value->convenio_id;
             }
             
+            
+        
             $postdata = http_build_query(
                     array(
                         'body' => $json_paciente,
@@ -460,18 +474,35 @@ class pacientes extends BaseController {
         $paciente_id = $this->paciente->gravar2($paciente_id);
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
+        if($_POST['parceiro_id'] != ""){
+             $parceiro_post = $_POST['parceiro_id'];
+          }else{
+             $parceiropadrao =  $this->parceiro->parceiropadrao(); 
+             if(count($parceiropadrao) > 0){
+             $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+             }else{
+               $parceiro_post = 0;  
+             }
+          }
+
 //         var_dump($paciente_id); die;
         foreach ($parceiros as $key => $value) {
+            $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
-
+            
+            if($parceiro_post == $value->financeiro_parceiro_id){
+                $parceiro_id = $value->convenio_id;
+            }
+            
             // $fields = array('' => $_POST['body']);
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
 
             // var_dump($url); die;
             $postdata = http_build_query(
                     array(
-                        'body' => $json_paciente
+                        'body' => $json_paciente,
+                        'parceriamed_id' => $parceiro_id
                     )
             );
 
@@ -1162,10 +1193,7 @@ class pacientes extends BaseController {
     function atualizarquantidadefuncionarios() {
 
         $empresa_cadastro_id = $_POST['empresa_id'];
-
-
         $retorno = $this->paciente->atualizarquantidadefuncionarios();
-
         $this->paciente->atualizarvalorcontratoempresa($empresa_cadastro_id);
 
         if ($retorno != '-1') {

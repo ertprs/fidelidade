@@ -329,7 +329,7 @@ class Utilitario {
     }
 
     function barcode($text = "0", $filepath = "", $size = "20", $orientation = "horizontal", $code_type = "code128", $print = false, $SizeFactor = 1) {
-//        var_dump($text, $filepath , $print);die;
+   //  var_dump($text, $filepath , $print);die;
         $code_string = "";
         // Translate the $text into barcode the correct $code_type
         if (in_array(strtolower($code_type), array("code128", "code128b"))) {

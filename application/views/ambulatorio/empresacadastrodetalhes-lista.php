@@ -1,8 +1,12 @@
+
+   
 <?
 $empresa = $this->guia->listarempresa();
 $operador_id = $this->session->userdata('operador_id');
 //$empresa_id = $this->session->userdata('empresa_id');
 $perfil_id = $this->session->userdata('perfil_id');
+
+
 ?>
 <div class="content"> <!-- Inicio da DIV content -->
 
@@ -338,18 +342,26 @@ $perfil_id = $this->session->userdata('perfil_id');
             <br>
             Total 
             <table>
-                <? foreach ($quantidade_funcionarios as $item): ?>
+                <?
+                $planos = Array();
+                foreach ($quantidade_funcionarios as $item): ?>
                     <tr>
                         <td>
      <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.');
-     $valortotalempresa = ($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id};
+     @$valortotalempresa{$item->forma_pagamento_id} = ($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id};
+    
+     $planos[] = Array('plano_id'=>$item->forma_pagamento_id, 'total'=>@$valortotalempresa{$item->forma_pagamento_id});
+     
      ?>
                         </td>
                     </tr>
      <? endforeach; ?>
             </table>
                 <?
-      $this->paciente->atualizarfuncionarioadicionado($empresa_id,$valortotalempresa);   
+               
+        foreach($planos as $value){
+           $r =  $this->paciente->atualizarfuncionarioadicionado($empresa_id,$value['total'],$value['plano_id']); 
+        }
        
      } ?>
             <br>
@@ -609,7 +621,7 @@ if (count($contratos) > 0) {
 
 <script type="text/javascript">
 <?php if ($this->session->flashdata('message') != ''): ?>
-                                alert("<? echo $this->session->flashdata('message') ?>");
+  alert("<? echo $this->session->flashdata('message') ?>");
 <? endif; ?>
 
 

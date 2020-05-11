@@ -94,6 +94,7 @@ class parceiro_model extends Model {
 
     function gravar() {
         try {
+           
             /* inicia o mapeamento no banco */
             $financeiro_parceiro_id = $_POST['txtcadastrosparceiroid'];
             $this->db->set('razao_social', $_POST['txtrazaosocial']);
@@ -111,12 +112,21 @@ class parceiro_model extends Model {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
             }
             $this->db->set('fantasia', $_POST['txtfantasia']);
-            $this->db->set('endereco_ip', $_POST['txtendereco_ip']);
-            $this->db->set('enderecomed_ip', $_POST['txtenderecoMed_ip']);
-            $this->db->set('parceriamed_id', $_POST['parceriaMed_id']);
+            if($_POST['txtendereco_ip'] != ""){
+             $this->db->set('endereco_ip', $_POST['txtendereco_ip']);
+            }
             $this->db->set('logradouro', $_POST['endereco']);
             $this->db->set('numero', $_POST['numero']);
-            $this->db->set('convenio_id', $_POST['convenio_id']);
+            if($_POST['convenio_id'] != ""){
+             $this->db->set('convenio_id', $_POST['convenio_id']);
+            }
+            if(isset($_POST['txtparceriapadrao'])){
+                $this->db->set('parceriapadrao','t');
+            }else{
+               $this->db->set('parceriapadrao','f');
+            }
+                
+            
             $this->db->set('bairro', $_POST['bairro']);
             $this->db->set('complemento', $_POST['complemento']);
             $this->db->set('usuario', $_POST['usuario']);
@@ -173,7 +183,8 @@ class parceiro_model extends Model {
                                f.usuario,
                                f.senha,
                                f.enderecomed_ip,
-                               f.parceriamed_id');
+                               f.parceriamed_id,
+                               f.parceriapadrao');
             $this->db->from('tb_financeiro_parceiro f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("financeiro_parceiro_id", $financeiro_parceiro_id);
@@ -201,6 +212,7 @@ class parceiro_model extends Model {
             $this->_senha = $return[0]->senha;
             $this->_enderecomed_ip = $return[0]->enderecomed_ip;
             $this->_parceriamed_id = $return[0]->parceriamed_id;
+            $this->_parceriapadrao = $return[0]->parceriapadrao;
         } else {
             $this->_financeiro_parceiro_id = null;
         }
@@ -219,6 +231,19 @@ class parceiro_model extends Model {
         return $this->db->get()->result();
         
     }
+    
+    function parceiropadrao(){
+        $this->db->select('financeiro_parceiro_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where('ativo','t');
+        $this->db->where('parceriapadrao','t');
+        return $this->db->get()->result();
+        
+    }
+    
+    
+    
+    
 
 }
 

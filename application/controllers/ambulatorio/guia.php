@@ -500,6 +500,11 @@ class Guia extends BaseController {
         $this->loadView('ambulatorio/relatoriotitularesexcluidos');
     }
 
+    function relatoriotitularsemcontrato() {
+        //        $data['empresa'] = $this->guia->listarempresas();
+                $this->loadView('ambulatorio/relatoriotitularsemcontrato');
+            }
+
     function gerarelatoriocontratosinativos() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
@@ -514,6 +519,11 @@ class Guia extends BaseController {
 
         $this->load->View('ambulatorio/impressaorelatoriotitularesexcluidos', $data);
     }
+
+    function gerarelatoriotitularsemcontrato() {
+                $data['relatorio'] = $this->guia->gerarelatoriotitularsemcontrato();
+                $this->load->View('ambulatorio/impressaorelatoriotitularsemcontrato', $data);
+            }
 
     function relatoriodependentes() {
 //        $data['empresa'] = $this->guia->listarempresas();
@@ -2047,6 +2057,8 @@ class Guia extends BaseController {
 
     function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id, $carnet_id = NULL, $num_carne = NULL) {
 
+        $this->cancelarparcelaexcluir($paciente_id, $contrato_id, $parcela_id);
+        
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
         $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoparcelagerencianet($parcela_id);
         $empresa = $this->guia->listarempresa();
@@ -2740,7 +2752,6 @@ class Guia extends BaseController {
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['procedimento'] = $this->procedimento->listarprocedimentos();
         $data['exames'] = $this->exametemp->listaraexamespaciente($ambulatorio_guia_id);
-
         $data['x'] = 0;
         foreach ($data['exames'] as $value) {
             $teste = $this->exametemp->verificaprocedimentosemformapagamento($value->procedimento_tuss_id);
@@ -5113,6 +5124,13 @@ table tr:hover  #achadoERRO{
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
 
+    function cancelarparcelaexcluir($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $this->guia->cancelarparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id);
+    }
+
+
+
     function excluircontratoempresaadmin($contrato_id) {
 
         $ambulatorio_guia_id = $this->guia->excluircontratoempresaadmin($contrato_id);
@@ -6359,8 +6377,9 @@ table tr:hover  #achadoERRO{
         }
         $data['empresa_id'] = $empresa_id;
 
-        $data['empresa'] = $this->empresa->listardadosempresacadastro($empresa_id);
-        //var_dump($data['empresa']); die;
+        $data['empresa'] = $this->empresa->listardadosempresa($empresa_id);
+        // echo '<pre>';
+        // var_dump($data['empresa']); die;
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
         $data['paciente_id'] = $paciente_id;
@@ -6523,7 +6542,75 @@ table tr:hover  #achadoERRO{
     }
     
     
-    
+    function gerarboletosicoob($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
+       
+       
+        // DADOS DO BOLETO PARA O SEU CLIENTE
+        $dias_de_prazo_para_pagamento = 5;
+        $taxa_boleto = 2.95;
+        $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias  OU  informe data: "13/04/2006"  OU  informe "" se Contra Apresentacao;
+        $valor_cobrado = "2950,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $valor_cobrado = str_replace(",", ".",$valor_cobrado);
+        $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+
+        $dadosboleto["inicio_nosso_numero"] = "24";  // 24 - Padrão da Caixa Economica Federal
+        $dadosboleto["nosso_numero"] = "19525086";  // Nosso numero sem o DV - REGRA: Máximo de 8 caracteres!
+        $dadosboleto["numero_documento"] = "27.030195.10";	// Num do pedido ou do documento
+        $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
+        $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
+        $dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
+        $dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
+
+        // DADOS DO SEU CLIENTE
+        $dadosboleto["sacado"] = "Nome do seu Cliente";
+        $dadosboleto["endereco1"] = "Endereço do seu Cliente";
+        $dadosboleto["endereco2"] = "Cidade - Estado -  CEP: 00000-000";
+
+        // INFORMACOES PARA O CLIENTE
+        $dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Nonononono";
+        $dadosboleto["demonstrativo2"] = "Mensalidade referente a nonon nonooon nononon<br>Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
+        $dadosboleto["demonstrativo3"] = "BoletoPhp - http://www.boletophp.com.br";
+
+        // INSTRUÇÕES PARA O CAIXA
+        $dadosboleto["instrucoes1"] = "- Sr. Caixa, cobrar multa de 2% após o vencimento";
+        $dadosboleto["instrucoes2"] = "- Receber até 10 dias após o vencimento";
+        $dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br";
+        $dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto BoletoPhp - www.boletophp.com.br";
+
+        // DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
+        $dadosboleto["quantidade"] = "";
+        $dadosboleto["valor_unitario"] = "";
+        $dadosboleto["aceite"] = "";		
+        $dadosboleto["especie"] = "R$";
+        $dadosboleto["especie_doc"] = "";
+
+
+        // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
+
+
+        // DADOS DA SUA CONTA - CEF
+        $dadosboleto["agencia"] = "1565"; // Num da agencia, sem digito
+        $dadosboleto["conta"] = "13877"; 	// Num da conta, sem digito
+        $dadosboleto["conta_dv"] = "4"; 	// Digito do Num da conta
+
+        // DADOS PERSONALIZADOS - CEF
+        $dadosboleto["conta_cedente"] = "87000000414"; // ContaCedente do Cliente, sem digito (Somente Números)
+        $dadosboleto["conta_cedente_dv"] = "3"; // Digito da ContaCedente do Cliente
+        $dadosboleto["carteira"] = "SR";  // Código da Carteira: pode ser SR (Sem Registro) ou CR (Com Registro) - (Confirmar com gerente qual usar)
+
+        // SEUS DADOS
+        $dadosboleto["identificacao"] = "BoletoPhp - Código Aberto de Sistema de Boletos";
+        $dadosboleto["cpf_cnpj"] = "";
+        $dadosboleto["endereco"] = "Coloque o endereço da sua empresa aqui";
+        $dadosboleto["cidade_uf"] = "Cidade / Estado";
+        $dadosboleto["cedente"] = "Coloque a Razão Social da sua empresa aqui";
+
+// NÃO ALTERAR!
+        echo "<meta charset='utf-8'>";
+    include("./sicoob/funcoes_cef.php"); 
+    include("./sicoob/layout_cef.php");    
+            
+    }
     
     
 }

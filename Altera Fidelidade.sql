@@ -903,3 +903,10 @@ ALTER TABLE ponto.tb_precadastro ADD COLUMN email text;
 ALTER TABLE ponto.tb_precadastro ADD COLUMN senha_app text;
 ALTER TABLE ponto.tb_precadastro ADD COLUMN whatsapp text;
 ALTER TABLE ponto.tb_precadastro ADD COLUMN nascimento date;
+--07/05/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN plano_id integer;
+
+
+--08/05/2020
+ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriapadrao boolean;
+ALTER TABLE ponto.tb_financeiro_parceiro ALTER COLUMN parceriapadrao SET DEFAULT false;
