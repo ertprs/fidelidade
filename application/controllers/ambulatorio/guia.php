@@ -2283,12 +2283,11 @@ class Guia extends BaseController {
     function gravardependentes() {
         $paciente_id = $_POST['txtpaciente_id'];
         $contrato_id = $_POST['txtcontrato_id'];
-
         $ambulatorio_guia_id = $this->guia->gravardependentes($paciente_id, $contrato_id);
-        // if ($this->session->userdata('cadastro') == 2) {
-        //     $dependente_id = $_POST['dependente'];
-        //     $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
-        // }
+        if ($this->session->userdata('cadastro') == 2) {
+             $dependente_id = $_POST['dependente'];
+             $this->guia->geraparcelasdependente($dependente_id, $contrato_id);
+        }
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao gravar a dependente. Opera&ccedil;&atilde;o cancelada.';
         } else {
@@ -6549,36 +6548,36 @@ table tr:hover  #achadoERRO{
         $dias_de_prazo_para_pagamento = 5;
         $taxa_boleto = 2.95;
         $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias  OU  informe data: "13/04/2006"  OU  informe "" se Contra Apresentacao;
-        $valor_cobrado = "2950,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $valor_cobrado = "5,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
         $valor_cobrado = str_replace(",", ".",$valor_cobrado);
         $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
-        $dadosboleto["inicio_nosso_numero"] = "24";  // 24 - Padrão da Caixa Economica Federal
+        $dadosboleto["inicio_nosso_numero"] = "1";  // 24 - Padrão da Caixa Economica Federal
         $dadosboleto["nosso_numero"] = "19525086";  // Nosso numero sem o DV - REGRA: Máximo de 8 caracteres!
-        $dadosboleto["numero_documento"] = "27.030195.10";	// Num do pedido ou do documento
+        $dadosboleto["numero_documento"] = $paciente_contrato_parcelas_id;	// Num do pedido ou do documento
         $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
         $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
         $dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
         $dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
 
         // DADOS DO SEU CLIENTE
-        $dadosboleto["sacado"] = "Nome do seu Cliente";
-        $dadosboleto["endereco1"] = "Endereço do seu Cliente";
-        $dadosboleto["endereco2"] = "Cidade - Estado -  CEP: 00000-000";
+        $dadosboleto["sacado"] = "Cliente teste"; //Nome do seu Cliente
+        $dadosboleto["endereco1"] = "Rua espanha"; //Endereço do seu Cliente
+        $dadosboleto["endereco2"] = "Caucaia - Ceará -  CEP: 73310-005";
 
         // INFORMACOES PARA O CLIENTE
-        $dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Nonononono";
-        $dadosboleto["demonstrativo2"] = "Mensalidade referente a nonon nonooon nononon<br>Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
-        $dadosboleto["demonstrativo3"] = "BoletoPhp - http://www.boletophp.com.br";
+        $dadosboleto["demonstrativo1"] = "Pagamento de Compra";
+        $dadosboleto["demonstrativo2"] = "Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
+        $dadosboleto["demonstrativo3"] = "";
 
         // INSTRUÇÕES PARA O CAIXA
         $dadosboleto["instrucoes1"] = "- Sr. Caixa, cobrar multa de 2% após o vencimento";
         $dadosboleto["instrucoes2"] = "- Receber até 10 dias após o vencimento";
         $dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br";
-        $dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto BoletoPhp - www.boletophp.com.br";
+        $dadosboleto["instrucoes4"] = "";
 
         // DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
-        $dadosboleto["quantidade"] = "";
+        $dadosboleto["quantidade"] = "1";
         $dadosboleto["valor_unitario"] = "";
         $dadosboleto["aceite"] = "";		
         $dadosboleto["especie"] = "R$";
@@ -6589,27 +6588,27 @@ table tr:hover  #achadoERRO{
 
 
         // DADOS DA SUA CONTA - CEF
-        $dadosboleto["agencia"] = "1565"; // Num da agencia, sem digito
+        $dadosboleto["agencia"] = "4609"; // Num da agencia, sem digito
         $dadosboleto["conta"] = "13877"; 	// Num da conta, sem digito
         $dadosboleto["conta_dv"] = "4"; 	// Digito do Num da conta
 
         // DADOS PERSONALIZADOS - CEF
-        $dadosboleto["conta_cedente"] = "87000000414"; // ContaCedente do Cliente, sem digito (Somente Números)
-        $dadosboleto["conta_cedente_dv"] = "3"; // Digito da ContaCedente do Cliente
+        $dadosboleto["conta_cedente"] = "202088"; // ContaCedente do Cliente, sem digito (Somente Números)
+        $dadosboleto["conta_cedente_dv"] = ""; // Digito da ContaCedente do Cliente
         $dadosboleto["carteira"] = "SR";  // Código da Carteira: pode ser SR (Sem Registro) ou CR (Com Registro) - (Confirmar com gerente qual usar)
 
         // SEUS DADOS
-        $dadosboleto["identificacao"] = "BoletoPhp - Código Aberto de Sistema de Boletos";
+        $dadosboleto["identificacao"] = "Sicoob";
         $dadosboleto["cpf_cnpj"] = "";
-        $dadosboleto["endereco"] = "Coloque o endereço da sua empresa aqui";
-        $dadosboleto["cidade_uf"] = "Cidade / Estado";
-        $dadosboleto["cedente"] = "Coloque a Razão Social da sua empresa aqui";
+        $dadosboleto["endereco"] = "Avenida teste";
+        $dadosboleto["cidade_uf"] = "Fortaleza / Ceará";
+        $dadosboleto["cedente"] = "SALUTE ATIVIDADES DE INTERMEDIACAO E AGENCIAMENTO / 35812309000160";
 
 // NÃO ALTERAR!
-        echo "<meta charset='utf-8'>";
+    echo "<meta charset='utf-8'>";
     include("./sicoob/funcoes_cef.php"); 
-    include("./sicoob/layout_cef.php");    
-            
+    include("./sicoob/layout_cef.php");  
+         
     }
     
     
