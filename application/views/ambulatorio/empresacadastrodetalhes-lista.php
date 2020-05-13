@@ -57,7 +57,7 @@ $perfil_id = $this->session->userdata('perfil_id');
     ?>
 
 
-<? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>
+<? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Detalhes</a></h3>
         <div>
@@ -338,7 +338,7 @@ $perfil_id = $this->session->userdata('perfil_id');
                     </tr>
                 </tfoot>
             </table>
-            <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
+            <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
             <br>
             Total 
             <table>
@@ -424,7 +424,7 @@ else:
 
 
 
-        <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
+        <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
         <fieldset>
             <legend>Contrato</legend>
 <?
