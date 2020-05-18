@@ -531,8 +531,8 @@ class Guia extends BaseController {
     }
 
     function gerarelatoriodependentes() {
-//        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
-//        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatoriodependentes();
 
         $this->load->View('ambulatorio/impressaorelatoriodependentes', $data);
