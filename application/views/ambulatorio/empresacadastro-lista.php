@@ -1,7 +1,7 @@
 
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_new">
-    <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
+    <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
         <a href="<?php echo base_url() ?>ambulatorio/empresa/carregarempresacadastro/0">
             Nova Empresa
         </a>
@@ -52,11 +52,12 @@
                                         <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresacadastro/<?= $item->empresa_cadastro_id ?>">Editar</a></div>
                                 </td> 
                                 <? } ?>
-                                <? if($this->session->userdata('perfil_id') != 5){
-                                    ?>
+                               
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/pacientes/novofuncionario/<?= $item->empresa_cadastro_id ?>">Detalhes</a></div>   
                                 </td>
+                                <? if($this->session->userdata('perfil_id') != 5){
+                                    ?>
                                 <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;"><div class="bt_link">
                                         <a  onclick="javascript: return confirm('Deseja realmente excluir essa Empresa?');"   href="<?= base_url() ?>cadastros/pacientes/excluirempresacadastro/<?= $item->empresa_cadastro_id ?>">Excluir</a></div> 
