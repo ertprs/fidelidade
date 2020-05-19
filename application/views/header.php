@@ -298,13 +298,13 @@ $data['permissao'] = $this->db->get()->result();
 
                                     <? } ?>
                                         <?php 
-                                      if ($perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 1 || $perfil_id == 7) {  
+                                      if ($perfil_id == 4 || $perfil_id == 5 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 1 || $perfil_id == 7) {  
                                        ?>
                                               <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarprecadastros">Pŕe-cadastro</a></span></li>
                                        <?
                                       }
                                         ?>
-                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) { ?>                                      
+                                    <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 5 || $perfil_id == 8 || $perfil_id == 9 ) { ?>                                      
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioinadimplentes">Relatorio Inadimplentes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioadimplentes">Relatorio Adimplentes</a></span></li>
 
@@ -328,6 +328,7 @@ $data['permissao'] = $this->db->get()->result();
                                     <? } ?>
                                 </ul>
                             </li>
+                            <? if ($perfil_id != 7) { ?>
                             <li><span class="folder">Situa&ccedil;&atilde;o</span>
                                 <ul>
                                     <? if ($perfil_id == 12) { ?>
@@ -337,6 +338,7 @@ $data['permissao'] = $this->db->get()->result();
                                     <? } ?>
                                 </ul>
                             </li> 
+                                    <? } ?>
                             <? if ($data['permissao'][0]->cadastro_empresa_flag == 't' || $this->session->userdata('perfil_id') == 1 || $this->session->userdata('perfil_id') == 5 || $this->session->userdata('perfil_id') == 4|| $this->session->userdata('perfil_id') == 8|| $this->session->userdata('perfil_id') == 9): ?>
                                 <li><span class="folder">Empresa</span>
                                     <ul>
@@ -351,7 +353,7 @@ $data['permissao'] = $this->db->get()->result();
                             <? endif; ?>
                         </ul>
                     </li>
-
+                    <? if ($perfil_id != 7) { ?>
                     <li><span class="folder">Financeiro</span>
                         <ul>
                             <? if ($perfil_id == 1 || ($data['permissao'][0]->excluir_entrada_saida == 't')) { ?>
@@ -403,6 +405,17 @@ $data['permissao'] = $this->db->get()->result();
 
                         </ul>
                     </li>
+                                <? } ?>
+                    <? if ($perfil_id == 5) { ?>
+                        <li><span class="folder">Configura&ccedil;&atilde;o</span>
+                            <ul>
+                                <li><span class="folder">Recep&ccedil;&atilde;o</span>
+                                        <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/novo">Cadastrar Vendedores</a></span></ul>
+                                </li>
+                            </ul>
+                        </li>
+                    <? } ?>
+
                     <? if ($perfil_id == 1) { ?>                
                         <li><span class="folder">Configura&ccedil;&atilde;o</span>
                             <ul>

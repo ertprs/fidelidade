@@ -358,8 +358,9 @@ class Operador_model extends BaseModel {
         $this->db->from('tb_operador o');
         $this->db->join('tb_perfil p', 'p.perfil_id = o.perfil_id');
         $this->db->where('o.ativo', 't');
-        $this->db->where('o.perfil_id', 4);
-         $this->db->orderby("o.nome");
+        $this->db->where("(o.perfil_id = '4' or o.perfil_id = '8' or o.perfil_id = '9')");
+        
+        $this->db->orderby("o.nome");
         
 //        $this->db->where('o.operador_id',$operador_id);
         $return = $this->db->get();

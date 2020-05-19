@@ -1,3 +1,5 @@
+ <? $perfil_id = $this->session->userdata('perfil_id');
+ $operador_id = $this->session->userdata('operador_id'); ?>
  <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
    
          <?= form_open_multipart(base_url() . 'cadastros/pacientes/gravarprecadastro'); ?>
@@ -46,6 +48,24 @@
                     //if ($this->session->userdata('perfil_id') == 1) {                    
                       
                     ?>
+
+                    <? if($perfil_id == 7){ ?>
+            <div>
+                    <label>Indicação
+                   </label>                    
+                    <select id="vendedor" name="vendedor">
+                            <?php 
+                            foreach($datalistarvendedor as $item){
+                                if($item->operador_id == $operador_id){
+                                ?>
+                        <option value="<?= $item->operador_id ?>" ><?= $item->nome; ?></option>
+                        <?  }
+                            }
+                            ?>
+                    </select>
+                   
+             </div>
+                    <? }else{ ?>
             
             <div>
                     <label>Indicação
@@ -62,6 +82,7 @@
                    
              </div>
             <?
+                    }
                   //  }else{
             ?>
              <!-- <div>

@@ -123,9 +123,14 @@ class Operador extends BaseController {
         $data['lista'] = $this->operador_m->listar($filtro = null, $maximo = null, $inicio = null);
 
 //            redirect(base_url()."seguranca/operador/index/$data","refresh");
+        $perfil_id = $this->session->userdata('perfil_id');
         $this->session->set_flashdata('message', $data['mensagem']);
-//        header("Location: base_url() . seguranca/operador");
-        redirect(base_url() . "seguranca/operador", $data);
+//        header("Location: base_url() . seguranca/operador")
+        if($perfil_id == 5){
+            redirect(base_url() . "home", $data);
+        }else{
+            redirect(base_url() . "seguranca/operador", $data);
+        }
     }
 
     function operadorconvenio($operador_id) {

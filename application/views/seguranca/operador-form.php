@@ -1,3 +1,4 @@
+<? $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
     <div class="bt_link_voltar">
         <a href="<?= base_url() ?>seguranca/operador">
@@ -160,6 +161,21 @@
                 <div>
                     <label>Tipo perfil *</label>
 
+                    <? if($perfil_id == 5){?>
+
+                    <select name="txtPerfil" id="txtPerfil" class="size4">
+                        <option value="">Selecione</option>
+                        <? foreach ($listarPerfil as $item) :
+                            if($item->perfil_id == 4 || $item->perfil_id == 8 ||$item->perfil_id == 9 || $item->perfil_id == 7){
+                            ?>
+                                    <option value="<?= $item->perfil_id; ?>"
+                                    ><?= $item->nome; ?></option>
+
+                        <?} endforeach; ?>
+                    </select>
+
+                    <? }else{ ?>
+
                     <select name="txtPerfil" id="txtPerfil" class="size4">
                         <option value="">Selecione</option>
                         <? foreach ($listarPerfil as $item) :
@@ -177,6 +193,8 @@
                             <?}}?>
                         <? endforeach; ?>
                     </select>
+
+                        <? } ?>
                 </div>
 
             </fieldset>

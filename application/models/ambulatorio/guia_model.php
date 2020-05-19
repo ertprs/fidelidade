@@ -464,9 +464,17 @@ class guia_model extends Model {
         $this->db->where('p2.situacao !=', 'Titular');
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcd.ativo', 'true');
-//        $this->db->where('pc.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
-//        $this->db->where('pc.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
-//        $this->db->groupby('pc.paciente_contrato_id,p2.nome,p.nome,fp.nome');
+        if($_POST['txtdata_inicio'] != ""){
+         $this->db->where('p2.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");   
+        }
+        if( $_POST['txtdata_fim'] != ""){
+          $this->db->where('p2.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        }
+        
+        if($_POST['txtNomepaciente']){
+           $this->db->where('p.paciente_id',$_POST['txtNomeid']); 
+        }
+
         $this->db->orderby('pc.paciente_contrato_id,p2.nome,p.nome');
         $return = $this->db->get();
         return $return->result();
