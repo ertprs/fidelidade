@@ -821,13 +821,7 @@ class AppPacienteAPI extends Controller {
         // var_dump($texto_add); 
         // die;
         $resposta = $this->app->listarEmpresas();    
-        $resposta2 = $this->app->listarParceiros();   
-        $cont = count($resposta);
-        foreach ($resposta2 as $key => $value) {
-            $value->email = '';
-            $resposta[$cont + $key] = $value;
-            # code...
-        }
+        
         // echo '<pre>';
         // var_dump($resposta2); 
         // die;
