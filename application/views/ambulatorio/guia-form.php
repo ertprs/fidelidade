@@ -67,7 +67,7 @@
                         <table id="table_justa">
                             <thead>
                                 <tr>
-                                    <th width="70px;" class="tabela_header">Dependente</th>
+                                    <th width="" class="tabela_header">Dependente</th>
     <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
                                 </tr>
                             </thead>
@@ -75,8 +75,8 @@
 
 
                                 <tr>
-                                    <td> 
-                                        <select  name="dependente" id="dependente" class=" chosen-select" tabindex="1" required="" >
+                                    <td > 
+                                        <select  name="dependente" id="dependente" class="texto09 chosen-select" tabindex="1" required="" >
                                             <option value="">Selecione</option>
                                             <? foreach ($lista as $item) : ?>
                                                 <option value="<?= $item->paciente_id; ?>"><?= $item->nome; ?></option>
@@ -90,7 +90,7 @@
 
                             <tfoot>
                                 <tr>
-                                    <th class="tabela_footer" colspan="4">
+                                    <th class="tabela_footer" colspan="">
                                     </th>
                                 </tr>
                             </tfoot>
@@ -208,7 +208,12 @@
 <script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/init.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+
+
 <script type="text/javascript">
+    
+
+
 
 <?php if ($this->session->flashdata('message') != ''): ?>
                                                     alert("<? echo $this->session->flashdata('message') ?>");
