@@ -5956,6 +5956,14 @@ ORDER BY p.nome";
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
             $this->db->update('tb_consultas_avulsas');
         } else {
+            
+            $this->db->select('');
+            $this->db->from('tb_entradas');
+            $this->db->where('consultas_avulsas_id',$consultas_avulsas_id);         
+            $contEntrada = $this->db->get()->result();
+            if(count($contEntrada) > 0){
+                return true;
+            }
 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
