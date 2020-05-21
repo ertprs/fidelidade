@@ -821,13 +821,35 @@ class AppPacienteAPI extends Controller {
         // var_dump($texto_add); 
         // die;
         $resposta = $this->app->listarEmpresas();    
-        $resposta2 = $this->app->listarParceiros();   
-        $cont = count($resposta);
-        foreach ($resposta2 as $key => $value) {
-            $value->email = '';
-            $resposta[$cont + $key] = $value;
-            # code...
+        
+        // echo '<pre>';
+        // var_dump($resposta2); 
+        // die;
+        $obj = new stdClass();
+        if(count($resposta) > 0){
+            $obj->status = 200;
+            $obj->data = $resposta;
+        }else{
+            $obj->status = 404;
         }
+        // echo '<pre>';
+        // var_dump($obj); 
+        // die;
+
+        echo json_encode($obj); 
+    }
+
+    function busca_parceiros(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        // $json_post = json_decode(file_get_contents("php://input"));
+        // var_dump($json_post); 
+        // die;
+        // $medico_id = $json_post->medico_id;
+        // echo '<pre>';
+        // var_dump($texto_add); 
+        // die;
+        $resposta = $this->app->listarParceiros();    
         // echo '<pre>';
         // var_dump($resposta2); 
         // die;

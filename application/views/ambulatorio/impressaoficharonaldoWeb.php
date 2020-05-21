@@ -43,13 +43,13 @@ if ($permissao[0]->carteira_padao_1 == 't') {
 <table border="0">
         <tbody>
             <tr>
-                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+                <td ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
             </tr>
             <tr>
                 <td colspan="2">NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
             <tr>
-                <td colspan="2">CPF: <b><?
+                <td width="15%">CPF: <b><?
                         if (strlen(preg_replace("/\D/", '', @$paciente[0]->cpf)) === 11) {
                             echo preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", @$paciente[0]->cpf);
                         } else {
