@@ -6542,18 +6542,28 @@ table tr:hover  #achadoERRO{
     
     
     function gerarboletosicoob($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
+         $this->load->plugin('mpdf');
+         $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
        
        
+         $valor  =   str_replace(".", ",",$lista[0]->valor);
+         
+         
+          
+         
         // DADOS DO BOLETO PARA O SEU CLIENTE
         $dias_de_prazo_para_pagamento = 5;
-        $taxa_boleto = 2.95;
-        $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias  OU  informe data: "13/04/2006"  OU  informe "" se Contra Apresentacao;
-        $valor_cobrado = "5,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $taxa_boleto = 0.00;
+      //  $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias  OU  informe data: "13/04/2006"  OU  informe "" se Contra Apresentacao;
+        $data_venc = date("d/m/Y",strtotime($lista[0]->data));
+        
+        $valor_cobrado = $valor; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
         $valor_cobrado = str_replace(",", ".",$valor_cobrado);
         $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
-        $dadosboleto["inicio_nosso_numero"] = "1";  // 24 - Padrão da Caixa Economica Federal
+        $dadosboleto["inicio_nosso_numero"] = "01";  // 24 - Padrão da Caixa Economica Federal
         $dadosboleto["nosso_numero"] = "19525086";  // Nosso numero sem o DV - REGRA: Máximo de 8 caracteres!
+        $dadosboleto["nosso_numero_sicoob"] = "01";
         $dadosboleto["numero_documento"] = $paciente_contrato_parcelas_id;	// Num do pedido ou do documento
         $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
         $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
@@ -6605,10 +6615,12 @@ table tr:hover  #achadoERRO{
         $dadosboleto["cedente"] = "SALUTE ATIVIDADES DE INTERMEDIACAO E AGENCIAMENTO / 35812309000160";
 
 // NÃO ALTERAR!
+       
     echo "<meta charset='utf-8'>";
     include("./sicoob/funcoes_cef.php"); 
-    include("./sicoob/layout_cef.php");  
-         
+    include("./sicoob/layout_cef.php");
+    
+ // echo "<script>print();</script>";
     }
     
     

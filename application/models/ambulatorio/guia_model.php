@@ -5453,6 +5453,14 @@ ORDER BY p.nome";
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
         } else {
+            $this->db->select("");
+            $this->db->from("tb_entradas");
+            $this->db->where("paciente_contrato_parcelas_id",$paciente_contrato_parcelas_id);
+            $this->db->where('ativo', 't');
+            $contEntrada  = $this->db->get()->result();
+            if(count($contEntrada) > 0){
+                return true;
+            }
             //gravando na entrada 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
