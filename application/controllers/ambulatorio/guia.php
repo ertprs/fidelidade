@@ -6561,9 +6561,10 @@ table tr:hover  #achadoERRO{
         $valor_cobrado = str_replace(",", ".",$valor_cobrado);
         $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
-        $dadosboleto["inicio_nosso_numero"] = "01";  // 24 - Padrão da Caixa Economica Federal
+        $dadosboleto["inicio_nosso_numero"] = "24";  // 24 - Padrão da Caixa Economica Federal
         $dadosboleto["nosso_numero"] = "19525086";  // Nosso numero sem o DV - REGRA: Máximo de 8 caracteres!
-        $dadosboleto["nosso_numero_sicoob"] = "01";
+        $dadosboleto["nosso_numero_sicoob"] = "1952508";
+        
         $dadosboleto["numero_documento"] = $paciente_contrato_parcelas_id;	// Num do pedido ou do documento
         $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
         $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
