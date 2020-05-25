@@ -5534,7 +5534,7 @@ ORDER BY p.nome";
             @$valor = $parcela[0]->valor;
         }
 
-        $credor = $this->criarcredordevedorpaciente($titular_id);
+        $credor = $this->criarcredordevedorpaciente($contrato_id);
         $plano = @$parcela[0]->plano;
 
         $this->db->select('financeiro_maior_zero');

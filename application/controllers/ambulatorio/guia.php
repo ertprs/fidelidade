@@ -782,7 +782,6 @@ class Guia extends BaseController {
     }
 
     function impressaocarteira($paciente_id, $contrato_id, $paciente_contrato_dependente_id = NULL, $paciente_titular = NULL) {
-
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
