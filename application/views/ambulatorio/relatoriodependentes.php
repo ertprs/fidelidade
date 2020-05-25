@@ -4,8 +4,14 @@
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatoriodependentes">
                 <dl>
-
-<!--                    <dt>
+                    <dt>
+                        <label>Titular</label>
+                    </dt>
+                    <dd>
+                      <input type="hidden" id="txtNomeid" class="texto10" name="txtNomeid" readonly="true" />
+                      <input type="text" id="txtNomepaciente" name="txtNomepaciente" class="texto05"/>
+                    </dd>
+                    <dt>
                         <label>Data inicio</label>
                     </dt>
                     <dd>
@@ -16,7 +22,7 @@
                     </dt>
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
-                    </dd>-->
+                    </dd>
                     
                 </dl>
                 <button type="submit" >Pesquisar</button>
@@ -78,4 +84,24 @@
             }
         });
     });
+    
+    
+     $(function () {
+            $("#txtNomepaciente").autocomplete({
+                source: "<?= base_url() ?>index.php?c=autocomplete&m=pacientetitular",
+                minLength: 3,
+                focus: function (event, ui) {
+                    $("#txtNomepaciente").val(ui.item.label);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#txtNomepaciente").val(ui.item.value);
+                    $("#txtNomeid").val(ui.item.id);
+                    $("#txtTelefone").val(ui.item.itens);
+                    $("#nascimento").val(ui.item.valor);
+                    $("#txtEnd").val(ui.item.endereco);
+                    return false;
+                }
+            });
+        });
 </script>

@@ -46,6 +46,8 @@ $carteira = $dadosboleto["carteira"];
 
 //conta cedente (sem dv) com 6 digitos
 $conta_cedente = formata_numero($dadosboleto["conta_cedente"],6,0);
+$t = substr($conta_cedente, -1);
+$t2 =  substr($conta_cedente, 0,5);
 //dv da conta cedente
 $conta_cedente_dv = modulo_10($conta_cedente);
 
@@ -61,7 +63,7 @@ $dv = digitoVerificador_barra("$codigobanco$nummoeda$fator_vencimento$valor$cont
 // Numero para o codigo de barras com 44 digitos
 $linha = "$codigobanco$nummoeda$dv$fator_vencimento$valor$conta_cedente$conta_cedente_dv$sequenciaNossoNumero$livre";
 
-$agencia_codigo = $agencia." / ". $conta_cedente ."-". $conta_cedente_dv;
+$agencia_codigo = $agencia." / ". $t2 ."-". $t;
 
 $dadosboleto["codigo_barras"] = $linha;
 $dadosboleto["linha_digitavel"] = monta_linha_digitavel($linha);
