@@ -2376,14 +2376,21 @@ ORDER BY p.nome";
         return $return->result();
     }
 
-    function listarvendedor() {
+    function listarvendedor($vendedor) {
 
         $this->db->select('nome');
         $this->db->from('tb_operador');
-        $this->db->where('operador_id', @$_POST['vendedor']);
+
+        if (count($vendedor) > 0) {
+
+            $this->db->where_in('operador_id', $vendedor);
+        }
+
+        //$this->db->where('operador_id', @$_POST['vendedor']);
+        $this->db->orderby('nome');
         $return = $this->db->get()->result();
         if (count($return) > 0) {
-            return $return[0]->nome;
+            return $return;
         } else {
             return '';
         }
@@ -2409,15 +2416,30 @@ ORDER BY p.nome";
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
 //        $this->db->where('pcp.excluido', 'false');
-        $this->db->where('p.vendedor', $_POST['vendedor']);
+
+        if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
+            $this->db->where_in('p.vendedor', @$_POST['vendedor']);
+        }
+
+        // $this->db->where('p.vendedor', $_POST['vendedor']);
+
         // Se algum dia for preciso fazer com que o relatório mostre todos os vendedores ao não colocar o filtro
         // É necessário se atentar ao fato de quê a lógica por trás da comissão não olha para mais de um vendedor
         // ao mesmo tempo, sendo assim, vai ser preciso refazer uma parte.
         $this->db->where("pc.data_cadastro >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
         $this->db->where("pc.data_cadastro <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
         // $this->db->orderby('fr.nome, p.nome');
+        $this->db->orderby('vendedor');
         $this->db->orderby('p.nome');
         $this->db->orderby('fp.nome');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarvendedoresgerente($gerente){
+        $this->db->select('operador_id');
+        $this->db->from('tb_ambulatorio_gerente_operador');
+        $this->db->where('gerente_id', $gerente);
         $return = $this->db->get();
         return $return->result();
     }
@@ -2539,7 +2561,13 @@ ORDER BY p.nome";
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
         $this->db->where('p.forma_rendimento_id is not null');
-        $this->db->where('p.vendedor', $_POST['vendedor']);
+
+        if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
+            $this->db->where_in('p.vendedor', @$_POST['vendedor']);
+        }
+
+        // $this->db->where('p.vendedor', $_POST['vendedor']);
+
         // Se algum dia for preciso fazer com que o relatório mostre todos os vendedores ao não colocar o filtro
         // É necessário se atentar ao fato de quê a lógica por trás da comissão não olha para mais de um vendedor
         // ao mesmo tempo, sendo assim, vai ser preciso refazer uma parte.
@@ -2605,6 +2633,7 @@ ORDER BY p.nome";
                             pcp.ativo,
                             pcp.valor,
                             pcp.data,
+                            pcp.data_atualizacao,
                             fp.comissao_vendedor_mensal,
                             fp.comissao_gerente_mensal,
                             o.nome as vendedor');
@@ -2615,10 +2644,26 @@ ORDER BY p.nome";
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
+        $this->db->where('pcp.ativo', 'false');
         $this->db->where('pcp.excluido', 'false');
-        $this->db->where('p.vendedor', $_POST['vendedor']);
-        $this->db->where("pcp.data >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
-        $this->db->where("pcp.data <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+
+        if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
+            $this->db->where_in('p.vendedor', @$_POST['vendedor']);
+        }
+
+        //$this->db->where('p.vendedor', $_POST['vendedor']);
+        // $this->db->where("pcp.data >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        // $this->db->where("pcp.data <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+
+        $this->db->where("pcp.data_atualizacao >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
+        $this->db->where("pcp.data_atualizacao <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        
+        if($_POST['tipopesquisa'] == '1'){
+            $this->db->orderby('pcp.data_atualizacao');
+            $this->db->orderby('vendedor');
+        }else{
+            $this->db->orderby('vendedor');
+        }
         $this->db->orderby('p.nome');
         $this->db->orderby('fp.nome');
         $return = $this->db->get();

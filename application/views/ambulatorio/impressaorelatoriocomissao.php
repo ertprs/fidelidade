@@ -11,9 +11,16 @@
                     border-bottom:none;mso-border-top-alt:none;border-left:
                     none;border-right:none;' colspan="4">&nbsp;</th>
             </tr>
+
+            <?if($vendedor != ''){?>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">VENDEDOR: <?= $vendedor ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">VENDEDOR: <? foreach($vendedor as $item){
+                 echo $item->nome.', ';   
+                } ?></th>
             </tr>
+            <?}else{?>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">NÃO HÁ VENDEDORES CADASTRADOS PARA ESSE GERENTE</th>
+            <?}?>
 
             <tr>
                 <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= date("d/m/Y",strtotime($txtdatainicio)); ?> ate <?=  date("d/m/Y",strtotime($txtdatafim)); ?></th>
@@ -52,6 +59,7 @@
                 <tr>
                     <th class="tabela_teste">Cliente</th>
                     <th class="tabela_teste">Plano</th>
+                    <th class="tabela_teste">Vendedor</th>
                     <th class="tabela_teste">Forma de Pag.</th>
                     <th class="tabela_teste">Comiss&atilde;o</th>
                     <th class="tabela_teste">Comiss&atilde;o Vendedor Externo</th>
@@ -79,6 +87,7 @@
                     <tr>
                         <td ><font size="-2"><?= $item->paciente; ?></td>
                         <td ><font size="-2"><?= $item->plano; ?></td>
+                        <td ><font size="-2"><?= $item->vendedor; ?></td>
                         <td ><font size="-2"><?= $item->forma_rendimento; ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($valor_comissao, 2, ',', '.'); ?></td>

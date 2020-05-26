@@ -795,6 +795,22 @@ class paciente_model extends BaseModel {
 
         return $return->result();
     }
+
+
+    function listargerentedevendas() {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+
+            $this->db->select('operador_id, nome');
+            $this->db->from('tb_operador');
+            $this->db->orderby('nome');
+            $this->db->where_in('perfil_id', 5);
+            $this->db->where('ativo', 't');
+            $return = $this->db->get();
+        
+
+        return $return->result();
+    }
     
     function listarvendedorexterno() {
         $perfil_id = $this->session->userdata('perfil_id');

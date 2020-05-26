@@ -3414,6 +3414,7 @@ class Guia extends BaseController {
 
     function relatoriocomissao() {
         $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $data['listargerentedevendas'] = $this->paciente->listargerentedevendas();
         $this->loadView('ambulatorio/relatoriocomissao', $data);
     }
 
@@ -3455,6 +3456,7 @@ class Guia extends BaseController {
 
     function relatoriocomissaovendedor() {
         $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $data['listargerentedevendas'] = $this->paciente->listargerentedevendas();
         $this->loadView('ambulatorio/relatoriocomissaovendedor', $data);
     }
 
@@ -3521,10 +3523,33 @@ class Guia extends BaseController {
     }
 
     function gerarelatoriocomissao() {
+        if(!isset($_POST['vendedor'])){
+
+              $arraygerente = $this->guia->listarvendedoresgerente($_POST['gerentedevendas']);
+
+              if(count($arraygerente) > 0){
+
+              foreach($arraygerente as $item){
+                $arrayvendedor[] = $item->operador_id;
+              }
+
+              $_POST['vendedor'] = $arrayvendedor;
+
+            }else{
+                $array= array(10000);
+                $_POST['vendedor'] = $array;
+            }
+        }
+        
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
         $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
+        // print_r($data['vendedor']);
+        // die;
         $data['relatorio'] = $this->guia->relatoriocomissao();
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
         $data['relatorio_forma'] = $this->guia->relatoriocomissaoContadorForma();
         // echo '<pre>';
         // var_dump($data['relatorio_forma']); die;
@@ -3623,6 +3648,24 @@ class Guia extends BaseController {
     }
 
     function gerarelatoriocomissaovendedor() {
+
+        if(!isset($_POST['vendedor'])){
+
+            $arraygerente = $this->guia->listarvendedoresgerente($_POST['gerentedevendas']);
+
+            if(count($arraygerente) > 0){
+            foreach($arraygerente as $item){
+              $arrayvendedor[] = $item->operador_id;
+            }
+
+            $_POST['vendedor'] = $arrayvendedor;
+
+          }else{
+                $array= array(10000);
+              $_POST['vendedor'] = $array;
+          }
+      }
+
         $data['txtdatainicio'] = str_replace("/", "-", $_POST['txtdata_inicio']);
         $data['txtdatafim'] = str_replace("/", "-", $_POST['txtdata_fim']);
 //        var_dump($_POST); die;
