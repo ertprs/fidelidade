@@ -2429,7 +2429,14 @@ ORDER BY p.nome";
         $this->db->where("pc.data_cadastro >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
         $this->db->where("pc.data_cadastro <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
         // $this->db->orderby('fr.nome, p.nome');
-        $this->db->orderby('vendedor');
+
+        if($_POST['tipopesquisa'] == '1'){
+            $this->db->orderby('pc.data_cadastro');
+            $this->db->orderby('vendedor');
+        }else{
+            $this->db->orderby('vendedor');
+            $this->db->orderby('pc.data_cadastro');
+        }
         $this->db->orderby('p.nome');
         $this->db->orderby('fp.nome');
         $return = $this->db->get();
@@ -2663,6 +2670,7 @@ ORDER BY p.nome";
             $this->db->orderby('vendedor');
         }else{
             $this->db->orderby('vendedor');
+            $this->db->orderby('pcp.data_atualizacao');
         }
         $this->db->orderby('p.nome');
         $this->db->orderby('fp.nome');

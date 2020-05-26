@@ -26,6 +26,16 @@
                          
                         </select>
                     </dd>
+                    <dt>
+                        <label>Organizar Por</label>
+                    </dt>
+                    <dd>
+                        <select name="tipopesquisa" id="tipopesquisa" class="size2">
+                            <option value="1">Data</option>
+                            <option value="2">Nome de Vendedor</option>
+                         
+                        </select>
+                    </dd>
 
                         <div id="Divgerentedevendas">
                     <dt>

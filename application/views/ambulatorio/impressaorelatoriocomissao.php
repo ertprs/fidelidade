@@ -1,4 +1,9 @@
 <meta charset="UTF-8">
+<style>
+.cinza{
+    background: Grey;
+}
+</style>
 <div class="content"> <!-- Inicio da DIV content -->
     <table>
         <thead>
@@ -73,14 +78,43 @@
                 <?php
                 $valortotal = 0;
                 $total = 0;
-                foreach ($relatorio as $item) :      
+                $totalporvendedor = 0;
+                $valorvendedortotal = 0;
+                $pegarnomevendedor = 0;
+                foreach ($relatorio as $item) :   
+                    
+                    if($_POST['tipopesquisa'] == '2'){
+
+                        if($pegarnomevendedor == 0){
+                            $operadorvendedor = $item->vendedor;
+                            $pegarnomevendedor++;
+                        }
+    
+                        if($item->vendedor != $operadorvendedor){
+                            ?>
+                        <tr class="cinza">
+                        <td COLSPAN = 4><font size="-1">TOTAL VENDEDOR: <?=$totalporvendedor?></td>
+                        <!-- <td COLSPAN = 3></td> -->
+                        <td style='text-align: center;' ><font size="-1">VALOR TOTAL VENDEDOR: <?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
+                    </tr>
+                                            
+                            <?
+                            $valorvendedortotal = 0;
+                            $totalporvendedor = 0;
+                            }
+    
+                        }
+
+
                     $total++;
+                    $totalporvendedor++;
                     if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
                         $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
                     }else{
                         $valor_comissao = $item->comissao;
                     }                                     
                     $valortotal = $valortotal + $valor_comissao;
+                    $valorvendedortotal = $valorvendedortotal + $valor_comissao;
 
 
                     ?>                      
@@ -95,7 +129,26 @@
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_seguradora, 2, ',', '.'); ?></td>
                     </tr>
 
-                <? endforeach; ?>
+                    <?   
+                    
+                    if($_POST['tipopesquisa'] == '2'){
+                    if($operadorvendedor != $item->vendedor){
+                        $operadorvendedor = $item->vendedor; 
+                    }
+                }
+                ?>
+
+                <? endforeach; 
+                
+                if($_POST['tipopesquisa'] == '2'){?>
+                <tr class="cinza">
+                        <td COLSPAN = 4><font size="-1">TOTAL VENDEDOR: <?=$totalporvendedor?></td>
+                        <!-- <td COLSPAN = 3></td> -->
+                        <td style='text-align: center;' ><font size="-1">VALOR TOTAL VENDEDOR: <?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
+                </tr>
+
+                <?}?>
+
                     <tr>
                         <td COLSPAN = 4><font size="-1">TOTAL: <?=$total?></td>
                         <!-- <td COLSPAN = 3></td> -->
