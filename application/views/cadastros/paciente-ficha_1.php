@@ -202,6 +202,21 @@
                     <?php
                     foreach ($listarvendedor as $item) {
                         ?>
+                        <option   value =<?php echo $item->operador_id; ?>    ><?php echo $item->nome; ?></option>
+                        <?php
+                    }
+                    ?> 
+                </select>
+            </div>
+
+            <div>
+                <label>Pessoa Indicação</label>
+
+                <select name="pessoaindicacao" id="pessoaindicacao" class="size2">
+                    <option value="">Selecione</option>
+                    <?php
+                    foreach ($listarindicacao as $item) {
+                        ?>
                         <option   value =<?php echo $item->operador_id; ?>  <? if(@$lista[0]->vendedor == $item->operador_id){ echo "selected"; } ?>   ><?php echo $item->nome; ?></option>
                         <?php
                     }
