@@ -532,7 +532,7 @@ class Autocomplete extends Controller {
             if ($dependente) {
                 $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
 //                $paciente_id = $retorno[0]->paciente_id;
-                $paciente_titular_id = $retorno[0]->paciente_id;
+                $paciente_titular_id = $retorno[0]->titular_id;
 //            $paciente_dependente_id = $paciente_informacoes[0]->paciente_id;
             } else {
 //            $paciente_id = $_POST['txtNomeid'];
