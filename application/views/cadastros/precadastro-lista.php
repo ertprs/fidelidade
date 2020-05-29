@@ -1,4 +1,4 @@
-
+<?$listarindicacao = $this->paciente->listarindicacao(); ?>
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_new">
         <a href="<?= base_url()?>cadastros/pacientes/carregarprecadastro">Novo Pré-cadastro</a>
@@ -13,6 +13,7 @@
                         <th class="tabela_title" >Nome</th>
                         <th class="tabela_title" >CPF</th>
                         <th class="tabela_title" >Dt. Cadastro</th>
+                        <th class="tabela_title" >Indicação</th>
                     </tr>
                     <tr>
                 <form method="get" action="<?php echo base_url() ?>cadastros/pacientes/listarprecadastros">
@@ -26,8 +27,21 @@
                     </th>
 
 
-                    <th class="tabela_title" colspan="2">
+                    <th class="tabela_title">
                         <input type="text" name="data" id="data" class="texto03" alt="date" value="<?php echo @$_GET['data']; ?>" />
+                    </th>
+
+                    <th class="tabela_title">
+                    <select name="id_indicacao" id="id_indicacao" class="size2">
+                    <option value="">Selecione</option>
+                    <?php
+                    foreach ($listarindicacao as $item) {
+                        ?>
+                        <option   value =<?php echo $item->operador_id; ?>  <? if(@$_GET['id_indicacao'] == $item->operador_id){ echo "selected"; } ?>   ><?php echo $item->nome; ?></option>
+                        <?php
+                    }
+                    ?> 
+                    </select>
                     </th>
 
                     <th class="tabela_title" >

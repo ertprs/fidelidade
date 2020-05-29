@@ -4242,6 +4242,10 @@ class paciente_model extends BaseModel {
         $this->db->where('pc.cpf ilike',"%".$args['cpf']."%");             
    }
 
+   if (isset($args['id_indicacao']) && strlen($args['id_indicacao']) > 0) {   
+            $this->db->where('pc.vendedor', $args['id_indicacao']);             
+}
+
    if (isset($args['data']) && strlen($args['data']) > 0) {   
        $data_inicio = date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 00:00:00";
        $data_final = date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 23:59:59";
