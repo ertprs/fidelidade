@@ -203,6 +203,10 @@
                         <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
                                 VENDEDOR : <?= @$paciente[0]->vendedor_nome; ?> 
                             </div></td>
+
+                            <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
+                                INDICAÇÃO : <?= @$paciente[0]->nome_indicacao; ?> 
+                            </div></td>
                     <? }
                     ?>
                 </tr>

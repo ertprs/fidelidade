@@ -1,4 +1,4 @@
-
+<?$listarindicacao = $this->paciente->listarindicacao(); ?>
 <div class="content"> <!-- Inicio da DIV content -->
     <div class="bt_link_new">
         <a href="<?= base_url()?>cadastros/pacientes/carregarprecadastro">Novo Pré-cadastro</a>
@@ -6,21 +6,60 @@
     <div id="accordion">
         <h3 class="singular"><a href="#"> Pré-cadastro</a></h3>
         <div>
-            <table>
+        <table >
                 <thead>
                     <tr>
-                        <th colspan="5" class="tabela_title">
-                            <form method="get" action="<?= base_url() ?>cadastros/pacientes/listarenviosparauigu"> 
-                              
-                            </form>
-                        </th>
+                        <!--<th class="tabela_title" ></th>-->
+                        <th class="tabela_title" >Nome</th>
+                        <th class="tabela_title" >CPF</th>
+                        <th class="tabela_title" >Dt. Cadastro</th>
+                        <th class="tabela_title" >Indicação</th>
                     </tr>
+                    <tr>
+                <form method="get" action="<?php echo base_url() ?>cadastros/pacientes/listarprecadastros">
+
+                    <th class="tabela_title" >
+                        <input type="text" name="nome" class="texto03" value="<?php echo @$_GET['nome']; ?>" />
+                    </th>
+
+                    <th class="tabela_title" >
+                        <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?php echo @$_GET['cpf']; ?>" />
+                    </th>
+
+
+                    <th class="tabela_title">
+                        <input type="text" name="data" id="data" class="texto03" alt="date" value="<?php echo @$_GET['data']; ?>" />
+                    </th>
+
+                    <th class="tabela_title">
+                    <select name="id_indicacao" id="id_indicacao" class="size2">
+                    <option value="">Selecione</option>
+                    <?php
+                    foreach ($listarindicacao as $item) {
+                        ?>
+                        <option   value =<?php echo $item->operador_id; ?>  <? if(@$_GET['id_indicacao'] == $item->operador_id){ echo "selected"; } ?>   ><?php echo $item->nome; ?></option>
+                        <?php
+                    }
+                    ?> 
+                    </select>
+                    </th>
+
+                    <th class="tabela_title" >
+                        <button type="submit" name="enviar">Pesquisar</button>
+                    </th>
+
+                </form>
+                </tr>
+            </table>
+            <table>
+                <thead>
+
                     <tr>
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">Plano</th>
                         <th class="tabela_header">Cpf</th>
                         <th class="tabela_header">Telefone</th>
-                        <th class="tabela_header">Vendedor</th>
+                        <th class="tabela_header">Indicação</th>
                         <th class="tabela_header" colspan="3"><center>Ações</center></th>
                         
                     </tr>
@@ -95,12 +134,19 @@
     </div>
 
 </div> <!-- Final da DIV content -->
+<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
 
     $(function () {
         $("#accordion").accordion();
     });
     
+    $("#cpfcnpj").mask("999.999.999-99");
+
     $(function () {
         $("#data").datepicker({
             autosize: true,

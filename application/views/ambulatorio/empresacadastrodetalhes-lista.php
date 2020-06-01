@@ -57,7 +57,7 @@ $perfil_id = $this->session->userdata('perfil_id');
     ?>
 
 
-<? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>
+<? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Detalhes</a></h3>
         <div>
@@ -192,46 +192,24 @@ $perfil_id = $this->session->userdata('perfil_id');
                         </td></tr>
                     <tr><td> Preço:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="precototal"  readonly="false">  
                         </td></tr>
-
-
                     <tr> 
                         <td> <br><input type="submit" value="Adicionar" > 
-
-
                             <?
-                            if ($pode_finalizar == "true") {
+                            if ($pode_finalizar == "true" && $this->session->userdata("perfil_id") != 5) {
                                 ?>
-
                                 <button>  
                                     <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/finalizarcadastrodefuncionarios/" . $empresa_id ?> ', '_blank', 'width=900,height=600');" style="text-decoration: none;">
                                         Finalizar
                                     </a> 
                                 </button>
-
-
                                 <?
                             } else {
                                 ?>
-
-
-
-
                                 <?
                             }
                             ?>
-
-
-
-
-
-
                         </td>
-
-
-
                     </tr>
-
-
                 </table>
 
             </form>
@@ -338,7 +316,7 @@ $perfil_id = $this->session->userdata('perfil_id');
                     </tr>
                 </tfoot>
             </table>
-            <? if($this->session->userdata('perfil_id') != 4 && $this->session->userdata('perfil_id') != 5 && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
+            <? if($this->session->userdata('perfil_id') != 4  && $this->session->userdata('perfil_id') != 8 && $this->session->userdata('perfil_id') != 9){?>             
             <br>
             Total 
             <table>

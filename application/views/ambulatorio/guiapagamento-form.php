@@ -12,8 +12,6 @@
             if (!(@$paciente[0]->empresa_id != "" || @$paciente[0]->empresa_id != null)) {
                 ?>
              <fieldset>
-
-
                     <div class="bt_link"> 
                         <a href="<?= base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id"; ?>">
                             Consulta Extra

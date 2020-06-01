@@ -82,6 +82,53 @@
                 <label>Reativar</label> 
                 <input type="checkbox"  name="reativar" id="reativar">
             </div>
+            <div>
+                <label>Endere&ccedil;o *</label>
+                <input type="text" id="txtendereco" class="texto10" name="endereco" value="<?= @$obj->_endereco; ?>" required/>
+            </div>
+            <div>
+                <label>N&uacute;mero</label>
+
+
+                <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" required/>
+            </div>
+            <div>
+                <label>Complemento</label>
+
+
+                <input type="text" id="txtComplemento" class="texto04" name="complemento" value="<?= @$obj->_complemento; ?>" />
+            </div>
+            <div>
+                <label>Bairro *</label>
+
+
+                <input type="text" id="txtBairro" class="texto03" name="bairro" value="<?= @$obj->_bairro; ?>" required />
+            </div>
+
+
+            <div>
+                <label>Município *</label>
+
+
+                <input type="hidden" id="txtCidadeID" class="texto_id" name="municipio_id" value="<?= @$obj->_cidade; ?>" readonly="true" />
+                <input type="text" id="txtCidade" class="texto04" name="txtCidade" value="<?= @$obj->_cidade_nome; ?>" required/>
+            </div>
+            <div>
+                <label>CEP</label>
+
+
+                <input type="text" id="cep" class="texto02" name="cep" alt="cep" value="<?= @$obj->_cep; ?>" required/>
+            </div>
+
+            <div>
+                    <label>Telefone</label>
+                <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 99999-9999" value="<?= @$obj->_telefone; ?>" required/>
+                </div>
+
+                <div>
+                    <label>Celular *</label>
+                    <input type="text" id="txtCelular" class="texto02" name="celular" alt="(99) 99999-9999" value="<?= @$obj->_celular; ?>" required/>
+                </div>
             <?php if($empresapermissao[0]->forma_dependente == "t"){?>
              <div>
                 <label>Forma Pagamento </label>
@@ -98,6 +145,8 @@
                 </select>  
             </div>
             <?php }?>
+
+            
 
             <fieldset>
                 <legend>Titular</legend>
@@ -131,6 +180,9 @@
 
                     $("#txtNascimento").mask("99/99/9999");
                     $("#txtcpf").mask("999.999.999-99");
+                    $("#txtCelular").mask("(99) 99999-9999");
+                        $("#txtTelefone").mask("(99) 99999-9999");
+                        $("#cep").mask("99999-999");
                     $(function () {
                         $("#txtcbo").autocomplete({
                             source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",

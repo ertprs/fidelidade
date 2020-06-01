@@ -1,4 +1,9 @@
 <meta charset="UTF-8">
+<style>
+.cinza{
+    background: Grey;
+}
+</style>
 <div class="content"> <!-- Inicio da DIV content -->
     <table>
         <thead>
@@ -11,9 +16,16 @@
                     border-bottom:none;mso-border-top-alt:none;border-left:
                     none;border-right:none;' colspan="4">&nbsp;</th>
             </tr>
+
+            <?if($vendedor != ''){?>
             <tr>
-                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">VENDEDOR: <?= $vendedor ?></th>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">VENDEDOR: <? foreach($vendedor as $item){
+                 echo $item->nome.', ';   
+                } ?></th>
             </tr>
+            <?}else{?>
+                <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">NÃO HÁ VENDEDORES CADASTRADOS PARA ESSE GERENTE</th>
+            <?}?>
 
             <tr>
                 <th style='text-align: left; font-family: serif; font-size: 12pt;' colspan="4">PERIODO: <?= date("d/m/Y", strtotime($txtdatainicio)); ?> até <?= date("d/m/Y", strtotime($txtdatafim)); ?></th>
@@ -51,8 +63,9 @@
                 <tr>
                     <th class="tabela_teste">Cliente</th>
                     <th class="tabela_teste">Plano</th>
+                    <th class="tabela_teste">Vendedor</th>
                     <!-- <th class="tabela_teste">Forma de Pag</th> -->
-                    <th class="tabela_teste">Data</th>
+                    <th class="tabela_teste">Data Pagamento</th>
                     <th class="tabela_teste">Valor Parcela</th>
                     <th class="tabela_teste">Comissão Vendedor</th>
                     <th class="tabela_teste">Comissão Gerente</th>
@@ -63,10 +76,32 @@
             <tbody> 
                 <?php 
                 $valortotal = 0;
+                $valorvendedortotal = 0;
                 $npagas= 0;
                 $pagas= 0;
+                $pegarnomevendedor = 0;
                 foreach ($relatorio as $item) :
-                      
+
+                    if($_POST['tipopesquisa'] == '2'){
+
+                    if($pegarnomevendedor == 0){
+                        $operadorvendedor = $item->vendedor;
+                        $pegarnomevendedor++;
+                    }
+
+                    if($item->vendedor != $operadorvendedor){
+                        ?>
+                                        <tr class="cinza">
+                            <td colspan="5">VALOR TOTAL VENDEDOR</td>
+                            <td style='text-align: center;' ><font size="-2"><?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
+                                        </tr>
+                                        
+                        <?
+                        $valorvendedortotal = 0;
+                        }
+
+                    }
+
                     // if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
                         // $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
                     // }else{
@@ -79,13 +114,16 @@
                     }
                     if ($item->ativo == 'f') {
                         $valortotal = $valortotal + $valor_comissao;
+                        $valorvendedortotal = $valorvendedortotal + $valor_comissao;
                     }
+
                     ?>                      
                     <tr>
                         <td ><font size="-2"><?= $item->paciente; ?></td>
                         <td ><font size="-2"><?= $item->plano; ?></td>
+                        <td ><font size="-2"><?= $item->vendedor; ?></td>
                         <!-- <td ><font size="-2"><?= $item->forma_rendimento; ?></td> -->
-                        <td ><font size="-2"><?= date("d/m/Y", strtotime($item->data)) ?></td>
+                        <td ><font size="-2"><?= date("d/m/Y", strtotime($item->data_atualizacao)) ?></td>
                         <td ><font size="-2"><?= number_format($item->valor, 2, ',', '.'); ?></td>
                         <td style='text-align: center;<?
                         if ($item->ativo != 'f') {
@@ -109,8 +147,22 @@
                             }
                             ?></td>
                     </tr>
+                    <?
+
+                        if($_POST['tipopesquisa'] == '2'){
+                    if($operadorvendedor != $item->vendedor){
+                        $operadorvendedor = $item->vendedor; 
+                    }
+                }
+                    ?>
 
                 <? endforeach; ?>
+                <?  if($_POST['tipopesquisa'] == '2'){?>
+                <tr class="cinza">
+                        <td colspan="5">VALOR TOTAL VENDEDOR</td>
+                        <td style='text-align: center;' ><font size="-2"><?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
+                </tr>
+                <?}?>
                 <tr>
                     <td colspan="5">VALOR TOTAL</td>
                     <td style='text-align: center;' ><font size="-2"><?= number_format($valortotal, 2, ',', '.'); ?></td>

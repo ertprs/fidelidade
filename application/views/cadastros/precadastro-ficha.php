@@ -21,7 +21,7 @@
             
               <div>
                     <label>Telefone</label>
-                    <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 9999-9999" value="<?= @$lista[0]->telefone; ?>"  />
+                    <input type="text" id="txtTelefone" class="texto02" name="telefone" alt="(99) 99999-9999" value="<?= @$lista[0]->telefone; ?>"  />
                 </div>
             
             <div>
@@ -148,7 +148,7 @@
 <script  type="text/javascript">
     
       $("#cpfcnpj").mask("999.999.999-99");
-       $("#txtTelefone").mask("(99) 9999-9999");      
+       $("#txtTelefone").mask("(99) 99999-9999");      
               function verificarCPF() {
                         
                                 var cpf = $("#cpfcnpj").val();

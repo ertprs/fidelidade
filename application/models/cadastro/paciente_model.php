@@ -129,7 +129,7 @@ class paciente_model extends BaseModel {
     }
 
     function listardados($paciente_id) {
-        $this->db->select('pc.pago_todos_iugu,p.empresa_id,op.nome as vendedor_nome,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, fr.nome as pagamento,p.cpf,p.data_cadastro');
+        $this->db->select('pc.pago_todos_iugu,p.empresa_id,op.nome as vendedor_nome,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, fr.nome as pagamento,p.cpf,p.data_cadastro, ind.nome as nome_indicacao');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
         $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
@@ -137,6 +137,7 @@ class paciente_model extends BaseModel {
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->join('tb_operador op', 'op.operador_id = p.vendedor', 'left');
+        $this->db->join('tb_operador ind', 'ind.operador_id = p.pessoaindicacao', 'left');
         $this->db->where("p.paciente_id", $paciente_id);
         $return = $this->db->get();
         return $return->result();
@@ -795,6 +796,22 @@ class paciente_model extends BaseModel {
 
         return $return->result();
     }
+
+
+    function listargerentedevendas() {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+
+            $this->db->select('operador_id, nome');
+            $this->db->from('tb_operador');
+            $this->db->orderby('nome');
+            $this->db->where_in('perfil_id', 5);
+            $this->db->where('ativo', 't');
+            $return = $this->db->get();
+        
+
+        return $return->result();
+    }
     
     function listarvendedorexterno() {
         $perfil_id = $this->session->userdata('perfil_id');
@@ -1155,6 +1172,9 @@ class paciente_model extends BaseModel {
             if ($_POST['vendedor'] != '') {
                 $this->db->set('vendedor', $_POST['vendedor']);
             }
+            if ($_POST['pessoaindicacao'] != '') {
+                $this->db->set('pessoaindicacao', $_POST['pessoaindicacao']);
+            }
             $this->db->set('situacao', $_POST['situacao']);
             $this->db->set('bairro', $_POST['bairro']);
             $this->db->set('complemento', $_POST['complemento']);
@@ -1413,6 +1433,22 @@ class paciente_model extends BaseModel {
             if (@$_POST['municipio_id'] != '') {
 
                 $this->db->set('municipio_id', $_POST['municipio_id']);
+            }
+            if (@$_POST['endereco'] != '') {
+
+                $this->db->set('logradouro', $_POST['endereco']);
+            }
+            if (@$_POST['complemento'] != '') {
+
+                $this->db->set('complemento', $_POST['complemento']);
+            }
+            if (@$_POST['telefone'] != '') {
+
+                $this->db->set('telefone', $_POST['telefone']);
+            }
+            if (@$_POST['celular'] != '') {
+
+                $this->db->set('celular', $_POST['celular']);
             }
             if (@$_POST['cep'] != '') {
                 $this->db->set('cep', $_POST['cep']);
@@ -4130,14 +4166,14 @@ class paciente_model extends BaseModel {
     }
 
     function contadorcpfautocomplete($cpf, $paciente_id) {
-        $this->db->select();
+        $this->db->select('paciente_id');
         $this->db->from('tb_paciente');
         $this->db->where('cpf', str_replace("-", "", str_replace(".", "", $cpf)));
         $this->db->where('ativo', 't');
         if ($paciente_id > 0) {
             $this->db->where('paciente_id !=', $paciente_id);
         }
-        $this->db->where('cpf_responsavel_flag', 'f');
+        $this->db->where('cpfresp', 'f');
         $return = $this->db->count_all_results();
         return $return;
     }
@@ -4191,11 +4227,35 @@ class paciente_model extends BaseModel {
     
     function listarprecadastro($args = array()){    
         
-        $this->db->select('pc.nome,pc.cpf,pc.telefone,pc.precadastro_id,pc.nome as forma_pagamento,op.nome as vendedor');
+        $this->db->select('pc.nome,pc.cpf,pc.telefone,pc.precadastro_id,fp.nome as forma_pagamento,op.nome as vendedor');
         $this->db->from('tb_precadastro pc');
         $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pc.plano_id',"left"); 
         $this->db->join('tb_operador op','op.operador_id = pc.vendedor','left');
         $this->db->where('pc.ativo','t');
+
+        if (isset($args['nome']) && strlen($args['nome']) > 0) {   
+            $this->db->where('pc.nome ilike',"%".$args['nome']."%");             
+       }
+
+       if (isset($args['cpf']) && strlen($args['cpf']) > 0) {   
+        $args['cpf'] = str_replace("-", "", str_replace(".", "", $_GET['cpf']));
+        $this->db->where('pc.cpf ilike',"%".$args['cpf']."%");             
+   }
+
+   if (isset($args['id_indicacao']) && strlen($args['id_indicacao']) > 0) {   
+            $this->db->where('pc.vendedor', $args['id_indicacao']);             
+}
+
+   if (isset($args['data']) && strlen($args['data']) > 0) {   
+       $data_inicio = date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 00:00:00";
+       $data_final = date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 23:59:59";
+
+    $this->db->where('pc.data_cadastro >=', $data_inicio);
+    $this->db->where('pc.data_cadastro <=', $data_final);           
+}
+
+
+
         return $this->db;
         
     }

@@ -910,3 +910,7 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN plano_id integer;
 --08/05/2020
 ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriapadrao boolean;
 ALTER TABLE ponto.tb_financeiro_parceiro ALTER COLUMN parceriapadrao SET DEFAULT false;
+
+--29/05/2020
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN pessoaindicacao integer;
