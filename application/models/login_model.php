@@ -34,16 +34,6 @@ class login_model extends Model {
             
         }
 
-        if(count($return) == 0){
-            $this->db->select("0 as paciente_id, p.nome, p.cpf, p.email as cns, '' as plano", false);
-            $this->db->from('tb_precadastro p');
-            $this->db->where('p.email', $usuario);
-            $this->db->where('p.senha_app', md5($senha));
-            $this->db->where('p.ativo', 't');
-            $return = $this->db->get()->result();
-            // var_dump($return); die;
-        }
-
         return $return;
     }
 
