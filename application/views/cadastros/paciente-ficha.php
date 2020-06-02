@@ -108,12 +108,16 @@
                 <input type="text" id="txtcbo" class="texto04" name="txtcbo" value="<?= @$obj->_cbo_nome; ?>" />
                 <input type="hidden" id="txtcbohidden" class="texto04" name="txtcbohidden" value="<?= @$obj->_cbo_nome; ?>" />
             </div>
+
+            <?if(@$obj->_situacao != "Dependente"){?>
             <div>
                 <label>Rendimentos</label>
                 <input type="text" alt="decimal" id="rendimentos" class="texto02" name="rendimentos" value="<?=  number_format(@$obj->_rendimentos, 2, ',', '.'); ?>" required/>
             </div>
+            <?}?>
 
             <div>
+
                 <label>Indicacao</label>
 
 
@@ -155,6 +159,7 @@
                 </select>
             </div>
 
+            <?if(@$obj->_situacao != "Dependente"){?>
             <div>
                 <label>Forma Pagamento *</label>
 
@@ -174,6 +179,7 @@
                     ?> 
                 </select>
             </div>
+                <?}?>
 
             <div>
                 <label>Situacao</label>
@@ -192,6 +198,8 @@
                 <!--<input  name="situacao" id="situacao" class="texto03" readonly value="<?= @$obj->_situacao ?>">-->
 
             </div>
+
+            <?if(@$obj->_situacao != "Dependente"){?>
             <div>
                 <label>Pessoa Jurídica</label>
 
@@ -209,7 +217,7 @@
 
                 </select>
             </div>
-
+                <?}?>
 
             <div>
                 <label>Estado civil</label>
@@ -242,6 +250,8 @@
                     ?>>Outros</option>
                 </select>
             </div>
+
+            <?if(@$obj->_situacao != "Dependente"){?>
             <div>
                 <label>Parceiro</label>
 
@@ -261,10 +271,13 @@
                               ?> 
                 </select>
             </div>
+
             <div>
                 <label>Cód. Paciente</label>
                 <input type="text" id="cod_pac" class="texto02" value="<?= @$obj->_codigo_paciente ?>" name="cod_pac"/>
             </div>
+            <?}?>
+
             <div>
                 <label>Reativar</label> 
                 <input type="checkbox"  name="reativar" id="reativar" <?= (@$obj->_reativar == "t") ? "checked" : ""; ?>>
@@ -334,6 +347,7 @@
                     <input type="text" name="data_emissao" id="txtDataEmissao" class="texto02" alt="date" value="<?php echo substr(@$obj->_data_emissao, 8, 2) . '/' . substr(@$obj->_data_emissao, 5, 2) . '/' . substr(@$obj->_data_emissao, 0, 4); ?>" />
                 </div>
 
+                <?if(@$obj->_situacao != "Dependente"){?>
                 <div>
 
                     <label>Outro documento</label>
@@ -362,7 +376,7 @@
                     <label>Celular *</label>
                     <input type="text" id="txtCelular" class="texto02" name="celular" alt="phone" value="<?= @$obj->_celular; ?>" required/>
                 </div>
-
+                <?}?>
                 <div class="bt_linkm">
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>

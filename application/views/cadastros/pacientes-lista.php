@@ -43,7 +43,8 @@
                     <tr>
                         <!--<th class="tabela_title" ></th>-->
                         <th class="tabela_title" >Numero</th>
-                        <th class="tabela_title" >Nome / Telefone / Nome da Mae / CPF</th>
+                        <th class="tabela_title" >Nome / Telefone / Nome da Mae</th>
+                        <th class="tabela_title" >CPF</th>
                         <th class="tabela_title" colspan="2">Dt. Nascimento</th>
                     </tr>
                     <tr>
@@ -54,12 +55,16 @@
                         <input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />
                 </th>-->
                     <th class="tabela_title" >
-                        <input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />
+                        <input type="text" name="prontuario" class="texto02" value="<?php echo @$_GET['prontuario']; ?>" />
                     </th>
                     <th class="tabela_title" >
                             <!--<input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />-->
-                        <input type="text" name="nome" class="texto08" value="<?php echo @$_GET['nome']; ?>" />
+                        <input type="text" name="nome" class="texto06" value="<?php echo @$_GET['nome']; ?>" />
                         <!--<input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />-->
+                    </th>
+                    <th class="tabela_title" >
+                        <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?php echo @$_GET['cpf']; ?>" />
+                       
                     </th>
 
                     <th class="tabela_title" colspan="2">
@@ -176,11 +181,17 @@
 
 
 </div> <!-- Final da DIV content -->
-<link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
+<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
 
     $(function () {
         $("#accordion").accordion();
     });
+
+    $("#cpfcnpj").mask("999.999.999-99");
 
 </script>

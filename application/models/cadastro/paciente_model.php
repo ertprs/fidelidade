@@ -98,7 +98,8 @@ class paciente_model extends BaseModel {
             if (isset($args['prontuario']) && strlen($args['prontuario']) > 0) {
                 $this->db->where('paciente_id', $args['prontuario']);
 //                $this->db->where('ativo', 'true');
-            } elseif (isset($args['nome']) && strlen($args['nome']) > 0) {
+            } 
+            elseif (isset($args['nome']) && strlen($args['nome']) > 0) {
                 $this->db->where('p.nome ilike', '%' . $args['nome'] . '%');
 //                $this->db->where('ativo', 'true');
                 $this->db->orwhere('p.nome_mae ilike', '%' . $args['nome'] . '%');
@@ -107,12 +108,18 @@ class paciente_model extends BaseModel {
                 $this->db->where('p.ativo', 'true');
                 $this->db->orwhere('p.telefone ilike', '%' . $args['nome'] . '%');
                 $this->db->where('p.ativo', 'true');
-                $this->db->orwhere('p.cpf ilike', '%' . $args['nome'] . '%');
-                $this->db->where('p.ativo', 'true');
-            } elseif (isset($args['nascimento']) && strlen($args['nascimento']) > 0) {
+            } 
+            
+            if (isset($args['nascimento']) && strlen($args['nascimento']) > 0) {
                 $this->db->where('p.nascimento', $args['nascimento']);
                 $this->db->where('p.ativo', 'true');
             }
+
+            if (isset($args['cpf']) && strlen($args['cpf']) > 0) {   
+                $args['cpf'] = str_replace("-", "", str_replace(".", "", $_GET['cpf']));
+                $this->db->where('p.cpf ilike',"%".$args['cpf']."%");   
+                $this->db->where('p.ativo', 'true');          
+           }
         }
         if ($perfil_id == 6) {
             $this->db->where('go.ativo', 'true');
@@ -947,7 +954,7 @@ class paciente_model extends BaseModel {
             if ($_POST['indicacao'] != '') {
                 $this->db->set('indicacao', $_POST['indicacao']);
             }
-            if ($_POST['forma_rendimento_id'] != '') {
+            if (@$_POST['forma_rendimento_id'] != '') {
                 $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
             }
             $this->db->set('sexo', $_POST['sexo']);
@@ -969,7 +976,7 @@ class paciente_model extends BaseModel {
             if ($_POST['municipio_id'] != '') {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
             }
-            if ($_POST['financeiro_parceiro_id'] != '') {
+            if (@$_POST['financeiro_parceiro_id'] != '') {
                 $this->db->set('parceiro_id', $_POST['financeiro_parceiro_id']);
             }
             $this->db->set('cep', $_POST['cep']);
@@ -981,7 +988,7 @@ class paciente_model extends BaseModel {
                 $this->db->set('data_emissao', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_emissao']))));
             }
              
-            if ($_POST['cns'] != '') {
+            if (@$_POST['cns'] != '') {
                 $this->db->set('cns', $_POST['cns']);
             }
    
@@ -1002,8 +1009,14 @@ class paciente_model extends BaseModel {
             if (isset($_POST['ligacao'])) {
                 $this->db->set('ligacao', $_POST['ligacao']);
             }
+
+            if (isset($_POST['outro_documento'])) {
             $this->db->set('outro_documento', $_POST['outro_documento']);
+            }
+            if (isset($_POST['numero_documento'])) {
             $this->db->set('numero_documento', $_POST['numero_documento']);
+            }
+
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
 
@@ -1013,11 +1026,17 @@ class paciente_model extends BaseModel {
                 $this->db->set('senha_app', md5($_POST['txtSenha']));
             }
 
+            if (isset($_POST['rendimentos'])) {
             $this->db->set('rendimentos', str_replace(",", ".", str_replace(".", "", $_POST['rendimentos'])));
+            }
 
+            if (isset($_POST['celular'])) {
             $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
-            $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            }
 
+            if (isset($_POST['telefone'])) {
+            $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            }
 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
@@ -4244,7 +4263,7 @@ class paciente_model extends BaseModel {
 
    if (isset($args['id_indicacao']) && strlen($args['id_indicacao']) > 0) {   
             $this->db->where('pc.vendedor', $args['id_indicacao']);             
-}
+    }
 
    if (isset($args['data']) && strlen($args['data']) > 0) {   
        $data_inicio = date("Y-m-d", strtotime(str_replace('/', '-', $args['data']))) . " 00:00:00";
