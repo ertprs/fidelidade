@@ -37,20 +37,9 @@ class app_model extends Model {
             $this->db->update('tb_paciente');
             return array($paciente_id, $nome);
         }
-        $this->db->select('nome');
-        $this->db->from('tb_precadastro');
-        // $this->db->where('nome', $json_post->nome);
-        $this->db->where('cpf', str_replace(".", "", str_replace("-", "", $json_post->cpf)));
-        $this->db->where('ativo', 't');
-        $this->db->orderby('nome');
-        $contadorPacientePre = $this->db->get()->result();
-        if(count($contadorPacientePre)  > 0){
-            $nome = $contadorPacientePre[0]->nome;
-            
-            return array(0, $nome);
-        }
+        
         $this->db->set('nome', $json_post->nome);
-        $this->db->set('email', $json_post->email);
+        $this->db->set('cns', $json_post->email);
         // $this->db->set('usuario_app', $json_post->usuario_app);
         $this->db->set('senha_app', md5($json_post->senha_app));
         $this->db->set('cpf', str_replace(".", "", str_replace("-", "", $json_post->cpf)));
@@ -61,7 +50,7 @@ class app_model extends Model {
         $this->db->set('whatsapp', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->whatsapp))));
         $this->db->set('data_cadastro', $horario);
         $this->db->set('operador_cadastro', 1);
-        $this->db->insert('tb_precadastro');
+        $this->db->insert('tb_paciente');
         $paciente_id =  $this->db->insert_id();
         return array(0, $json_post->nome);
     }
