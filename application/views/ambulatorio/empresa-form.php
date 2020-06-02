@@ -136,9 +136,30 @@
                     <dt>
                         <label>E-Pharma (Código Plano)</label>
                     </dt>
+                  
                     <dd>
                         <input type="text" id="codigo_plano" class="texto07" name="codigo_plano" value="<?= @$obj->_codigo_plano; ?>" />
                     </dd>
+                    
+                    <dt>
+                        <label>Agência (sem o digito verificador)</label>
+                    </dt> 
+                    <dd>
+                        <input type="text" id="agenciaSicoob" name="agenciaSicoob" value="<?= @$obj->_agenciasicoob; ?>">
+                    </dd>
+                     <dt>
+                        <label>Conta Corrente</label>
+                    </dt> 
+                    <dd>
+                        <input type="number" id="contacorrenteSicoob" name="contacorrenteSicoob" value="<?= @$obj->_contacorrentesicoob; ?>">
+                    </dd>
+                      <dt>
+                        <label>Código do Beneficiário</label>
+                    </dt> 
+                    <dd>
+                        <input type="number" id="codigobeneficiarioSicoob" name="codigobeneficiarioSicoob" value="<?= @$obj->_codigobeneficiariosicoob; ?>">
+                    </dd>
+                     
                     <dt>
                         <label>Modelo Carteira</label>
                     </dt>

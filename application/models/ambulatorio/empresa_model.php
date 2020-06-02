@@ -459,6 +459,23 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('relacao_carencia', 'f');
             }
+            if($_POST['agenciaSicoob'] != ""){
+                 $this->db->set('agenciasicoob',$_POST['agenciaSicoob']);
+            }else{
+                 $this->db->set('agenciasicoob',null); 
+            }
+            if($_POST['contacorrenteSicoob'] != ""){
+                 $this->db->set('contacorrentesicoob',$_POST['contacorrenteSicoob']);
+            }else{
+                 $this->db->set('contacorrentesicoob',null); 
+            }
+            if($_POST['codigobeneficiarioSicoob'] != ""){
+                 $this->db->set('codigobeneficiariosicoob',$_POST['codigobeneficiarioSicoob']);
+            }else{
+                 $this->db->set('codigobeneficiariosicoob',null); 
+            }
+            
+            
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
@@ -535,7 +552,10 @@ class empresa_model extends Model {
                                f.forma_dependente,
                                f.tipo_declaracao,
                                f.carteira_padao_6,
-                               f.relacao_carencia');
+                               f.relacao_carencia,
+                               f.agenciasicoob,
+                               f.contacorrentesicoob,
+                               f.codigobeneficiariosicoob');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -588,6 +608,9 @@ class empresa_model extends Model {
             $this->_modificar_verificar = $return[0]->modificar_verificar;
             $this->_forma_dependente = $return[0]->forma_dependente;
             $this->_relacao_carencia = $return[0]->relacao_carencia; 
+            $this->_agenciasicoob = $return[0]->agenciasicoob; 
+            $this->_contacorrentesicoob = $return[0]->contacorrentesicoob; 
+            $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob; 
         } else {
             $this->_empresa_id = null;
         }

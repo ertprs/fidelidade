@@ -216,9 +216,6 @@
                                         ?>
                                     </th>
 
-
-
-
                                 <? } ?>
                             </tr>
                         </thead>
@@ -487,14 +484,12 @@
                                             <?php
                                         }
                                         ?>
-                                     <!--  <td  class="<?php echo $estilo_linha; ?>">
-                                                <div style="width: 50px;" class="bt_link">
-                                                 <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoob/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" >Boleto Sicoob
-                                                 </a>
-                                                </div>
-                                            </td>-->
-
-
+                                        <td  class="<?php echo $estilo_linha; ?>">
+                                            <div style="width: 50px;" class="bt_link">
+                                                <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoob/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank" >Boleto Sicoob
+                                             </a>
+                                            </div>
+                                        </td>
                                         <?
                                     } else {
 

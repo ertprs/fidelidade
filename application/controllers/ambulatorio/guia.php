@@ -2673,6 +2673,8 @@ class Guia extends BaseController {
         $data['contrato_id'] = $contrato_id;
         $this->loadView('ambulatorio/pagamentodebitoconta-form', $data);
     }
+    
+    
 
     function integracaoiugu($paciente_id, $contrato_id) {
         header('Access-Control-Allow-Origin: *');
@@ -6543,86 +6545,41 @@ table tr:hover  #achadoERRO{
     
     function gerarboletosicoob($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
          $this->load->plugin('mpdf');
-         $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
-       
-       
+         $empresa_id = $this->session->userdata('empresa_id');
+         $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+         $empresa = $this->guia->listarempresaporid($empresa_id);
          $valor  =   str_replace(".", ",",$lista[0]->valor);
-         
-         
-          
-         
         // DADOS DO BOLETO PARA O SEU CLIENTE
-        $dias_de_prazo_para_pagamento = 5;
-        $taxa_boleto = 0.00;
-      //  $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias  OU  informe data: "13/04/2006"  OU  informe "" se Contra Apresentacao;
-        $data_venc = date("d/m/Y",strtotime($lista[0]->data));
+        $taxa_boleto = 0;
+        $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+        $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+        $data['vencimento'] = $lista[0]->data;
+        $data['paciente'] = $lista[0]->paciente;
+        $data['municipio'] = $lista[0]->municipio;
+        $data['estado'] = $lista[0]->estado;
+        $data['cep'] = $lista[0]->cep;
+        $data['logradouro'] = $lista[0]->logradouro;
         
-        $valor_cobrado = $valor; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
-        $valor_cobrado = str_replace(",", ".",$valor_cobrado);
-        $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
-
-        $dadosboleto["inicio_nosso_numero"] = "24";  // 24 - Padrão da Caixa Economica Federal
-        $dadosboleto["nosso_numero"] = "19525086";  // Nosso numero sem o DV - REGRA: Máximo de 8 caracteres!
-        $dadosboleto["nosso_numero_sicoob"] = "1952508";
+        //Dados da empresa
+        $data['cnpj'] = $empresa[0]->cnpj;
+        $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+        $data['estadoEmpresa'] = $empresa[0]->estado;
+        $data['municipioEmpresa'] = $empresa[0]->municipio;
+        $data['cedente'] = $empresa[0]->nome;
         
-        $dadosboleto["numero_documento"] = $paciente_contrato_parcelas_id;	// Num do pedido ou do documento
-        $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
-        $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
-        $dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
-        $dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
+      //  echo "<pre>";
+     //  print_r($empresa);
+        $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+        $data['agencia'] = $empresa[0]->agenciasicoob;  
+        $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+// NÃO ALTERAR!    
+    $this->load->View('ambulatorio/boletosicoob',$data); 
 
-        // DADOS DO SEU CLIENTE
-        $dadosboleto["sacado"] = "Cliente teste"; //Nome do seu Cliente
-        $dadosboleto["endereco1"] = "Rua espanha"; //Endereço do seu Cliente
-        $dadosboleto["endereco2"] = "Caucaia - Ceará -  CEP: 73310-005";
-
-        // INFORMACOES PARA O CLIENTE
-        $dadosboleto["demonstrativo1"] = "Pagamento de Compra";
-        $dadosboleto["demonstrativo2"] = "Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
-        $dadosboleto["demonstrativo3"] = "";
-
-        // INSTRUÇÕES PARA O CAIXA
-        $dadosboleto["instrucoes1"] = "- Sr. Caixa, cobrar multa de 2% após o vencimento";
-        $dadosboleto["instrucoes2"] = "- Receber até 10 dias após o vencimento";
-        $dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br";
-        $dadosboleto["instrucoes4"] = "";
-
-        // DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
-        $dadosboleto["quantidade"] = "1";
-        $dadosboleto["valor_unitario"] = "";
-        $dadosboleto["aceite"] = "";		
-        $dadosboleto["especie"] = "R$";
-        $dadosboleto["especie_doc"] = "";
-
-
-        // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
-
-
-        // DADOS DA SUA CONTA - CEF
-        $dadosboleto["agencia"] = "4609"; // Num da agencia, sem digito
-        $dadosboleto["conta"] = "13877"; 	// Num da conta, sem digito
-        $dadosboleto["conta_dv"] = "4"; 	// Digito do Num da conta
-
-        // DADOS PERSONALIZADOS - CEF
-        $dadosboleto["conta_cedente"] = "202088"; // ContaCedente do Cliente, sem digito (Somente Números)
-        $dadosboleto["conta_cedente_dv"] = ""; // Digito da ContaCedente do Cliente
-        $dadosboleto["carteira"] = "SR";  // Código da Carteira: pode ser SR (Sem Registro) ou CR (Com Registro) - (Confirmar com gerente qual usar)
-
-        // SEUS DADOS
-        $dadosboleto["identificacao"] = "Sicoob";
-        $dadosboleto["cpf_cnpj"] = "";
-        $dadosboleto["endereco"] = "Avenida teste";
-        $dadosboleto["cidade_uf"] = "Fortaleza / Ceará";
-        $dadosboleto["cedente"] = "SALUTE ATIVIDADES DE INTERMEDIACAO E AGENCIAMENTO / 35812309000160";
-
-// NÃO ALTERAR!
-       
-    echo "<meta charset='utf-8'>";
-    include("./sicoob/funcoes_cef.php"); 
-    include("./sicoob/layout_cef.php");
+  }
+  
     
- // echo "<script>print();</script>";
-    }
+    
     
     
 }

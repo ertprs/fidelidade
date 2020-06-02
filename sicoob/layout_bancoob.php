@@ -1,11 +1,11 @@
 <?php
 // +----------------------------------------------------------------------+
-// | BoletoPhp - Versão Beta                                              |
+// | BoletoPhp - Versï¿½o Beta                                              |
 // +----------------------------------------------------------------------+
-// | Este arquivo está disponível sob a Licença GPL disponível pela Web   |
+// | Este arquivo estï¿½ disponï¿½vel sob a Licenï¿½a GPL disponï¿½vel pela Web   |
 // | em http://pt.wikipedia.org/wiki/GNU_General_Public_License           |
-// | Você deve ter recebido uma cópia da GNU Public License junto com     |
-// | esse pacote; se não, escreva para:                                   |
+// | Vocï¿½ deve ter recebido uma cï¿½pia da GNU Public License junto com     |
+// | esse pacote; se nï¿½o, escreva para:                                   |
 // |                                                                      |
 // | Free Software Foundation, Inc.                                       |
 // | 59 Temple Place - Suite 330                                          |
@@ -13,16 +13,16 @@
 // +----------------------------------------------------------------------+
 
 // +----------------------------------------------------------------------+
-// | Originado do Projeto BBBoletoFree que tiveram colaborações de Daniel |
+// | Originado do Projeto BBBoletoFree que tiveram colaboraï¿½ï¿½es de Daniel |
 // | William Schultz e Leandro Maniezo que por sua vez foi derivado do	  |
-// | PHPBoleto de João Prado Maia e Pablo Martins F. Costa                |
+// | PHPBoleto de Joï¿½o Prado Maia e Pablo Martins F. Costa                |
 // |                                                                      |
 // | Se vc quer colaborar, nos ajude a desenvolver p/ os demais bancos :-)|
 // | Acesse o site do Projeto BoletoPhp: www.boletophp.com.br             |
 // +----------------------------------------------------------------------+
 
 // +----------------------------------------------------------------------+
-// | Equipe Coordenação Projeto BoletoPhp: <boletophp@boletophp.com.br>   |
+// | Equipe Coordenaï¿½ï¿½o Projeto BoletoPhp: <boletophp@boletophp.com.br>   |
 // | Desenvolvimento Boleto BANCOOB/SICOOB: Marcelo de Souza              |
 // | Ajuste de algumas rotinas: Anderson Nuernberg                        |
 // +----------------------------------------------------------------------+
@@ -33,9 +33,8 @@
 <html>
 <head>
 <title><?php echo $dadosboleto["identificacao"]; ?></title>
-<META http-equiv=Content-Type content=text/html charset=ISO-8859-1>
-<meta name="Generator" content="Projeto BoletoPHP - www.boletophp.com.br - Licença GPL" />
-	
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <style type="text/css">
 <!--
 .ti {font: 9px Arial, Helvetica, sans-serif}
@@ -84,7 +83,7 @@
 /* *** CABECALHO *** */
 
 #instr_header {
-	background: url('imagens/logo_empresa.png') no-repeat top left;
+	background: url('<?= base_url() ?>img/logo_empresa.png') no-repeat top left;
 	padding-left: 160px;
 	height: 65px;
 }
@@ -495,15 +494,10 @@ div.barcode {
 
 <div id="container">
 
-	<div id="instr_header">
-		<h1><?php echo $dadosboleto["identificacao"]; ?> <?php echo isset($dadosboleto["cpf_cnpj"]) ? $dadosboleto["cpf_cnpj"] : '' ?></h1>
-		<address><?php echo $dadosboleto["endereco"]; ?><br></address>
-		<address><?php echo $dadosboleto["cidade_uf"]; ?></address>
-	</div>	<!-- id="instr_header" -->
-
+	
 	<div id="">
 <!--
-  Use no lugar do <div id=""> caso queira imprimir sem o logotipo e instruções
+  Use no lugar do <div id=""> caso queira imprimir sem o logotipo e instruï¿½ï¿½es
   <div id="instructions">
  -->
 		
@@ -538,7 +532,7 @@ div.barcode {
 		<table class="header" border=0 cellspacing="0" cellpadding="0">
 		<tbody>
 		<tr>
-			<td width=150><IMG SRC="imagens/logobancoob.jpg"></td>
+			<td widith=150px><img style="width:150px;" src="<?= base_url() ?>img/marca_sicoob.png"></td>
 			<td width=50>
         <div class="field_cod_banco"><?php echo $dadosboleto["codigo_banco_com_dv"]?></div>
 			</td>
@@ -562,7 +556,7 @@ div.barcode {
 			<td class="ag_cod_cedente"><?php echo $dadosboleto["agencia_codigo"]?> &nbsp;</td>
 			<td class="especie"><?php echo $dadosboleto["especie"]?>&nbsp;</td>
 			<TD class="qtd"><?php echo $dadosboleto["quantidade"]?>&nbsp;</td>
-			<TD class="nosso_numero"><?php echo $dadosboleto["nosso_numero"]?>&nbsp;</td>
+			<TD class="nosso_numero"><?php echo $dadosboleto["nosso_numero_mostrar"]?>&nbsp;</td>
 		</tr>
 		</tbody>
 		</table>
@@ -617,11 +611,9 @@ div.barcode {
 		</tbody>
 		</table>
 		
-		<div class="footer">
-			<p>Autentica&ccedil;&atilde;o mec&acirc;nica</p>
-		</div>
-
 		
+
+            <br>
 		
 		<div class="cut">
 			<p>Corte na linha pontilhada</p>
@@ -631,7 +623,7 @@ div.barcode {
 		<table class="header" border=0 cellspacing="0" cellpadding="0">
 		<tbody>
 		<tr>
-			<td width=150><IMG SRC="imagens/logobancoob.jpg"></td>
+			<td width=150><IMG style="width:150px;" SRC="<?= base_url() ?>img/marca_sicoob.png"></td>
 			<td width=50>
         <div class="field_cod_banco"><?php echo $dadosboleto["codigo_banco_com_dv"]?></div>
 			</td>
@@ -682,7 +674,7 @@ div.barcode {
 			<td class="especie_doc"><?php echo $dadosboleto["especie_doc"]?></td>
 			<td class="aceite"><?php echo $dadosboleto["aceite"]?></td>
 			<td class="data_process"><?php echo $dadosboleto["data_processamento"]?></td>
-			<td class="nosso_numero2"><?php echo $dadosboleto["nosso_numero"]?></td>
+			<td class="nosso_numero2"><?php echo $dadosboleto["nosso_numero_mostrar"]?></td>
 		</tr>
 		</tbody>
 		</table>
@@ -692,7 +684,7 @@ div.barcode {
 		<tr class="titulos">
 			<td class="reservado">Uso do  banco</td>
 			<td class="carteira">Carteira</td>
-			<td class="especie2">Espécie</td>
+			<td class="especie2">EspÃ©cie</td>
 			<td class="qtd2">Quantidade</td>
 			<td class="xvalor">x Valor</td>
 			<td class="valor_doc2">(=) Valor documento</td>

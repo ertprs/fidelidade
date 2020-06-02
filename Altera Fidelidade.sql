@@ -910,3 +910,8 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN plano_id integer;
 --08/05/2020
 ALTER TABLE ponto.tb_financeiro_parceiro ADD COLUMN parceriapadrao boolean;
 ALTER TABLE ponto.tb_financeiro_parceiro ALTER COLUMN parceriapadrao SET DEFAULT false;
+
+--01/06/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN agenciaSicoob character varying(100);
+ALTER TABLE ponto.tb_empresa ADD COLUMN contacorrenteSicoob character varying(100);
+ALTER TABLE ponto.tb_empresa ADD COLUMN codigobeneficiarioSicoob character varying(100);
