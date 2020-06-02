@@ -915,3 +915,6 @@ ALTER TABLE ponto.tb_financeiro_parceiro ALTER COLUMN parceriapadrao SET DEFAULT
 ALTER TABLE ponto.tb_empresa ADD COLUMN agenciaSicoob character varying(100);
 ALTER TABLE ponto.tb_empresa ADD COLUMN contacorrenteSicoob character varying(100);
 ALTER TABLE ponto.tb_empresa ADD COLUMN codigobeneficiarioSicoob character varying(100);
+--29/05/2020
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN pessoaindicacao integer;

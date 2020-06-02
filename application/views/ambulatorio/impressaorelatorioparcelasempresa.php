@@ -45,7 +45,7 @@
                             $i++;
                         }
                     }
-                  $valor_total   += ($item->valor + $valor_dependentes ) * $mes; 
+                  $valor_total   += ($item->valor + $valor_dependentes ); 
                 ?>
             <tr>
                 <td><?= $item->paciente ?></td>
@@ -53,8 +53,8 @@
                 $cnpj_cpf = preg_replace("/\D/", '', $item->cpf);
                 echo @preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $cnpj_cpf); ?>
                 </td>
-                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor + $valor_dependentes, 2, ',', '.'); ?> (<?=$i;?>) </td>
-               <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format(($item->valor + $valor_dependentes)*$mes, 2, ',', '.'); ?></td>
+                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor, 2, ',', '.'); ?> (<?=$i;?>) </td>
+               <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor + $valor_dependentes, 2, ',', '.'); ?></td>
                <? 
                $total_titular = ($item->valor + $valor_dependentes)*$mes;
                $contador_total = $contador_total + $total_titular;

@@ -17,11 +17,54 @@
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date" required="true"/>
                     </dd>
                     <dt>
+                        <label>Tipo de Pesquisa</label>
+                    </dt>
+                    <dd>
+                        <select name="tipoPesquisa" id="tipoPesquisa" class="size2">
+                            <option value="VENDEDORES">VENDEDOR</option>
+                            <option value="GERENTE">GERENTE DE VENDAS</option>
+                         
+                        </select>
+                    </dd>
+                    <dt>
+                        <label>Organizar Por</label>
+                    </dt>
+                    <dd>
+                        <select name="tipopesquisa" id="tipopesquisa" class="size2">
+                            <option value="1">Data</option>
+                            <option value="2">Nome de Vendedor</option>
+                         
+                        </select>
+                    </dd>
+
+                        <div id="Divgerentedevendas">
+                    <dt>
+                        <label>Gerente de Vendas</label>
+                    </dt>
+                    <dd>
+                        <select name="gerentedevendas" id="gerentedevendas" class="size2">
+                            <option value="">Selecione</option>
+                            <?php
+                            foreach ($listargerentedevendas as $item) {
+                                ?>
+                                <option   value =<?php echo $item->operador_id; ?>><?php echo $item->nome; ?></option>
+                                <?php
+                            }
+                            ?> 
+                        </select>
+
+                    </dd>
+                    <dt>
+                            </div>
+
+                            <div id="Divvendedor">
+
+                    <dt>
                         <label>Vendedor</label>
                     </dt>
                     <dd>
-                        <select name="vendedor" id="vendedor" class="size2" required="true">
-                            <option value="" >Selecione</option>
+                        <select name="vendedor[]" id="vendedor" class="chosen-select" data-placeholder="Selecione os campos..." multiple>
+                            <option value=""></option>
                             <?php
                             foreach ($listarvendedor as $item) {
                                 ?>
@@ -30,8 +73,11 @@
                             }
                             ?> 
                         </select>
+
                     </dd>
                     <dt>
+
+                            </div>
                 </dl>
                 <button type="submit" >Pesquisar</button>
             </form>
@@ -41,10 +87,47 @@
 
 
 </div> <!-- Final da DIV content -->
-<link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
+
+<link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/chosen.css">
+<!--<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/style.css">-->
+<link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/prism.css">
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/chosen.jquery.js"></script>
+<!--<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/prism.js"></script>-->
+<script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/init.js"></script>
+<!-- <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css"> -->
 <script type="text/javascript">
 
-    
+$(function () {
+        $("#accordion").accordion();
+    });
+
+    $('#tipoPesquisa').change(function () {
+        trocarAnoMes();
+    });
+
+    function trocarAnoMes(){
+        if($('#tipoPesquisa').val() == 'VENDEDORES'){
+            $('#Divgerentedevendas').hide();
+            $('#Divvendedor').show();
+            $("#vendedor").prop('required', true);
+            $("#gerentedevendas").prop('required', false);
+        }else{
+            $('#Divgerentedevendas').show();
+            $('#Divvendedor').hide();
+            $("#vendedor").prop('required', false);
+            $("#gerentedevendas").prop('required', true);
+        }
+    }
+
+
+    trocarAnoMes();
+
+
     $(function () {
         $("#txtdata_inicio").datepicker({
             autosize: true,
@@ -69,10 +152,6 @@
         });
     });
 
-
-    $(function () {
-        $("#accordion").accordion();
-    });
 
 
 

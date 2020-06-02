@@ -46,6 +46,10 @@ $data['permissao'] = $this->db->get()->result();
         <script type="text/javascript" src="<?= base_url() ?>js/jquery-meiomask.js" ></script>
         <script type="text/javascript" src="<?= base_url() ?>js/jquery.bestupper.min.js"  ></script>
         <script type="text/javascript" src="<?= base_url() ?>js/scripts.js" ></script>
+        <link rel="stylesheet" href="<?= base_url() ?>js/chosen/chosen.css">
+        <link rel="stylesheet" href="<?= base_url() ?>js/chosen/docsupport/prism.css">
+        <script type="text/javascript" src="<?= base_url() ?>js/chosen/chosen.jquery.js"></script>
+        <script type="text/javascript" src="<?= base_url() ?>js/chosen/docsupport/init.js"></script>
         <!--<script type="text/javascript" src="<?= base_url() ?>js/jquery.js" ></script>-->
         <script type="text/javascript">
 //            var jQuery = jQuery.noConflict();
