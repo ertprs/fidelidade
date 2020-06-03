@@ -6445,6 +6445,10 @@ table tr:hover  #achadoERRO{
             
             $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
 
+            // echo '<pre>';
+            // print_r($data['dependente']);
+            // die;
+
 
             $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
         }else{

@@ -159,9 +159,10 @@
             <u>Dependentes</u>
             <br>
                     <?
-                    $contador = -1;
+                    $contador = 0;
                     foreach($dependente as $nomes){
-                        if($contador == -1){
+                        
+                        if($nomes->situacao == 'Titular'){
                             $contador = 0;
                         }else{
                             $contador = $contador + 1;
