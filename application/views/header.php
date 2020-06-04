@@ -324,6 +324,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicov">Gerar SICOV</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicovoptante">Gerar Arquivo Optante</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/importararquivoretorno">Importar Arquivo Retorno debito</a></span></li>
+                                       <!-- <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocnab">Gerar CNAB</a></span></li>-->
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/listarautorizacao">Tela de Autorização</a></span></li>                                    
                                         <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->

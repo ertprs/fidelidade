@@ -267,7 +267,6 @@ class paciente_model extends BaseModel {
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->where("cp.paciente_contrato_id", $contrato_id);
         $this->db->where("cp.excluido", 'f');
-//        $this->db->where('cp.parcela_verificadora', null);
         $this->db->orderby("data");
         $return = $this->db->get()->result();
         return $return;
@@ -978,6 +977,8 @@ class paciente_model extends BaseModel {
             }
             if (@$_POST['financeiro_parceiro_id'] != '') {
                 $this->db->set('parceiro_id', $_POST['financeiro_parceiro_id']);
+            }else{
+                 $this->db->set('parceiro_id',null);
             }
             $this->db->set('cep', $_POST['cep']);
 

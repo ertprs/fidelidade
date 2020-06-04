@@ -371,33 +371,52 @@ class pacientes extends BaseController {
         } else {
             $data['mensagem'] = 'Erro ao gravar paciente';
         }
-        if($_POST['financeiro_parceiro_id'] > 0){
-            $parceiros = $this->paciente->listarparceirosurl($_POST['financeiro_parceiro_id']);
-        }else{
-            $parceiros = array();
-        }
+        
+        $parceiros = $this->paciente->listarparceirosurl();
+        if($_POST['financeiro_parceiro_id'] != ""){
+             $parceiro_post = $_POST['financeiro_parceiro_id'];
+          }else{
+             $parceiropadrao =  $this->parceiro->parceiropadrao(); 
+             if(count($parceiropadrao) > 0){
+             $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+             }else{
+               $parceiro_post = 0;  
+             }
+          }
+//         var_dump($paciente_id); die;
         foreach ($parceiros as $key => $value) {
+            $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
+            
+            if($parceiro_post == $value->financeiro_parceiro_id){
+                $parceiro_id = $value->convenio_id;
+            }
+            
             // $fields = array('' => $_POST['body']);
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
+
             // var_dump($url); die;
             $postdata = http_build_query(
                     array(
-                        'body' => $json_paciente
+                        'body' => $json_paciente,
+                        'parceriamed_id' => $parceiro_id
                     )
             );
+
             $opts = array('http' =>
                 array(
                     'method' => 'POST',
                     'header' => 'Content-type: application/x-www-form-urlencoded',
                     'content' => $postdata
             ));
+
             $context = stream_context_create($opts);
+
             $result = file_get_contents($url, false, $context);
             // var_dump($result); die;
-            // var_dump($result); die;       
         }
+
         $this->session->set_flashdata('message', $data['mensagem']);
         redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
     }
