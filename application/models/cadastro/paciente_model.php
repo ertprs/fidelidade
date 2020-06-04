@@ -636,7 +636,7 @@ class paciente_model extends BaseModel {
 
             $this->db->select('tp.tipo_logradouro_id as codigo_logradouro,co.convenio_id as convenio, pc.plano_id, co.nome as descricaoconvenio,cbo.descricao as cbo_nome, tp.descricao,p.*, c.nome as cidade_desc,c.municipio_id as cidade_cod,
                 pcd.pessoa_juridica,
-                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns,p.reativar,p.credor_devedor_id
+                fp.razao_social as parceiro,p.logradouro,p.numero,p.cns,p.reativar,p.credor_devedor_id, p.empresa_id
 
                 ');
             $this->db->from('tb_paciente p');
@@ -715,6 +715,7 @@ class paciente_model extends BaseModel {
             $this->_credor_devedor_id = $return[0]->credor_devedor_id;
             $this->_usuario_app = $return[0]->usuario_app;
             $this->_senha_app = $return[0]->senha_app;
+            $this->_empresa_id = $return[0]->empresa_id;
         }
     }
 

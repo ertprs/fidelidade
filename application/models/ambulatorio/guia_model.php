@@ -7291,6 +7291,9 @@ AND data <= '$data_fim'";
             if (@$_POST['vendedor_baixo'] != "") {
                 $this->db->set('vendedor_id', @$_POST['vendedor_baixo']);
             }
+            if (@$empresa_cadastro_id != "") {
+                $this->db->set('empresa_cadastro_id', $empresa_cadastro_id);
+            }
             $this->db->insert('tb_paciente_contrato');
             $erro = $this->db->_error_message();
 
