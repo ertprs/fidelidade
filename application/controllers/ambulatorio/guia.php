@@ -6627,6 +6627,25 @@ table tr:hover  #achadoERRO{
   
     
     
+     function relatoriocnab() {
+        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatoriocnab', $data);
+    }
+    
+    function gerarcnab() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $relatorio = $this->guia->gerarcnab();
+        
+        echo "<pre>";
+        print_r($relatorio);
+        die();
+
+    }
+    
+    
+    
+    
     
     
 }

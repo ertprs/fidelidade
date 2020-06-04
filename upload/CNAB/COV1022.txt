@@ -1,0 +1,22 @@
+A1902713              CARTAO DO POVO      104CAIXA               2019100900004005DEBITO AUTOMATICO                                                    
+E5104                     1888000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005104        0000010
+E4688                     2558000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          004688        0000020
+E5852                     0031000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005852        0000030
+E5592                     0750000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005592        0000040
+E5473                     1047000000000002302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005473        0000050
+E6267                     0920000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          006267        0000060
+E6133                     1469000000000002302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          006133        0000070
+E4914                     2558000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          004914        0000080
+E5498                     1958000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005498        0000090
+E6323                     3418000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          006323        0000100
+E6130                     3466000000000002302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          006130        0000110
+E5429                     3281000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005429        0000120
+E4582                     2558000000000000302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          004582        0000130
+E6007                     0926000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          006007        0000140
+E5064                     2558000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005064        0000150
+E5424                     3466000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005424        0000160
+E4841                     2558000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          004841        0000170
+E5140                     1563000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005140        0000180
+E6294                     2558000000000002302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          006294        0000190
+E5038                     1977000000000001302019100500000000000189003Pagamento por debito automatico sistema Fidelidade          005038        0000200
+Z00002200000000000037800                                                                                                                       0000210

@@ -12483,6 +12483,58 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     }
     
     
+    function gerarcnab(){
+     $this->db->select('valor, pc.ativo as contrato,
+                            cp.data, 
+                            cp.ativo, 
+                            cp.manual,
+                            cp.debito,
+                            pc.paciente_id,
+                            cp.observacao,
+                            cpi.pdf, 
+                            url, 
+                            invoice_id, 
+                            cp.taxa_adesao,
+                            cp.data_cartao_iugu, 
+                            cp.pago_cartao, 
+                            cpi.status,cpi.codigo_lr,
+                            cp.paciente_contrato_id, 
+                            cp.paciente_contrato_parcelas_id,
+                            paciente_contrato_parcelas_iugu_id,
+                            p.credor_devedor_id,
+                            p.empresa_id,
+                            cp.empresa_iugu,
+                            pc.pago_todos_iugu,
+                            gpi.link as link_gerencianet,
+                            gpi.pdf as pdf_gerencianet,
+                            gpi.charge_id,
+                            gpi.carne,
+                            gpi.link_carne,
+                            gpi.cover_carne,
+                            gpi.pdf_carnet,
+                            gpi.pdf_cover_carne,
+                            gpi.carnet_id,
+                            gpi.num_carne,
+                            cp.paciente_dependente_id
+                            ');
+        $this->db->from('tb_paciente_contrato_parcelas cp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas_gerencianet gpi', 'gpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->where('cp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('cp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->where('cp.ativo','t');
+        $this->db->where("cp.excluido", 'f');
+        $this->db->orderby("data");
+        $return = $this->db->get()->result();
+        return $return;   
+    }
+    
+    
+    
+    
+    
 }
 
 ?>
