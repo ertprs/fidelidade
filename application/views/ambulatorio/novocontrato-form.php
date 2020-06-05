@@ -289,7 +289,7 @@
                         }
                         ?> 
                     </select>
-                    <input type="hidden" id="empresa_cadastro_id" name="empresa_cadastro_id" class="texto10"  value="<?= @$empresa_cadastro_id; ?>"  />
+                    <input type="hidden" id="empresa_cadastro_id" name="empresa_cadastro_id" class="texto10"  value="<?= @$obj->_empresa_id; ?>"  />
 
                 </div>
                 <div id="pagamento">

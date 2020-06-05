@@ -163,7 +163,7 @@
                     foreach($dependente as $nomes){
                         
                         if($nomes->situacao == 'Titular'){
-                            $contador = 0;
+                            
                         }else{
                             $contador = $contador + 1;
                             echo $contador.' - <u>'.$nomes->paciente.'</u><br>';

@@ -2249,6 +2249,7 @@ class Guia extends BaseController {
     function gravarplano() {
         $paciente_id = $_POST['txtpaciente'];
         @$empresa_cadastro_id = @$_POST['empresa_cadastro_id'];
+        
         $paciente = $this->guia->gravarplano($paciente_id, $empresa_cadastro_id);
         $paciente_contrato_id = $this->guia->gravarplanoparcelas($paciente_id);
 //        redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id/$paciente_contrato_id");
