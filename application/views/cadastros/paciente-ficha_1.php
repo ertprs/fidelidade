@@ -1,5 +1,5 @@
 <div class="content ficha_ceatox"> <!-- Inicio da DIV content -->
-    <form name="form_paciente" id="form_paciente" action="<?= base_url() ?>cadastros/pacientes/gravardocumentos" method="post">
+    <form name="form_paciente" id="form_paciente" action="<?= base_url() ?>cadastros/pacientes/gravardocumentoscompleto" method="post">
         <fieldset>
             <legend>Dados do Paciente</legend>
             <div>
@@ -373,6 +373,55 @@
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>
         </fieldset>
+        
+        <fieldset>
+                <legend>Forma de pagamento</legend>
+                <div class="valores">
+                    <input required="" type="radio" name="testec" value=""/>1 x 0.00<br>
+                    <input required="" type="radio" name="testec" value=""/>5 x 0.00<br> 
+                    <input required="" type="radio" name="testec" value=""/>6 x 0.00<br> 
+                    <input required="" type="radio" name="testec" value=""/>10 x 0.00<br> 
+                    <input required="" type="radio" name="testec" value=""/>11 x 0.00<br>  
+                    <input required="" type="radio" name="testec" value=""/>12 x 0.00<br> 
+                    <input required="" type="radio" name="testec" value=""/>23 x 0.00<br> 
+                    <input required="" type="radio" name="testec" value=""/>24 x 0.00<br> 
+                </div>
+                <div>
+                    <label>Data Ades&atilde;o</label>
+                    <input type="text" name="adesao" id="adesao" required class="texto02" alt="date" required/>
+                </div>
+                <div>
+                    <label>Valor Ades&atilde;o</label>
+                    <input type="text" name="valor_adesao" id="valor_adesao"  style="text-align: right;" required class="texto02" alt="decimal" value="0,00"/>
+                </div>
+                <div>
+                    <label>Dia Vencimento Parcela</label>
+                    <input type="number" name="vencimentoparcela" id="vencimentoparcela" required max="30" min="1" class="texto02" required />
+                </div>
+                <div>
+                    <label>Pessoa Jurídica</label>
+
+                    <select name="pessoajuridica" id="pessoajuridica" class="size2" required="true">
+                        <option value="NAO" <?
+                        if (@$obj->_pessoa_juridica == 'f') {
+                            echo 'selected';
+                        }
+                        ?>>NÃO</option>
+                        <option value="SIM" <?
+                        if (@$obj->_pessoa_juridica == 't') {
+                            echo 'selected';
+                        }
+                        ?>>SIM</option>
+
+                    </select>
+                </div>
+                <div>
+                    <label>Pular Meses</label>
+
+                    <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
+                </div>
+                  
+            </fieldset>
 
         <button type="submit">Enviar</button>
         <button type="reset">Limpar</button>
@@ -385,12 +434,27 @@
 
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
+
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
+
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
+
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/maskedmoney.js"></script>
+
+<input type="hidden" id="mensagem_erro" value="<?= $this->session->userdata('mensagem_erro') ?>"> 
+
+
 <script type="text/javascript">
+     $(function () {
+         if($("#mensagem_erro").val() != "" ){
+               alert($("#mensagem_erro").val());
+         }
+         <?  $this->session->set_userdata('mensagem_erro',"") ?>
+         $("#mensagem_erro").val("");
+     });
+   
                         $("#txtDataEmissao").mask("99/99/9999");
                         $("#txtNascimento").mask("99/99/9999");
                         $("#txtCelular").mask("(99) 99999-9999");
@@ -488,5 +552,50 @@
 
                         }
 
+
+                                $(function () {
+                                    $("#adesao").datepicker({
+                                        autosize: true,
+                                        changeYear: true,
+                                        changeMonth: true,
+                                        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                                        dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                                        buttonImage: '<?= base_url() ?>img/form/date.png',
+                                        dateFormat: 'dd/mm/yy'
+                                    });
+                                });
+
+                 $(function () {
+                    $('#plano').change(function () {
+                        if ($(this).val()) {
+                            $('.carregando').show();
+                            $.getJSON('<?= base_url() ?>autocomplete/carregarprecos', {tipo: $(this).val(), ajax: true}, function (j) {
+                            console.log(j);
+                                var options = '';
+                                for (var c = 0; c < j.length; c++) {
+                                    //CARREGANDO TODOS OS INPUTS COM OS RESPECTIVOS VALORES DOS SEUS CAMPOS VINDO DO AUTOCOMPLETE
+                                    options += ' <input required="" id="checkboxvalor1" type="radio" name="checkboxvalor1" value="01-' + j[0].valor1 + '  "/>1 x ' + j[0].valor1 + ' <br>\n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="05-' + j[0].valor5 + ' "/>5 x ' + j[0].valor5 + '<br>\n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="06-' + j[0].valor6 + ' "/>6 x ' + j[0].valor6 + '<br>   \n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="10-' + j[0].valor10 + ' "/>10 x ' + j[0].valor10 + '  <br> \n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="11-' + j[0].valor11 + ' "/>11 x ' + j[0].valor11 + ' <br>     \n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="12-' + j[0].valor12 + ' "  />12 x ' + j[0].valor12 + '<br>  \n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="23-' + j[0].valor23 + ' "  />23 x ' + j[0].valor23 + '<br>   \n\
+                                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="24-' + j[0].valor24 + ' "  />24 x ' + j[0].valor24 + '<br>                 ';
+                                     
+                                      var adesao = parseFloat(j[0].valor_adesao).toLocaleString('pt-br', {minimumFractionDigits: 2});  
+                                      $("#valor_adesao").val(adesao);
+                                }
+                                $('.valores').html(options).show();
+                                $('.carregando').hide();
+                            });
+                        } else {
+//                                                    $('#classe').html('<option value="">TODOS</option>');
+                        }
+                    });
+                 });
+                 
+             
+$("#valor_adesao").maskMoney({prefix:'', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
 
 </script>

@@ -6,7 +6,6 @@ $operador_id = $this->session->userdata('operador_id');
 //$empresa_id = $this->session->userdata('empresa_id');
 $perfil_id = $this->session->userdata('perfil_id');
 
-
 ?>
 <div class="content"> <!-- Inicio da DIV content -->
 

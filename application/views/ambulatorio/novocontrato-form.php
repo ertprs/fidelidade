@@ -400,7 +400,7 @@
                                 $(function () {
                                     $('#plano').change(function () {
                                         if ($(this).val()) {
-//                $('.carregando').show();
+                                            var options = "";
                                             $.getJSON('<?= base_url() ?>autocomplete/parcelascontratojson', {plano: $(this).val(), ajax: true}, function (j) {
                                                 options = '<input required="" type="radio" name="checkboxvalor1" value="01-' + j[0].valor1 + ' "/>1 x  ' + j[0].valor1 + '<br>';
                                                 options += '<input required type="radio" name="checkboxvalor1"  value="05-' + j[0].valor5 + '  "/>5 x ' + j[0].valor5 + '<br>';

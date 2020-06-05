@@ -65,6 +65,7 @@
                     </tr>
                 </thead>
                 <?php
+                $perfil_id = $this->session->userdata('perfil_id');
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->paciente->listarprecadastro($_GET)->get()->result();                 
                 $total = count($consulta);
@@ -88,6 +89,7 @@
                                 <td class="<?php echo $estilo_linha; ?>"> <?= $item->telefone; ?></td>
                                  <td class="<?php echo $estilo_linha; ?>"> <?= $item->vendedor; ?></td>
                                 
+                              <?php if($perfil_id == 5 || $perfil_id == 1){?>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;">                                  
                                    <div class="bt_link">
                                     <a href="<?= base_url() ?>cadastros/pacientes/novo/<?= $item->precadastro_id?>">
@@ -95,23 +97,24 @@
                                     </a>
                                      </div>
                                 </td>
-                                
+                              <?php }?>
                                 
                                <td class="<?php echo $estilo_linha; ?>" width="100px;">
-                                   
                                    <div class="bt_link">
                                     <a href="<?= base_url() ?>cadastros/pacientes/carregarprecadastro/<?= $item->precadastro_id?>">
                                         <center> Editar</center>
                                     </a>
                                      </div>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="100px;">
-                                   <div class="bt_link">
-                                    <a href="<?= base_url() ?>cadastros/pacientes/excluirprecadastro/<?= $item->precadastro_id?>" onclick="javascript: return confirm('Deseja realmente excluir?');">
-                                          <center>  Excluir</center>
-                                    </a>
-                                  </div>
-                                </td> 
+                                 <?php if($perfil_id == 5 || $perfil_id == 1){?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="100px;">
+                                       <div class="bt_link">
+                                        <a href="<?= base_url() ?>cadastros/pacientes/excluirprecadastro/<?= $item->precadastro_id?>" onclick="javascript: return confirm('Deseja realmente excluir?');">
+                                              <center>  Excluir</center>
+                                        </a>
+                                      </div>
+                                    </td>
+                                 <?php }?>
                                 
                                 
                             </tr>

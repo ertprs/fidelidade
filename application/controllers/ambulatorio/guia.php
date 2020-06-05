@@ -6625,8 +6625,7 @@ table tr:hover  #achadoERRO{
   }
   
     
-    
-     function relatoriocnab() {
+    function relatoriocnab() {
         $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriocnab', $data);
     }
@@ -6634,15 +6633,91 @@ table tr:hover  #achadoERRO{
     function gerarcnab() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
-        $relatorio = $this->guia->gerarcnab();
+        $empresa_id = $this->session->userdata('empresa_id');
+        $empresa = $this->guia->listarempresaporid($empresa_id);
         
-        echo "<pre>";
-        print_r($relatorio);
+        $relatorio = $this->guia->gerarcnab();
+       // $this->utilitario->preencherDireita('CAIXA', 20, ' ');
+       // $this->utilitario->preencherEsquerda($sequencial_NSA, 6, '0');
+      
+        $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
+        $A = array();
+        $A[0] = '';     // Iniciando o indice zero do array;
+        $A[1] = '756';  //(3) Código do Sicoob na Compensação: "756"
+        $A[2] = '0000'; //(4) Lote de Serviço: "0000"
+        $A[3] = '0';    //(1) Tipo de Registro: "0"
+        $A[4] = $this->utilitario->preencherDireita('',9,' '); //(9)Uso Exclusivo FEBRABAN / CNAB: Preencher com espaços em branco
+        $A[5] = '2';    //(1) Tipo de Inscrição da Empresa: '1'  =  CPF '2'  =  CGC / CNPJ
+        $A[6] = $this->utilitario->preencherEsquerda('00099999999999',14,'0');    //(14)Número de Inscrição da Empresa
+        $A[7] = $this->utilitario->preencherDireita($conveio,20,' ');;    //(20)Código do Convênio no Sicoob: Preencher com espaços em branco
+        $A[8] = ' ';    //(5) Prefixo da Cooperativa: vide planilha "Contracapa" deste arquivo
+        $A[9] = ' ';    //
+        $A[10] = ' ';   //
+        $A[11] = ' ';
+        
+
+        $header_A = implode($A);
+        
+        print_r($conveio);
+        
         die();
+        
+        
 
     }
     
     
+    function gerarcarnesicoob($paciente_id,$contrato_id){
+      
+        // $this->load->plugin('mpdf');
+         $html ="";
+         $empresa_id = $this->session->userdata('empresa_id');
+      
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+        //Dados da empresa
+        $data['cnpj'] = $empresa[0]->cnpj;
+        $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+        $data['estadoEmpresa'] = $empresa[0]->estado;
+        $data['municipioEmpresa'] = $empresa[0]->municipio;
+        $data['cedente'] = $empresa[0]->nome;
+        
+        $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+        $data['agencia'] = $empresa[0]->agenciasicoob;  
+        $data['convenio'] = $empresa[0]->codigobeneficiariosicoob; 
+        
+          $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
+      
+     foreach($pagamento as $item){
+        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+         
+        $data['vencimento'] = $lista[0]->data;
+        $data['paciente'] = $lista[0]->paciente;
+        $data['municipio'] = $lista[0]->municipio;
+        $data['estado'] = $lista[0]->estado;
+        $data['cep'] = $lista[0]->cep;
+        $data['logradouro'] = $lista[0]->logradouro;
+        
+        $valor  =   str_replace(".", ",",$lista[0]->valor);
+        $taxa_boleto = 0;
+        $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+        $data['paciente_contrato_id'] = $item->paciente_contrato_parcelas_id;
+        
+     
+     }
+     //  $html .= $this->load->View('ambulatorio/boletosicoob',$data,true); 
+     
+     $filename = "";
+     $rodape = "";
+     $filename = "";
+     $cabecalho = "";
+   // pdf($html, $filename, $cabecalho, $rodape);
+       
+       // echo "<pre>";
+      //  print_r($pagamento);
+      //  die();
+        
+    }
     
     
     
