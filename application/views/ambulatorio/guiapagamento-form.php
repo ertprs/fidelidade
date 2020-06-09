@@ -260,14 +260,16 @@
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
 
-                                        <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                                        <td style="width: 130px"  class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
 
                                         <? if ($item->contrato == 't') { ?>
-
-                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                                  
+                                          
                                                 <?
                                                 if ($empresapermissao[0]->confirm_outra_data == 't') {
                                                     ?>
+                                                                  
+                                          <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                             <div class="bt_link">
                                                 <?php
                                                 if ($item->paciente_dependente_id != "" && $item->paciente_dependente_id != 0 && $this->session->userdata('cadastro') == 2) {
@@ -282,17 +284,16 @@
                                                         Confirmar
                                                     </a>
                                                 <?php } ?>
-
                                             </div>
-
                                         </td>
+                                           
+                                        
                                         <?
                                     } else {
                                         ?>
 
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                            
-
                                             <div class="bt_link">
                                                 <?php
                                                 if ($item->paciente_dependente_id != "" && $item->paciente_dependente_id != 0 && $this->session->userdata('cadastro') == 2) {
@@ -507,9 +508,22 @@
                             <? } ?>
 
 
-                          
-                    <td colspan="4" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                        
+                 <?php if ($empresapermissao[0]->iugu_token != "" ) {?>
+                    <td colspan="3" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                 <?php } elseif ($empresapermissao[0]->client_secret != "" && $empresapermissao[0]->client_id != "") {
+                     ?>
+                   <td colspan="3" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                    <?
+                 }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                    ?>
+                    <td colspan="2" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                   <?
+                 }else{
+                     ?>
+                      <td colspan="1" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                    <?
+                 }
+                  ?>    
 
                         <? if ($perfil_id == 1) { ?>
                             <td   class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
@@ -517,7 +531,7 @@
                                     </a></div> 
 
                             </td>
-                            <td   class="<?php echo $estilo_linha; ?>" colspan="3"><div style="width: 50px;" class="bt_link">
+                            <td   class="<?php echo $estilo_linha; ?>" colspan="1"><div style="width: 50px;" class="bt_link">
                                     <a id="" onclick="javascript: return confirm('Deseja realmente Cancelar a parcela?');" href="<?= base_url() ?>ambulatorio/guia/cancelarparcela/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">Cancelar
                                     </a></div> 
 
