@@ -715,6 +715,7 @@ class paciente_model extends BaseModel {
             $this->_usuario_app = $return[0]->usuario_app;
             $this->_senha_app = $return[0]->senha_app;
             $this->_empresa_id = $return[0]->empresa_id;
+            $this->_cpf_responsavel_flag = $return[0]->cpf_responsavel_flag;
         }
     }
 
@@ -1426,7 +1427,7 @@ class paciente_model extends BaseModel {
                 $this->db->set('parceiro_id', $_POST['financeiro_parceiro_id']);
             }
 
-            if (isset($_POST['cpf_responsavel'])) {
+            if (isset($_POST['cpf_responsavel']) || isset($_POST['cpfresp'])) {
                 $this->db->set('cpf_responsavel_flag', 't');
             } else {
                 $this->db->set('cpf_responsavel_flag', 'f');

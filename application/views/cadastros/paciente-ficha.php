@@ -307,25 +307,26 @@
                     <input required type="radio" name="seletorcpf" id="seletorcpf"  value="CPF"/>CPF
                     <input required type="radio" name="seletorcpf" id="seletorcnpj" value="CNPJ"/>CNJP<br>
                 <? } ?>
-
             </div>
             <div>
-                <label>CPF *</label>
-
-
-                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" />
-                <!--<input type="text" name="cpfcnpj" id ="cpfcnpj" class="texto02" value="" />-->
-                <?php
-                if (@$obj->_cpfresp == "t") {
+                <label>&nbsp;</label>
+                  <?php
+                if (@$obj->_cpfresp == "t" || @$obj->_cpf_responsavel_flag == 't') {
                     ?>
-                    <input type="checkbox" name="cpfresp" checked ="true" />CPF Responsavel
+                <input type="checkbox" name="cpfresp" id="cpfresp" checked ="true" />CPF Responsavel
                     <?php
                 } else {
                     ?>
-                    <input type="checkbox" name="cpfresp"  />CPF Responsavel
+                <input type="checkbox" name="cpfresp" id="cpfresp"  />CPF Responsavel
                     <?php
                 }
                 ?>
+            </div>
+            <div>
+                <label>CPF *</label>
+                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" />
+                <!--<input type="text" name="cpfcnpj" id ="cpfcnpj" class="texto02" value="" />-->
+              
             </div>
             <div>
                 <label>RG</label>
@@ -540,7 +541,7 @@
                             if ($('#seletorcpf').prop('checked')) {
                                 var cpf = $("#cpfcnpj").val();
                                 var paciente_id = $("#txtPacienteId").val();
-                                if ($('#cpf_responsavel').prop('checked')) {
+                                if ($('#cpfresp').prop('checked')) {
                                     var cpf_responsavel = 'on';
                                 } else {
                                     var cpf_responsavel = '';

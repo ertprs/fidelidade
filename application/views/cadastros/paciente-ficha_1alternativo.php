@@ -58,7 +58,7 @@
                 <label>N&uacute;mero</label>
 
 
-                <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" required/>
+                <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" maxlength="20" required/>
             </div>
             <div>
                 <label>Complemento</label>
@@ -261,13 +261,10 @@
             </div>
             <div>
                 <label>CPF/CNPJ</label>
-                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$obj->_cpf; ?>" required/>
-             
+                <input type="text" name="cpf" id ="cpfcnpj" maxlength="18" onblur="verificarCPF()" class="texto03" value="<?= @$obj->_cpf; ?>" required/>          
             </div>
             <div>
                 <label>RG</label>
-
-
                 <input type="text" name="rg"  id="txtDocumento" class="texto04" maxlength="20" value="<?= @$obj->_documento; ?>" />
             </div>
             <div>
