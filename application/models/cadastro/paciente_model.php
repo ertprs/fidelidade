@@ -4735,7 +4735,6 @@ class paciente_model extends BaseModel {
         $this->db->where("cp.excluido", 'f');
         $this->db->where("cp.taxa_adesao", 'f');
         $this->db->where('cp.parcela > 0');
-        
 //        $this->db->where("charge_id is null");        
 //        $this->db->where("cp.data_cartao_iugu is null");
         $this->db->orderby("cp.data");
