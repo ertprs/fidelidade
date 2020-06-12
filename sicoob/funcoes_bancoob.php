@@ -71,8 +71,10 @@ $dadosboleto["codigo_banco_com_dv"] = $codigo_banco_com_dv;
 
 // FUN��ES
 // Algumas foram retiradas do Projeto PhpBoleto e modificadas para atender as particularidades de cada banco
+ $teste = "formata_numero";
 
-function formata_numero($numero,$loop,$insert,$tipo = "geral") {
+
+ function formata_numero($numero,$loop,$insert,$tipo = "geral") {
 	if ($tipo == "geral") {
 		$numero = str_replace(",","",$numero);
 		while(strlen($numero)<$loop){

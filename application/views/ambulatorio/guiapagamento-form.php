@@ -160,10 +160,10 @@
                                     }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
                                         ?>
                                          <th class="tabela_header" colspan="1">
-                                               <!-- <div class="bt_link" >
+                                              <div class="bt_link" >
                                                     <a  target="_blank" href="<?= base_url() ?>ambulatorio/guia/gerarcarnesicoob/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Carnês sicoob
                                                     </a>
-                                                </div> -->
+                                                </div>
                                          </th>
                                         <?
                                          }

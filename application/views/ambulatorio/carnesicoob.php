@@ -1,8 +1,6 @@
 
 <?php
-if($agencia == "" || $conta_corrente == "" || $convenio == ""){
-    echo "<h2>Favor, verificar dados da Empresa</h2>";
-}
+
 
 // +----------------------------------------------------------------------+
 // | BoletoPhp - Versão Beta                                              |
@@ -56,59 +54,14 @@ $valor_cobrado = $valor_boleto; // Valor - REGRA: Sem pontos na milhar e tanto f
 $valor_cobrado = str_replace(",", ".",$valor_cobrado);
 $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
-$num_contrato_con = $conta_corrente."-1"; // Número do contrato: É o mesmo número da conta
+
 $agencia = $agencia;
 
-while(strlen($paciente_contrato_id) < 7) {
-      $paciente_contrato_id = "1".$paciente_contrato_id; 
-}
+$dadosboleto["nosso_numero"] = $nosso_numero;
 
-$NossoNumero = formata_numdoc($paciente_contrato_id,7);  // Até 7 dígitos, número sequencial iniciado em 1 (Ex.: 1, 2...)
+$dadosboleto["nosso_numero_mostrar"] = $nossonumerosemdv."-".$dv;
 
-$qtde_nosso_numero = strlen($NossoNumero);
-$sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$num_contrato_con),10).formata_numdoc($NossoNumero,7);
-$cont=0;
-$calculoDv = 0;
-for($num=0;$num<=strlen($sequencia);$num++)
-	{
-		$cont++;
-		if($cont == 1)
-			{
-				$constante = 3;
-			}
-		if($cont == 2)
-			{
-				$constante = 1;
-			}
-		if($cont == 3)
-			{
-				$constante = 9;
-			}
-		if($cont == 4)
-			{
-				$constante = 7;
-				$cont = 0;
-			}
-		$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
-	}
-
-$Resto = $calculoDv % 11;
-if($Resto == 0 || $Resto == 1)
-	{
-		$Dv = 0;
-	}
-else
-	{
-		$Dv = 11 - $Resto;
-	}
-        
-      
-
-$dadosboleto["nosso_numero"] = $NossoNumero.$Dv;
-
-$dadosboleto["nosso_numero_mostrar"] = $NossoNumero."-".$Dv;
-
-$dadosboleto["numero_documento"] = "$paciente_contrato_id";	// Num do pedido ou do documento
+$dadosboleto["numero_documento"] = "$identificacao";	// Num do pedido ou do documento
 $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
 $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
 $dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
@@ -141,29 +94,36 @@ $dadosboleto["especie_doc"] = "DM";
 // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
 // DADOS ESPECIFICOS DO SICOOB
 $dadosboleto["modalidade_cobranca"] = "01";
-$dadosboleto["numero_parcela"] = "001";
+$dadosboleto["numero_parcela"] =  $cont_num_parcela;
 
 
 // DADOS DA SUA CONTA - BANCO SICOOB
 $dadosboleto["agencia"] = $agencia; // Num da agencia, sem digito
-$dadosboleto["conta"] = $conta_corrente; 	// Num da conta, sem digito
+
 
 // DADOS PERSONALIZADOS - SICOOB
-$dadosboleto["convenio"] = "0".$convenio;  // Num do convênio - É o mesmo número da conta_cedente formatado de outra forma, exemplo: Se a conta é 19719-0, então o convênio é: 0197190
 $dadosboleto["carteira"] = "1";
 
 // SEUS DADOS
-$dadosboleto["identificacao"] = $paciente_contrato_id;
+$dadosboleto["identificacao"] = "Carnê";
 $dadosboleto["cpf_cnpj"] = $cnpj;
 $dadosboleto["endereco"] = $logradouroEmpresa;
 $dadosboleto["cidade_uf"] = $municipio." / ".$estado;
 $dadosboleto["cedente"] = $cedente." / ".$cnpj;
 
 // NÃO ALTERAR!
-  include_once("./sicoob/funcoes_bancoob.php"); 
-  include("./sicoob/layout_bancoob.php");
+
+$dadosboleto["linha_digitavel"] = $linha_digitavel;
+$dadosboleto["codigo_banco_com_dv"] = $codigo_banco_com_dv;
+$dadosboleto["agencia_codigo"] =  $agencia_codigo;
+$dadosboleto["code"] = $code;
+
+
+  include("./sicoob/layout_bancoobcarne.php");
 ?>
 
 <script type="text/javascript">  
-  //print();
+    <?if($print == 'true'){?>
+        print();
+    <?}?>
 </script>
