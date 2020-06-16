@@ -831,7 +831,8 @@ class guia_model extends Model {
                             pcp.paciente_dependente_id,
                             pcp.taxa_adesao,
                             m.estado,
-                            p.cep');
+                            p.cep,
+                            p.cpf');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = pcp.financeiro_credor_devedor_id', 'left');
@@ -10768,6 +10769,8 @@ ORDER BY ae.agenda_exames_id)";
                             e.contacorrentesicoob,
                             e.codigobeneficiariosicoob,
                             e.cnpj,
+                            e.cep,
+                            m.codigo_ibge,
                             m.estado');
         $this->db->from('tb_empresa e');
         $this->db->join('tb_municipio m', 'm.municipio_id = e.municipio_id', 'left');
@@ -12546,6 +12549,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->where('cp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->where('cp.ativo','t');
         $this->db->where("cp.excluido", 'f');
+        $this->db->where("cp.taxa_adesao", 'f');
         $this->db->orderby("data");
       
         $return = $this->db->get()->result();

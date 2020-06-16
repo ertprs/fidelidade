@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">&nbsp;&nbsp;&nbsp; Gerar CNAB</a></h3>
+        <h3><a href="#">&nbsp;&nbsp;&nbsp; Gerar CNAB240</a></h3>
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarcnab">
                 <dl>

@@ -6640,16 +6640,25 @@ table tr:hover  #achadoERRO{
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         
-        
         $empresa_id = $this->session->userdata('empresa_id');
         $empresa = $this->guia->listarempresaporid($empresa_id);
+       
         $cnpj = $empresa[0]->cnpj;
         $conta_corrente = $empresa[0]->contacorrentesicoob;
         $razao_social = $empresa[0]->razao_social;
+        $nome =  $empresa[0]->nome;
+        $endereco = $empresa[0]->logradouro;
+        $bairro = $empresa[0]->bairro;
+        $cep_ep = substr($empresa[0]->cep,0,5);
+        $sufixo_cep = substr($empresa[0]->cep, -3);
+        $cidade = $empresa[0]->municipio;
+        $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab();
-       // $this->utilitario->preencherDireita('CAIXA', 20, ' ');
-       // $this->utilitario->preencherEsquerda($sequencial_NSA, 6, '0');
-      
+        
+       // echo "<pre>";
+       // print_r($relatorio);
+       // die();
+       
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
         $A[0] = '';     // Iniciando o indice zero do array;
@@ -6681,17 +6690,20 @@ table tr:hover  #achadoERRO{
        $header_A = implode($A);
 
         $i = 1;
+        $cont_lot = 1;
+        $cont_q = 1;
+        $sequencia  = 1;
+        $cont_linha = 1;
         //header do lote
-       
-       
+        $teste = 1;
         
         // REGISTRO DETALHE SEGMENTO P
         $body_P = array();
         $body_P_con = '';
         foreach($relatorio as $item){
-            
+         $i = 1;
         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
-            
+        
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
         $municipio = $lista[0]->municipio;
@@ -6700,12 +6712,14 @@ table tr:hover  #achadoERRO{
         $logradouro = $lista[0]->logradouro;
         $valor = $lista[0]->valor * 100;
         
+        $cpf =  $lista[0]->cpf;
+        
         $data_venc = date("dmY", strtotime($vencimento));
             
         $L = array();
         $L[0] = '';
         $L[1] = '756';
-        $L[2] = $this->utilitario->preencherEsquerda($i,4,'0');
+        $L[2] = $this->utilitario->preencherEsquerda($cont_lot,4,'0');
         $L[3] = $this->utilitario->preencherEsquerda('1',1,'0');
         $L[4] = $this->utilitario->preencherDireita('R',1,' ');
         $L[5] = $this->utilitario->preencherEsquerda('01',2,'0');
@@ -6727,8 +6741,8 @@ table tr:hover  #achadoERRO{
         $L[21] =  $this->utilitario->preencherEsquerda(date('dmY'),8,'0');
         $L[22] = $this->utilitario->preencherEsquerda('',8,'0');
         $L[23] = $this->utilitario->preencherDireita('',33,' '); 
-            
        
+       $cont_linha++;
        $body_con = implode($L); 
        $body_L[] = $body_con;
        $body_P_con .= $body_con . "\n";
@@ -6740,7 +6754,7 @@ table tr:hover  #achadoERRO{
         $P = array();
         $P[0] = '';
         $P[1] = '756';
-        $P[2] =  $this->utilitario->preencherEsquerda($i,4,'0');
+        $P[2] =  $this->utilitario->preencherEsquerda($sequencia,4,'0');
         $P[3] =  $this->utilitario->preencherEsquerda('3',1,'0');
         $P[4] =  $this->utilitario->preencherEsquerda($i,5,'0');
         $P[5] = $this->utilitario->preencherDireita('P',1,' ');
@@ -6782,40 +6796,65 @@ table tr:hover  #achadoERRO{
         $P[41] =  $this->utilitario->preencherEsquerda('',10,'0');   
         $P[42] =  $this->utilitario->preencherDireita('',1,' ');   
       
-     // $t = 0 ;
-     //   foreach($R as $ie){
-      //    echo "<pre>";
-      //    $t += strlen($ie);   
-      //  }
-      // echo $t;
-       
-      // die();
+       $cont_linha++;
         $body_con = implode($P);
         $body_P[] = $body_con;
         $body_P_con .= $body_con . "\n"; 
      //fim do segmento
+        $i++;
+      
+      //segmento Q
+        $Q = Array();
+        $Q[0] = "";
+        $Q[1] = "756";
+        $Q[2] = $this->utilitario->preencherEsquerda($sequencia,4,'0');
+        $Q[3] = $this->utilitario->preencherEsquerda("3",1,'0');
+        $Q[4] = $this->utilitario->preencherEsquerda($i,5,'0');
+        $Q[5] = $this->utilitario->preencherDireita("Q",1,'0');
+        $Q[6] = $this->utilitario->preencherDireita(" ",1,' ');
+        $Q[7] = $this->utilitario->preencherEsquerda('01',2,'0');
+        $Q[8] = $this->utilitario->preencherEsquerda('1',1,'0');
+        $Q[9] = $this->utilitario->preencherEsquerda($cpf,15,'0');
+        $Q[10] = $this->utilitario->preencherDireita($nome,40,' ');
+        $Q[11] = $this->utilitario->preencherDireita($endereco,40,' ');
+        $Q[12] = $this->utilitario->preencherDireita($bairro,15,' ');
+        $Q[13] = $this->utilitario->preencherEsquerda($cep_ep,5,'0');
+        $Q[14] = $this->utilitario->preencherEsquerda($sufixo_cep,3,'0');
+        $Q[15] = $this->utilitario->preencherDireita($cidade,15,' ');
+        $Q[16] = $this->utilitario->preencherDireita($codigoUF,2,' ');
+        $Q[17] =  $this->utilitario->preencherEsquerda('2',1,'0');
+        $Q[18] =  $this->utilitario->preencherEsquerda($cnpj,15,'0');
+        $Q[19] = $this->utilitario->preencherDireita($nome,40,' ');
+        $Q[20] = $this->utilitario->preencherEsquerda("",3,'0');
+        $Q[21] = $this->utilitario->preencherDireita("",20,' ');
+        $Q[22] = $this->utilitario->preencherDireita("",8,' ');
+
+        $cont_linha++;
+        $body_con = implode($Q);
+        $body_Q[] = $body_con;
+        $body_P_con .= $body_con . "\n"; 
         
-        
-        
-        
-   //segmento Q
-   
-        
-        
-     
-        
-        
-      //REGISTRO TRAILLER DO LOTE
+        //$t = 0 ;
+       // foreach($Q as $ie){
+       //   echo "<pre>";
+      //    $t += strlen($ie);   
+    //    }
+    //   echo $t;
+       
+    ///   die();
+
+
+         //REGISTRO TRAILLER DO LOTE
         
         $RT = Array();
         $RT[0] = "";
         $RT[1] = "756";
-        $RT[2] = $this->utilitario->preencherEsquerda($i, 4, '0');
+        $RT[2] = $this->utilitario->preencherEsquerda($cont_lot, 4, '0');
         $RT[3] = $this->utilitario->preencherEsquerda("5", 1, '0');
         $RT[4] = $this->utilitario->preencherDireita("", 9, ' ');
-        $RT[5] = $this->utilitario->preencherEsquerda("0", 6, '0');
+        $RT[5] = $this->utilitario->preencherEsquerda("4", 6, '0');
         $RT[6] = $this->utilitario->preencherEsquerda("0", 6, '0');
-        $RT[7] = $this->utilitario->preencherEsquerda("0", 17, '0');
+        $RT[7] = $this->utilitario->preencherEsquerda($valor, 17, '0');
         $RT[8] = $this->utilitario->preencherEsquerda("0", 6, '0');
         $RT[9] = $this->utilitario->preencherEsquerda("0", 17, '0');
         $RT[10] = $this->utilitario->preencherEsquerda("0", 6, '0');
@@ -6825,19 +6864,15 @@ table tr:hover  #achadoERRO{
         $RT[14] = $this->utilitario->preencherDireita("", 8, ' ');
         $RT[15] = $this->utilitario->preencherDireita("", 117, ' ');
         
+      
+        $cont_linha++;
         $body_con = implode($RT);
         $body_RT[] = $body_con;
         $body_P_con .= $body_con . "\n"; 
-  
+        $cont_lot++;
         $i++;
-        
-        
-        
-        
-        
-        
-        
-
+        $sequencia++;
+    
 }
 
 
@@ -6854,17 +6889,13 @@ table tr:hover  #achadoERRO{
           $R[2] = $this->utilitario->preencherEsquerda("", 4, '9');                  
           $R[3] = $this->utilitario->preencherEsquerda("9", 1, '0');   
           $R[4] = $this->utilitario->preencherDireita("", 9, ' ');  
-          $R[5] = $this->utilitario->preencherEsquerda($i, 6, '0');  
-          $R[6] = $this->utilitario->preencherEsquerda($i, 6, '0');
+          $R[5] = $this->utilitario->preencherEsquerda($sequencia-1, 6, '0');  
+          $R[6] = $this->utilitario->preencherEsquerda($cont_linha, 6, '0');
           $R[7] = $this->utilitario->preencherEsquerda("", 6, '0');
           $R[8] = $this->utilitario->preencherDireita("", 205, ' ');
-        
-
            
-         $footer_R = implode($R);
+          $footer_R = implode($R);
 
-      
-      
         $string_geral = '';
         $string_geral = $header_A . "\n" . $body_P_con . $footer_R;
         
@@ -6880,7 +6911,8 @@ table tr:hover  #achadoERRO{
         if (count($relatorio) > 0) {
             $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
         }
-        $nome_arquivo = "CNAB" . $data_Mes . $i;
+        $hora = date('His');
+        $nome_arquivo = "CNAB240_" . $data_Mes . $i;
         $fp = fopen("./upload/CNAB/$nome_arquivo.txt", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
         $escreve = fwrite($fp, $string_geral);
 
