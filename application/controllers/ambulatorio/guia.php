@@ -491,10 +491,12 @@ class Guia extends BaseController {
     }
 
     function relatoriocontratosinativos() {
-//        $data['empresa'] = $this->guia->listarempresas();
+      $data['empresa'] = $this->guia->listarempresas();
         $data['planos'] = $this->formapagamento->listarforma();
         $data['vencedor'] = $this->operador_m->listarvendedor(1);
         $data['forma']  = $this->formapagamento->listarformaRendimentoPaciente();
+        $data['empresacadastro'] = $this->guia->listarempresacadastro();
+        $data['listarindicacao'] = $this->paciente->listarindicacao();
         $this->loadView('ambulatorio/relatoriocontratosinativos', $data);
     }
 
@@ -6583,10 +6585,10 @@ table tr:hover  #achadoERRO{
     
     
     
-    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id){
-        $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
-        
-       $data['paciente_id'] = $paciente_id;
+    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id,$contrato_id){
+       $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
+      $data['contrato_id'] = $contrato_id;
+      $data['paciente_id'] = $paciente_id;
       $data['paciente'] = $this->paciente->listardados($paciente_id);
       $this->loadView('ambulatorio/guiapagamentoempresa-form', $data);
         
@@ -6657,12 +6659,12 @@ table tr:hover  #achadoERRO{
         $A[4] = $this->utilitario->preencherDireita('',9,' '); //(9)Uso Exclusivo FEBRABAN / CNAB: Preencher com espaços em branco
         $A[5] = '2';    //(1) Tipo de Inscrição da Empresa: '1'  =  CPF '2'  =  CGC / CNPJ
         $A[6] = $this->utilitario->preencherEsquerda($cnpj,14,'0');    //(14)Número de Inscrição da Empresa
-        $A[7] = $this->utilitario->preencherDireita($conveio,20,' ');  //(20)Código do Convênio no Sicoob: Preencher com espaços em branco
+        $A[7] = $this->utilitario->preencherDireita("",20,' ');  //(20)Código do Convênio no Sicoob: Preencher com espaços em branco
         $A[8] = $this->utilitario->preencherEsquerda('4609',5,'0'); 
         $A[9] = $this->utilitario->preencherEsquerda('4',1,'0');  
         $A[10] = $this->utilitario->preencherEsquerda($conta_corrente,12,'0');
         $A[11] = $this->utilitario->preencherEsquerda('0',1,'0');
-        $A[12] = $this->utilitario->preencherDireita('1',1,' ');
+        $A[12] = $this->utilitario->preencherDireita('0',1,'0');
         $A[13] = $this->utilitario->preencherDireita($razao_social,30,' ');
         $A[14] = $this->utilitario->preencherDireita('SICOOB',30,' ');
         $A[15] = $this->utilitario->preencherDireita('',10,' ');
@@ -6676,9 +6678,7 @@ table tr:hover  #achadoERRO{
         $A[23] = $this->utilitario->preencherDireita('',20,' ');
         $A[24] = $this->utilitario->preencherDireita('',29,' ');
 
-        
-        
-         $header_A = implode($A);
+       $header_A = implode($A);
 
         $i = 1;
         //header do lote
@@ -6698,6 +6698,7 @@ table tr:hover  #achadoERRO{
         $estado = $lista[0]->estado;
         $cep= $lista[0]->cep;
         $logradouro = $lista[0]->logradouro;
+        $valor = $lista[0]->valor * 100;
         
         $data_venc = date("dmY", strtotime($vencimento));
             
@@ -6713,12 +6714,12 @@ table tr:hover  #achadoERRO{
         $L[8] = $this->utilitario->preencherDireita('',1,' ');
         $L[9] = $this->utilitario->preencherEsquerda('2',1,'0');
         $L[10] = $this->utilitario->preencherEsquerda($cnpj,15,'0');
-        $L[11] = $this->utilitario->preencherDireita($conveio,20,' '); 
+        $L[11] = $this->utilitario->preencherDireita("",20,' '); 
         $L[12] =  $this->utilitario->preencherEsquerda('4609',5,'0'); 
         $L[13] = $this->utilitario->preencherEsquerda('4',1,'0');
         $L[14] = $this->utilitario->preencherEsquerda($conta_corrente,12,'0');
         $L[15] = $this->utilitario->preencherEsquerda('0',1,'0');
-        $L[16] = $this->utilitario->preencherDireita('1',1,' ');
+        $L[16] = $this->utilitario->preencherDireita('',1,' ');
         $L[17] =  $this->utilitario->preencherDireita($razao_social,30,' ');
         $L[18] =  $this->utilitario->preencherDireita('',40,' ');
         $L[19] =  $this->utilitario->preencherDireita('',40,' ');
@@ -6727,10 +6728,15 @@ table tr:hover  #achadoERRO{
         $L[22] = $this->utilitario->preencherEsquerda('',8,'0');
         $L[23] = $this->utilitario->preencherDireita('',33,' '); 
             
-        $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');
-            
-        $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",25,' ');;
-            
+       
+       $body_con = implode($L); 
+       $body_L[] = $body_con;
+       $body_P_con .= $body_con . "\n";
+       
+       
+       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
+       $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
+        
         $P = array();
         $P[0] = '';
         $P[1] = '756';
@@ -6739,47 +6745,65 @@ table tr:hover  #achadoERRO{
         $P[4] =  $this->utilitario->preencherEsquerda($i,5,'0');
         $P[5] = $this->utilitario->preencherDireita('P',1,' ');
         $P[6] = $this->utilitario->preencherDireita('',1,' ');
-        $P[7] = $this->utilitario->preencherEsquerda('02',2,'0');
+        $P[7] = $this->utilitario->preencherEsquerda('01',2,'0');
         $P[8] = $this->utilitario->preencherEsquerda('4609',5,'0');
         $P[9] = $this->utilitario->preencherEsquerda('4',1,'0');
         $P[10] =  $this->utilitario->preencherEsquerda($conta_corrente,12,'0');   
         $P[11] =  $this->utilitario->preencherEsquerda('0',1,'0');
-        $P[12] = $this->utilitario->preencherDireita('1',1,' ');
+        $P[12] = $this->utilitario->preencherDireita('',1,' ');
         $P[13] = $formata_nosso_numero;
         $P[14] =  $this->utilitario->preencherEsquerda('1',1,'0');
         $P[15] = $this->utilitario->preencherEsquerda('0',1,'0');
         $P[16] = $this->utilitario->preencherDireita('',1,' ');
         $P[17] = $this->utilitario->preencherEsquerda('2',1,'0');
-        $P[18] = $this->utilitario->preencherEsquerda('1',1,'0');
+        $P[18] = $this->utilitario->preencherEsquerda('2',1,'0');
         $P[19] = $this->utilitario->preencherDireita($i,15,'0');
         $P[20] =  $this->utilitario->preencherEsquerda($data_venc,8,'0');
-        $P[21] = $this->utilitario->preencherEsquerda('',13,'0');
+        $P[21] = $this->utilitario->preencherEsquerda($valor,15,'0'); //NO MANUAL DIZ QUE É (13)
         $P[22] = $this->utilitario->preencherEsquerda('',5,'0');
-        $P[23] = $this->utilitario->preencherEsquerda('',1,'0');
-        $P[24] = $this->utilitario->preencherEsquerda('DM',2,'0');
+        $P[23] = $this->utilitario->preencherDireita('',1,' ');
+        $P[24] = $this->utilitario->preencherEsquerda('32',2,'0');
         $P[25] = $this->utilitario->preencherDireita('A',1,'0');
         $P[26] = $this->utilitario->preencherEsquerda(date('dmY'),8,'0');
-        $P[27] = $this->utilitario->preencherEsquerda('0',1,'0');
-        $P[28] = $this->utilitario->preencherEsquerda("0",8,'0');
-        $P[29] =   $this->utilitario->preencherEsquerda("0",13,'0');      
+        $P[27] = $this->utilitario->preencherEsquerda('',1,'0');
+        $P[28] = $this->utilitario->preencherEsquerda("",8,'0');
+        $P[29] = $this->utilitario->preencherEsquerda("",15,'0'); //  no manual diz (13)   
         $P[30] = $this->utilitario->preencherEsquerda('0',1,'0');
-        $P[31] = $this->utilitario->preencherEsquerda('0',8,'0');      
-        $P[32] = $this->utilitario->preencherEsquerda('0',13,'0');
-        $P[33] = $this->utilitario->preencherEsquerda('0',13,'0');
-        $P[34] = $this->utilitario->preencherEsquerda('0',13,'0');
+        $P[31] = $this->utilitario->preencherEsquerda("",8,'0');      
+        $P[32] = $this->utilitario->preencherEsquerda("",15,'0');
+        $P[33] = $this->utilitario->preencherEsquerda('',15,'0');
+        $P[34] = $this->utilitario->preencherEsquerda('',15,'0');
         $P[35] = $this->utilitario->preencherDireita($paciente,25,' ');      
-        $P[36] = $this->utilitario->preencherEsquerda('1',1,'0');     
+        $P[36] = $this->utilitario->preencherEsquerda('3',1,'0');     
         $P[37] = $this->utilitario->preencherEsquerda('0',2,'0'); 
         $P[38] = $this->utilitario->preencherEsquerda('0',1,'0');       
         $P[39] = $this->utilitario->preencherDireita('',3,' ');            
         $P[40] =  $this->utilitario->preencherEsquerda('09',2,'0');  
         $P[41] =  $this->utilitario->preencherEsquerda('',10,'0');   
         $P[42] =  $this->utilitario->preencherDireita('',1,' ');   
-        
-        $body_con = implode($P); 
-        $body_P[] = $body_con; 
+      
+     // $t = 0 ;
+     //   foreach($R as $ie){
+      //    echo "<pre>";
+      //    $t += strlen($ie);   
+      //  }
+      // echo $t;
+       
+      // die();
+        $body_con = implode($P);
+        $body_P[] = $body_con;
         $body_P_con .= $body_con . "\n"; 
      //fim do segmento
+        
+        
+        
+        
+   //segmento Q
+   
+        
+        
+     
+        
         
       //REGISTRO TRAILLER DO LOTE
         
@@ -6791,21 +6815,35 @@ table tr:hover  #achadoERRO{
         $RT[4] = $this->utilitario->preencherDireita("", 9, ' ');
         $RT[5] = $this->utilitario->preencherEsquerda("0", 6, '0');
         $RT[6] = $this->utilitario->preencherEsquerda("0", 6, '0');
-        $RT[7] = $this->utilitario->preencherEsquerda("0", 15, '0');
+        $RT[7] = $this->utilitario->preencherEsquerda("0", 17, '0');
         $RT[8] = $this->utilitario->preencherEsquerda("0", 6, '0');
-        $RT[9] = $this->utilitario->preencherEsquerda("0", 15, '0');
+        $RT[9] = $this->utilitario->preencherEsquerda("0", 17, '0');
         $RT[10] = $this->utilitario->preencherEsquerda("0", 6, '0');
-        $RT[11] = $this->utilitario->preencherEsquerda("0", 15, '0');
+        $RT[11] = $this->utilitario->preencherEsquerda("0", 17, '0');
         $RT[12] = $this->utilitario->preencherEsquerda("0", 6, '0');
-        $RT[13] = $this->utilitario->preencherEsquerda("0", 15, '0');
+        $RT[13] = $this->utilitario->preencherEsquerda("0", 17, '0');
         $RT[14] = $this->utilitario->preencherDireita("", 8, ' ');
         $RT[15] = $this->utilitario->preencherDireita("", 117, ' ');
-
-       
-            $i++;
+        
+        $body_con = implode($RT);
+        $body_RT[] = $body_con;
+        $body_P_con .= $body_con . "\n"; 
+  
+        $i++;
+        
+        
+        
+        
+        
+        
+        
 
 }
 
+
+//print_r($body_P_con);
+
+//die();
 
 
 
@@ -6818,10 +6856,11 @@ table tr:hover  #achadoERRO{
           $R[4] = $this->utilitario->preencherDireita("", 9, ' ');  
           $R[5] = $this->utilitario->preencherEsquerda($i, 6, '0');  
           $R[6] = $this->utilitario->preencherEsquerda($i, 6, '0');
-          $R[7] = $this->utilitario->preencherEsquerda($i, 6, '0');
+          $R[7] = $this->utilitario->preencherEsquerda("", 6, '0');
           $R[8] = $this->utilitario->preencherDireita("", 205, ' ');
         
 
+           
          $footer_R = implode($R);
 
       
@@ -7456,6 +7495,149 @@ function geraCodigoBanco($numero) {
         } 
 
 
+   function importararquivoretornocnab() {
+        $data['empresa'] = $this->guia->listarempresas();
+        
+        $this->loadView('ambulatorio/importararquivoretornocnab', $data);
+    }
+    
+    
+    
+      function importararquivoretornoenviarcnab() {
+        $chave_pasta = $this->session->userdata('empresa_id');
+
+        $nome = $_FILES['arquivo']['name'];
+        $nome_arq = $_FILES['arquivo'];
+                            
+
+        if (!is_dir("./upload/retornoimportadoscnab")) {
+            mkdir("./upload/retornoimportadoscnab");
+            $destino = "./upload/retornoimportadoscnab";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/retornoimportadoscnab/$chave_pasta")) {
+            mkdir("./upload/retornoimportadoscnab/$chave_pasta");
+            $destino = "./upload/retornoimportadoscnab/$chave_pasta";
+            chmod($destino, 0777);
+        }
+
+
+
+
+
+        $configuracao = array(
+            'upload_path' => './upload/retornoimportadoscnab/' . $chave_pasta . '',
+            'allowed_types' => 'txt',
+            'file_name' => $nome,
+            'max_size' => '0'
+        );
+
+        $this->load->library('upload');
+        $this->upload->initialize($configuracao);
+
+        if ($this->upload->do_upload('arquivo'))
+            $data['mensagem'] = 'Arquivo salvo com sucesso.';
+        else
+            $erro = $this->upload->display_errors();
+        $data['mensagem'] = 'Erro';
+
+
+
+
+        if (!is_dir("./upload/retornoimportadoscnab/todos")) {
+            mkdir("./upload/retornoimportadoscnab/todos");
+            $destino_todos = "./upload/retornoimportadoscnab/todos";
+            chmod($destino_todos, 0777);
+        }
+
+        if (!is_dir("./upload/retornoimportadoscnab/todos/$chave_pasta")) {
+            mkdir("./upload/retornoimportadoscnab/todos/$chave_pasta");
+            $destino_todos = "./upload/retornoimportadoscnab/todos/$chave_pasta";
+            chmod($destino_todos, 0777);
+        }
+
+
+        $configuracao2 = array(
+            'upload_path' => './upload/retornoimportadoscnab/todos/' . $chave_pasta . '',
+            'allowed_types' => 'txt',
+            'file_name' => $nome,
+            'max_size' => '0'
+        );
+
+
+        $this->upload->initialize($configuracao2);
+
+        if ($this->upload->do_upload('arquivo'))
+            $data['mensagem'] = 'Arquivo salvo com sucesso.';
+        else
+            $erro = $this->upload->display_errors();
+        $data['mensagem'] = 'Erro';
+                            
+        $this->session->set_flashdata('message', $data['mensagem']);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+    }
+        
+    
+        function lerarquivoretornoimportadocnab($nome_arquivo = NULL) {
+            $chave_pasta = $this->session->userdata('empresa_id');    
+            
+             if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
+        
+           }
+            
+            redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+           
+        }
+        
+        
+         function verarquivoimportadocnab($nome_arquivo = NULL) {
+             
+              redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+         }
+        
+        
+      function downloadTXTcnabimportado($nome_arquivo = NULL) {
+        $chave_pasta = $this->session->userdata('empresa_id');
+        $arquivo = file_get_contents("./upload/retornoimportadoscnab/todos/$chave_pasta/$nome_arquivo");
+        header('Content-type: text/plain');
+        header('Content-Length: ' . strlen($arquivo));
+        header("Content-Disposition: attachment; filename=$nome_arquivo");
+        echo $arquivo;
+    }
+
+    
+      function impressaoreciboempresa($empresa_cadastro_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $data['emissao'] = date("d-m-Y");
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $data['pagamento'] = $pagamento;
+        // var_dump($pagamento); die;
+        $valor_total = 0;
+
+        $data['paciente'] = $this->paciente->listadadosempresacadastro($empresa_cadastro_id);
+        $valor = number_format($pagamento[0]->valor, 2, ',', '.');
+
+        $data['valor'] = $valor;
+
+        if ($valor == '0,00') {
+            $data['extenso'] = 'ZERO';
+        } else {
+            $valoreditado = str_replace(",", "", str_replace(".", "", $valor));
+            // if ($dinheiro == "t") {
+            $data['extenso'] = GExtenso::moeda($valoreditado);
+            // }
+        }
+
+        $dataFuturo = date("Y-m-d");
+
+//        $this->load->View('ambulatorio/impressaorecibomed', $data);
+        $this->load->View('ambulatorio/impressaorecibo', $data);
+    }
+    
 }
 
 

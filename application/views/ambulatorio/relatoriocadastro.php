@@ -17,6 +17,16 @@
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
                     </dd>
+                    <dt>
+                        <label>Situação</label>
+                    </dt>
+                    <dd>
+                        <select name="cliente" id="cliente">
+                            <option value="">TODOS</option>
+                            <option value="titular">Titular</option>
+                            <option value="dependente">Dependente</option>
+                        </select>
+                    </dd>
                     
                 </dl>
                 <button type="submit" >Pesquisar</button>

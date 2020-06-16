@@ -98,14 +98,18 @@
                                      </div>
                                 </td>
                               <?php }?>
+                              
+                                        <td class="<?php echo $estilo_linha; ?>" width="100px;">
+                                          <?php if($this->session->userdata('operador_id') == $item->operador_id || $this->session->userdata('operador_id') == 1 || $perfil_id == 5 || $perfil_id == 1){ ?>   
+                                            <div class="bt_link">
+                                             <a href="<?= base_url() ?>cadastros/pacientes/carregarprecadastro/<?= $item->precadastro_id?>">
+                                                 <center> Editar</center>
+                                             </a>
+                                              </div>
+                                            <?php }?>
+                                         </td>
+                                 
                                 
-                               <td class="<?php echo $estilo_linha; ?>" width="100px;">
-                                   <div class="bt_link">
-                                    <a href="<?= base_url() ?>cadastros/pacientes/carregarprecadastro/<?= $item->precadastro_id?>">
-                                        <center> Editar</center>
-                                    </a>
-                                     </div>
-                                </td>
                                  <?php if($perfil_id == 5 || $perfil_id == 1){?>
                                     <td class="<?php echo $estilo_linha; ?>" width="100px;">
                                        <div class="bt_link">

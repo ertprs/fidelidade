@@ -918,3 +918,13 @@ ALTER TABLE ponto.tb_empresa ADD COLUMN codigobeneficiarioSicoob character varyi
 --29/05/2020
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN pessoaindicacao integer;
+
+
+--13/06/2020
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN empresa_id integer;
+
+--15/06/2020
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN associado_empresa_cadastro_id integer;
+
+ALTER TABLE ponto.tb_entradas ADD COLUMN empresa_id integer;
+ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_id integer;

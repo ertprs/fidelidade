@@ -416,8 +416,6 @@ if (count($contratos) > 0) {
                             <th class="tabela_header">Data</th>
                             <th class="tabela_header">Status</th>
                             <th colspan="5" class="tabela_header"></th>
-
-
                         </tr>
                     </thead>
                     <tbody>

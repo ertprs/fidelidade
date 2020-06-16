@@ -84,8 +84,10 @@ class paciente_model extends BaseModel {
         // var_dump($perfil_id);die;
         $this->db->from('tb_paciente p')
                 ->join('tb_municipio', 'tb_municipio.municipio_id = p.municipio_id', 'left')
-                ->select('p.*, tb_municipio.nome as ciade, tb_municipio.estado')
+                ->select('p.*, tb_municipio.nome as ciade, tb_municipio.estado,opv.nome as vendedor,opi.nome as indicacao')
                 ->where("(p.ativo ='true' or p.reativar = 't' )");
+        $this->db->join('tb_operador opv','opv.operador_id = p.vendedor','left');
+        $this->db->join('tb_operador opi','opi.operador_id = p.pessoaindicacao','left');
         if ($perfil_id == 6) {
             $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
             $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
@@ -603,7 +605,7 @@ class paciente_model extends BaseModel {
 
     function listarEnderecoTitular($paciente_id) {
 
-        $this->db->select('p2.paciente_id as titular_id');
+        $this->db->select('p2.paciente_id as titular_id,pc.plano_id');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
         $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcd.paciente_contrato_id','left');
@@ -1085,6 +1087,7 @@ class paciente_model extends BaseModel {
                     $this->db->set('plano_id', $_POST['plano']);
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
+                    $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
                     $this->db->insert('tb_paciente_contrato');
                 }
             } else { // update
@@ -1258,6 +1261,7 @@ class paciente_model extends BaseModel {
                     $this->db->set('plano_id', $_POST['plano']);
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
+                    $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
                     $this->db->insert('tb_paciente_contrato');
                 }
             } else { // update
@@ -1398,6 +1402,7 @@ class paciente_model extends BaseModel {
                     $this->db->set('plano_id', $_POST['plano']);
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
+                    $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
                     $this->db->insert('tb_paciente_contrato');
                 }
             } else { // update
@@ -1418,7 +1423,70 @@ class paciente_model extends BaseModel {
     function gravardependente() {
 
         try {
+         if (isset($_POST['txtcbo']) && $_POST['txtcbo'] != $_POST['txtcbohidden']) {
+                $this->db->select('cbo_ocupacao_id');
+                $this->db->from('tb_cbo_ocupacao');
+                $this->db->orderby('cbo_ocupacao_id desc');
+                $this->db->limit(1);
+                $ultimaprofissao = $this->db->get()->result();
+//                var_dump($ultimaprofissao); die;
+                $last_id = $ultimaprofissao[0]->cbo_ocupacao_id + 1;
 
+                $this->db->set('cbo_ocupacao_id', $last_id);
+                $this->db->set('descricao', $_POST['txtcbo']);
+                $this->db->insert('tb_cbo_ocupacao');
+                $ocupacao_id = $last_id;
+
+                $this->db->set('profissao', $ocupacao_id);
+            } elseif (isset($_POST['txtcbo']) && $_POST['txtcboID'] != "") {
+                $this->db->set('profissao', $_POST['txtcboID']);
+            }
+            
+            if (isset($_POST['indicacao']) && $_POST['indicacao'] != '') {
+                $this->db->set('indicacao', $_POST['indicacao']);
+            }
+            
+            if (isset($_POST['estado_civil_id']) && $_POST['estado_civil_id'] != '') {
+                $this->db->set('estado_civil_id', $_POST['estado_civil_id']);
+            }
+             if (isset($_POST['data_emissao']) && $_POST['data_emissao'] != '') {
+                $this->db->set('data_emissao', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_emissao']))));
+            }
+            
+            if (isset($_POST['outro_documento']) && $_POST['outro_documento'] != "") {
+              $this->db->set('outro_documento', $_POST['outro_documento']);
+            }
+            if (isset($_POST['numero_documento']) && $_POST['numero_documento'] != "") {
+             $this->db->set('numero_documento', $_POST['numero_documento']);
+            }
+            
+            if(isset($_POST['nome_pai']) && $_POST['nome_pai'] != ""){
+            $this->db->set('nome_pai', $_POST['nome_pai']);
+            }
+            if(isset($_POST['nome_mae']) && $_POST['nome_mae'] != ""){
+             $this->db->set('nome_mae', $_POST['nome_mae']);
+            }
+            if(isset($_POST['uf_rg']) && $_POST['uf_rg'] != ""){
+              $this->db->set('uf_rg', $_POST['uf_rg']);
+            }
+            
+            if (isset($_POST['celular']) && $_POST['celular'] != "") {
+            $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
+            }
+
+            if (isset($_POST['telefone']) && $_POST['telefone'] != "") {
+               $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            }
+            if (isset($_POST['tipo_logradouro']) && $_POST['tipo_logradouro'] != '') {
+                $this->db->set('tipo_logradouro', $_POST['tipo_logradouro']);
+            }
+            if (isset($_POST['vendedor']) && $_POST['vendedor'] != '') {
+                $this->db->set('vendedor', $_POST['vendedor']);
+            }
+            if (isset($_POST['pessoaindicacao']) && $_POST['pessoaindicacao'] != '') {
+               $this->db->set('pessoaindicacao', $_POST['pessoaindicacao']);
+            }
+         
             $this->db->set('nome', $_POST['nome']);
             if (@$_POST['cpf'] != '') {
                 $this->db->set('cpf', str_replace("-", "", str_replace(".", "", $_POST['cpf'])));
@@ -1444,7 +1512,7 @@ class paciente_model extends BaseModel {
             }
 
             if (@$_POST['numero'] != '') {
-                $this->db->set('numero', "23");
+                $this->db->set('numero', $_POST['numero']);
             }
 
 
@@ -1478,7 +1546,7 @@ class paciente_model extends BaseModel {
             if (@$_POST['email'] != '') {
                 $this->db->set('cns', $_POST['email']);
             }
-             if (@$_POST['forma_rendimento_id'] != '') {
+            if (@$_POST['forma_rendimento_id'] != '') {
                 $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
             }
 
@@ -3677,11 +3745,9 @@ class paciente_model extends BaseModel {
             $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id');
             $this->db->where('pc.ativo', 't');
             $this->db->where('p.ativo', 't');
-            $this->db->where('empresa_id', $_POST['empresa_cadastro_id']);
+            $this->db->where('p.empresa_id', $_POST['empresa_cadastro_id']);
             $this->db->where('plano_id', @$retorno[0]->forma_pagamento_id);
             $quantidade = $this->db->get()->result();
-
-
 
             if (count($retorno) <= 0) {
                 return -2;
@@ -3809,6 +3875,10 @@ class paciente_model extends BaseModel {
                     $this->db->set('plano_id', $_POST['plano']);
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
+                    $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
+                    if(isset($_POST['empresa_cadastro_id'])  && $_POST['empresa_cadastro_id'] != ""){
+                       $this->db->set('associado_empresa_cadastro_id',$_POST['empresa_cadastro_id']);
+                    }
                     $this->db->insert('tb_paciente_contrato');
                     $paciente_contrato_id = $this->db->insert_id();
 
@@ -3863,6 +3933,7 @@ class paciente_model extends BaseModel {
                 $this->db->set('vendedor_id', @$_POST['vendedor']);
             }
             $this->db->set('empresa_cadastro_id', $_POST['empresa_id']);
+            $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
             $this->db->insert('tb_paciente_contrato');
             $erro = $this->db->_error_message();
             $paciente_contrato_id = $this->db->insert_id();
@@ -3878,6 +3949,7 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente_contrato p');
         $this->db->where('empresa_cadastro_id', $empresa_id);
         $this->db->where('ativo_admin', 't');
+        $this->db->where('p.paciente_id is null');
 
         return $this->db->get()->result();
     }
@@ -4249,7 +4321,7 @@ class paciente_model extends BaseModel {
     
     function listarprecadastro($args = array()){    
         
-        $this->db->select('pc.nome,pc.cpf,pc.telefone,pc.precadastro_id,fp.nome as forma_pagamento,op.nome as vendedor');
+        $this->db->select('pc.nome,pc.cpf,pc.telefone,pc.precadastro_id,fp.nome as forma_pagamento,op.nome as vendedor,op.operador_id');
         $this->db->from('tb_precadastro pc');
         $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pc.plano_id',"left"); 
         $this->db->join('tb_operador op','op.operador_id = pc.vendedor','left');

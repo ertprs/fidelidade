@@ -85,6 +85,8 @@
                     <th class="tabela_header" width="100px;">Telefone</th>
                     <th class="tabela_header" width="100px;">CPF</th>
                     <th class="tabela_header" width="100px;">Situação</th>
+                    <th class="tabela_header" width="100px;">Vendedor</th>
+                    <th class="tabela_header" width="100px;">Indicação</th>
                     <th class="tabela_header" colspan="4"  width="70px;"><center>A&ccedil;&otilde;es</center></th>
 
                 </tr>
@@ -121,6 +123,10 @@
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo $telefone; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo $item->cpf; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= $item->situacao; ?></td>
+                                
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= $item->vendedor; ?></td>
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= $item->indicacao; ?></td>
+                                  
                                 <? $perfil_id = $this->session->userdata('perfil_id'); ?>
                                 <? if ($perfil_id != 6) { ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="50px;" ><div class="bt_link">
@@ -156,7 +162,7 @@
                 ?>
                 <tfoot>
                     <tr>
-                        <th class="tabela_footer" colspan="10">
+                        <th class="tabela_footer" colspan="12">
                             <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
                             <div style="display: inline">

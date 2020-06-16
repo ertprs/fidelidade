@@ -202,10 +202,8 @@
                                         else:
                                             ?>
 
-                                            <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/ <?= @$contrato_id ?>/<?= @$item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                                            <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $empresa_cadastro_id ?>/<?= @$contrato_id ?>/<?= @$item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
                                         <? endif; ?>
-
-
 
                                         <?
                                         if ($item->contrato == 't') {
@@ -491,8 +489,14 @@
                         endif;
                     else:
                         ?>
-                        <td colspan="4" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-            <? endif; ?>
+                        <td colspan="1" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $empresa_cadastro_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                        <td colspan="3"  class="<?php echo $estilo_linha; ?>">
+                         <div class="bt_link">
+                           <a href="<?= base_url() ?>ambulatorio/guia/impressaoreciboempresa/<?= $empresa_cadastro_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo</a>
+                           </div>
+                        </td>
+ <? endif; ?>
+                        
 
 
             <? if ($perfil_id == 1) { ?>

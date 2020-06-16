@@ -369,9 +369,11 @@
                     <label>Celular *</label>
                     <input type="text" id="txtCelular" class="texto02" name="celular" alt="(99) 99999-9999" value="<?= @$obj->_celular; ?>" required/>
                 </div>
+                <?php if(@$obj->_paciente_id != ""){?>
                 <div class="bt_linkm">
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>
+                <?php }?>
         </fieldset>
         
         <fieldset>
@@ -457,8 +459,8 @@
    
                         $("#txtDataEmissao").mask("99/99/9999");
                         $("#txtNascimento").mask("99/99/9999");
-                        $("#txtCelular").mask("(99) 99999-9999");
-                        $("#txtTelefone").mask("(99) 9999-9999");
+                        $("#txtCelular").mask("(99) 9?9999-9999");
+                        $("#txtTelefone").mask("(99) 9?9999-9999");
                         $("#cep").mask("99999-999");
                         $("#seletorcpf").click(function () {
                             $("#cpfcnpj").mask("999.999.999-99");

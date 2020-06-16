@@ -2957,7 +2957,14 @@ class Autocomplete extends Controller {
             $retorno['itens'] = $item->telefone;
             $retorno['valor'] = substr($item->nascimento, 8, 2) . "/" . substr($item->nascimento, 5, 2) . "/" . substr($item->nascimento, 0, 4);
             $retorno['id'] = $item->paciente_id;
-            $retorno['endereco'] = $item->logradouro . " - " . $item->numero;
+            $retorno['endereco'] = $item->logradouro ;
+            $retorno['numero'] = $item->numero;
+            $retorno['municipio_id'] = $item->municipio_id;
+            $retorno['municipio'] = $item->municipio;
+            $retorno['cep'] = $item->cep;
+            $retorno['complemento'] = $item->complemento;
+            $retorno['bairro'] = $item->bairro;
+            $retorno['celular']  = $item->celular;          
             $var[] = $retorno;
         }
         echo json_encode($var);

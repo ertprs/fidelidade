@@ -316,6 +316,7 @@ class guia_model extends Model {
     }
 
     function relatoriocontratosinativos() {
+      
         $this->db->select('p.nome,
                             pc.paciente_contrato_id,
                             fp.nome as plano,
@@ -324,12 +325,14 @@ class guia_model extends Model {
                             pc.data_atualizacao,
                             pc.data_cadastro,
                             p.telefone,
-                            p.celular');
+                            p.celular,
+                            opi.nome as indicacao');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = pc.operador_atualizacao', 'left');
         $this->db->join('tb_operador op', 'op.operador_id = p.vendedor', 'left');
+        $this->db->join('tb_operador opi', 'opi.operador_id = p.pessoaindicacao', 'left');
         $this->db->where('p.ativo', 'true');
         if ($_POST['tipobusca'] == "I") {
             $this->db->where('pc.ativo', 'f');
@@ -358,19 +361,13 @@ class guia_model extends Model {
 //            $this->db->where('p.vendedor', $_POST['vencedor']);
 //        }
 
-        if (count(@$_POST['vencedor']) != 0) {
-            foreach (@$_POST['vencedor'] as $value) {
-                if ($value == 0) {
-                    
-                } else {
-                    if (count(@$_POST['vencedor']) != 0) {
-                        $vencedor = $_POST['vencedor'];
-                        $this->db->where_in('p.vendedor', $vencedor);
-                    }
-                }
-            }
+       
+        if (count(@$_POST['vencedor']) > 0 && !in_array('0', @$_POST['vencedor'])) {
+            $this->db->where_in('p.vendedor', @$_POST['vencedor']);
         }
-        
+        if (count(@$_POST['indicacao']) > 0 && !in_array('0', @$_POST['indicacao'])) {
+            $this->db->where_in('p.pessoaindicacao', @$_POST['indicacao']);
+        }
         if (!empty($_POST['forma_rendimento'])) {
             $this->db->where('pc.forma_rendimento_id',$_POST['forma_rendimento']);
         }
@@ -381,6 +378,17 @@ class guia_model extends Model {
         } else {
             $this->db->where('pc.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
             $this->db->where('pc.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        }
+        
+        if($_POST['empresa_id'] != "" && substr($_POST['empresa_id'], 0,1) != "E"){
+            $this->db->where('pc.empresa_id',$_POST['empresa_id']);
+            $this->db->where("(pc.empresa_cadastro_id is null )");
+        }
+        
+        if(substr($_POST['empresa_id'], 0,1) == "E"){
+            $empresa_id = substr($_POST['empresa_id'], 1);
+            //empresa_id é na verdade empresa_cadastro_id da tabela tb_empresa_cadastro
+            $this->db->where("(pc.associado_empresa_cadastro_id = $empresa_id or p.empresa_id = $empresa_id )");
         }
         $this->db->orderby('p.nome');
         $this->db->orderby('pc.paciente_contrato_id');
@@ -503,6 +511,13 @@ class guia_model extends Model {
         $this->db->where('p.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('p.nome');
         $this->db->orderby('fp.nome');
+        
+        if($_POST['cliente'] == "titular"){
+          $this->db->where('p.situacao','Titular');
+        }
+        if($_POST['cliente'] == "dependente"){
+           $this->db->where('p.situacao','Dependente') ;
+        }
         $return = $this->db->get();
         return $return->result();
     }
@@ -5458,7 +5473,7 @@ ORDER BY p.nome";
         if ($this->session->userdata('cadastro') == 2 && $depende_id != "") {
             $paciente_id = $depende_id;
         }
-
+        $empresa_id = $this->session->userdata('empresa_id');
         $info_paciente = $this->listarinforpaciente($paciente_id);
         $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
         $valor = $parcela[0]->valor;
@@ -5542,6 +5557,7 @@ ORDER BY p.nome";
 //        $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$empresa_id);
             $this->db->insert('tb_entradas');
             $entradas_id = $this->db->insert_id();
 
@@ -5563,6 +5579,7 @@ ORDER BY p.nome";
             $this->db->set('data_cadastro', $horario);
             $this->db->set('data', $data_parcela);
             $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$empresa_id);
             $this->db->insert('tb_saldo');
  
             /////////////////////////////////////////////////
@@ -7294,6 +7311,8 @@ AND data <= '$data_fim'";
             if (@$empresa_cadastro_id != "") {
                 $this->db->set('empresa_cadastro_id', $empresa_cadastro_id);
             }
+            
+            $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
             $this->db->insert('tb_paciente_contrato');
             $erro = $this->db->_error_message();
 
@@ -11289,6 +11308,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->set('data_cadastro', $nova_data_contrato_atual);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->set('empresa_cadastro_id', $empresa_id);
+            $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
             $this->db->insert('tb_paciente_contrato');
             $paciente_contrato_novo_id = $this->db->insert_id();
 
@@ -12527,6 +12547,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->where('cp.ativo','t');
         $this->db->where("cp.excluido", 'f');
         $this->db->orderby("data");
+      
         $return = $this->db->get()->result();
         return $return;   
     }

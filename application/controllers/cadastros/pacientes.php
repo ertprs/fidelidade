@@ -64,7 +64,6 @@ class pacientes extends BaseController {
     }
 
     function novodependente() {
-
         $data['idade'] = 0;
         $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
         $data['listaconvenio'] = $this->paciente->listaconvenio();
@@ -555,6 +554,8 @@ class pacientes extends BaseController {
 
     function gravardependente() {
   
+        
+      
         $paciente_id = $this->paciente->gravardependente();
         // var_dump($paciente_id); die;
         $titular_id = $_POST['txtNomeid'];
@@ -1530,6 +1531,17 @@ class pacientes extends BaseController {
                  redirect(base_url() . "cadastros/pacientes/novo");
            }
               
+    }
+    
+    function novodependentecompleto2() { 
+        $data['idade'] = 0;
+        $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
+        $data['listaconvenio'] = $this->paciente->listaconvenio();
+        $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $data['parceiros'] = $this->exame->listarparceiros();
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
+        $data['listarindicacao'] = $this->paciente->listarindicacao();
+        $this->loadView('cadastros/paciente-fichadependente_3', $data);
     }
     
 }

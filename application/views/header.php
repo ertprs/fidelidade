@@ -287,6 +287,12 @@ $data['permissao'] = $this->db->get()->result();
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentecompleto">Novo Dependente</a></span></li>
                                             <? // }  ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
+                                       <? } elseif ($this->session->userdata('cadastro') == 3) { ?>
+                                            <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
+                                            <? //if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9 ) {  ?>        
+                                            <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novodependentecompleto2">Novo Dependente</a></span></li>
+                                            <? // }  ?>
+                                           <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes">Editar</a></span></li>
                                         <? } else {
                                             ?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novo">Novo Titular</a></span></li>
@@ -325,6 +331,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriosicovoptante">Gerar Arquivo Optante</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/importararquivoretorno">Importar Arquivo Retorno debito</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriocnab">Gerar CNAB</a></span></li>
+                                          <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/importararquivoretornocnab">Importar retorno CNAB</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioaniversariante">Relatorio Aniversáriantes</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/listarautorizacao">Tela de Autorização</a></span></li>                                    
                                         <!--<li><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Relatorio</a></span></li>-->
