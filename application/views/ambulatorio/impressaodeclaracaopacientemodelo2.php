@@ -11,10 +11,10 @@
                 font-size: 13px;
             }
             .maior{
-                font-size: 15px !important;
+                font-size: 13px !important;
             }
             .letramenor{
-                font-size: 13px;
+                font-size: 15px;
             }
             .quebrar_pagina{
                 page-break-before: always
@@ -22,7 +22,9 @@
             .cabecalho{
                 font-size: 22px !important;
             }
-
+            .letramenor2{
+                  font-size: 15px;
+            }
         </style>
     </head>
     <body>
@@ -35,10 +37,10 @@
             <!-- CABEÇALHO -->
         <table align="center">
         <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-        <table>
+        </table>
 
         <!-- CORPO -->
-        <table  style="width:100%;">
+        <table  style="width:100%;"  class='letramenor'>
             <tr>
                 <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE </u></th>
             </tr>
@@ -228,10 +230,10 @@
         <!-- CABEÇALHO -->
         <table align="center">
         <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-        <table>
+        </table>
 
         <!-- CORPO -->
-        <table  style="width:100%;">
+        <table  style="width:100%;"  class='letramenor'>
             <tr>
                 <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE </u></th>
             </tr>
@@ -328,18 +330,11 @@
             </tr>
         </table>
 
-        <div class="quebrar_pagina"><div>
-
-    <!-- CABEÇALHO -->
-    <table align="center">
-    <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-    <table>
+       
 
     <!-- CORPO -->
-    <table  style="width:100%;">
-    <tr>
-        <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE </u></th>
-    </tr>
+    <table  style="width:100%;"  class='letramenor'>
+    
 
     <tr>
     <td align='justify'>
@@ -488,10 +483,10 @@
     <!-- CABEÇALHO -->
     <table align="center">
     <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-    <table>
+    </table>
 
     <!-- CORPO -->
-    <table  style="width:100%;">
+    <table  style="width:100%;"  class='letramenor'>
     <tr>
         <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE </u></th>
     </tr>
@@ -533,18 +528,11 @@
     </table>
 
 
-    <div class="quebrar_pagina"><div>
-
-    <!-- CABEÇALHO -->
-    <table align="center">
-    <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-    <table>
-
+    
+ 
     <!-- CORPO -->
     <table  style="width:100%;" class='letramenor'>
-    <tr>
-    <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE <br><br></u></th>
-    </tr>
+  
 
     <tr>
     <td align='justify'><b>§ 3º</b> - No caso de invalidez parcial, a tabela dá a cada 
@@ -634,19 +622,12 @@
     </table>
 
     
-    <div class="quebrar_pagina"><div>
-
-    <!-- CABEÇALHO -->
-    <table align="center">
-    <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-    </table>
+  
+   
 
     <!-- CORPO -->
-    <table  style="width:100%;">
-    <tr>
-    <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE <br><br></u></th>
-    </tr>
-
+    <table  style="width:100%;"  class='letramenor'>
+    
     <tr>
     <td align='justify'><b>Art.5º</b> - A SALUTE se compromete em manter atualizada a lista
      de sua rede de saúde conveniada em seu site e/ou aplicativo e tais informações também 
@@ -654,7 +635,13 @@
     </tr>
 
     <tr>
-    <td align='center'><b>ANEXO III <br><br> CRÉDITO <br><br></b></td>
+    <td align='center'><b> <br> <br><br></b></td>
+    </tr>
+    <tr>
+        <td align='center'><b>&nbsp; <br><br></b></td> 
+    </tr>
+    <tr>
+        <td align='center'><b>ANEXO III</b> <br> <br><b>CRÉDITO <br><br></b></td> 
     </tr>
 
     <tr>
@@ -721,14 +708,14 @@
         </tr>
         </table>
 
-        <table class="letramenor">
+        <table class="letramenor2">
         <tr>
         <td>De acordo com o texto, o valor máximo de indenização do é de R$ 10.000,00, a ser pago em casos de morte ou invalidez total permanente.</td>
         </tr>
         </table>
 
 
-        <table border="1" align="center" style="width:100%;" class="letramenor" CELLSPACING="0" CELLPADDING="2">
+        <table border="1" align="center" style="width:100%;" class="letramenor2" CELLSPACING="0" CELLPADDING="2">
            <tr>
             <th>Danos Corporais Totais <br> Repercussão na Íntegra do Patrimônio Físico</th>
             <th >Percentual <br> da Perda</th>
@@ -834,7 +821,7 @@
            </tr>
         </table>
 
-        <table class="letramenor">
+        <table class="letramenor2">
         <tr>
         <td>No caso de invalidez parcial, a tabela dá a cada parte do corpo um percentual diferente. Assim, para saber como dar entrada, fique por
             dentro desses valores para ter uma ideia do que poderá receber.<br></td>

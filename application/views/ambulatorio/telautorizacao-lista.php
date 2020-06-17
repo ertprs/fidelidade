@@ -24,6 +24,7 @@
                 </tr>
                 </thead>
                 <?php
+                $perfil_id = $this->session->userdata('perfil_id'); 
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->guia->listarautorizacao($_GET);
                 $total = $consulta->count_all_results();
@@ -48,12 +49,16 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->procedimento; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= date('d/m/Y H:i:s', strtotime($item->data_cadastro)) ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">      
+                                   <?php if($perfil_id != 10){?>
                                     <a onclick="javascript: return confirm('Deseja realmente Autorizar ?');" href="<?= base_url() ?>ambulatorio/guia/autorizarprocedimento/<?= $item->paciente_verificados_id ?>" target="_blank">Autorizar</a>
+                                   <?php }?>
                                 </td>
-                                  <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
-                                    <a onclick="javascript: return confirm('Deseja realmente Excluir?');" href="<?= base_url() ?>ambulatorio/guia/excluirautorizarprocedimento/<?= $item->paciente_verificados_id ?>"  target="_blank">Excluir</a>
-                                </td>
+                                  <td class="<?php echo $estilo_linha; ?>" width="70px;"> 
+                                     <?php if($perfil_id != 10){?>
+                                       <a onclick="javascript: return confirm('Deseja realmente Excluir?');" href="<?= base_url() ?>ambulatorio/guia/excluirautorizarprocedimento/<?= $item->paciente_verificados_id ?>"  target="_blank">Excluir</a>
+                                     <?php }?>
+                                  </td>
                             </tr>
 
                         </tbody>

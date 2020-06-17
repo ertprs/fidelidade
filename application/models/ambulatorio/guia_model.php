@@ -12557,6 +12557,34 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     }
     
     
+    function listarpendenciaadesao($paciente_id){
+        
+        $this->db->select('pc.paciente_contrato_id,
+                            fp.nome as plano,
+                            pc.ativo,
+                            cp.data,
+                            fp.nome as plano,
+                            pc.data_cadastro,
+                            fp.qtd_dias,
+                            pc.nao_renovar,
+                            p.nome as paciente
+                            ');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente_contrato_parcelas cp', 'cp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->where("pc.paciente_id", $paciente_id);
+        $this->db->where("pc.ativo", 't');
+        $this->db->where('cp.taxa_adesao','t');
+        $this->db->where('cp.ativo','t');
+        $this->db->where('cp.excluido','f');
+        $this->db->orderby('cp.data');
+        $return = $this->db->get();
+        return $return->result();
+        
+        
+    }
+    
     
     
     

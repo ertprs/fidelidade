@@ -1,8 +1,15 @@
-<?$listarindicacao = $this->paciente->listarindicacao(); ?>
+<?
+$perfil_id = $this->session->userdata('perfil_id');
+
+$listarindicacao = $this->paciente->listarindicacao(); ?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?= base_url()?>cadastros/pacientes/carregarprecadastro">Novo Pré-cadastro</a>
-    </div>
+    
+    <?php if($perfil_id != 10){?>
+      <div class="bt_link_new">
+            <a href="<?= base_url()?>cadastros/pacientes/carregarprecadastro">Novo Pré-cadastro</a>
+      </div>
+    <?php }?>
+    
     <div id="accordion">
         <h3 class="singular"><a href="#"> Pré-cadastro</a></h3>
         <div>

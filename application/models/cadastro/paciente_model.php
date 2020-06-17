@@ -2049,6 +2049,10 @@ class paciente_model extends BaseModel {
         $query = $this->db->get();
         $return = $query->result();
 
+         if(count($return) == 0){
+            return;
+        }
+        
         $paciente_contrato_id = $return[0]->paciente_contrato_id;
 
         $this->db->select('parcelas, valoradcional');

@@ -1,5 +1,8 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
+        <?php $perfil_id = $this->session->userdata('perfil_id'); ?>
+        
+        <?php if($perfil_id != 10){?>
         <h3><a href="#">Carregar imagem individual </a></h3>
         <div >
             <?= form_open_multipart(base_url() . 'cadastros/pacientes/importarimagem'); ?>
@@ -8,8 +11,8 @@
             <button type="submit" name="btnEnviar">Enviar</button>
             <input type="hidden" name="paciente_id" value="<?= $paciente_id; ?>" />
             <?= form_close(); ?>
-
         </div>
+        <?php }?>
 
         <h3><a href="#">Vizualizar imagens </a></h3>
         <div >

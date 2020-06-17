@@ -165,5 +165,5 @@ $dadosboleto["cedente"] = $cedente." / ".$cnpj;
 ?>
 
 <script type="text/javascript">  
-  //print();
+  print();
 </script>

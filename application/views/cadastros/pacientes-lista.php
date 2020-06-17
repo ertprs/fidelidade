@@ -128,7 +128,7 @@
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?= $item->indicacao; ?></td>
                                   
                                 <? $perfil_id = $this->session->userdata('perfil_id'); ?>
-                                <? if ($perfil_id != 6) { ?>
+                                <? if ($perfil_id != 6 && $perfil_id != 10) { ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="50px;" ><div class="bt_link">
                                             <a href="<?= base_url() ?>cadastros/pacientes/carregar/<?= $item->paciente_id ?>">
                                                 <b>Editar</b>

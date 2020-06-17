@@ -24,6 +24,7 @@
                 </tr>
                 </thead>
                 <?php
+                $perfil_id = $this->session->userdata('perfil_id');
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->empresa->listarsolicitacaoagendamento($_GET);
                 $total = $consulta->count_all_results();
@@ -52,11 +53,19 @@
                                 <?}?>
                                
                                 
-                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>"><div class="bt_link">
-                                        <a onclick="javascript: return confirm('Deseja confirmar a solicitação de agendamento?')" href="<?= base_url() ?>ambulatorio/empresa/confirmarsolicitacaoagendamento/<?= $item->paciente_solicitar_agendamento_id; ?>">Confirmar</a></div>
+                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>">
+                                     <?php if($perfil_id != 10){?>
+                                        <div class="bt_link">
+                                         <a onclick="javascript: return confirm('Deseja confirmar a solicitação de agendamento?')" href="<?= base_url() ?>ambulatorio/empresa/confirmarsolicitacaoagendamento/<?= $item->paciente_solicitar_agendamento_id; ?>">Confirmar</a>
+                                        </div>
+                                    <?php }?>
                                 </td>
-                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>"><div class="bt_link">
-                                        <a onclick="javascript: return confirm('Deseja remover a solicitação de agendamento?')" href="<?= base_url() ?>ambulatorio/empresa/excluirsolicitacaoagendamento/<?= $item->paciente_solicitar_agendamento_id; ?>">Excluir</a></div>
+                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>">
+                                     <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
+                                      
+                                         <a onclick="javascript: return confirm('Deseja remover a solicitação de agendamento?')" href="<?= base_url() ?>ambulatorio/empresa/excluirsolicitacaoagendamento/<?= $item->paciente_solicitar_agendamento_id; ?>">Excluir</a></div>
+                                       <?php }?>
                                 </td>
                                 
                                 <?

@@ -928,3 +928,9 @@ ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN associado_empresa_cadastro_id 
 
 ALTER TABLE ponto.tb_entradas ADD COLUMN empresa_id integer;
 ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_id integer;
+
+
+--17/06/2020
+INSERT INTO ponto.tb_perfil(
+            perfil_id, nome, ativo)
+    VALUES (10, 'AUDITORA', 't');

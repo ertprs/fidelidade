@@ -1,4 +1,5 @@
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php $perfil_id = $this->session->userdata('perfil_id'); ?>
     <div id="accordion">
         <h3><a href="#">&nbsp;&nbsp;&nbsp; Gerar CNAB240</a></h3>
         <div>
@@ -17,8 +18,9 @@
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
                     </dd>
                 </dl>
-                <button type="submit" >Pesquisar</button>
-
+                <?php if($perfil_id != 10){?>
+                  <button type="submit" >Pesquisar</button>
+                <?php }?>
             </form>
             <hr>
             <h3 class="singular"><a href="#">Arquivos CNAB</a></h3>

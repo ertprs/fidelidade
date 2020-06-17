@@ -6404,7 +6404,7 @@ table tr:hover  #achadoERRO{
     }
 
     function impressaodeclaracaopaciente($paciente_id) {
-
+        $this->load->plugin('mpdf'); 
         $this->load->helper('directory');
         $empresa_id = $this->session->userdata('empresa_id');
 
@@ -6454,7 +6454,6 @@ table tr:hover  #achadoERRO{
             // echo '<pre>';
             // print_r($data['dependente']);
             // die;
-
 
             $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
         }else{
@@ -6655,9 +6654,10 @@ table tr:hover  #achadoERRO{
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab();
         
-       // echo "<pre>";
-       // print_r($relatorio);
-       // die();
+        
+        //echo "<pre>";
+        //print_r($relatorio);
+        //die();
        
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
@@ -6700,22 +6700,14 @@ table tr:hover  #achadoERRO{
         // REGISTRO DETALHE SEGMENTO P
         $body_P = array();
         $body_P_con = '';
-        foreach($relatorio as $item){
-         $i = 1;
-        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
         
-        $vencimento = $lista[0]->data;
-        $paciente = $lista[0]->paciente;
-        $municipio = $lista[0]->municipio;
-        $estado = $lista[0]->estado;
-        $cep= $lista[0]->cep;
-        $logradouro = $lista[0]->logradouro;
-        $valor = $lista[0]->valor * 100;
         
-        $cpf =  $lista[0]->cpf;
         
-        $data_venc = date("dmY", strtotime($vencimento));
-            
+        
+        
+        
+        
+        
         $L = array();
         $L[0] = '';
         $L[1] = '756';
@@ -6742,11 +6734,31 @@ table tr:hover  #achadoERRO{
         $L[22] = $this->utilitario->preencherEsquerda('',8,'0');
         $L[23] = $this->utilitario->preencherDireita('',33,' '); 
        
-       $cont_linha++;
-       $body_con = implode($L); 
-       $body_L[] = $body_con;
-       $body_P_con .= $body_con . "\n";
        
+        $body_con = implode($L); 
+        $body_L[] = $body_con;
+        $body_P_con .= $body_con . "\n";
+        
+        $valor_total= 0;
+        foreach($relatorio as $item){
+         
+        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        
+        $vencimento = $lista[0]->data;
+        $paciente = $lista[0]->paciente;
+        $municipio = $lista[0]->municipio;
+        $estado = $lista[0]->estado;
+        $cep= $lista[0]->cep;
+        $logradouro = $lista[0]->logradouro;
+        $valor = $lista[0]->valor * 100;
+        $valor_total += $lista[0]->valor;
+        
+        $cpf =  $lista[0]->cpf;
+        
+        $data_venc = date("dmY", strtotime($vencimento));
+            
+        
+        $cont_linha++;
        
        $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
        $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
@@ -6754,7 +6766,7 @@ table tr:hover  #achadoERRO{
         $P = array();
         $P[0] = '';
         $P[1] = '756';
-        $P[2] =  $this->utilitario->preencherEsquerda($sequencia,4,'0');
+        $P[2] =  $this->utilitario->preencherEsquerda($cont_lot,4,'0');
         $P[3] =  $this->utilitario->preencherEsquerda('3',1,'0');
         $P[4] =  $this->utilitario->preencherEsquerda($i,5,'0');
         $P[5] = $this->utilitario->preencherDireita('P',1,' ');
@@ -6795,7 +6807,7 @@ table tr:hover  #achadoERRO{
         $P[40] =  $this->utilitario->preencherEsquerda('09',2,'0');  
         $P[41] =  $this->utilitario->preencherEsquerda('',10,'0');   
         $P[42] =  $this->utilitario->preencherDireita('',1,' ');   
-      
+      $sequencia++;
        $cont_linha++;
         $body_con = implode($P);
         $body_P[] = $body_con;
@@ -6807,7 +6819,7 @@ table tr:hover  #achadoERRO{
         $Q = Array();
         $Q[0] = "";
         $Q[1] = "756";
-        $Q[2] = $this->utilitario->preencherEsquerda($sequencia,4,'0');
+        $Q[2] = $this->utilitario->preencherEsquerda($cont_lot,4,'0');
         $Q[3] = $this->utilitario->preencherEsquerda("3",1,'0');
         $Q[4] = $this->utilitario->preencherEsquerda($i,5,'0');
         $Q[5] = $this->utilitario->preencherDireita("Q",1,'0');
@@ -6846,15 +6858,22 @@ table tr:hover  #achadoERRO{
 
          //REGISTRO TRAILLER DO LOTE
         
+        
+     
+        $cont_linha++;
+        $i++;
+        $sequencia++;    
+}
+
         $RT = Array();
         $RT[0] = "";
         $RT[1] = "756";
         $RT[2] = $this->utilitario->preencherEsquerda($cont_lot, 4, '0');
         $RT[3] = $this->utilitario->preencherEsquerda("5", 1, '0');
         $RT[4] = $this->utilitario->preencherDireita("", 9, ' ');
-        $RT[5] = $this->utilitario->preencherEsquerda("4", 6, '0');
+        $RT[5] = $this->utilitario->preencherEsquerda($sequencia+1, 6, '0');
         $RT[6] = $this->utilitario->preencherEsquerda("0", 6, '0');
-        $RT[7] = $this->utilitario->preencherEsquerda($valor, 17, '0');
+        $RT[7] = $this->utilitario->preencherEsquerda($valor_total*100, 17, '0');
         $RT[8] = $this->utilitario->preencherEsquerda("0", 6, '0');
         $RT[9] = $this->utilitario->preencherEsquerda("0", 17, '0');
         $RT[10] = $this->utilitario->preencherEsquerda("0", 6, '0');
@@ -6865,16 +6884,10 @@ table tr:hover  #achadoERRO{
         $RT[15] = $this->utilitario->preencherDireita("", 117, ' ');
         
       
-        $cont_linha++;
+      
         $body_con = implode($RT);
         $body_RT[] = $body_con;
         $body_P_con .= $body_con . "\n"; 
-        $cont_lot++;
-        $i++;
-        $sequencia++;
-    
-}
-
 
 //print_r($body_P_con);
 
@@ -6889,7 +6902,7 @@ table tr:hover  #achadoERRO{
           $R[2] = $this->utilitario->preencherEsquerda("", 4, '9');                  
           $R[3] = $this->utilitario->preencherEsquerda("9", 1, '0');   
           $R[4] = $this->utilitario->preencherDireita("", 9, ' ');  
-          $R[5] = $this->utilitario->preencherEsquerda($sequencia-1, 6, '0');  
+          $R[5] = $this->utilitario->preencherEsquerda("1", 6, '0');  
           $R[6] = $this->utilitario->preencherEsquerda($cont_linha, 6, '0');
           $R[7] = $this->utilitario->preencherEsquerda("", 6, '0');
           $R[8] = $this->utilitario->preencherDireita("", 205, ' ');

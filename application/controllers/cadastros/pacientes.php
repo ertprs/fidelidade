@@ -562,8 +562,10 @@ class pacientes extends BaseController {
         $empresa_p = $this->guia->listarempresa();
         $titular_flag = $empresa_p[0]->titular_flag;
  
+        
+     
         $this->paciente->gravardependente2($paciente_id);
-
+ 
         $contrato_id = $this->paciente->listarcontratotitular();
 
         // if ($this->session->userdata('cadastro') == 2) {

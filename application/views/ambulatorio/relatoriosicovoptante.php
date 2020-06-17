@@ -1,4 +1,5 @@
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php $perfil_id = $this->session->userdata('perfil_id'); ?>
     <div id="accordion">
         <h3><a href="#">&nbsp;&nbsp;&nbsp; Gerar Arquivo Optante</a></h3>
         <div>
@@ -31,8 +32,9 @@
                     
                     
                 </dl>
-                <button type="submit" >Pesquisar</button>
-
+                <?php if($perfil_id != 10){?>
+                    <button type="submit" >Pesquisar</button>
+                <?php }?>
             </form>
             <hr>
             <h3 class="singular"><a href="#">Arquivos Optantes</a></h3>
