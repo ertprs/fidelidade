@@ -528,6 +528,8 @@ class Caixa extends BaseController {
         $data['operador'] = $this->operador->listaroperadores();
         $data['tipo'] = $this->tipo->listartipo();
         $data['forma_rendimento'] = $this->caixa->listarformarendimento();
+        $data['empresas'] = $this->guia->listarempresacadastro(); 
+      
         $this->loadView('ambulatorio/relatorioentrada', $data);
     }
 

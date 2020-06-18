@@ -160,9 +160,10 @@ $dadosboleto["cidade_uf"] = $municipio." / ".$estado;
 $dadosboleto["cedente"] = $cedente." / ".$cnpj;
 
 // NÃO ALTERAR!
-  include("./sicoob/funcoes_bancoob.php"); 
+  include_once("./sicoob/funcoes_bancoob.php"); 
   include("./sicoob/layout_bancoob.php");
 ?>
+
 <script type="text/javascript">  
   print();
 </script>

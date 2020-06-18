@@ -6,7 +6,6 @@ $operador_id = $this->session->userdata('operador_id');
 //$empresa_id = $this->session->userdata('empresa_id');
 $perfil_id = $this->session->userdata('perfil_id');
 
-
 ?>
 <div class="content"> <!-- Inicio da DIV content -->
 
@@ -28,7 +27,7 @@ $perfil_id = $this->session->userdata('perfil_id');
 
 
     <?
-    if (count($quantidade_funcionarios) > 0) {
+    if (count($quantidade_funcionarios) > 0 && $perfil_id != 10) {
         ?>
         <div class="bt_link_new">
             <a href="<?php echo base_url() ?>cadastros/pacientes/carregarfuncionario/<?php echo @$empresa_id; ?>">
@@ -107,14 +106,18 @@ $perfil_id = $this->session->userdata('perfil_id');
                             <td class="<?php echo @$estilo_linha; ?>"><?= $item->plano ?></td>
                             <td class="<?php echo @$estilo_linha; ?>"> <?= $item->parcelas ?> x <?= $item->valor ?> </td>
                             <td class="<?php echo @$estilo_linha; ?>" >  
+                              <?php if($perfil_id != 10){?>
                                 <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/editarquantidade/" . $item->qtd_funcionarios_empresa_id . "/" . $item->forma_pagamento_id . "/" . $empresa_id ?> ', '_blank', 'width=600,height=300 ');">
                                     Editar Quantidade
                                 </a> 
+                              <?php }?>
                             </td>
                             <td class="<?php echo @$estilo_linha; ?>" >
-                                <a onclick="javascript: return confirm('Deseja realmente excluir o Funcionário?');"    href="<?= base_url() ?>cadastros/pacientes/excluirfuncionarioqtd/<?= $item->qtd_funcionarios_empresa_id; ?>" target="_blank">
-                                    Excluir
-                                </a>
+                                <?php if($perfil_id != 10){?>
+                                    <a onclick="javascript: return confirm('Deseja realmente excluir o Funcionário?');"    href="<?= base_url() ?>cadastros/pacientes/excluirfuncionarioqtd/<?= $item->qtd_funcionarios_empresa_id; ?>" target="_blank">
+                                        Excluir
+                                    </a>
+                                <?php }?>
                             </td>
                         </tr>
 
@@ -193,9 +196,14 @@ $perfil_id = $this->session->userdata('perfil_id');
                     <tr><td> Preço:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="precototal"  readonly="false">  
                         </td></tr>
                     <tr> 
-                        <td> <br><input type="submit" value="Adicionar" > 
+                        <td>
+                            <?php if($perfil_id != 10){?>
+                                <br>
+                                <input type="submit" value="Adicionar" >
+                            <?php }?>
+                            
                             <?
-                            if ($pode_finalizar == "true" && $this->session->userdata("perfil_id") != 5) {
+                            if ($pode_finalizar == "true" && $this->session->userdata("perfil_id") != 5 && $perfil_id != 10) {
                                 ?>
                                 <button>  
                                     <a href="#!" onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/finalizarcadastrodefuncionarios/" . $empresa_id ?> ', '_blank', 'width=900,height=600');" style="text-decoration: none;">
@@ -264,22 +272,23 @@ $perfil_id = $this->session->userdata('perfil_id');
                                 <td class="<?php echo @$estilo_linha; ?>"colspan="1"><?= @$item->forma_pagamento; ?></td>
 
                                 <td  class="<?php echo @$estilo_linha; ?>">
-
+                                 <?php if($perfil_id != 10){?>
                                     <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/pacientes/carregar/<?= $item->paciente_id ?>">
-                                            Editar 
-
+                                            Editar
                                         </a>
                                     </div>
+                                 <?php }?>
                                 </td>
 
                                 <td  class="<?php echo @$estilo_linha; ?>">
-
+                              <?php if($perfil_id != 10){?>
                                     <div class="bt_link">
                                         <a onclick="javascript: return confirm('Deseja realmente excluir o Funcionário?');"    href="<?= base_url() ?>cadastros/pacientes/excluirfuncionario/<?= $empresa_id; ?>/<?= $item->paciente_id; ?>">
                                             Excluir
                                         </a>
                                     </div>
+                               <?php }?>
                                 </td>
 
                                 <td  class="<?php echo @$estilo_linha; ?>">
@@ -290,11 +299,13 @@ $perfil_id = $this->session->userdata('perfil_id');
                                     </div>
                                 </td> 
                                 <td  class="<?php echo @$estilo_linha; ?>"> 
+                                      <?php if($perfil_id != 10){?>
                                     <div class="bt_link">
                                         <a     href="#!" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontratocadastro/" . $item->paciente_id . '/' . $empresa_id . "/" . $item->forma_pagamento_id ?> ', '_blank', 'width=500,height=200,left=510,top=300');">
                                             Plano
                                         </a> 
                                     </div>
+                                     <?php }?>
                                 </td>
 
                                 </td>
@@ -417,8 +428,6 @@ if (count($contratos) > 0) {
                             <th class="tabela_header">Data</th>
                             <th class="tabela_header">Status</th>
                             <th colspan="5" class="tabela_header"></th>
-
-
                         </tr>
                     </thead>
                     <tbody>
@@ -487,12 +496,14 @@ if (count($contratos) > 0) {
                                     </td>
 
             <? if ($perfil_id == 1 && $item->ativo == 't') { ?>
-                                        <td class="<?php echo $estilo_linha; ?>" >       
+                                        <td class="<?php echo $estilo_linha; ?>" >  
+                                          <?php if($perfil_id != 10){?>
                                             <div class="bt_link_new" style="width: 100px;">
                                                 <a onclick="javascript: return confirm('Deseja realmente excluir o contrato?\nObs: Esse processo poderá ser demorado se houver parcelas no Iugu geradas');"   href="<?= base_url() . "ambulatorio/guia/excluircontratoempresa/" . @$item->paciente_contrato_id ?>" target="_blank" >
                                                     Excluir
                                                 </a>
                                             </div>
+                                           <?php }?>
                                         </td>   
             <? } else {
                 ?>

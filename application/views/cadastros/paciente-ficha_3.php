@@ -216,7 +216,7 @@
                     <input type="text" name="cpf" id ="txtCpf"  alt="cnpj" class="texto04" value="<?= @$obj->_cpf; ?>" readonly/>   
                 <? } ?>
                 <?php
-                if (@$obj->_cpfresp == "t") {
+                if (@$obj->_cpfresp == "t" || @$obj->_cpf_responsavel_flag == "t") {
                     ?>
                     <input type="checkbox" name="cpfresp" checked ="true" readonly/>CPF Responsavel
                     <?php

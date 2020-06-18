@@ -64,7 +64,6 @@ class pacientes extends BaseController {
     }
 
     function novodependente() {
-
         $data['idade'] = 0;
         $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
         $data['listaconvenio'] = $this->paciente->listaconvenio();
@@ -555,14 +554,18 @@ class pacientes extends BaseController {
 
     function gravardependente() {
   
+        
+      
         $paciente_id = $this->paciente->gravardependente();
         // var_dump($paciente_id); die;
         $titular_id = $_POST['txtNomeid'];
         $empresa_p = $this->guia->listarempresa();
         $titular_flag = $empresa_p[0]->titular_flag;
  
+        
+     
         $this->paciente->gravardependente2($paciente_id);
-
+ 
         $contrato_id = $this->paciente->listarcontratotitular();
 
         // if ($this->session->userdata('cadastro') == 2) {
@@ -1459,7 +1462,89 @@ class pacientes extends BaseController {
         redirect(base_url()."cadastros/pacientes/listarprecadastros");        
     }
     
+    function gravardocumentoscompleto() {
+
+        $paciente_id = $this->paciente->gravardocumentos();
+        $situacao = $_POST['situacao'];
+        @$empresa_id = @$_POST['empresa_cadastro_id'];
+        $paciente_id = $this->paciente->gravar2($paciente_id);
+       
+        $r =  $this->paciente->gravar5($paciente_id);
+        
+          $parceiros = $this->paciente->listarparceirosurl();
+          if($_POST['parceiro_id'] != ""){
+             $parceiro_post = $_POST['parceiro_id'];
+          }else{
+             $parceiropadrao =  $this->parceiro->parceiropadrao(); 
+             if(count($parceiropadrao) > 0){
+             $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+             }else{
+               $parceiro_post = 0;  
+             }
+          }
+         
+          
+        foreach ($parceiros as $key => $value) {
+            $parceiro_id = 0;
+            $retorno_paciente = $this->paciente->listardados($paciente_id);
+            $json_paciente = json_encode($retorno_paciente);
+            // $fields = array('' => $_POST['body']);
+            
+            $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
+         
+            if($parceiro_post == $value->financeiro_parceiro_id){
+                $parceiro_id = $value->convenio_id;
+            }
+            
+            
+        
+            $postdata = http_build_query(
+                    array(
+                        'body' => $json_paciente,
+                        'parceriamed_id' => $parceiro_id
+                    )
+            );
+            $opts = array('http' =>
+                array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => $postdata
+            ));
+            $context = stream_context_create($opts);
+            if($value->endereco_ip != ""){
+              $result = file_get_contents($url, false, $context);
+            }
+        //  var_dump($result); die;
+        }
+        if ($r != "-1") {
+            $data['mensagem'] = 'Paciente gravado com sucesso';
+        } else {
+            $data['mensagem'] = 'Erro. Paciente com falta de informação';
+            $this->session->set_userdata(array("mensagem_erro"=>"Erro. Paciente com falta de informação"));
+        }
+        
+      
+        
+        $this->session->set_flashdata('message', $data['mensagem']);
+        
+           if ($r != "-1") {
+                 redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
+           }else{  
+                 redirect(base_url() . "cadastros/pacientes/novo");
+           }
+              
+    }
     
+    function novodependentecompleto2() { 
+        $data['idade'] = 0;
+        $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
+        $data['listaconvenio'] = $this->paciente->listaconvenio();
+        $data['listarvendedor'] = $this->paciente->listarvendedor();
+        $data['parceiros'] = $this->exame->listarparceiros();
+        $data['empresapermissao'] = $this->empresa->listarpermissoes();
+        $data['listarindicacao'] = $this->paciente->listarindicacao();
+        $this->loadView('cadastros/paciente-fichadependente_3', $data);
+    }
     
 }
 

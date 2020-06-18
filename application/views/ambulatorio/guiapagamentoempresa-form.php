@@ -8,6 +8,27 @@
         ?>
         <h3 class="singular"><a href="#">Marcar exames</a></h3>
         <div> 
+             <fieldset>
+                    <div class="bt_link"> 
+                        <a href="<?= base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id"; ?>">
+                            Consulta Extra
+                        </a>
+
+                    </div>  
+                    <div class="bt_link">
+
+                        <a href="<?= base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id"; ?>">
+                            Consulta Coparticipação
+                        </a>
+
+                    </div>  
+                    <div class="bt_link">
+
+                        <a  href="<?= base_url() . "ambulatorio/guia/criarparcelacontrato/$paciente_id/$contrato_id"; ?>">
+                            Criar Parcela
+                        </a>
+                    </div> 
+                </fieldset>
             <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravardependentes" method="post">
                 <fieldset>
                     <legend>Dados do Paciente</legend>

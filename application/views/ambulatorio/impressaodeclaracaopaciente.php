@@ -16,7 +16,7 @@
         ?>
         <table border="0"  style="width: 100%; height: 100%;" >
             <tr>
-                <td width="25%" ><img width="90%" style="padding: 7%;" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td>
+                <td width="25%" ><img width="30%" style="padding: 7%;" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td>
                 <td  style="text-align: center;font-size: 15px; " >Nº Cartão <u>000<?= @$paciente_id ; ?></u></td>
             </tr>
             <tr>

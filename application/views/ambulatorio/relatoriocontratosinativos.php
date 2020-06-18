@@ -44,6 +44,19 @@
                             
                         </select>
                     </dd> <br><br><br>
+                     <dt>
+                        <label>Indicação</label>
+                    </dt>
+                    <dd> 
+                        <select   name="indicacao[]" id="indicacao  " multiple class=" chosen-select"    data-placeholder="Selecione">                          
+                         <!--<option value="">Selecione</option>-->
+                         <option value="0">Todos</option>
+                            <?foreach ($listarindicacao as $key => $value) {?>
+                                <option <?if(count($listarindicacao) == 1){echo 'selected';}?> value="<?=$value->operador_id?>"><?=$value->nome?></option>
+                           <? }?>
+                        </select>
+                    </dd><br><br><br>
+                    
                     <dt>
                         <label>BUSCAR POR</label>
                     </dt>
@@ -75,6 +88,31 @@
                             <?                               
                             }
                             ?> 
+                        </select>
+                    </dd>
+                    
+                    </dd>
+                       <dt>
+                        <label>Empresa</label>
+                    </dt>
+                    <dd>
+                      <select name="empresa_id" id="empresa_id" class="size2">
+                           <option value="">TODOS</option>
+                            <?php 
+                            foreach($empresa as $value){
+                                ?>                            
+                               <option value="<?= $value->empresa_id ?>"><?= $value->nome ?></option>
+                            <?                               
+                            }
+                            ?>
+                               
+                               <?php if(count($empresacadastro) > 0){?>
+                          <optgroup label="Outras">
+                            <?php foreach($empresacadastro as $item){?>
+                                 <option value="E<?= $item->empresa_cadastro_id; ?>"><?= $item->nome; ?></option>
+                            <?php }?>
+                           </optgroup>
+                               <?php }?>
                         </select>
                     </dd>
                     

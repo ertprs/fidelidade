@@ -74,8 +74,13 @@
                     ?>
                     <tr>
                         
-                        <td ><?= @$item->paciente_id; ?></td>
-                        
+                        <td ><? if($item->empresa_cadastro_id != ""){
+                           echo @$item->empresa_cadastro_id;
+                        }else{
+                           echo @$item->paciente_id; 
+                        }
+                            
+                        ?></td>
                         <td ><?= @$item->conta; ?></td>
                         <td ><?= @$item->razao_social; ?>&nbsp;</td>
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>

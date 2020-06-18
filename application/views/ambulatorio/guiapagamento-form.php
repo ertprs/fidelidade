@@ -6,10 +6,11 @@
         $perfil_id = $this->session->userdata('perfil_id');
         $empresa = $this->guia->listarempresa();
         ?>
-        <h3 class="singular"><a href="#">Marcar exames</a></h3>
+        <h3 class="singular"><a href="#">Pagamento</a></h3>
         <div> 
             <?
-            if (!(@$paciente[0]->empresa_id != "" || @$paciente[0]->empresa_id != null)) {
+           // if (!(@$paciente[0]->empresa_id != "" || @$paciente[0]->empresa_id != null)) {
+            if($perfil_id != 10){
                 ?>
              <fieldset>
                     <div class="bt_link"> 
@@ -33,10 +34,9 @@
                     </div> 
                 </fieldset>
             <?
-            } 
+            }
+        //    } 
             ?>
-              
-
 
             <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravardependentes" method="post">
                 <fieldset>
@@ -102,7 +102,8 @@
 
                                 <? if (@$listarpagamentoscontrato[0]->contrato == 't') { ?>
                                     <?php
-                                    if ($empresa[0]->iugu_token == "") {
+                                    if($perfil_id != 10){
+                                    if ($empresapermissao[0]->client_secret != "" && $empresapermissao[0]->client_id != "") {
                                         ?>
                                         <th class="tabela_header" colspan="1">
                                             <div class="bt_link">
@@ -145,76 +146,47 @@
                                         }
                                         ?>
                                         <?
-                                    } else {
+                                    } elseif($empresapermissao[0]->iugu_token != "" ){
                                         ?>
 
                                         <th class="tabela_header" colspan="1">
-                                            <?
-                                            if (@$paciente[0]->empresa_id != ""):
-                                                if ($this->session->userdata('empresa_id') == @$paciente[0]->empresa_id):
-                                                    ?>
-                                                    <?
-                                                else:
-                                                endif;
-                                            else:
-                                                ?>
                                                 <div class="bt_link" id="botaogerartodos">
                                                     <a href="<?= base_url() ?>ambulatorio/guia/gerartodosiugu/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Todos Iugu
                                                     </a>
                                                 </div> 
-                                            <?
-                                            endif;
-                                            ?>
                                         </th>
 
                                         <?php
-                                    }
-                                    ?>
-
-
-
-                                    <th class="tabela_header" colspan="1">
-
-
+                                    }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                                        ?>
+                                         <th class="tabela_header" colspan="1">
+                                              <div class="bt_link" >
+                                                    <a  target="_blank" href="<?= base_url() ?>ambulatorio/guia/gerarcarnesicoob/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Carnês sicoob
+                                                    </a>
+                                                </div>
+                                         </th>
                                         <?
-                                        if (@$paciente[0]->empresa_id != ""):
-                                            if ($this->session->userdata('empresa_id') == @$paciente[0]->empresa_id):
-                                                ?> 
-                                                <?
-                                            else:
-                                            endif;
-                                        else:
-                                            ?>
+                                         }
+                                        ?>
 
+                                         
+                                    <?php }?>
+                                 <?php if($empresapermissao[0]->iugu_token != "" && $perfil_id != 10){?>
+                                    <th class="tabela_header" colspan="1">
                                             <div class="bt_link">
                                                 <a href="<?= base_url() ?>ambulatorio/guia/pagamentocartaoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>">Pag. Cartão Agendado
                                                 </a>
                                             </div> 
-
-                                        <? endif; ?>
-
-
-
-
                                     </th>
+                                  <?php }?>
+                                 <?php if($perfil_id != 10){?>
                                     <th class="tabela_header" colspan="1">
-                                        <?
-                                        if (@$paciente[0]->empresa_id != ""):
-                                            if ($this->session->userdata('empresa_id') == @$paciente[0]->empresa_id):
-                                                ?>
-                                                <?
-                                            else:
-                                            endif;
-                                        else:
-                                            ?>
                                             <div class="bt_link">
                                                 <a href="<?= base_url() ?>ambulatorio/guia/pagamentodebitoconta/<?= $paciente_id ?>/<?= $contrato_id ?>">Débito em conta
                                                 </a>
                                             </div>
-                                        <?
-                                        endif;
-                                        ?>
                                     </th>
+                                  <?php }?>
 
                                 <? } ?>
                             </tr>
@@ -227,12 +199,7 @@
 
                         foreach ($listarpagamentoscontrato as $item) {
 
-                            if ($item->empresa_id != "") {
-                                $excluir_somente_empresa = true;
-                            } else {
-                                $excluir_somente_empresa = false;
-                            }
-
+                          
                             $contador ++;
 //                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
 //                                $invoice_id = $item->invoice_id;
@@ -294,50 +261,21 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
-
-
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-                                                <td colspan="3"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-                                                <?
-                                            else:
-                                                ?>
-
-                                                <td colspan="2"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
-                                            ?>
-
-                                            <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                                        <? endif; ?>
-
-
-
+                                                    <?php  if($perfil_id != 10){ ?>
+                                        <td style="width: 130px"  class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                                                    <?php }?>
                                         <? if ($item->contrato == 't') { ?>
-
-                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                                                  
+                                          
                                                 <?
                                                 if ($empresapermissao[0]->confirm_outra_data == 't') {
-
-
-                                                    if ($excluir_somente_empresa == True):
-                                                        if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                            ?>
-
-                                                        <td colspan="2"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                        </td>
-
-                                                        <?
-                                                    endif;
-                                                else:
                                                     ?>
+                                                                  
+                                          <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                              <?php if($perfil_id != 10){?>
                                             <div class="bt_link">
-                                                <?php
+                                                
+                                                <?
                                                 if ($item->paciente_dependente_id != "" && $item->paciente_dependente_id != 0 && $this->session->userdata('cadastro') == 2) {
                                                     ?>
                                                     <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id/$item->paciente_dependente_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
@@ -349,36 +287,19 @@
                                                     <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
                                                         Confirmar
                                                     </a>
-                                                <?php } ?>
-
+                                                <? } ?>
+                                               
                                             </div>
-
-                                        <?
-                                        endif;
-                                        ?>
+                                              <?php }?>
                                         </td>
+                                           
+                                        
                                         <?
                                     } else {
                                         ?>
 
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                            <?
-                                            if ($excluir_somente_empresa == True):
-                                                if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                    ?>
-                                                <td colspan="3"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-                                                <?
-                                            else:
-                                                ?>
-                                                <td   class="<?php echo $estilo_linha; ?>" > 
-
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
-                                            ?>
-
+                                           
                                             <div class="bt_link">
                                                 <?php
                                                 if ($item->paciente_dependente_id != "" && $item->paciente_dependente_id != 0 && $this->session->userdata('cadastro') == 2) {
@@ -395,10 +316,6 @@
                                                 ?>
                                             </div>
 
-
-                                        <?
-                                        endif;
-                                        ?>
                                         </td>
 
 
@@ -406,18 +323,6 @@
                                     ?>
 
                                     <? if ($perfil_id == 1 || $perfil_id == 2) { ?>
-
-
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-                                                <td colspan="3"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-                                                <?
-                                            endif;
-                                        else:
-                                            ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                 <div class="bt_link">
 
@@ -426,18 +331,14 @@
                                                     </a>
                                                 </div>
                                             </td>
-                                        <?
-                                        endif;
-                                        ?>
-
-
 
                                     <? }
                                     ?>
 
 
                                     <?
-                                    if ($empresa[0]->iugu_token == "") {
+                                    if($perfil_id != 10){
+                             if ($empresapermissao[0]->client_secret != "" && $empresapermissao[0]->client_id != "") {
                                         ?>
                                         <?php
                                         if (@$item->link_gerencianet != "") {
@@ -484,47 +385,22 @@
                                             <?php
                                         }
                                         ?>
-                                        <td  class="<?php echo $estilo_linha; ?>">
-                                            <div style="width: 50px;" class="bt_link">
-                                                <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoob/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank" >Boleto Sicoob
-                                             </a>
-                                            </div>
+                                                                 
+                                        <td  class="<?php echo $estilo_linha; ?>" >
+                                            
                                         </td>
+                                                 
                                         <?
-                                    } else {
+                                    } elseif($empresapermissao[0]->iugu_token != "" ){
 
 
                                         if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') {
                                             ?>
 
-                                            <?
-                                            if ($excluir_somente_empresa == True):
-                                                if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                    ?>
-
-                                                    <td colspan="3"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                    </td>
-
-                                                    <?
-                                                else:
-                                                    ?>
-                                                    <td  class="<?php echo $estilo_linha; ?>" > 
-
-                                                    </td>
-                                                <?
-                                                endif;
-                                            else:
-                                                ?>
-
                                                 <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 100px;" class="bt_link">
                                                         <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pag. Iugu
                                                         </a></div>
                                                 </td> 
-
-
-
-                                            <? endif; ?>
-
 
 
                                             <? if ($item->pago_cartao != 't') { ?>
@@ -558,19 +434,6 @@
                                         <? } else { ?>
 
 
-                                            <?
-                                            if ($excluir_somente_empresa == True):
-                                                if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                    ?> 
-                                                    <?
-                                                else:
-                                                    ?>
-                                                    <td  class="<?php echo $estilo_linha; ?>" >  
-                                                    </td>
-                                                <?
-                                                endif;
-                                            else:
-                                                ?>
 
                                                 <td colspan="1" class="<?php echo $estilo_linha; ?>">
                                                     <div style="width: 100px;" class="bt_link">
@@ -578,25 +441,9 @@
                                                         </a>
                                                     </div>
                                                 </td>
-                                            <?
-                                            endif;
-                                            ?>
+                                          
 
-                                            <?
-                                            if ($excluir_somente_empresa == True):
-                                                if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                    ?>
-
-                                                    <?
-                                                else:
-                                                    ?>
-                                                    <td  class="<?php echo $estilo_linha; ?>" > 
-
-                                                    </td>
-                                                <?
-                                                endif;
-                                            else:
-                                                ?>
+                                           
 
                                                 <td colspan="1" class="<?php echo $estilo_linha; ?>">
                                                     <div style="width: 100px;" class="bt_link">
@@ -605,32 +452,36 @@
                                                     </div>
                                                 </td>
 
-                                            <? endif; ?>
 
                                             <?
                                         }
+                                    }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                                     ?>
+                                        <td  class="<?php echo $estilo_linha; ?>">
+                                            
+                                           <?php if($item->taxa_adesao != 't'){?>
+                                            <div style="width: 50px;" class="bt_link">
+                                                <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoob/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank" >Boleto Sicoob
+                                                </a>
+                                            </div>
+                                            <?php }?>
+                                        </td>
+                                   <?
                                     }
                                     ?>
+                                 <?php }else{
+                                   ?>
+                                        <td  class="<?php echo $estilo_linha; ?>" colspan="3">
+                                        </td>
+                                        <?
+                                   }
+                                 ?>
+                                        
+                                        
                                     <? if ($perfil_id == 1) { ?>
 
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-
-                                                <?
-                                            else:
-                                                ?>
-
-                                                <td  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
-                                            ?> 
-                                            <td  class="<?php echo $estilo_linha; ?>">                                                       
-                                            </td> 
-
+                                         
+                                        
                                             <td onclick="javascript: return confirm('Deseja realmente excluir a parcela?');"  class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
 
                                                     <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->carnet_id ?>/<?= $item->num_carne ?>">Excluir
@@ -639,70 +490,10 @@
                                                 </div>  
                                             </td> 
 
-                                        <?
-                                        endif;
-                                        ?>
-
-
                                     <? }
                                     ?>
                                 <? } else { ?>
-                                    <?
-                                    if ($empresapermissao[0]->confirm_outra_data == 't') {
-
-
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-
-                                                <td colspan="2"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-
-                                                <?
-                                            endif;
-                                        else:
-                                            ?>
-                                            <div class="bt_link">
-                                                <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
-                                                    Confirmar
-                                                </a>
-                                            </div>
-
-                                        <?
-                                        endif;
-                                        ?>
-                                        </td>
-                                        <?
-                                    }else {
-                                        ?> 
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-                                                <td colspan="3"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-                                                <?
-                                            else:
-                                                ?>
-                                                <td   class="<?php echo $estilo_linha; ?>" > 
-
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
-                                            ?>
-                                            <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                <div class="bt_link">
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        <?
-                                        endif;
-                                        ?> 
-                                        <?
-                                    }
-                                    ?>           
+                                             
 
                                     <td colspan="8" class="<?php echo $estilo_linha; ?>"></td> 
                                 <? } ?>
@@ -723,24 +514,6 @@
                                 </td>
                                 <? if ($item->manual == 't') { ?>
 
-                                    <?
-                                    if ($excluir_somente_empresa == True):
-                                        if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                            ?>
-                                            <td colspan="8" class="<?php echo $estilo_linha; ?>" > 
-
-                                            </td>
-                                            <?
-                                        else:
-                                            ?>
-
-                                            <td colspan="5" class="<?php echo $estilo_linha; ?>"                                                       
-                                        </td>
-                                    <?
-                                    endif;
-                                else:
-                                    ?>
-
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                         <div class="bt_link">
                                             <a href="<?= base_url() ?>ambulatorio/guia/impressaorecibo/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo
@@ -748,70 +521,48 @@
                                         </div>
                                     </td>
 
-
-                                <? endif; ?>
-
-
                             <? } ?>
 
+                                    
 
-                            <?
-                            if ($excluir_somente_empresa == True):
-                                if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                    ?>
-                                    <td colspan="6" class="<?php echo $estilo_linha; ?>" > 
-
-                                    </td>
-                                    <?
-                                else:
-                                    ?>
-
-                                    <td colspan="5" class="<?php echo $estilo_linha; ?>"                                                       
-                                </td>
-                            <?
-                            endif;
-                        else:
-                            ?>
-                            <td colspan="4" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                        <? endif; ?>
-
+                 <?
+                 if($perfil_id != 10){
+                    if ($empresapermissao[0]->iugu_token != "" ) {?>
+                       <td colspan="3" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                    <?php } elseif ($empresapermissao[0]->client_secret != "" && $empresapermissao[0]->client_id != "") {
+                        ?>
+                      <td colspan="3" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                       <?
+                    }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                       ?>
+                       <td colspan="2" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                      <?
+                    }else{
+                         if($perfil_id != 10){
+                        ?>
+                         <td colspan="1" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                       <?
+                         }
+                    }
+                 }else{
+                     ?>
+                    <td colspan="1" class="<?php echo $estilo_linha; ?>"></td>
+               <?
+                 }
+                  ?>    
 
                         <? if ($perfil_id == 1) { ?>
-
-
-                            <?
-                            if ($excluir_somente_empresa == True):
-                                if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                    ?>
-
-                                    <?
-                                else:
-                                    ?>
-
-                                    <td  class="<?php echo $estilo_linha; ?>"                                                       
-                                </td>
-                            <?
-                            endif;
-                        else:
-                            ?>
-
                             <td   class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
                                     <a id="" onclick="javascript: return confirm('Deseja realmente excluir a parcela?');" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Excluir
                                     </a></div> 
 
                             </td>
-
-                            <td   class="<?php echo $estilo_linha; ?>" colspan="3"><div style="width: 50px;" class="bt_link">
+                            <td   class="<?php echo $estilo_linha; ?>" colspan="1"><div style="width: 50px;" class="bt_link">
                                     <a id="" onclick="javascript: return confirm('Deseja realmente Cancelar a parcela?');" href="<?= base_url() ?>ambulatorio/guia/cancelarparcela/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">Cancelar
                                     </a></div> 
 
                             </td>
-                        <?
-                        endif;
-                        ?>
-
-
-
+                      
                     <? }
                     ?>
                 <? } ?>
@@ -898,29 +649,35 @@
                         <? if ($item->ativo == 't') { ?>
                             <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
 
-
+                                        <?php if($perfil_id != 10){?>
                             <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
-                            <? if ($perfil_id == 1) { ?>
+                                        <?php }?>
+                           <? if ($perfil_id == 1) { ?>
 
                                 <? if ($empresapermissao[0]->confirm_outra_data == 't') { ?>
-
+                                                  
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                        <div class="bt_link">
-                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
-                                                Confirmar
-                                            </a>
-                                        </div>
+                                          <?php if($perfil_id != 10){?>
+                                                <div class="bt_link">
+                                                    <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                        Confirmar
+                                                    </a>
+                                                </div>
+                                            <?php }?>
                                     </td>
+                                                
 
                                 <? } else {
                                     ?>
 
 
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                           <?php if($perfil_id != 10){?>
                                         <div class="bt_link">
                                             <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
                                             </a>
                                         </div>
+                                        <?php }?>
                                     </td> 
 
                                     <?
@@ -928,7 +685,7 @@
                                 ?>
                                 <?
                             }
-
+if($perfil_id != 10){
                             if ($empresa[0]->iugu_token == "") {
                                 if (@$item->link_GN != "") {
                                     ?>
@@ -972,6 +729,7 @@
                                     <?
                                 }
                             }
+}
 
                             if ($perfil_id == 1) {
                                 ?>
@@ -987,8 +745,11 @@
                         <? } else { ?>
                             <td colspan="" class="<?php echo $estilo_linha; ?>">PAGA</td>
 
+                            
+                            <?php if($perfil_id != 10){?>
                             <td colspan="3" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
-                            <? if ($perfil_id == 1) {
+                            <?php }?>
+                          <? if ($perfil_id == 1) {
                                 ?>
                                 <td class="<?php echo $estilo_linha; ?>">
                                     <div class="bt_link">
@@ -1000,17 +761,23 @@
                             ?>
                             
                         <? } ?>
+                              
                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                              <?php if($perfil_id != 10){?>
                             <div class="bt_link">
                                 <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/voucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Voucher
                                 </a>
                             </div>
+                              <?php }?>
                         </td> 
+                              
                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                               <?php if($perfil_id != 10){?>
                             <div class="bt_link">
                                 <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/statusvoucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">Status
                                 </a>
                             </div>
+                                <?php }?>
                         </td> 
                     </tr>
                 </tbody>
@@ -1096,8 +863,10 @@
 
                         <? if ($item->ativo == 't') { ?>
                             <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
+                            <?php if($perfil_id != 10){?>
                             <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
-                            <? if ($perfil_id == 1) { ?>
+                            <?php }?>
+                                <? if ($perfil_id == 1) { ?>
 
 
                                 <? if ($empresapermissao[0]->confirm_outra_data == 't') { ?>
@@ -1125,7 +894,7 @@
                                 <?
                             }
 
-
+if($perfil_id != 10){
                             if ($empresa[0]->iugu_token == "") {
                                 if (@$item->link_GN != "") {
                                     ?>
@@ -1184,12 +953,11 @@
                                 }
                             }
 
-
-
-
-
-
-
+}else{
+    ?>
+                                    <td class="<?php echo $estilo_linha; ?>" colspan="2"></td>
+                                    <?
+}
 
 
 
@@ -1207,8 +975,12 @@
                         } else {
                             ?>
                             <td class="<?php echo $estilo_linha; ?>">PAGA</td>
+                           <?php if($perfil_id != 10){?>
                             <td colspan="4" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
-                            <? if ($perfil_id == 1) { ?>
+                            <?php }else{?>
+                            <td colspan="4" style="width: 130px" class="<?php echo $estilo_linha; ?>"></td>
+                            <?php }?>
+                                <? if ($perfil_id == 1) { ?>
                                 <td class="<?php echo $estilo_linha; ?>">
                                     <div class="bt_link">
                                         <a onclick="javascript: return confirm('Deseja realmente excluir o pagamento?');" href="<?= base_url() ?>ambulatorio/guia/excluirconsultaavulsaguia/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Excluir

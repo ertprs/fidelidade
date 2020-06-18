@@ -180,9 +180,9 @@
 
                     $("#txtNascimento").mask("99/99/9999");
                     $("#txtcpf").mask("999.999.999-99");
-                    $("#txtCelular").mask("(99) 99999-9999");
-                        $("#txtTelefone").mask("(99) 99999-9999");
-                        $("#cep").mask("99999-999");
+                    $("#txtCelular").mask("(99) 9?9999-9999");
+                    $("#txtTelefone").mask("(99) 9?9999-9999");
+                    $("#cep").mask("99999-999");
                     $(function () {
                         $("#txtcbo").autocomplete({
                             source: "<?= base_url() ?>index.php?c=autocomplete&m=cboprofissionais",

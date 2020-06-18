@@ -17,6 +17,7 @@
                     <th class="tabela_header">Celular</th>
                     <th class="tabela_header">Data</th>
                     <th class="tabela_header">Vendedor</th>
+                    <th class="tabela_header">Indicação</th>
                     <? if($_POST['tipobusca'] == 'I'){ ?>
                         <th class="tabela_header">Data Exclusão</th>
                         <th class="tabela_header">Operador Exclusão</th>
@@ -37,6 +38,7 @@
                         <td ><?= $item->celular; ?></td> 
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
                         <td ><?= $item->vendedor; ?></td>
+                        <td ><?= $item->indicacao; ?></td>
                         <? if($_POST['tipobusca'] == 'I'){ ?>
                         <td ><?= substr($item->data_atualizacao, 8, 2) . "/" . substr($item->data_atualizacao, 5, 2) . "/" . substr($item->data_atualizacao, 0, 4); ?></td>
                             <td><?= $item->operador; ?></td>

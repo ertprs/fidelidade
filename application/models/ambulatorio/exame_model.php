@@ -74,8 +74,15 @@ class exame_model extends Model {
                             p.nascimento,
                             p.cpf,
                             p.logradouro,
-                            p.numero');
+                            p.numero,
+                            p.bairro,
+                            m.nome as municipio,
+                            m.municipio_id,
+                            p.complemento,
+                            p.cep,
+                            p.celular');
         $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio m','m.municipio_id = p.municipio_id','left');
         $this->db->where('p.situacao', 'Titular');
         $this->db->where('p.ativo', 'true');
         if($perfil_id == 6){

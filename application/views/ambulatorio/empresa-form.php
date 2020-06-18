@@ -207,6 +207,10 @@
                                 if (@$obj->_cadastro == 2):echo 'selected';
                                 endif;
                                 ?>>Completo</option>
+                                <option value=3 <?
+                                if (@$obj->_cadastro == 3):echo 'selected';
+                                endif;
+                                ?>>Completo 2</option>
                             </select>
                         </dd>
                         <dt>

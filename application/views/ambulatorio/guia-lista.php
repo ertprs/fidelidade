@@ -20,7 +20,9 @@ if (count($exames) > 0) {
     }
 </style>
 <div class="content ficha_ceatox">
-    <? if ($ativo == 'f') { ?>
+    <? 
+    $perfil_id = $this->session->userdata('perfil_id');
+    if ($ativo == 'f' && $perfil_id != 10) { ?>
         <div class="bt_link_new">
             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/novocontrato/" . $paciente['0']->paciente_id; ?> ', '_blank', 'width=900,height=600');">
                 Novo Contrato
@@ -90,8 +92,6 @@ if (count($exames) > 0) {
                             <th class="tabela_header">Data</th>
                             <th class="tabela_header">Status</th>
                             <th colspan="6" class="tabela_header"></th>
-
-
                         </tr>
                     </thead>
                     <tbody>
@@ -130,15 +130,22 @@ if (count($exames) > 0) {
                                             </a>
                                         </div>
                                     </td>
-                                <?php if($paciente['0']->empresa_id != "") {?>
-                                  <td class="<?php echo $estilo_linha; ?>" >       
+                                <?php 
+                                
+                               // if($paciente['0']->empresa_id != "") {
+                                    
+                                //}
+?>
+                                    
+                                <!--  <td class="<?php echo $estilo_linha; ?>" >       
                                         <div class="bt_link_new" style="width: 100px;">
-                                            <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentofuncionariosempresa/" . @$paciente['0']->paciente_id."/".$paciente['0']->empresa_id."/".$item->forma_pagamento_id;?>">
+                                            <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentofuncionariosempresa/" . @$paciente['0']->paciente_id."/".$paciente['0']->empresa_id."/".$item->forma_pagamento_id."/".$item->paciente_contrato_id;?>">
                                                 Pagamento 
                                             </a>
                                         </div>
-                                    </td>
-                                 <?php }else{?>
+                                    </td>-->
+                             
+                                    
                                     <td class="<?php echo $estilo_linha; ?>" >       
                                         <div class="bt_link_new" style="width: 100px;">
                                             <a target="_blank" href="<?= base_url() . "ambulatorio/guia/listarpagamentos/" . @$paciente['0']->paciente_id . "/" . @$item->paciente_contrato_id ?>">
@@ -146,7 +153,7 @@ if (count($exames) > 0) {
                                             </a>
                                         </div>
                                     </td>                                    
-                                                <?php }?>
+                                               
                                     <td class="<?php echo $estilo_linha; ?>" >       
                                         <div class="bt_link_new" style="width: 100px;">
                                             <a target="_blank" href="<?= base_url() . "ambulatorio/guia/anexararquivoscontrato/" . @$item->paciente_contrato_id ?>">
@@ -166,7 +173,7 @@ if (count($exames) > 0) {
                                     <? } else {
                                         ?>
                                         <td class="<?php echo $estilo_linha; ?>"> 
-                                            <? if ($ativo == 'f') { ?>
+                                            <? if ($ativo == 'f' && $perfil_id != 10) { ?>
                                                 <div class="bt_link_new" style="width: 100px;">
                                                     <a onclick="javascript: return confirm('Deseja realmente re-ativar o contrato?');"   href="<?= base_url() . "ambulatorio/guia/ativarcontrato/" . $paciente['0']->paciente_id . "/" . @$item->paciente_contrato_id ?>">
                                                         Re-Ativar
@@ -256,9 +263,11 @@ if (count($exames) > 0) {
                                             Contrato
                                         </a>
                                     </div>
+                                  <?php if($perfil_id != 10){?>
                                     <div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/guia/excluir/<?= $paciente['0']->paciente_id ?>/<?= $titular['0']->paciente_contrato_id ?>">Excluir </a>
                                     </div> 
+                                  <?php }?>
                              
                             <?php } 
                              if (count($titular) > 0 && $titular['0']->paciente_contrato_id == "" && @$paciente[0]->situacao == "Dependente") {
@@ -290,8 +299,8 @@ if (count($exames) > 0) {
         </fieldset>
         <fieldset>
 
-
-            <button type="button" class="btn-toggle" data-element="#minhaDiv">Observação</button> 
+         <?php if($perfil_id != 10){?>
+            <button type="button" class="btn-toggle" data-element="#minhaDiv">Observação</button>   
             <br>
             <div id="minhaDiv" style="display:none">
 
@@ -312,6 +321,7 @@ if (count($exames) > 0) {
 
             </div>
             <br>
+         <?php }?>
             <legend>Observações</legend>
             <table>
                 <tr>
@@ -348,6 +358,7 @@ if (count($exames) > 0) {
                 }
                 ?>
             </table>
+          
         </fieldset>
         <br>
     </div>

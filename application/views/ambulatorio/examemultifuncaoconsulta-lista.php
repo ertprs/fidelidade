@@ -6,7 +6,7 @@
             </a>
         </div>-->
     <div id="accordion">
-
+        <?php $perfil_id = $this->session->userdata('perfil_id'); ?>
         <h3 class="singular"><a href="#">Multifuncao Agendamento Web</a></h3>
         <div>
             <?
@@ -271,10 +271,12 @@
                                     if ($item->confirmado == 'f') {
                                         ?>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                            <div class="bt_link">
-                                                <a onclick="javascript: return confirm('Deseja realmente cancelar esse atendimento?');" href="<?= base_url() ?>ambulatorio/exametemp/excluirconsultatempgeral/<?= $item->agenda_exames_id ?>/<?= $endereco_ip ?>" target="_blank">Cancelar
-                                                </a>
-                                            </div>
+                                            <?php if($perfil_id != 10){?>
+                                                <div class="bt_link">
+                                                    <a onclick="javascript: return confirm('Deseja realmente cancelar esse atendimento?');" href="<?= base_url() ?>ambulatorio/exametemp/excluirconsultatempgeral/<?= $item->agenda_exames_id ?>/<?= $endereco_ip ?>" target="_blank">Cancelar
+                                                    </a>
+                                                </div>
+                                            <?php }?>
                                         </td>    
                                     <? } else { ?>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">

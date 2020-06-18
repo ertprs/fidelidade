@@ -345,6 +345,9 @@ class Guia extends BaseController {
         // echo '<pre>';
         // var_dump($body_E); 
         // die;
+        
+        
+        
         if (!is_dir("./upload/SICOV")) {
             mkdir("./upload/SICOV");
             $destino = "./upload/SICOV";
@@ -488,10 +491,12 @@ class Guia extends BaseController {
     }
 
     function relatoriocontratosinativos() {
-//        $data['empresa'] = $this->guia->listarempresas();
+      $data['empresa'] = $this->guia->listarempresas();
         $data['planos'] = $this->formapagamento->listarforma();
         $data['vencedor'] = $this->operador_m->listarvendedor(1);
         $data['forma']  = $this->formapagamento->listarformaRendimentoPaciente();
+        $data['empresacadastro'] = $this->guia->listarempresacadastro();
+        $data['listarindicacao'] = $this->paciente->listarindicacao();
         $this->loadView('ambulatorio/relatoriocontratosinativos', $data);
     }
 
@@ -6399,7 +6404,7 @@ table tr:hover  #achadoERRO{
     }
 
     function impressaodeclaracaopaciente($paciente_id) {
-
+        $this->load->plugin('mpdf'); 
         $this->load->helper('directory');
         $empresa_id = $this->session->userdata('empresa_id');
 
@@ -6449,7 +6454,6 @@ table tr:hover  #achadoERRO{
             // echo '<pre>';
             // print_r($data['dependente']);
             // die;
-
 
             $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2', $data);
         }else{
@@ -6580,10 +6584,10 @@ table tr:hover  #achadoERRO{
     
     
     
-    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id){
-        $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
-        
-       $data['paciente_id'] = $paciente_id;
+    function listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id,$contrato_id){
+       $data['parcelas'] = $this->guia->listarpagamentofuncionariosempresa($paciente_id,$empresa_id,$plano_id);
+      $data['contrato_id'] = $contrato_id;
+      $data['paciente_id'] = $paciente_id;
       $data['paciente'] = $this->paciente->listardados($paciente_id);
       $this->loadView('ambulatorio/guiapagamentoempresa-form', $data);
         
@@ -6626,8 +6630,7 @@ table tr:hover  #achadoERRO{
   }
   
     
-    
-     function relatoriocnab() {
+    function relatoriocnab() {
         $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriocnab', $data);
     }
@@ -6635,20 +6638,1053 @@ table tr:hover  #achadoERRO{
     function gerarcnab() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        
+        $empresa_id = $this->session->userdata('empresa_id');
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+       
+        $cnpj = $empresa[0]->cnpj;
+        $conta_corrente = $empresa[0]->contacorrentesicoob;
+        $razao_social = $empresa[0]->razao_social;
+        $nome =  $empresa[0]->nome;
+        $endereco = $empresa[0]->logradouro;
+        $bairro = $empresa[0]->bairro;
+        $cep_ep = substr($empresa[0]->cep,0,5);
+        $sufixo_cep = substr($empresa[0]->cep, -3);
+        $cidade = $empresa[0]->municipio;
+        $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab();
         
-        echo "<pre>";
-        print_r($relatorio);
-        die();
+        
+        //echo "<pre>";
+        //print_r($relatorio);
+        //die();
+       
+        $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
+        $A = array();
+        $A[0] = '';     // Iniciando o indice zero do array;
+        $A[1] = '756';  //(3) Código do Sicoob na Compensação: "756"
+        $A[2] = '0000'; //(4) Lote de Serviço: "0000"
+        $A[3] = '0';    //(1) Tipo de Registro: "0"
+        $A[4] = $this->utilitario->preencherDireita('',9,' '); //(9)Uso Exclusivo FEBRABAN / CNAB: Preencher com espaços em branco
+        $A[5] = '2';    //(1) Tipo de Inscrição da Empresa: '1'  =  CPF '2'  =  CGC / CNPJ
+        $A[6] = $this->utilitario->preencherEsquerda($cnpj,14,'0');    //(14)Número de Inscrição da Empresa
+        $A[7] = $this->utilitario->preencherDireita("",20,' ');  //(20)Código do Convênio no Sicoob: Preencher com espaços em branco
+        $A[8] = $this->utilitario->preencherEsquerda('4609',5,'0'); 
+        $A[9] = $this->utilitario->preencherEsquerda('4',1,'0');  
+        $A[10] = $this->utilitario->preencherEsquerda($conta_corrente,12,'0');
+        $A[11] = $this->utilitario->preencherEsquerda('0',1,'0');
+        $A[12] = $this->utilitario->preencherDireita('0',1,'0');
+        $A[13] = $this->utilitario->preencherDireita($razao_social,30,' ');
+        $A[14] = $this->utilitario->preencherDireita('SICOOB',30,' ');
+        $A[15] = $this->utilitario->preencherDireita('',10,' ');
+        $A[16] = $this->utilitario->preencherEsquerda('1',1,'0');
+        $A[17] = $this->utilitario->preencherEsquerda(date('dmY'),8,'0');
+        $A[18] = $this->utilitario->preencherEsquerda(date('His'),6,'0');
+        $A[19] = $this->utilitario->preencherEsquerda('1',6,'0');
+        $A[20] = $this->utilitario->preencherEsquerda('081',3,'0');
+        $A[21] = $this->utilitario->preencherEsquerda('',5,'0');
+        $A[22] = $this->utilitario->preencherDireita('',20,' ');
+        $A[23] = $this->utilitario->preencherDireita('',20,' ');
+        $A[24] = $this->utilitario->preencherDireita('',29,' ');
+
+       $header_A = implode($A);
+
+        $i = 1;
+        $cont_lot = 1;
+        $cont_q = 1;
+        $sequencia  = 1;
+        $cont_linha = 1;
+        //header do lote
+        $teste = 1;
+        
+        // REGISTRO DETALHE SEGMENTO P
+        $body_P = array();
+        $body_P_con = '';
+        
+        
+        
+        
+        
+        
+        
+        
+        $L = array();
+        $L[0] = '';
+        $L[1] = '756';
+        $L[2] = $this->utilitario->preencherEsquerda($cont_lot,4,'0');
+        $L[3] = $this->utilitario->preencherEsquerda('1',1,'0');
+        $L[4] = $this->utilitario->preencherDireita('R',1,' ');
+        $L[5] = $this->utilitario->preencherEsquerda('01',2,'0');
+        $L[6] = $this->utilitario->preencherDireita('',2,' ');
+        $L[7] = $this->utilitario->preencherEsquerda('040',3,'0');
+        $L[8] = $this->utilitario->preencherDireita('',1,' ');
+        $L[9] = $this->utilitario->preencherEsquerda('2',1,'0');
+        $L[10] = $this->utilitario->preencherEsquerda($cnpj,15,'0');
+        $L[11] = $this->utilitario->preencherDireita("",20,' '); 
+        $L[12] =  $this->utilitario->preencherEsquerda('4609',5,'0'); 
+        $L[13] = $this->utilitario->preencherEsquerda('4',1,'0');
+        $L[14] = $this->utilitario->preencherEsquerda($conta_corrente,12,'0');
+        $L[15] = $this->utilitario->preencherEsquerda('0',1,'0');
+        $L[16] = $this->utilitario->preencherDireita('',1,' ');
+        $L[17] =  $this->utilitario->preencherDireita($razao_social,30,' ');
+        $L[18] =  $this->utilitario->preencherDireita('',40,' ');
+        $L[19] =  $this->utilitario->preencherDireita('',40,' ');
+        $L[20] =  $this->utilitario->preencherEsquerda($i,8,'0');
+        $L[21] =  $this->utilitario->preencherEsquerda(date('dmY'),8,'0');
+        $L[22] = $this->utilitario->preencherEsquerda('',8,'0');
+        $L[23] = $this->utilitario->preencherDireita('',33,' '); 
+       
+       
+        $body_con = implode($L); 
+        $body_L[] = $body_con;
+        $body_P_con .= $body_con . "\n";
+        
+        $valor_total= 0;
+        foreach($relatorio as $item){
+         
+        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        
+        $vencimento = $lista[0]->data;
+        $paciente = $lista[0]->paciente;
+        $municipio = $lista[0]->municipio;
+        $estado = $lista[0]->estado;
+        $cep= $lista[0]->cep;
+        $logradouro = $lista[0]->logradouro;
+        $valor = $lista[0]->valor * 100;
+        $valor_total += $lista[0]->valor;
+        
+        $cpf =  $lista[0]->cpf;
+        
+        $data_venc = date("dmY", strtotime($vencimento));
+            
+        
+        $cont_linha++;
+       
+       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
+       $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
+        
+        $P = array();
+        $P[0] = '';
+        $P[1] = '756';
+        $P[2] =  $this->utilitario->preencherEsquerda($cont_lot,4,'0');
+        $P[3] =  $this->utilitario->preencherEsquerda('3',1,'0');
+        $P[4] =  $this->utilitario->preencherEsquerda($i,5,'0');
+        $P[5] = $this->utilitario->preencherDireita('P',1,' ');
+        $P[6] = $this->utilitario->preencherDireita('',1,' ');
+        $P[7] = $this->utilitario->preencherEsquerda('01',2,'0');
+        $P[8] = $this->utilitario->preencherEsquerda('4609',5,'0');
+        $P[9] = $this->utilitario->preencherEsquerda('4',1,'0');
+        $P[10] =  $this->utilitario->preencherEsquerda($conta_corrente,12,'0');   
+        $P[11] =  $this->utilitario->preencherEsquerda('0',1,'0');
+        $P[12] = $this->utilitario->preencherDireita('',1,' ');
+        $P[13] = $formata_nosso_numero;
+        $P[14] =  $this->utilitario->preencherEsquerda('1',1,'0');
+        $P[15] = $this->utilitario->preencherEsquerda('0',1,'0');
+        $P[16] = $this->utilitario->preencherDireita('',1,' ');
+        $P[17] = $this->utilitario->preencherEsquerda('2',1,'0');
+        $P[18] = $this->utilitario->preencherEsquerda('2',1,'0');
+        $P[19] = $this->utilitario->preencherDireita($i,15,'0');
+        $P[20] =  $this->utilitario->preencherEsquerda($data_venc,8,'0');
+        $P[21] = $this->utilitario->preencherEsquerda($valor,15,'0'); //NO MANUAL DIZ QUE É (13)
+        $P[22] = $this->utilitario->preencherEsquerda('',5,'0');
+        $P[23] = $this->utilitario->preencherDireita('',1,' ');
+        $P[24] = $this->utilitario->preencherEsquerda('32',2,'0');
+        $P[25] = $this->utilitario->preencherDireita('A',1,'0');
+        $P[26] = $this->utilitario->preencherEsquerda(date('dmY'),8,'0');
+        $P[27] = $this->utilitario->preencherEsquerda('',1,'0');
+        $P[28] = $this->utilitario->preencherEsquerda("",8,'0');
+        $P[29] = $this->utilitario->preencherEsquerda("",15,'0'); //  no manual diz (13)   
+        $P[30] = $this->utilitario->preencherEsquerda('0',1,'0');
+        $P[31] = $this->utilitario->preencherEsquerda("",8,'0');      
+        $P[32] = $this->utilitario->preencherEsquerda("",15,'0');
+        $P[33] = $this->utilitario->preencherEsquerda('',15,'0');
+        $P[34] = $this->utilitario->preencherEsquerda('',15,'0');
+        $P[35] = $this->utilitario->preencherDireita($paciente,25,' ');      
+        $P[36] = $this->utilitario->preencherEsquerda('3',1,'0');     
+        $P[37] = $this->utilitario->preencherEsquerda('0',2,'0'); 
+        $P[38] = $this->utilitario->preencherEsquerda('0',1,'0');       
+        $P[39] = $this->utilitario->preencherDireita('',3,' ');            
+        $P[40] =  $this->utilitario->preencherEsquerda('09',2,'0');  
+        $P[41] =  $this->utilitario->preencherEsquerda('',10,'0');   
+        $P[42] =  $this->utilitario->preencherDireita('',1,' ');   
+      $sequencia++;
+       $cont_linha++;
+        $body_con = implode($P);
+        $body_P[] = $body_con;
+        $body_P_con .= $body_con . "\n"; 
+     //fim do segmento
+        $i++;
+      
+      //segmento Q
+        $Q = Array();
+        $Q[0] = "";
+        $Q[1] = "756";
+        $Q[2] = $this->utilitario->preencherEsquerda($cont_lot,4,'0');
+        $Q[3] = $this->utilitario->preencherEsquerda("3",1,'0');
+        $Q[4] = $this->utilitario->preencherEsquerda($i,5,'0');
+        $Q[5] = $this->utilitario->preencherDireita("Q",1,'0');
+        $Q[6] = $this->utilitario->preencherDireita(" ",1,' ');
+        $Q[7] = $this->utilitario->preencherEsquerda('01',2,'0');
+        $Q[8] = $this->utilitario->preencherEsquerda('1',1,'0');
+        $Q[9] = $this->utilitario->preencherEsquerda($cpf,15,'0');
+        $Q[10] = $this->utilitario->preencherDireita($nome,40,' ');
+        $Q[11] = $this->utilitario->preencherDireita($endereco,40,' ');
+        $Q[12] = $this->utilitario->preencherDireita($bairro,15,' ');
+        $Q[13] = $this->utilitario->preencherEsquerda($cep_ep,5,'0');
+        $Q[14] = $this->utilitario->preencherEsquerda($sufixo_cep,3,'0');
+        $Q[15] = $this->utilitario->preencherDireita($cidade,15,' ');
+        $Q[16] = $this->utilitario->preencherDireita($codigoUF,2,' ');
+        $Q[17] =  $this->utilitario->preencherEsquerda('2',1,'0');
+        $Q[18] =  $this->utilitario->preencherEsquerda($cnpj,15,'0');
+        $Q[19] = $this->utilitario->preencherDireita($nome,40,' ');
+        $Q[20] = $this->utilitario->preencherEsquerda("",3,'0');
+        $Q[21] = $this->utilitario->preencherDireita("",20,' ');
+        $Q[22] = $this->utilitario->preencherDireita("",8,' ');
+
+        $cont_linha++;
+        $body_con = implode($Q);
+        $body_Q[] = $body_con;
+        $body_P_con .= $body_con . "\n"; 
+        
+        //$t = 0 ;
+       // foreach($Q as $ie){
+       //   echo "<pre>";
+      //    $t += strlen($ie);   
+    //    }
+    //   echo $t;
+       
+    ///   die();
+
+
+         //REGISTRO TRAILLER DO LOTE
+        
+        
+     
+        $cont_linha++;
+        $i++;
+        $sequencia++;    
+}
+
+        $RT = Array();
+        $RT[0] = "";
+        $RT[1] = "756";
+        $RT[2] = $this->utilitario->preencherEsquerda($cont_lot, 4, '0');
+        $RT[3] = $this->utilitario->preencherEsquerda("5", 1, '0');
+        $RT[4] = $this->utilitario->preencherDireita("", 9, ' ');
+        $RT[5] = $this->utilitario->preencherEsquerda($sequencia+1, 6, '0');
+        $RT[6] = $this->utilitario->preencherEsquerda("0", 6, '0');
+        $RT[7] = $this->utilitario->preencherEsquerda($valor_total*100, 17, '0');
+        $RT[8] = $this->utilitario->preencherEsquerda("0", 6, '0');
+        $RT[9] = $this->utilitario->preencherEsquerda("0", 17, '0');
+        $RT[10] = $this->utilitario->preencherEsquerda("0", 6, '0');
+        $RT[11] = $this->utilitario->preencherEsquerda("0", 17, '0');
+        $RT[12] = $this->utilitario->preencherEsquerda("0", 6, '0');
+        $RT[13] = $this->utilitario->preencherEsquerda("0", 17, '0');
+        $RT[14] = $this->utilitario->preencherDireita("", 8, ' ');
+        $RT[15] = $this->utilitario->preencherDireita("", 117, ' ');
+        
+      
+      
+        $body_con = implode($RT);
+        $body_RT[] = $body_con;
+        $body_P_con .= $body_con . "\n"; 
+
+//print_r($body_P_con);
+
+//die();
+
+
+
+//REGISTRO TRAILLER DO ARQUIVO
+          $R = array();
+          $R[1] = "";
+          $R[1] = "756";
+          $R[2] = $this->utilitario->preencherEsquerda("", 4, '9');                  
+          $R[3] = $this->utilitario->preencherEsquerda("9", 1, '0');   
+          $R[4] = $this->utilitario->preencherDireita("", 9, ' ');  
+          $R[5] = $this->utilitario->preencherEsquerda("1", 6, '0');  
+          $R[6] = $this->utilitario->preencherEsquerda($cont_linha, 6, '0');
+          $R[7] = $this->utilitario->preencherEsquerda("", 6, '0');
+          $R[8] = $this->utilitario->preencherDireita("", 205, ' ');
+           
+          $footer_R = implode($R);
+
+        $string_geral = '';
+        $string_geral = $header_A . "\n" . $body_P_con . $footer_R;
+        
+        
+       if (!is_dir("./upload/CNAB")) {
+            mkdir("./upload/CNAB");
+            $destino = "./upload/CNAB";
+            chmod($destino, 0777);
+        }
+        
+        
+        $data_Mes = date("m"); // Definindo a variavel pro nome do arquivo
+        if (count($relatorio) > 0) {
+            $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
+        }
+        $hora = date('His');
+        $nome_arquivo = "CNAB240_" . $data_Mes . $i;
+        $fp = fopen("./upload/CNAB/$nome_arquivo.txt", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
+        $escreve = fwrite($fp, $string_geral);
+
+        unlink("./upload/CNAB/$nome_arquivo.zip");
+        // Apagar o arquivo primeiro
+        $zip = new ZipArchive;
+        $this->load->helper('directory');
+        $zip->open("./upload/CNAB/$nome_arquivo.zip", ZipArchive::CREATE);
+        $zip->addFile("./upload/CNAB/$nome_arquivo.txt", "$nome_arquivo.txt");
+        $zip->close();
+        unlink("./upload/CNAB/$nome_arquivo.txt");
+
+        if (count($relatorio) > 0) {
+            $messagem = "Arquivo gerado com sucesso";
+        } else {
+            $messagem = "Não foram encontradas cobranças para gerar o arquivo";
+        }
+
+        $this->session->set_flashdata('message', $messagem);
+        redirect(base_url() . "ambulatorio/guia/relatoriocnab");
+        
+
+       
+        
 
     }
     
     
+    function gerarcarnesicoob($paciente_id,$contrato_id){
+      
+      //   $this->load->plugin('mpdf');
+         $html ="";
+         $empresa_id = $this->session->userdata('empresa_id');
+      
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+        //Dados da empresa
+        $data['cnpj'] = $empresa[0]->cnpj;
+        $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+        $data['estadoEmpresa'] = $empresa[0]->estado;
+        $data['municipioEmpresa'] = $empresa[0]->municipio;
+        $data['cedente'] = $empresa[0]->nome;   
+        $dadosboleto["conta"] = $empresa[0]->contacorrentesicoob;
+        $data['agencia'] = $empresa[0]->agenciasicoob;       
+        $dadosboleto["convenio"] = "0".$empresa[0]->codigobeneficiariosicoob; 
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
+        
+        
+         //Dados da empresa
+        $data['cnpj'] = $empresa[0]->cnpj;
+        $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+        $data['estadoEmpresa'] = $empresa[0]->estado;
+        $data['municipioEmpresa'] = $empresa[0]->municipio;
+        $data['cedente'] = $empresa[0]->nome;
+      
+        $total_parcela =  count($pagamento);
+        $cont_num_parcela = 0;
+        
+     foreach($pagamento as $item){
+        $cont_num_parcela++;
+        $data['print'] = "false";
+        if($total_parcela == $cont_num_parcela){
+            $data['print'] = "true";
+        }
+        $data['cont_num_parcela'] = $cont_num_parcela;
+        
+        $numero_parcela = $this->utilitario->preencherEsquerda($cont_num_parcela, 3, '0'); 
+       
+        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        $data['vencimento'] = $lista[0]->data;
+        $data['paciente'] = $lista[0]->paciente;
+        $data['municipio'] = $lista[0]->municipio;
+        $data['estado'] = $lista[0]->estado;
+        $data['cep'] = $lista[0]->cep;
+        $data['logradouro'] = $lista[0]->logradouro;
+        $dadosboleto["modalidade_cobranca"] = "01";
+        $dadosboleto["numero_parcela"] = $numero_parcela;
+        $dadosboleto["carteira"] = "1";
+        $data['paciente_contrato_parcelas_id'] = $item->paciente_contrato_parcelas_id;
+        
+        $valor  =   str_replace(".", ",",$lista[0]->valor);
+        $taxa_boleto = 0;
+        $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+        
+        
+         $codigobanco = "756";
+         $codigo_banco_com_dv = $this->geraCodigoBanco($codigobanco);
+         $nummoeda = "9";
+         
+         $data['data_venc'] = date("d/m/Y", strtotime($data['vencimento'])); 
+         $fator_vencimento = $this->fator_vencimento($data['data_venc']);
+
+         $valor =  $this->formata_numero($data["valor_boleto"],10,0,"valor");
+         $agencia = $this->formata_numero($data["agencia"],4,0);
+         $conta = $this->formata_numero($dadosboleto["conta"],8,0);
+         $carteira = $dadosboleto["carteira"];
+         $livre_zeros='000000';
+         $modalidadecobranca = $dadosboleto["modalidade_cobranca"];
+         $numeroparcela      = $dadosboleto["numero_parcela"];
+         $convenio = $this->formata_numero($dadosboleto["convenio"],7,0); 
+         $agencia_codigo = $agencia ." / ". $convenio;
+         
+         
+     $paciente_contrato_id = $item->paciente_contrato_parcelas_id;
+  
+         
+     while(strlen($paciente_contrato_id) < 7) {
+        $paciente_contrato_id = "1".$paciente_contrato_id; 
+     }
+ 
+   
+     $NossoNumero = $this->formata_numdoc($paciente_contrato_id,7);  // Até 7 dígitos, número sequencial iniciado em 1 (Ex.: 1, 2...)
+     
+     $data['identificacao'] = $paciente_contrato_id;
+    
+    $num_contrato_con = $dadosboleto["conta"]."-1";
+    $qtde_nosso_numero = strlen($NossoNumero);
+    $sequencia = $this->formata_numdoc($agencia,4).$this->formata_numdoc(str_replace("-","",$num_contrato_con),10).$this->formata_numdoc($NossoNumero,7);
+    $cont=0;
+    $calculoDv = 0;
+for($num=0;$num<=strlen($sequencia);$num++)
+	{
+		$cont++;
+		if($cont == 1)
+			{
+				$constante = 3;
+			}
+		if($cont == 2)
+			{
+				$constante = 1;
+			}
+		if($cont == 3)
+			{
+				$constante = 9;
+			}
+		if($cont == 4)
+			{
+				$constante = 7;
+				$cont = 0;
+			}
+		$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+	}
+
+$Resto = $calculoDv % 11;
+if($Resto == 0 || $Resto == 1)
+	{
+		$Dv = 0;
+	}
+else
+	{
+		$Dv = 11 - $Resto;
+	}
+         
+         
+         
+         
+         $data['dv'] = $Dv;
+         $data['nossonumerosemdv'] = $NossoNumero; 
+         $data["nosso_numero"] = $NossoNumero.$Dv;
+         
+        
+  
+         $nossonumero = $this->formata_numero($data["nosso_numero"],8,0);
+         $campolivre  = "$modalidadecobranca$convenio$nossonumero$numeroparcela";
+
+         $dv=$this->modulo_11("$codigobanco$nummoeda$fator_vencimento$valor$carteira$agencia$campolivre");
+         $linha="$codigobanco$nummoeda$dv$fator_vencimento$valor$carteira$agencia$campolivre";
+         
+         
+       $data["codigo_barras"] = $linha;
+       $data["linha_digitavel"] = $this->monta_linha_digitavel($linha);
+
+
+       $data["agencia_codigo"] = $agencia_codigo;
+       $data["nosso_numero"] = $nossonumero;
+       $data["codigo_banco_com_dv"] = $codigo_banco_com_dv;
+       $data['paciente_contrato_id'] = $item->paciente_contrato_parcelas_id;   
+       $data['code'] =  $this->fbarcode($linha); 
+      
+       
+  
+       
+      $html .= $this->load->View('ambulatorio/carnesicoob',$data,true); 
+      // echo "<pre>";
+   
+  
+     }
+     
+       echo $html;
+    
+   
+    }
+    
+  
     
     
     
+    
+    
+   function calculonossonumerosicoob($paciente_contrato_parcelas_id){
+       
+        $empresa_id = $this->session->userdata('empresa_id');
+        $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+        $valor  =   str_replace(".", ",",$lista[0]->valor);
+        // DADOS DO BOLETO PARA O SEU CLIENTE
+        $taxa_boleto = 0;
+        $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+        $valor_boleto= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+        $paciente_contrato_id = $paciente_contrato_parcelas_id;
+        $vencimento = $lista[0]->data;
+        $paciente = $lista[0]->paciente;
+        $municipio = $lista[0]->municipio;
+        $estado = $lista[0]->estado;
+        $cep= $lista[0]->cep;
+        $logradouro = $lista[0]->logradouro;
+        
+        //Dados da empresa
+        $cnpj = $empresa[0]->cnpj;
+        $logradouroEmpresa = $empresa[0]->logradouro;
+        $estadoEmpresa = $empresa[0]->estado;
+        $municipioEmpresa = $empresa[0]->municipio;
+        $cedente = $empresa[0]->nome;
+       
+      //  echo "<pre>";
+     //  print_r($empresa);
+        $conta_corrente =   $empresa[0]->contacorrentesicoob;   
+        $agencia = $empresa[0]->agenciasicoob;  
+        $convenio = $empresa[0]->codigobeneficiariosicoob;     
+        $num_contrato_con = $conta_corrente."-1";
+       
+      
+if(@!function_exists(formata_numdoc))
+	{
+		function formata_numdoc($num,$tamanho)
+			{
+				while(strlen($num)<$tamanho)
+					{
+						$num= "0".$num; 
+					}
+				return $num;
+			}
+	}
+        
+        while(strlen($paciente_contrato_id) < 7) {
+           $paciente_contrato_id = "1".$paciente_contrato_id; 
+       }
+        $NossoNumero = formata_numdoc($paciente_contrato_id,7);  // Até 7 dígitos, número sequencial iniciado em 1 (Ex.: 1, 2...)
+
+        $qtde_nosso_numero = strlen($NossoNumero);
+        $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$num_contrato_con),10).formata_numdoc($NossoNumero,7);
+        $cont=0;
+        $calculoDv = 0;
+        for($num=0;$num<=strlen($sequencia);$num++)
+	{
+		$cont++;
+		if($cont == 1)
+			{
+				$constante = 3;
+			}
+		if($cont == 2)
+			{
+				$constante = 1;
+			}
+		if($cont == 3)
+			{
+				$constante = 9;
+			}
+		if($cont == 4)
+			{
+				$constante = 7;
+				$cont = 0;
+			}
+		$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+	}
+        $Resto = $calculoDv % 11;
+if($Resto == 0 || $Resto == 1)
+	{
+		$Dv = 0;
+	}
+else
+	{
+		$Dv = 11 - $Resto;
+	}    
+       return $NossoNumero.$Dv;  
+   //  include("./sicoob/funcoes_bancoob.php"); 
+   }
+    
+     function downloadTXTsicoob($nome_arquivo) {
+
+        $arquivo = file_get_contents("./upload/CNAB/$nome_arquivo");
+
+        // $string = 'Test download string';
+
+        header('Content-type: text/plain');
+        header('Content-Length: ' . strlen($arquivo));
+        header("Content-Disposition: attachment; filename=$nome_arquivo");
+
+        echo $arquivo;
+    }
+    
+    
+    
+    function formata_numero($numero,$loop,$insert,$tipo = "geral") {
+	if ($tipo == "geral") {
+		$numero = str_replace(",","",$numero);
+		while(strlen($numero)<$loop){
+			$numero = $insert . $numero;
+		}
+	}
+	if ($tipo == "valor") {
+		/*
+		retira as virgulas
+		formata o numero
+		preenche com zeros
+		*/
+		$numero = str_replace(",","",$numero);
+		while(strlen($numero)<$loop){
+			$numero = $insert . $numero;
+		}
+	}
+	if ($tipo == "convenio") {
+		while(strlen($numero)<$loop){
+			$numero = $numero . $insert;
+		}
+	}
+	return $numero;
+   }
+   
+   
+   
+   function fbarcode($valor){
+        $code = "";
+        $fino = 1 ;
+        $largo = 3 ;
+        $altura = 50 ;
+
+          $barcodes[0] = "00110" ;
+          $barcodes[1] = "10001" ;
+          $barcodes[2] = "01001" ;
+          $barcodes[3] = "11000" ;
+          $barcodes[4] = "00101" ;
+          $barcodes[5] = "10100" ;
+          $barcodes[6] = "01100" ;
+          $barcodes[7] = "00011" ;
+          $barcodes[8] = "10010" ;
+          $barcodes[9] = "01010" ;
+          for($f1=9;$f1>=0;$f1--){ 
+            for($f2=9;$f2>=0;$f2--){  
+              $f = ($f1 * 10) + $f2 ;
+              $texto = "" ;
+              for($i=1;$i<6;$i++){ 
+                $texto .=  substr($barcodes[$f1],($i-1),1) . substr($barcodes[$f2],($i-1),1);
+              }
+              $barcodes[$f] = $texto;
+            }
+          }
+
+
+        //Desenho da barra
+
+
+        //Guarda inicial
+        
+           
+        $code .="<img src=".base_url()."img/p.png width=".$fino." height=".$altura." border=0>";
+        $code .="<img src=".base_url()."img/b.png width=".$fino." height=".$altura." border=0>";
+        $code .="<img src=".base_url()."img/p.png width=".$fino." height=".$altura." border=0>";
+        $code .="<img src=".base_url()."img/b.png width=".$fino." height=".$altura." border=0>";
+       
+        $texto = $valor ;
+        if((strlen($texto) % 2) <> 0){
+                $texto = "0" . $texto;
+        }
+
+        // Draw dos dados
+        while (strlen($texto) > 0) {
+          $i = round($this->esquerda($texto,2));
+          $texto = $this->direita($texto,strlen($texto)-2);
+          $f = $barcodes[$i];
+          for($i=1;$i<11;$i+=2){
+            if (substr($f,($i-1),1) == "0") {
+              $f1 = $fino ;
+            }else{
+              $f1 = $largo ;
+            }
+      
+         $code .= "<img  src=".base_url()."img/p.png width=".$f1." height=".$altura." border=0>";
+   
+            if (substr($f,$i,1) == "0") {
+              $f2 = $fino ;
+            }else{
+              $f2 = $largo ;
+            }
+       
+         $code .= "<img src=".base_url()."img/b.png width=".$f2." height=".$altura." border=0>";
+    
+          }
+        }
+
+        // Draw guarda final
+       
+        $code .= "<img src=".base_url()."img/p.png width=".$largo." height=".$altura." border=0>";
+        $code .= "<img src=".base_url()."img/b.png width=".$fino." height=".$altura." border=0>";
+        $code .= "<img src=".base_url()."img/p.png width=1 height=".$altura." border=0>";
+       
+          
+          return $code;
+     } //Fim da fun��o
+    
+        
+        function esquerda($entra,$comp){
+               return substr($entra,0,$comp);
+       }
+
+       function direita($entra,$comp){
+               return substr($entra,strlen($entra)-$comp,$comp);
+       }
+
+       
+   function fator_vencimento($data) {
+	$data = @split("/",$data);
+	$ano = $data[2];
+	$mes = $data[1];
+	$dia = $data[0];
+    return(abs(($this->_dateToDays("1997","10","07")) - ($this->_dateToDays($ano, $mes, $dia))));
+}
+
+function _dateToDays($year,$month,$day) {
+    $century = substr($year, 0, 2);
+    $year = substr($year, 2, 2);
+    if ($month > 2) {
+        $month -= 3;
+    } else {
+        $month += 9;
+        if ($year) {
+            $year--;
+        } else {
+            $year = 99;
+            $century --;
+        }
+    }
+    return ( floor((  146097 * $century)    /  4 ) +
+            floor(( 1461 * $year)        /  4 ) +
+            floor(( 153 * $month +  2) /  5 ) +
+                $day +  1721119);
+}
+       
+
+function modulo_10($num) {
+    
+	$numtotal10 = 0;
+	$fator = 2;
+ 
+	for ($i = strlen($num); $i > 0; $i--) {
+		$numeros[$i] = substr($num,$i-1,1);
+		$parcial10[$i] = $numeros[$i] * $fator;
+		$numtotal10 .= $parcial10[$i];
+		if ($fator == 2) {
+			$fator = 1;
+		}
+		else {
+			$fator = 2; 
+		}
+               
+	}
+	
+	$soma = 0;
+       
+	for ($i = strlen($numtotal10); $i > 0; $i--) {
+		$numeros[$i] = substr($numtotal10,$i-1,1);
+		$soma += $numeros[$i]; 
+                
+	}
+	$resto = $soma % 10;
+        
+	$digito = 10 - $resto;
+       
+	if ($resto == 0) {
+		$digito = 0;
+	}
+        
+
+        return $digito;
+}
+     
+
+
+function modulo_11($num, $base=9, $r=0) {
+	$soma = 0;
+	$fator = 2; 
+	for ($i = strlen($num); $i > 0; $i--) {
+		$numeros[$i] = substr($num,$i-1,1);
+		$parcial[$i] = $numeros[$i] * $fator;
+		$soma += $parcial[$i];
+		if ($fator == $base) {
+			$fator = 1;
+		}
+		$fator++;
+	}
+	if ($r == 0) {
+		$soma *= 10;
+		$digito = $soma % 11;
+		
+		//corrigido
+		if ($digito == 10) {
+			$digito = "X";
+		}
+
+		/*
+		alterado por mim, Daniel Schultz
+
+		Vamos explicar:
+
+		O m�dulo 11 s� gera os digitos verificadores do nossonumero,
+		agencia, conta e digito verificador com codigo de barras (aquele que fica sozinho e triste na linha digit�vel)
+		s� que � foi um rolo...pq ele nao podia resultar em 0, e o pessoal do phpboleto se esqueceu disso...
+		
+		No BB, os d�gitos verificadores podem ser X ou 0 (zero) para agencia, conta e nosso numero,
+		mas nunca pode ser X ou 0 (zero) para a linha digit�vel, justamente por ser totalmente num�rica.
+
+		Quando passamos os dados para a fun��o, fica assim:
+
+		Agencia = sempre 4 digitos
+		Conta = at� 8 d�gitos
+		Nosso n�mero = de 1 a 17 digitos
+
+		A unica vari�vel que passa 17 digitos � a da linha digitada, justamente por ter 43 caracteres
+
+		Entao vamos definir ai embaixo o seguinte...
+
+		se (strlen($num) == 43) { n�o deixar dar digito X ou 0 }
+		*/
+		
+		if (strlen($num) == "43") {
+			//ent�o estamos checando a linha digit�vel
+			if ($digito == "0" or $digito == "X" or $digito > 9) {
+					$digito = 1;
+			}
+		}
+		return $digito;
+	} 
+	elseif ($r == 1){
+		$resto = $soma % 11;
+		return $resto;
+	}
+}
+
+
+
+function monta_linha_digitavel($linha) {
+    // Posi��o 	Conte�do
+    // 1 a 3    N�mero do banco
+    // 4        C�digo da Moeda - 9 para Real
+    // 5        Digito verificador do C�digo de Barras
+    // 6 a 19   Valor (12 inteiros e 2 decimais)
+    // 20 a 44  Campo Livre definido por cada banco
+
+    // 1. Campo - composto pelo c�digo do banco, c�digo da mo�da, as cinco primeiras posi��es
+    // do campo livre e DV (modulo10) deste campo
+    $p1 = substr($linha, 0, 4);
+    $p2 = substr($linha, 19, 5);
+    $p3 = $this->modulo_10("$p1$p2");
+    $p4 = "$p1$p2$p3";
+    $p5 = substr($p4, 0, 5);
+    $p6 = substr($p4, 5);
+    $campo1 = "$p5.$p6";
+
+    // 2. Campo - composto pelas posi�oes 6 a 15 do campo livre
+    // e livre e DV (modulo10) deste campo
+    $p1 = substr($linha, 24, 10);
+    $p2 = $this->modulo_10($p1);
+    $p3 = "$p1$p2";
+    $p4 = substr($p3, 0, 5);
+    $p5 = substr($p3, 5);
+    $campo2 = "$p4.$p5";
+ //return "$p2"; 
+    // 3. Campo composto pelas posicoes 16 a 25 do campo livre
+    // e livre e DV (modulo10) deste campo
+    $p1 = substr($linha, 34, 10);
+    $p2 = $this->modulo_10($p1);
+    $p3 = "$p1$p2";
+    $p4 = substr($p3, 0, 5);
+    $p5 = substr($p3, 5);
+    $campo3 = "$p4.$p5";
+    
+//return "$p2"; 
+    // 4. Campo - digito verificador do codigo de barras
+    $campo4 = substr($linha, 4, 1);
+
+    // 5. Campo composto pelo valor nominal pelo valor nominal do documento, sem
+    // indicacao de zeros a esquerda e sem edicao (sem ponto e virgula). Quando se
+    // tratar de valor zerado, a representacao deve ser 000 (tres zeros).
+    $campo5 = substr($linha, 5, 14);
+
+    return "$campo1 $campo2 $campo3 $campo4 $campo5"; 
+}
+
+function geraCodigoBanco($numero) {
+    $parte1 = substr($numero, 0, 3);
+    $parte2 = $this->modulo_11($parte1);
+    return $parte1 . "-" . $parte2;
+}
+       
+    function formata_numdoc($num,$tamanho)
+        {
+                while(strlen($num)<$tamanho)
+                        {
+                                $num= "0".$num; 
+                        }
+                return $num;
+        } 
+
+
+   function importararquivoretornocnab() {
+        $data['empresa'] = $this->guia->listarempresas();
+        
+        $this->loadView('ambulatorio/importararquivoretornocnab', $data);
+    }
+    
+    
+    
+      function importararquivoretornoenviarcnab() {
+        $chave_pasta = $this->session->userdata('empresa_id');
+
+        $nome = $_FILES['arquivo']['name'];
+        $nome_arq = $_FILES['arquivo'];
+                            
+
+        if (!is_dir("./upload/retornoimportadoscnab")) {
+            mkdir("./upload/retornoimportadoscnab");
+            $destino = "./upload/retornoimportadoscnab";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/retornoimportadoscnab/$chave_pasta")) {
+            mkdir("./upload/retornoimportadoscnab/$chave_pasta");
+            $destino = "./upload/retornoimportadoscnab/$chave_pasta";
+            chmod($destino, 0777);
+        }
+
+
+
+
+
+        $configuracao = array(
+            'upload_path' => './upload/retornoimportadoscnab/' . $chave_pasta . '',
+            'allowed_types' => 'txt',
+            'file_name' => $nome,
+            'max_size' => '0'
+        );
+
+        $this->load->library('upload');
+        $this->upload->initialize($configuracao);
+
+        if ($this->upload->do_upload('arquivo'))
+            $data['mensagem'] = 'Arquivo salvo com sucesso.';
+        else
+            $erro = $this->upload->display_errors();
+        $data['mensagem'] = 'Erro';
+
+
+
+
+        if (!is_dir("./upload/retornoimportadoscnab/todos")) {
+            mkdir("./upload/retornoimportadoscnab/todos");
+            $destino_todos = "./upload/retornoimportadoscnab/todos";
+            chmod($destino_todos, 0777);
+        }
+
+        if (!is_dir("./upload/retornoimportadoscnab/todos/$chave_pasta")) {
+            mkdir("./upload/retornoimportadoscnab/todos/$chave_pasta");
+            $destino_todos = "./upload/retornoimportadoscnab/todos/$chave_pasta";
+            chmod($destino_todos, 0777);
+        }
+
+
+        $configuracao2 = array(
+            'upload_path' => './upload/retornoimportadoscnab/todos/' . $chave_pasta . '',
+            'allowed_types' => 'txt',
+            'file_name' => $nome,
+            'max_size' => '0'
+        );
+
+
+        $this->upload->initialize($configuracao2);
+
+        if ($this->upload->do_upload('arquivo'))
+            $data['mensagem'] = 'Arquivo salvo com sucesso.';
+        else
+            $erro = $this->upload->display_errors();
+        $data['mensagem'] = 'Erro';
+                            
+        $this->session->set_flashdata('message', $data['mensagem']);
+
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+    }
+        
+    
+        function lerarquivoretornoimportadocnab($nome_arquivo = NULL) {
+            $chave_pasta = $this->session->userdata('empresa_id');    
+            
+             if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
+        
+           }
+            
+            redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+           
+        }
+        
+        
+         function verarquivoimportadocnab($nome_arquivo = NULL) {
+             
+              redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+         }
+        
+        
+      function downloadTXTcnabimportado($nome_arquivo = NULL) {
+        $chave_pasta = $this->session->userdata('empresa_id');
+        $arquivo = file_get_contents("./upload/retornoimportadoscnab/todos/$chave_pasta/$nome_arquivo");
+        header('Content-type: text/plain');
+        header('Content-Length: ' . strlen($arquivo));
+        header("Content-Disposition: attachment; filename=$nome_arquivo");
+        echo $arquivo;
+    }
+
+    
+      function impressaoreciboempresa($empresa_cadastro_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $data['emissao'] = date("d-m-Y");
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        $data['pagamento'] = $pagamento;
+        // var_dump($pagamento); die;
+        $valor_total = 0;
+
+        $data['paciente'] = $this->paciente->listadadosempresacadastro($empresa_cadastro_id);
+        $valor = number_format($pagamento[0]->valor, 2, ',', '.');
+
+        $data['valor'] = $valor;
+
+        if ($valor == '0,00') {
+            $data['extenso'] = 'ZERO';
+        } else {
+            $valoreditado = str_replace(",", "", str_replace(".", "", $valor));
+            // if ($dinheiro == "t") {
+            $data['extenso'] = GExtenso::moeda($valoreditado);
+            // }
+        }
+
+        $dataFuturo = date("Y-m-d");
+
+//        $this->load->View('ambulatorio/impressaorecibomed', $data);
+        $this->load->View('ambulatorio/impressaorecibo', $data);
+    }
     
 }
+
 
 /* End of file welcome.php */
 /* Location: ./system/application/controllers/welcome.php */

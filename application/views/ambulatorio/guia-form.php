@@ -3,10 +3,11 @@
     <div >
         <?
         ?>
-        <h3 class="singular"><a href="#">Marcar exames</a></h3>
+        <h3 class="singular"><a href="#">Contrato</a></h3>
         <div> 
             <?
-            if ($empresa_permissao[0]->alterar_contrato == 't') {
+            $perfil_id = $this->session->userdata('perfil_id');
+            if ($empresa_permissao[0]->alterar_contrato == 't' && $perfil_id != 10) {
                ?> 
             <div class="bt_link_new" >
                 <a href="<?=  base_url(); ?>ambulatorio/guia/editarnumerocontrato/<?= $contrato_id; ?>">Alterar Contrato</a>
@@ -96,7 +97,9 @@
                             </tfoot>
                         </table> 
                         <hr/>
+                     <?php if($perfil_id != 10){?>
                         <button type="submit" name="btnEnviar">Adicionar</button>
+                      <?php }?>
                     </fieldset>
                 <? } ?> 
             </form>
@@ -131,7 +134,7 @@
 
                                     <? if ($perfil_id != 6 && $perfil_id != 5 || true) { ?>
 
-                                        <? if ($item->situacao != 'Titular') { ?>
+                                        <? if ($item->situacao != 'Titular' && $perfil_id != 10) { ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="30px;"><div class="bt_link">
                                                     <a href="<?= base_url() ?>ambulatorio/guia/excluir/<?= $item->paciente_id ?>/<?= $contrato_id ?>">Excluir
                                                     </a></div>
@@ -146,12 +149,13 @@
 
                                     <? } ?> 
                                     <td class="<?php echo $estilo_linha; ?>" width="30px;" >
-                                        
+                                                <?php if($perfil_id != 10){?>
                                         <div class="bt_link">
                                             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaocarteira/" . $item->paciente_id . "/" . $contrato_id."/".$item->paciente_contrato_dependente_id."/".$paciente_id ?> ', '_blank', 'width=1000,height=1000');">
                                                 Carteira  
                                             </a>
                                         </div> 
+                                                <?php }?>
                                         
                                     </td>
 

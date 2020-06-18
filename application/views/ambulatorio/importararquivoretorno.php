@@ -1,5 +1,6 @@
  
 <div class="content"> <!-- Inicio da DIV content -->
+  <?php $perfil_id = $this->session->userdata('perfil_id'); ?>
     <div id="accordion">
         <h3><a href="#">&nbsp;&nbsp;&nbsp; Importar Arquivo Retorno</a></h3>
         <div>
@@ -16,7 +17,9 @@
                     <br>
 
                 </dl>
-                <button type="submit" >Enviar</button> 
+                <?php if($perfil_id != 10){?>
+                  <button type="submit" >Enviar</button> 
+                <?php }?>
             </form>
             <hr>
             <h3 class="singular">
@@ -48,7 +51,9 @@
                                    }
                                    ?> 
                                 <td width="10px"> <img         width="50px" height="50px"  src="<?= base_url(); ?>img/archive-zip-icon.png"><br><? echo $value ?>
+                                  <?php if($perfil_id != 10){?>
                                     <a   href="<?= base_url() . "./ambulatorio/guia/lerarquivoretornoimportado/" . $value; ?>"  target="_blank">Ler arquivo</a>
+                                  <?php }?>
                                 </td> 
                                 
                             <?php if ($cont == 3) {

@@ -72,7 +72,7 @@
                 <label>N&uacute;mero</label>
 
 
-                <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" required/>
+                <input type="text" id="txtNumero" class="texto02" name="numero" value="<?= @$obj->_numero; ?>" maxlength="20" required/>
             </div>
             <div>
                 <label>Complemento</label>
@@ -302,26 +302,26 @@
 
             </div>
             <div>
-                <label>CPF *</label>
-
-
-                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" />
-                <!--<input type="text" name="cpfcnpj" id ="cpfcnpj" class="texto02" value="" />-->
+                <label>&nbsp;</label>
                 <?php
-                if (@$obj->_cpfresp == "t") {
+                if (@$obj->_cpfresp == "t" || @$obj->_cpf_responsavel_flag == "t") {
                     ?>
-                    <input type="checkbox" name="cpfresp" checked ="true" />CPF Responsavel
+                <input type="checkbox" name="cpfresp" id="cpfresp" checked ="true" />CPF Responsavel
                     <?php
                 } else {
                     ?>
-                    <input type="checkbox" name="cpfresp"  />CPF Responsavel
+                <input type="checkbox" name="cpfresp" id="cpfresp" />CPF Responsavel
                     <?php
                 }
                 ?>
             </div>
             <div>
+                <label>CPF *</label>
+                <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$obj->_cpf; ?>" onblur="verificarCPF()" />
+                <!--<input type="text" name="cpfcnpj" id ="cpfcnpj" class="texto02" value="" />-->
+            </div>
+            <div>
                 <label>RG</label>
-
 
                 <input type="text" name="rg"  id="txtDocumento" class="texto04" maxlength="20" value="<?= @$obj->_documento; ?>" />
             </div>
@@ -533,8 +533,9 @@
                             if ($('#seletorcpf').prop('checked')) {
                                 var cpf = $("#cpfcnpj").val();
                                 var paciente_id = $("#txtPacienteId").val();
-                                if ($('#cpf_responsavel').prop('checked')) {
+                                if ($('#cpfresp').prop('checked')) {
                                     var cpf_responsavel = 'on';
+                                    
                                 } else {
                                     var cpf_responsavel = '';
                                 }

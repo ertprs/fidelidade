@@ -71,17 +71,7 @@
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date" required=""/>
                     </dd>
-                    <!--                    <dt>
-                                        <label>Empresa</label>
-                                        </dt>
-                                        <dd>
-                                            <select name="empresa" id="empresa" class="size2">
-                    <? foreach ($empresa as $value) : ?>
-                                                                            <option value="<?= $value->empresa_id; ?>" ><?php echo $value->nome; ?></option>
-                    <? endforeach; ?>
-                                                <option value="0">TODOS</option>
-                                            </select>
-                                        </dd>-->
+               
                     <dt>
                         <label>Enviar para Email?</label>
                     </dt>
@@ -128,9 +118,19 @@
                         </select> 
                     </dd>
 
-
-
-                </dl>
+                      <dt>
+                        <label>Empresa</label>
+                      </dt>
+                      <dd>
+                          <select name="empresa" id="empresa" class="size2">
+                        <? 
+                        foreach ($empresas as $value) : ?>
+                            <option value="<?= $value->empresa_cadastro_id; ?>" ><?php echo $value->nome; ?></option>
+                        <? endforeach; ?>
+                              <option value="0">TODOS</option>
+                          </select>
+                      </dd>
+                    </dl>
 
 
                 <button type="submit" >Pesquisar</button>
