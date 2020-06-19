@@ -934,3 +934,6 @@ ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_id integer;
 INSERT INTO ponto.tb_perfil(
             perfil_id, nome, ativo)
     VALUES (10, 'AUDITORA', 't');
+
+
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN pessoa_id integer;

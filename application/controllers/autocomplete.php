@@ -2970,6 +2970,36 @@ class Autocomplete extends Controller {
         echo json_encode($var);
     }
 
+    function pacientetitularrelatorio() {
+        if (isset($_GET['term'])) {
+            $result = $this->exame->listarautocompletepacientetitular($_GET['term']);
+        } else {
+            $result = $this->exame->listarautocompletepacientetitular();
+        }
+        foreach ($result as $item) {
+            $retorno['value'] = $item->nome;
+            $retorno['id'] = $item->paciente_id;
+        
+            $var[] = $retorno;
+        }
+        echo json_encode($var);
+    }
+
+    function pacientedependenterelatorio() {
+        if (isset($_GET['term'])) {
+            $result = $this->exame->listarautocompletepacientedependente($_GET['term']);
+        } else {
+            $result = $this->exame->listarautocompletepacientedependente();
+        }
+        foreach ($result as $item) {
+            $retorno['value'] = $item->nome;
+            $retorno['id'] = $item->paciente_id;
+        
+            $var[] = $retorno;
+        }
+        echo json_encode($var);
+    }
+
     function pacientenascimento() {
         if (isset($_GET['term'])) {
             $result = $this->exame->listarautocompletepacientenascimento($_GET['term']);

@@ -2639,10 +2639,17 @@ class Guia extends BaseController {
         $data['paciente_id'] = $paciente_id;
         $data['paciente'] = $this->paciente->listardados($paciente_id);
         $data['lista'] = $this->paciente->listardependentes();
+        // echo '<pre>';
+        // print_r($data['lista']);
+        // die;
         $data['empresa'] = $this->guia->listarempresa();
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentosconsultaavulsa($paciente_id);
 //        var_dump($data['listarpagamentoscontrato']); die;
         $data['contrato_id'] = $contrato_id;
+        $data['dependente'] = $this->guia->listardependentes($contrato_id);
+        //  echo '<pre>';
+        //  print_r($data['dependente']);
+        //  die;
         $this->loadView('ambulatorio/criarconsultaavulsapagamento-form', $data);
     }
 

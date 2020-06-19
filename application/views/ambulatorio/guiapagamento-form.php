@@ -593,6 +593,7 @@
 
                 <tr>
                     <th width="70px;" class="tabela_header">Parcela</th>
+                    <th width="70px;" class="tabela_header">Paciente</th>
                     <th width="70px;" class="tabela_header">Data</th>
                     <th width="70px;" class="tabela_header">Valor</th>
                     <th width="70px;" class="tabela_header">Situacao</th>
@@ -643,6 +644,7 @@
                 <tbody>
                     <tr>
                         <td class="<?php echo $estilo_linha; ?>"><?= $mes; ?></td>
+                        <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente; ?></td>
                         <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y", strtotime($item->data)); ?></td>
                         <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ',', '.') ?></td>
 
