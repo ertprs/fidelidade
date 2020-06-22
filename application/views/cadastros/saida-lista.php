@@ -77,7 +77,7 @@
                             <? } ?>
                         </th>
                         <th class="tabela_title">
-                            <select name="nome" id="nome" class="size2">
+                            <select name="nome" id="nome" class="size1">
                                 <option value="">TODOS</option>
                                 <? foreach ($tipo as $value) : ?>
                                     <option value="<?= $value->tipo_entradas_saida_id; ?>" <?
@@ -88,7 +88,7 @@
                             </select>
                         </th>
                         <th class="tabela_title">
-                            <select name="nome_classe" id="nome_classe" class="size2">
+                            <select name="nome_classe" id="nome_classe" class="size1">
                                 <option value="">TODOS</option>
                             </select>
                         </th>
@@ -167,17 +167,23 @@
                                 <? endif; ?>
                                     
                                     
-                                <? if ($this->session->userdata('perfil_id') == 1 || $data['permissao'][0]->excluir_entrada_saida == 't'): ?>      
-                                <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
+                               
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;">
+                                     <? if ($this->session->userdata('perfil_id') == 1 || $data['permissao'][0]->excluir_entrada_saida == 't'): ?>      
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/caixa/excluirsaida/<?= $item->saidas_id ?>">Excluir</a></div>
+                                         <? endif; ?>
                                 </td>
-                                   <? endif; ?>
+                               
                                 
-                                <? if ($this->session->userdata('perfil_id') == 1): ?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                              
+                                    <td class="<?php echo $estilo_linha; ?>" width="50px;">
+                                          <? if ($this->session->userdata('perfil_id') == 1): ?>
+                                        <div class="bt_link">
                                             <a href="<?= base_url() ?>cadastros/caixa/anexarimagemsaida/<?= $item->saidas_id ?>">Arquivos</a></div>
+                                    <? endif; ?>
                                     </td>
-                                <? endif; ?>
+                               
                             </tr>
 
                         </tbody>

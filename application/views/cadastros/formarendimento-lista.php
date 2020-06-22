@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>cadastros/formapagamento/carregarformarendimento/0">
-            Nova Forma
-        </a>
-    </div>
+    <?php if($perfil_id != 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>cadastros/formapagamento/carregarformarendimento/0">
+                Nova Forma
+            </a>
+        </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Forma de Pagamento</a></h3>
         <div>
@@ -42,12 +44,16 @@
                             <tr >
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">  
+                                     <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/formapagamento/carregarformarendimento/<?= $item->forma_rendimento_id ?>">Editar</a>
+                                     <?php }?>
                                 </td>
                                 
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">   
+                                     <?php if($perfil_id != 10){?>
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Forma?');" href="<?= base_url() ?>cadastros/formapagamento/excluirFormaRendimento/<?= $item->forma_rendimento_id ?>">Excluir</a>
+                                    <?php }?>
                                 </td>
          
                         </tr>

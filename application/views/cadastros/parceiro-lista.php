@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php if($perfil_id != 10){?>
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>cadastros/parceiro/carregarparceiro/0">
             Novo Parceiro
         </a>
     </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Parceiros</a></h3>
         <div>
@@ -51,12 +53,16 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cnpj; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cpf; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->endereco_ip; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;"> 
+                                     <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/parceiro/carregarparceiro/<?= $item->financeiro_parceiro_id ?>" target="_blank">Editar</a>
-                            </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                     <?php }?>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;"> 
+                                     <?php if($perfil_id != 10){?>
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Fornecedor?');" href="<?= base_url() ?>cadastros/parceiro/excluir/<?= $item->financeiro_parceiro_id ?>">Excluir</a>
-                            </td>
+                                    <?php }?>
+                                </td>
                         </tr>
 
                         </tbody>

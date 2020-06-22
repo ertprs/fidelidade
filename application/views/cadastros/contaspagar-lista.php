@@ -1,10 +1,13 @@
 
+<?php $perfil_id = $this->session->userdata('perfil_id');?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>cadastros/contaspagar/carregar/0">
-            Nova Conta
-        </a>
-    </div>
+    <?php if($perfil_id != 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>cadastros/contaspagar/carregar/0">
+                Nova Conta
+            </a>
+        </div>
+    <?php }?>
     <?
     $empresa = $this->caixa->empresa();
     $saldo = $this->caixa->saldo();
@@ -58,7 +61,7 @@
                             <? } ?>
                         </th>
                         <th class="tabela_title">
-                            <select name="nome" id="nome" class="size2">
+                            <select name="nome" id="nome" class="size1">
                                 <option value="">TODOS</option>
                                 <? foreach ($tipo as $value) : ?>
                                     <option value="<?= $value->tipo_entradas_saida_id; ?>" <?
@@ -69,12 +72,12 @@
                             </select>
                         </th>
                         <th class="tabela_title">
-                            <select name="nome_classe" id="nome_classe" class="size2">
+                            <select name="nome_classe" id="nome_classe" class="size1">
                                 <option value="">TODOS</option>
                             </select>
                         </th>
                         <th class="tabela_title">
-                            <select name="empresa" id="empresa" class="size2">
+                            <select name="empresa" id="empresa" class="size1">
                                 <option value="">TODOS</option>
                                 <? foreach ($empresa as $value) : ?>
                                     <option value="<?= $value->financeiro_credor_devedor_id; ?>" <?
@@ -96,6 +99,10 @@
                 <tr>
                     <th class="tabela_title">Saldo em Caixa:  <?= number_format($saldo[0]->sum, 2, ",", ".") ?></th>
                 </tr>
+            </thead>
+            </table>
+            <table>
+                <thead>
                 <tr>
                     <th class="tabela_header">Credor</th>
                     <th class="tabela_header">Tipo</th>
@@ -133,22 +140,34 @@
                                 <? } ?>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->tipo; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->classe; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>"><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
+                                <td class="<?php echo $estilo_linha; ?>" ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->conta; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ",", "."); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->observacao; ?></td>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="40px;">
+                                            <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contaspagar/carregar/<?= $item->financeiro_contaspagar_id ?>">Editar</a></div>
+                                            <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="40px;">
+                                     <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a onclick="javascript: return confirm('Deseja realmente excluir a conta <?= $item->razao_social; ?>');" href="<?= base_url() ?>cadastros/contaspagar/excluir/<?= $item->financeiro_contaspagar_id ?>">Excluir</a></div>
+                                     <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">
+                                      <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contaspagar/carregarconfirmacao/<?= $item->financeiro_contaspagar_id ?>">Confirmar</a></div>
+                                      <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">
+                                     <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contaspagar/anexarimagemcontasapagar/<?= $item->financeiro_contaspagar_id ?>">Arquivos</a></div>
+                                     <?php }?>
                                 </td>
                             </tr>
 

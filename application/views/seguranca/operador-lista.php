@@ -1,9 +1,15 @@
+<?php 
+$perfil_id = $this->session->userdata('perfil_id'); 
+?>
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php if($perfil_id != 10){?>
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>seguranca/operador/novo">
             Novo Operador
         </a>
     </div>
+    <?php }?>
+    
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Operadores</a></h3>
         <div>
@@ -58,32 +64,36 @@
                                 <?}?>
                                                                 <?if($item->ativo == 't'){?>
                                 <td class="<?php echo $estilo_linha; ?>" >
-                                    <a onclick="javascript: confirm('Deseja realmente excluir o operador <?=$item->usuario; ?>');"
-                                       href="<?= base_url() . "seguranca/operador/excluirOperador/$item->operador_id";?>"  style="text-decoration: none;">Excluir
-                                    </a>
-<!--                                    href="<?=base_url()?>seguranca/operador/excluirOperador/<?=$item->operador_id;?>"-->
+                                     <?php if($perfil_id != 10){?>
+                                        <a onclick="javascript: confirm('Deseja realmente excluir o operador <?=$item->usuario; ?>');"
+                                           href="<?= base_url() . "seguranca/operador/excluirOperador/$item->operador_id";?>"  style="text-decoration: none;">Excluir
+                                        </a>
+                                     <?php }?>
+
                                     </td>
                                     <td class="<?php echo $estilo_linha; ?>" width="70px;">
+                                         <?php if($perfil_id != 10){?>
                                         <a    href="<?= base_url() . "seguranca/operador/alterar/$item->operador_id"; ?>"  style="text-decoration: none;">Editar
-                                    </a>
-<!--                                        href="<?= base_url() ?>seguranca/operador/alterar/<?= $item->operador_id ?>"-->
+                                         </a>
+                                         <?php }?>
                                         </td>
                                     <td class="<?php echo $estilo_linha; ?>" width="70px;">
+                                        <?php if($perfil_id != 10){?>
                                         <a    href="<?= base_url() . "seguranca/operador/operadorconvenio/$item->operador_id"; ?>" style="text-decoration: none;">Convenio
                                     </a>
-<!--                           href="<?= base_url() ?>seguranca/operador/operadorconvenio/<?= $item->operador_id ?>"-->
+                                       <?php }?>
                                      </td>
                                       <?}else{?>
                                     
                                     <?}?>
                          
-                            <?if($item->ativo != 't'){?>
-                            <td class="<?php echo $estilo_linha; ?>" colspan="4" style="text-align: center;">
-                                <a onclick="javascript: return  confirm('Deseja realmente Reativar o operador <?=$item->usuario; ?>'); " href="<?= base_url() . "seguranca/operador/reativaroperador/$item->operador_id";?>"
-                                       >Reativar
-                                    </a> 
-                             </td>
-                               <?} ?>
+                            <?if($item->ativo != 't' && $perfil_id != 10){?>
+                                <td class="<?php echo $estilo_linha; ?>" colspan="4" style="text-align: center;">
+                                    <a onclick="javascript: return  confirm('Deseja realmente Reativar o operador <?=$item->usuario; ?>'); " href="<?= base_url() . "seguranca/operador/reativaroperador/$item->operador_id";?>"
+                                           >Reativar
+                                        </a> 
+                                 </td>
+                             <?} ?>
                              
                         </tr>
 

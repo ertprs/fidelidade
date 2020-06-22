@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>cadastros/classe/carregarclasse/0">
-            Novo Classe
-        </a>
-    </div>
+    <?php if($perfil_id != 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>cadastros/classe/carregarclasse/0">
+                Novo Classe
+            </a>
+        </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Classe</a></h3>
         <div>
@@ -43,12 +45,16 @@
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->descricao; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->tipo; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">     
+                                  <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/classe/carregarclasse/<?= $item->financeiro_classe_id ?>">Editar</a>
-                            </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
-                                    <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Classe?');" href="<?= base_url() ?>cadastros/classe/excluir/<?= $item->financeiro_classe_id ?>">Excluir</a>
-                            </td>
+                                   <?php }?>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">   
+                                     <?php if($perfil_id != 10){?>
+                                       <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Classe?');" href="<?= base_url() ?>cadastros/classe/excluir/<?= $item->financeiro_classe_id ?>">Excluir</a>
+                                    <?php }?>
+                                </td>
                         </tr>
 
                         </tbody>

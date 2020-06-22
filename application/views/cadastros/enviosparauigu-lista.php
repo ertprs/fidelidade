@@ -43,6 +43,7 @@
                     </tr>
                 </thead>
                 <?php
+                $perfil_id = $this->session->userdata('perfil_id'); 
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->paciente->listarenviosiugucard($_GET)->get()->result();                 
                 $total = count($consulta);
@@ -72,12 +73,13 @@
                                          }else{
                                              echo "Não paga";
                                          }
-                                 
                                  ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;">
+                                   <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/pacientes/excluirenvioiugu/<?= $item->envio_iugu_card_id; ?>">
                                         Excluir
                                     </a>
+                                     <?php }?>
                                 </td>
                             </tr>
 

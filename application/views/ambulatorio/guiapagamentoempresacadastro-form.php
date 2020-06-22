@@ -107,6 +107,7 @@
                         $key = $empresa[0]->iugu_token;
                         Iugu::setApiKey($key);
                         $contador = 0;
+                          $perfil_id = $this->session->userdata('perfil_id'); 
                         foreach ($listarpagamentoscontrato as $item) {
 
                             $saber_se_foi_pago = $item->data_cartao_iugu;
@@ -202,11 +203,16 @@
                                         else:
                                             ?>
 
+                                             <?php if($perfil_id != 10){?>
                                             <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $empresa_cadastro_id ?>/<?= @$contrato_id ?>/<?= @$item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                                        <? endif; ?>
+                                                                <?php }else{?>
+                                              <td style="width: 130px"  class="<?php echo $estilo_linha; ?>"> </td>
+                                                  <?php }?>
+                                                
+                                                <? endif; ?>
 
                                         <?
-                                        if ($item->contrato == 't') {
+                                        if ($item->contrato == 't' && $perfil_id != 10) {
 
                                             @$contrato = "true";
                                             ?>
@@ -489,12 +495,33 @@
                         endif;
                     else:
                         ?>
+                                        <?php if($perfil_id != 10){?>
                         <td colspan="1" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $empresa_cadastro_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                        <td colspan="3"  class="<?php echo $estilo_linha; ?>">
-                         <div class="bt_link">
-                           <a href="<?= base_url() ?>ambulatorio/guia/impressaoreciboempresa/<?= $empresa_cadastro_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo</a>
-                           </div>
-                        </td>
+                                        <?php }else{
+                                       ?>
+                        <td colspan="2" class="<?php echo $estilo_linha; ?>"></td>
+                        <?
+                                        }
+?>
+                          
+                        
+                         <?php if($perfil_id != 10){?>
+                            <td colspan="2"  class="<?php echo $estilo_linha; ?>">
+                            <div class="bt_link">
+                              <a href="<?= base_url() ?>ambulatorio/guia/impressaoreciboempresa/<?= $empresa_cadastro_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo</a>
+                              </div>
+                            </td>
+                         <?php }else{?>
+                            <td colspan="5"  class="<?php echo $estilo_linha; ?>">
+                             <div class="bt_link">
+                               <a href="<?= base_url() ?>ambulatorio/guia/impressaoreciboempresa/<?= $empresa_cadastro_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo</a>
+                             </div>
+                            </td>
+                        <?php }?>
+                        
+                        
+                        
+                                    
  <? endif; ?>
                         
 

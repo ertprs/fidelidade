@@ -1,10 +1,12 @@
-
+<?php   $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php if($perfil_id != 10){ ?>
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>ambulatorio/procedimento/carregarprocedimento/0">
             Novo Procedimento
         </a>
     </div>
+    <?php }?>
 
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Procedimento</a></h3>
@@ -34,6 +36,7 @@
                 </tr>
                 </thead>
                 <?php
+   
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->procedimento->listar($_GET);
                 $total = $consulta->count_all_results();
@@ -67,32 +70,24 @@
                                 } else {
                                     ?>
                                     <td class="<?php echo $estilo_linha; ?>"  width="50px;">
-
-                                        <div class="bt_link">
-                                            <a onclick="return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>')" href="<?= base_url() . "ambulatorio/procedimento/excluir/$item->procedimento_tuss_id"; ?>" target="_blank"> 
-
-                                                Excluir
-                                            </a></div>
-
-                                                <!--                                    <a onclick="javascript: return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>');"
-                                                       href="<?= base_url() ?>ambulatorio/procedimento/excluir/<?= $item->procedimento_tuss_id; ?>">
-                                                        <img border="0" title="Excluir" alt="Excluir"
-                                                             src="<?= base_url() ?>img/form/page_white_delete.png" />
-                                                    </a>-->
-
-                                                                <!--                                    <a href="<?= base_url() ?>ambulatorio/procedimento/carregarprocedimento/<?= $item->procedimento_tuss_id ?>">
-                                                                     <img border="0" title="Detalhes" alt="Detalhes"
-                                                                          src="<?= base_url() ?>img/form/page_white_edit.png" />
-                                                                 </a>-->
+                                       <?php if($perfil_id != 10){?>
+                                            <div class="bt_link">
+                                                <a onclick="return confirm('Deseja realmente excluir o procedimento <?= $item->nome; ?>')" href="<?= base_url() . "ambulatorio/procedimento/excluir/$item->procedimento_tuss_id"; ?>" target="_blank"> 
+                                                    Excluir
+                                                </a>
+                                            </div>
+                                      <?php }?>
                                     </td>
 
 
 
-                                    <td class="<?php echo $estilo_linha; ?>"  width="50px;"> <div class="bt_link">
+                                    <td class="<?php echo $estilo_linha; ?>"  width="50px;">
+                                         <?php if($perfil_id != 10){?>
+                                        <div class="bt_link">
                                             <a  onclick="javascript:window.open('<?= base_url() . "ambulatorio/procedimento/carregarprocedimento/$item->procedimento_tuss_id"; ?> ', '_blank');">
-            <!--                                        <img border="0" title="Detalhes" alt="Detalhes"
-                                                     src="<?= base_url() ?>img/form/page_white_edit.png" />-->
                                                 Editar</a></div>
+                                        <?php }?>
+                                        
 
                                     </td>
 

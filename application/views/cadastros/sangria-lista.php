@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id');?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>cadastros/caixa/novasangria">
-            Nova sangria
-        </a>
-    </div>
+    <?php if($perfil_id != 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>cadastros/caixa/novasangria">
+                Nova sangria
+            </a>
+        </div>
+    <?php }?>
     <?
     $operador = $this->operador->listaradminitradores();
     ?>
@@ -98,8 +100,12 @@
                                     <td class="<?php echo $estilo_linha; ?>"></td>
                                 <? } else { ?>
                                     <td class="<?php echo $estilo_linha; ?>">REALIZADA</td>
-                                    <td class="<?php echo $estilo_linha; ?>" width="100px;"><div class="bt_link">
-                                            <a href="<?= base_url() ?>cadastros/caixa/cancelarsangria/<?= $item->sangria_id ?>">Cancelar</a></div>
+                                    <td class="<?php echo $estilo_linha; ?>" width="100px;">
+                                       <?php if($perfil_id != 10){?>
+                                            <div class="bt_link">
+                                                <a href="<?= base_url() ?>cadastros/caixa/cancelarsangria/<?= $item->sangria_id ?>">Cancelar</a>
+                                            </div>
+                                       <?php }?>
                                     </td>
                                 <? } ?>
 

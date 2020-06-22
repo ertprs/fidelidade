@@ -1,10 +1,13 @@
 
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php if($perfil_id != 10){?>
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>cadastros/contasreceber/carregar/0">
             Nova Conta
         </a>
     </div>
+    <?php }?>
     <?
     $empresa = $this->caixa->empresa();
     $saldo = $this->caixa->saldo();
@@ -58,7 +61,7 @@
                             <? } ?>
                         </th>
                         <th class="tabela_title">
-                            <select name="nome" id="nome" class="size2">
+                            <select name="nome" id="nome" class="size1">
                                 <option value="">TODOS</option>
                                 <? foreach ($tipo as $value) : ?>
                                     <option value="<?= $value->tipo_entradas_saida_id; ?>" <?
@@ -69,7 +72,7 @@
                             </select>
                         </th>
                         <th class="tabela_title">
-                            <select name="nome_classe" id="nome_classe" class="size2">
+                            <select name="nome_classe" id="nome_classe" class="size1">
                                 <option value="">TODOS</option>
                             </select>
                         </th>
@@ -96,6 +99,10 @@
                 <tr>
                     <th class="tabela_title">Saldo em Caixa:  <?= number_format($saldo[0]->sum, 2, ",", ".") ?></th>
                 </tr>
+            </thead>
+            </table>
+            <table>
+                <thead>
                 <tr>
                     <th class="tabela_header">Devedor</th>
                     <th class="tabela_header">Tipo</th>
@@ -140,17 +147,29 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= number_format($item->valor, 2, ",", "."); ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->observacao; ?></td>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="40px;">
+                                   <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contasreceber/carregar/<?= $item->financeiro_contasreceber_id ?>">Editar</a></div>
+                                   <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="40px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="40px;">
+                                    <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a onclick="javascript: return confirm('Deseja realmente excluir a conta <?= $item->razao_social; ?>');" href="<?= base_url() ?>cadastros/contasreceber/excluir/<?= $item->financeiro_contasreceber_id ?>">Excluir</a></div>
+                                    <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">
+                                <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contasreceber/carregarconfirmacao/<?= $item->financeiro_contasreceber_id ?>">Confirmar</a></div>
+                                  <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="50px;"><div class="bt_link">
+                                <td class="<?php echo $estilo_linha; ?>" width="50px;">
+                                     <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>cadastros/contasreceber/anexarimagemcontasareceber/<?= $item->financeiro_contasreceber_id ?>">Arquivos</a></div>
+                               <?php }?>
                                 </td>
                             </tr>
 

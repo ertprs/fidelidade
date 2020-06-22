@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>ambulatorio/indicacao/carregarindicacao/0">
-            Nova Indica&ccedil;&atilde;o
-        </a>
-    </div>
+    <?php if($perfil_id != 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>ambulatorio/indicacao/carregarindicacao/0">
+                Nova Indica&ccedil;&atilde;o
+            </a>
+        </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Indica&ccedil;&atilde;o</a></h3>
         <div>
@@ -42,13 +44,15 @@
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;">
-
+                                            <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>ambulatorio/indicacao/carregarindicacao/<?= $item->paciente_indicacao_id ?>">
-                                        editar
+                                        Editar
                                     </a>&zwnj;&nbsp;
+                                           
                                     <a href="<?= base_url() ?>ambulatorio/indicacao/excluir/<?= $item->paciente_indicacao_id ?>">
-                                        excluir
+                                        Excluir
                                     </a>
+                                     <?php }?>
                                 </td>
                             </tr>
 

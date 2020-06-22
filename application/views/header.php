@@ -419,7 +419,7 @@ $data['permissao'] = $this->db->get()->result();
                         </ul>
                     </li>
                                 <? } ?>
-                    <? if ($perfil_id == 5 ||  $perfil_id == 10) { ?>
+                    <? if ($perfil_id == 5 ) { ?>
                         <li><span class="folder">Configura&ccedil;&atilde;o</span>
                             <ul>
                                 <li><span class="folder">Recep&ccedil;&atilde;o</span>

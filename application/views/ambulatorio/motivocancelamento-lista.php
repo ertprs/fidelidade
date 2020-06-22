@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>ambulatorio/motivocancelamento/carregarmotivocancelamento/0">
-            Novo Motivo
-        </a>
-    </div>
+    <?php if($perfil_id != 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>ambulatorio/motivocancelamento/carregarmotivocancelamento/0">
+                Novo Motivo
+            </a>
+        </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Motivo cancelamento</a></h3>
         <div>
@@ -42,12 +44,16 @@
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->descricao; ?></td>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
-                                    <a href="<?= base_url() ?>ambulatorio/motivocancelamento/carregarmotivocancelamento/<?= $item->ambulatorio_cancelamento_id ?>">Editar</a>
-                            </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">  
+                                   <?php if($perfil_id != 10){?>
+                                      <a href="<?= base_url() ?>ambulatorio/motivocancelamento/carregarmotivocancelamento/<?= $item->ambulatorio_cancelamento_id ?>">Editar</a>
+                                    <?php }?>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">     
+                                   <?php if($perfil_id != 10){?>
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Motivo?');" href="<?= base_url() ?>ambulatorio/motivocancelamento/excluir/<?= $item->ambulatorio_cancelamento_id ?>">Excluir</a>
-                            </td>
+                                   <?php }?>
+                                </td>
                         </tr>
 
                         </tbody>

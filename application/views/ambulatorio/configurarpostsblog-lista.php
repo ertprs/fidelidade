@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
-        <a href="<?php echo base_url() ?>ambulatorio/empresa/carregarpostsblog/0">
-            Novo Post
-        </a>
-    </div>
+    <?php if($perfil_id!= 10){?>
+        <div class="bt_link_new">
+            <a href="<?php echo base_url() ?>ambulatorio/empresa/carregarpostsblog/0">
+                Novo Post
+            </a>
+        </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Informativos</a></h3>
         <div>
@@ -46,10 +48,13 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->posts_blog_id;?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->titulo; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y H:i:s", strtotime($item->data_cadastro)); ?></td>
-                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>"><div class="bt_link">
+                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>">
+                                    <?php if($perfil_id!= 10){?>
+                                     <div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/empresa/carregarpostsblog/<?= $item->posts_blog_id; ?>">Editar</a></div>
+                                    <?php }?>
                                 </td>
-                                <?php if($perfil_id != 18 && $perfil_id != 20){?>
+                                <?php if($perfil_id != 18 && $perfil_id != 20 && $perfil_id!= 10){?>
                                 <td style="width:140px;" class="<?php echo $estilo_linha; ?>"><div class="bt_link">
                                         <a onclick="javascript: return confirm('Deseja realmente excluir o post?')" href="<?= base_url() ?>ambulatorio/empresa/excluirpostsblog/<?= $item->posts_blog_id; ?>">Excluir</a></div>
                                 </td>

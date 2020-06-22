@@ -1,4 +1,5 @@
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <!--    <div class="bt_link_new">
         <a href="<?php echo base_url() ?>seguranca/operador/novo">
             Novo Operador
@@ -55,8 +56,10 @@
                                 
                                     
                                     <td colspan="3" class="<?php echo $estilo_linha; ?>" width="140px;">
+                                                    <?php if($perfil_id != 10){ ?>  
                                     <a  onclick="javascript:window.open('<?= base_url() . "seguranca/operador/operadorgerentevendas/$item->operador_id"; ?> ', '_blank');">Vendedores
                                     </a>
+                                                    <?php }?>
 <!--                           href="<?= base_url() ?>seguranca/operador/operadorconvenio/<?= $item->operador_id ?>"-->
                                         </td>
                                                                     <?}else{?>

@@ -23,6 +23,7 @@
                     </tr>
                 </thead>
                 <?php
+                $perfil_id = $this->session->userdata('perfil_id');
                 $url = $this->utilitario->build_query_params(current_url(), $_GET);
                 $consulta = $this->paciente->listarerros($_GET);
                 $total = $consulta->count_all_results();
@@ -48,10 +49,11 @@
                                 
 
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;">
-
-                                    <a href="<?= base_url() ?>cadastros/pacientes/excluirerro/<?= $item->erros_gerencianet_id?> ">
-                                        Excluir
-                                    </a>
+                                     <?php if($perfil_id != 10){?>
+                                        <a href="<?= base_url() ?>cadastros/pacientes/excluirerro/<?= $item->erros_gerencianet_id?> ">
+                                            Excluir
+                                        </a>
+                                    <?php }?>
                                 </td>
                             </tr>
 

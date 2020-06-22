@@ -19,7 +19,7 @@ class Operador extends BaseController {
 
     function index() {
 
-        if ($this->utilitario->autorizar(1, $this->session->userdata('modulo')) == true) {
+        if ($this->utilitario->autorizar(1, $this->session->userdata('modulo')) == true || $this->session->userdata('perfil_id') == 10) {
             $this->pesquisar();
         } else {
             $data['mensagem'] = 'Usuario sem permissao';

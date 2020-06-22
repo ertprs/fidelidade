@@ -1,4 +1,4 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
         <h3 class="singular"><a href="#">Pesquisa Satisfação</a></h3>
@@ -40,8 +40,11 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente_id;?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->paciente; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= date("d/m/Y H:i:s", strtotime($item->data_cadastro)); ?></td>
-                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>"><div class="bt_link">
+                                <td style="width:140px;" class="<?php echo $estilo_linha; ?>">
+                                        <?php if($perfil_id != 10){?>
+                                    <div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/empresa/detalhespesquisasatisfacao/<?= $item->paciente_pesquisa_satisfacao_id; ?>">Detalhes</a></div>
+                                        <?php }?>
                                 </td>
                                 
                                 <?

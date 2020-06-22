@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php if($perfil_id != 10){?>
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>cadastros/fornecedor/carregarfornecedor/0">
             Novo Credor/Devedor
         </a>
     </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Credor/Devedor</a></h3>
         <div>
@@ -49,12 +51,16 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->razao_social; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cnpj; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->cpf; ?></td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">  
+                                  <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/fornecedor/carregarfornecedor/<?= $item->financeiro_credor_devedor_id ?>" target="_blank">Editar</a>
-                            </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                   <?php }?>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">       
+                                  <?php if($perfil_id != 10){?>
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Fornecedor?');" href="<?= base_url() ?>cadastros/fornecedor/excluir/<?= $item->financeiro_credor_devedor_id ?>">Excluir</a>
-                            </td>
+                                   <?php }?>
+                                </td>
                         </tr>
 
                         </tbody>

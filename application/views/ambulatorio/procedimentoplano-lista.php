@@ -1,5 +1,6 @@
 
 <?
+$perfil_id = $this->session->userdata('perfil_id');
 $data['empresa_permissao'] = $this->guia->listarempresapermissoes();
 $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
 ?>
@@ -11,31 +12,15 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
         <tr>
             <? if (@$data['empresa_permissao'][0]->apenas_procedimentos_multiplos != 't') { ?>
                 <td>
+                        <?php if($perfil_id != 10){?>
                     <div class="bt_link_new">
                         <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplano/0" target="_blank">
                             Novo Procedimento
                         </a>
                     </div>
+                        <?php }?>
                 </td>
-                <?
-                $geral = $this->session->userdata('geral');
-                if ($geral == 't') {
-                    ?>
-        <!--                    <td>
-                            <div class="bt_link_new">
-                                <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/0">
-                                    Novo Agrupador
-                                </a>
-                            </div>
-                        </td>-->
-                <? } ?>
-    <!--                <td>
-                    <div class="bt_link_new">
-                        <a href="<?php echo base_url() ?>ambulatorio/procedimentoplano/carregarmultiplosprocedimentoplano" target="_blank">
-                            Multiplos Procedimentos 
-                        </a>
-                    </div>
-                </td>-->
+             
             <? } else {
                 ?>
                 <td>
@@ -61,9 +46,6 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
         </tr>
     </table>
 
-    <?
-    $perfil_id = $this->session->userdata('perfil_id');
-    ?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Procedimentos Convênio</a></h3>
         <div>
@@ -120,7 +102,7 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                             <input type="text" name="grupo" class="texto04" value="<?php echo @$_GET['grupo']; ?>" />
                         </th>-->
                         <th class="tabela_title">
-                            <select name="procedimento" id="procedimento" class="size4 chosen-select" tabindex="1">
+                            <select name="procedimento" id="procedimento" class="size2 chosen-select" tabindex="1">
                                 <option value="">Selecione</option>
                                 <? foreach ($procedimento as $value) : ?>
                                     <option value="<?= $value->nome; ?>"<?
@@ -131,7 +113,7 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                             </select>
                         </th>
                         <th class="tabela_title">
-                            <input type="text" name="codigo" class="texto04" value="<?php echo @$_GET['codigo']; ?>" />
+                            <input type="text" name="codigo" class="texto01" value="<?php echo @$_GET['codigo']; ?>" />
                         </th>
                         <th class="tabela_title">
                             <button type="submit" id="enviar">Pesquisar</button>
@@ -222,50 +204,37 @@ $medicinadotrabalho = $this->session->userdata('medicinadotrabalho');
                                             </a></div>
                                <?php } ?>
                                         </td>
-                <!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
-                                            <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoformapagamento/<?= $item->procedimento_convenio_id ?>">
-                                                Pagamento
-                                            </a>
-                                        </td>-->
-                <!--                                        <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
-                                            <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanosessao/<?= $item->procedimento_convenio_id ?>">
-                                                Sessão
-                                            </a>
-                                        </td>-->
+
 
                                     <? } else {
                                         ?>
                                         <td class="<?php echo $estilo_linha; ?>" width="80px;"> </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="80px;"> </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                         
                                             <div class="bt_link">
                                                 <a target="_blank" onclick="javascript: return confirm('Deseja realmente excluir o procedimento? ');" href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id ?>">
                                                     Excluir
                                                 </a>
                                             </div>
+                                           
                                         </td>
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;"> 
+                                           =
                                             <div class="bt_link">
                                                 <a target="_blank" href="<?= base_url() ?>ambulatorio/procedimentoplano/carregarprocedimentoplanoagrupador/<?= $item->procedimento_convenio_id ?>">
                                                     Editar
                                                 </a>
                                             </div>
+                                          
                                         </td>
                                     <? } ?>
 
                                 <? } else { ?>
-                                    <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                        Excluir
-            <!--                                    href="<?= base_url() ?>ambulatorio/procedimentoplano/excluir/<?= $item->procedimento_convenio_id; ?>"-->
-                                    </td>
-                                    <td class="<?php echo $estilo_linha; ?>" width="60px;"> 
-                                        Editar
-                                    </td>
+                                    
+                                 
                                     <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
-                                        Pagamento
-                                    </td>
-                                    <td class="<?php echo $estilo_linha; ?>" width="80px;"> 
-                                        Sessão
+                                       
                                     </td>
                                 <? } ?>
                             </tr>

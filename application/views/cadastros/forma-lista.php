@@ -1,10 +1,12 @@
-
+<?php $perfil_id = $this->session->userdata('perfil_id'); ?>
 <div class="content"> <!-- Inicio da DIV content -->
+    <?php if($perfil_id != 10){?>
     <div class="bt_link_new">
         <a href="<?php echo base_url() ?>cadastros/forma/carregarforma/0">
             Nova Conta
         </a>
     </div>
+    <?php }?>
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Conta</a></h3>
         <div>
@@ -42,12 +44,16 @@
                             <tr>
                                 <td class="<?php echo $estilo_linha; ?>"><?= $item->descricao; ?></td>
 
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">   
+                                  <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/forma/carregarforma/<?= $item->forma_entradas_saida_id ?>">Editar</a>
-                            </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">                                  
+                                  <?php }?>
+                                </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="70px;">   
+                                   <?php if($perfil_id != 10){?>
                                     <a onclick="javascript: return confirm('Deseja realmente exlcuir esse Forma?');" href="<?= base_url() ?>cadastros/forma/excluir/<?= $item->forma_entradas_saida_id ?>">Excluir</a>
-                            </td>
+                                    <?php }?>
+                                </td>
                         </tr>
 
                         </tbody>
