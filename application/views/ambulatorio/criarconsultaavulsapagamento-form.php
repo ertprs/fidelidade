@@ -65,6 +65,15 @@
                 <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravarconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>" method="post">
                     <fieldset>
                         <legend>Dados da Consulta</legend>
+
+                        <div>
+                        <label>Cliente</label>
+                        <select name="pessoa_id">
+                            <? foreach($dependente as $item){?>
+                                <option value="<?=$item->paciente_id?>"><?=$item->paciente.' - '.$item->situacao?></option>
+                            <?}?>
+                        </select>
+                        </div>
                         <div>
                             <label>Valor</label>                      
                             <input type="text" id="valor" name="valor" alt="decimal" class="texto02" value="<?= @$paciente[0]->consulta_avulsa ?>" required/>

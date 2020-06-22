@@ -316,8 +316,34 @@ class guia_model extends Model {
     }
 
     function relatoriocontratosinativos() {
-      
-        $this->db->select('p.nome,
+
+        if($_POST['tipopaciente'] == 'titular'){
+            if(isset($_POST['paciente_titular_id'])){
+                $titular_id = $_POST['paciente_titular_id'];
+            }    
+        }elseif($_POST['tipopaciente'] == 'dependente'){
+            // $this->paciente->listaridcontrato_dependente($paciente_id);
+            $this->db->select('paciente_contrato_id');
+            $this->db->from('tb_paciente_contrato_dependente');
+            $this->db->where('paciente_id', $_POST['paciente_dependente_id']);
+            $return = $this->db->get()->result();
+
+            $contrato_id = $return[0]->paciente_contrato_id;
+
+            $this->db->select('paciente_id');
+            $this->db->from('tb_paciente_contrato');
+            $this->db->where('paciente_contrato_id', $contrato_id);
+            $var = $this->db->get()->result();
+
+            $titular_id = $var[0]->paciente_id;
+
+
+        }else{
+            $titular_id = 0;
+        }
+
+
+        $this->db->select('p.nome, p.paciente_id,
                             pc.paciente_contrato_id,
                             fp.nome as plano,
                             o.nome as operador,
@@ -334,6 +360,7 @@ class guia_model extends Model {
         $this->db->join('tb_operador op', 'op.operador_id = p.vendedor', 'left');
         $this->db->join('tb_operador opi', 'opi.operador_id = p.pessoaindicacao', 'left');
         $this->db->where('p.ativo', 'true');
+
         if ($_POST['tipobusca'] == "I") {
             $this->db->where('pc.ativo', 'f');
         }
@@ -390,6 +417,10 @@ class guia_model extends Model {
             //empresa_id é na verdade empresa_cadastro_id da tabela tb_empresa_cadastro
             $this->db->where("(pc.associado_empresa_cadastro_id = $empresa_id or p.empresa_id = $empresa_id )");
         }
+
+        if($titular_id != 0){
+             $this->db->where('pc.paciente_id', $titular_id); 
+         }
         $this->db->orderby('p.nome');
         $this->db->orderby('pc.paciente_contrato_id');
         $return = $this->db->get();
@@ -918,7 +949,7 @@ class guia_model extends Model {
 
     function listardependentes($paciente_contrato_id) {
 
-        $this->db->select('initcap(p.nome) as paciente,p.situacao,p.cpf, fp.nome as contrato');
+        $this->db->select('p.paciente_id, initcap(p.nome) as paciente,p.situacao,p.cpf, fp.nome as contrato');
         $this->db->from('tb_paciente_contrato_dependente pcd');
         $this->db->join('tb_paciente p', 'p.paciente_id = pcd.paciente_id', 'left');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcd.paciente_contrato_id', 'left');
@@ -6660,6 +6691,7 @@ AND data <= '$data_fim'";
 //            $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('paciente_id', $paciente_id);
+            $this->db->set('pessoa_id', $_POST['pessoa_id']);
             $this->db->set('data', $data);
             $this->db->set('tipo', 'EXTRA');
             $this->db->set('valor', $valor);

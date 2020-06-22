@@ -66,6 +66,37 @@
                             <option value="A">Ativos</option>
                         </select>
                     </dd>
+                    <br>
+                    <dt>
+                        <label>BUSCAR POR PACIENTE</label>
+                    </dt>
+                    <dd>
+                        <select name="tipopaciente" id="tipopaciente" class="size2">
+                            <option value="titular">Titulares</option>
+                            <option value="dependente">Dependentes</option>
+                        </select>
+                    </dd>
+
+                    <dt id="paciente_titular_">
+                        <label>TITULAR</label>
+                    </dt>
+                    <dd>
+                        <input type="hidden" name="paciente_titular_id" id="paciente_titular_id" class="size1" />
+                        <input type="text" name="paciente_titular" id="paciente_titular" class="size3" />
+                    </dd>
+
+
+                    <dt id="paciente_dependente_">
+                        <label>DEPENDENTE</label>
+                    </dt>
+                    <dd>
+                        <input type="hidden" name="paciente_dependente_id" id="paciente_dependente_id" class="size1" />
+                        <input type="text" name="paciente_dependente" id="paciente_dependente" class="size3"/>
+                    </dd>
+
+                    <br>
+
+
                     <dt>
                         <label>Data tipo</label>
                     </dt>
@@ -184,4 +215,68 @@
             }
         });
     });
+
+
+    $('#tipopaciente').change(function () {
+        trocartitular();
+    });
+
+    function trocartitular(){
+        if($('#tipopaciente').val() == 'titular'){
+            $('#paciente_titular').show();
+            $('#paciente_titular_').show();
+            $('#paciente_dependente').hide();
+            $('#paciente_dependente_id').val('');
+            $('#paciente_dependente').val('');
+            $('#paciente_dependente_').hide();
+
+        }else{
+            $('#paciente_dependente').show();
+            $('#paciente_dependente_').show();
+            $('#paciente_titular_').hide();
+            $('#paciente_titular_id').val('');
+            $('#paciente_titular').val('');
+            $('#paciente_titular').hide();
+
+        }
+    }
+
+    trocartitular();
+
+
+
+    $(function () {
+        $("#paciente_titular").autocomplete({
+            source: "<?= base_url() ?>index.php?c=autocomplete&m=pacientetitularrelatorio",
+            minLength: 7, // Todas as telas de agendamento eu coloquei esse comentario. Quando for alterar esse valor, basta ir em "Localizar em Projetos" e pesquisar por ele.
+            focus: function (event, ui) {
+                $("#paciente_titular").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#paciente_titular").val(ui.item.value);
+                $("#paciente_titular_id").val(ui.item.id);;
+        
+                return false;
+            }
+        });
+    });
+
+    $(function () {
+        $("#paciente_dependente").autocomplete({
+            source: "<?= base_url() ?>index.php?c=autocomplete&m=pacientedependenterelatorio",
+            minLength: 7, // Todas as telas de agendamento eu coloquei esse comentario. Quando for alterar esse valor, basta ir em "Localizar em Projetos" e pesquisar por ele.
+            focus: function (event, ui) {
+                $("#paciente_dependente").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#paciente_dependente").val(ui.item.value);
+                $("#paciente_dependente_id").val(ui.item.id);;
+        
+                return false;
+            }
+        });
+    });
+
 </script>

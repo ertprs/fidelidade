@@ -538,12 +538,13 @@ class paciente_model extends BaseModel {
     }
 
     function listarpagamentosconsultaavulsa($paciente_id) {
-        $this->db->select('*');
+        $this->db->select('cp.*, p.nome as paciente');
         $this->db->from('tb_consultas_avulsas cp');
-        $this->db->where("paciente_id", $paciente_id);
-        $this->db->where("excluido", 'f');
-        $this->db->where("tipo", 'EXTRA');
-        $this->db->orderby("data");
+        $this->db->join('tb_paciente p', 'cp.pessoa_id = p.paciente_id', 'left');
+        $this->db->where("cp.paciente_id", $paciente_id);
+        $this->db->where("cp.excluido", 'f');
+        $this->db->where("cp.tipo", 'EXTRA');
+        $this->db->orderby("cp.data");
         $return = $this->db->get();
         return $return->result();
     }
