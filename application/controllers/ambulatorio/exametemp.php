@@ -400,6 +400,7 @@ class Exametemp extends BaseController {
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
 
+        $this->excluirparceria($paciente_id);
 
         foreach ($pagamento as $item) {
 
@@ -415,6 +416,7 @@ class Exametemp extends BaseController {
             $this->guia->cancelarpagamentoiugu($item->paciente_contrato_parcelas_id);
         }
         $verifica = $this->exametemp->excluirpaciente($paciente_id);
+       
         if ($verifica == "-1") {
             $data['mensagem'] = 'Erro ao excluir o Paciente. Opera&ccedil;&atilde;o cancelada.';
         } else {
@@ -977,6 +979,37 @@ class Exametemp extends BaseController {
         $this->load->view('footer');
     }
 
+    function excluirparceria($paciente_id){
+         $retorno_paciente = $this->paciente->listardados($paciente_id);
+         $cpf = $retorno_paciente[0]->cpf;
+         $parceiro_id = $retorno_paciente[0]->parceiro_id;        
+         $parceiros = $this->paciente->listarparceirosporid($parceiro_id);
+         $endereco = $parceiros[0]->endereco_ip;
+       if($endereco != ""){
+         $url = "http://" . $endereco . "/autocomplete/excluirparceriafidelidade";
+         
+         $postdata = http_build_query(
+                    array(
+                        'cpf' => $cpf,
+                        'parceriamed_id' => $parceiro_id
+                    )
+            );
+            $opts = array('http' =>
+                array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => $postdata
+            ));
+         
+          $context = stream_context_create($opts);
+           
+              $result = file_get_contents($url, false, $context);
+     }
+   //      print_r($result); 
+    }
+    
+    
+    
 }
 
 /* End of file welcome.php */

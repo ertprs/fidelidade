@@ -4818,6 +4818,19 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
     
+    
+    
+      function listarparceirosporid($parceiro_id = null) {
+        $this->db->select('endereco_ip, financeiro_parceiro_id,convenio_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("ativo", 't');
+        $this->db->where("endereco_ip !=", '');
+        if($parceiro_id > 0){
+            $this->db->where("convenio_id ", $parceiro_id);
+        }
+        $return = $this->db->get();
+        return $return->result();
+    }
 }
 
 ?>

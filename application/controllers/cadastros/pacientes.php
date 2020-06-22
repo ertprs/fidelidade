@@ -1477,7 +1477,7 @@ class pacientes extends BaseController {
           }else{
              $parceiropadrao =  $this->parceiro->parceiropadrao(); 
              if(count($parceiropadrao) > 0){
-             $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+                $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
              }else{
                $parceiro_post = 0;  
              }
