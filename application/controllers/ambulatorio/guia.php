@@ -6932,8 +6932,8 @@ table tr:hover  #achadoERRO{
             $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
         }
         $hora = date('His');
-        $nome_arquivo = "CNAB240_" . $data_Mes . $i;
-        $fp = fopen("./upload/CNAB/$nome_arquivo.txt", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
+        $nome_arquivo = "CNAB240_" . $data_Mes . $cont_linha;
+        $fp = fopen("./upload/CNAB/$nome_arquivo.REM", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
         $escreve = fwrite($fp, $string_geral);
 
         unlink("./upload/CNAB/$nome_arquivo.zip");
