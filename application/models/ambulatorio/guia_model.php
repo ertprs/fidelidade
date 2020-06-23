@@ -12392,9 +12392,9 @@ ORDER BY ae.agenda_exames_id)";
             
         }
 
-        if($_POST['pagamento_id'] != '0'){
-            $this->db->where('vc.rendimento_id',$_POST['pagamento_id']);
-        }
+        // if($_POST['pagamento_id'] != '0'){
+        //     $this->db->where('vc.rendimento_id',$_POST['pagamento_id']);
+        // }
 
         $this->db->orderby('vc.data_cadastro, paciente');
         return $this->db->get()->result();
@@ -12471,7 +12471,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->set('parceiro_atualizacao',$operador);
         $this->db->set('data_atualizacao',$horario);
         $this->db->set('horario_uso',date("Y-m-d", strtotime(str_replace('/', '-', $_POST['data_uso'])))." 00:00:00");
-        $this->db->set('rendimento_id', $_POST['pagamento_id']);
+        // $this->db->set('rendimento_id', $_POST['pagamento_id']);
         $this->db->where('voucher_consulta_id',$_POST['voucher_consulta_id']);
         $this->db->update('tb_voucher_consulta');
         

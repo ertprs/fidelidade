@@ -56,7 +56,7 @@
                     </select>                   
                     </dd>
 
-                    <dt>
+                    <!-- <dt>
                         <label> Forma Pagamento</label>
                      </dt>
                     <dd>
@@ -70,7 +70,7 @@
                                                 
                                             
                                     </select>                   
-                    </dd>
+                    </dd> -->
 
                 </dl>
                 <button type="submit" >Pesquisar</button>
