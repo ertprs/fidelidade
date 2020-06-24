@@ -8,7 +8,7 @@
         <form action="<?= base_url() ?>ambulatorio/guia/confirmarvoucher" method="post">
             <p>Data de Uso</p>
             <input type="text" name="data_uso" id="data_uso" required="">
-            <p>Forma de Pagamento:</p>
+            <!-- <p>Forma de Pagamento:</p>
             <select name="pagamento_id" id="pagamento_id" class="size2" required>
                                         <?php foreach ($pagamentos as $item) {?>
                                             <option   value =<?php echo $item->forma_rendimento_id; ?>>
@@ -16,7 +16,7 @@
                                             </option>
                                         <? }?> 
          
-            </select>  
+            </select>   -->
             <input type="hidden" name="voucher_consulta_id" id="voucher_consulta_id" value="<?= $voucher_consulta_id; ?>" >           
             <input  type="submit" value="Enviar">
         </form>
