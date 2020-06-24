@@ -7689,11 +7689,45 @@ function geraCodigoBanco($numero) {
     
     
     
-    function trasnformarfuncionario(){
-        
-        $this->load->View('ambulatorio/transformarfuncionario-form');
+    function trasnformarfuncionario($paciente_id){
+        $data['empresa'] = $this->paciente->listadadosempresacadastro();
+        $data['planos'] = $this->formapagamento->listarforma();      
+        $data['paciente_id']  = $paciente_id;
+        $this->load->View('ambulatorio/transformarfuncionario-form',$data);
     }
     
+    function gravartrasnformarfuncionario(){ 
+     $verifica =    $this->paciente->gravartrasnformarfuncionario(); 
+     $mensagem = "";
+           if ($verifica == '-1') {                   
+              $mensagem =  'Erro, Quantidade no plano Atingida.';
+           } elseif ($verifica == '-2') {
+             $mensagem =   'Erro, Quantidade não cadastrada para esse plano.';
+           } 
+                   
+           if($mensagem != ""){
+                    echo "<html>
+                    <meta charset='UTF-8'>
+            <script type='text/javascript'>
+                alert('$mensagem');
+            window.onunload = fechaEstaAtualizaAntiga;
+            function fechaEstaAtualizaAntiga() {
+                window.opener.location.reload();
+                }
+            window.close();
+                </script>
+                </html>";
+           }else{
+               redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+           }
+        
+                            
+    }
+    
+    function trasnformartitular($paciente_id){
+        $this->paciente->gravartrasnformartitular($paciente_id);   
+      redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+    }
     
     
 }

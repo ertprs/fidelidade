@@ -28,9 +28,28 @@ if (count($exames) > 0) {
                 Novo Contrato
             </a>
         </div>
-    <? } ?>
+    <? } ?> 
     
-     
+    <?php
+    if($paciente[0]->situacao == "Titular" ){
+        if($paciente['0']->empresa_id == "") {
+          ?>
+       <div class="bt_link_new">
+              <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/trasnformarfuncionario/" . $paciente['0']->paciente_id; ?> ', '_blank', 'width=900,height=600');">
+                 Transformar funcionario
+              </a>
+          </div>
+      <? }else{?> 
+        <div class="bt_link_new">
+             <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/trasnformartitular/" . $paciente['0']->paciente_id; ?> ', '_blank', 'width=900,height=600');">
+                  Transformar Titular
+              </a>
+          </div> 
+     <?   
+       }
+    }
+    ?>
+    
     
     <?
     $operador_id = $this->session->userdata('operador_id');

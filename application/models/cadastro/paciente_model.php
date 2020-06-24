@@ -4465,11 +4465,14 @@ class paciente_model extends BaseModel {
     }
     
     
-    function listadadosempresacadastro($empresa_id){        
+    function listadadosempresacadastro($empresa_id=NULL){        
         $this->db->select('e.*,m.codigo_ibge');
         $this->db->from('tb_empresa_cadastro e');
         $this->db->join("tb_municipio m", 'm.municipio_id = e.municipio_id', 'left');
-        $this->db->where('empresa_cadastro_id', $empresa_id);
+        if($empresa_id != ""){
+           $this->db->where('empresa_cadastro_id', $empresa_id);
+        }
+        $this->db->where('e.ativo','t');
         return $this->db->get()->result();
     }
     
@@ -4811,6 +4814,86 @@ class paciente_model extends BaseModel {
         $return = $this->db->get();
         return $return->result();
     }
-}
+    
+   function gravartrasnformarfuncionario(){
+       
+            $horario = date('Y-m-d H:i:s');
+            $operador = $this->session->userdata('operador_id'); 
+            $paciente_id = $_POST['paciente_id']; 
+            
+            $this->db->select('');
+            $this->db->from('tb_qtd_funcionarios_empresa');
+            $this->db->where('empresa_id', $_POST['empresa_cadastro_id']);
+            $this->db->where('ativo', 't');
+            $this->db->where('forma_pagamento_id', $_POST['plano']);
+            $retorno = $this->db->get()->result(); 
+
+            $this->db->select('');
+            $this->db->from('tb_paciente p');
+            $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id');
+            $this->db->where('pc.ativo', 't');
+            $this->db->where('p.ativo', 't');
+            $this->db->where('p.empresa_id', $_POST['empresa_cadastro_id']);
+            $this->db->where('plano_id', @$retorno[0]->forma_pagamento_id);
+            $quantidade = $this->db->get()->result();
+  
+            if (count($retorno) <= 0) {
+                  return -2;
+            }   
+            if (!($retorno[0]->qtd_funcionarios > count($quantidade))) {
+                 return -1;
+            }   
+            if (@$_POST['empresa_cadastro_id'] != '') {
+                $this->db->set('empresa_id', @$_POST['empresa_cadastro_id']);
+            } else {
+                $this->db->set('empresa_id', null);
+            } 
+            $this->db->set('data_atualizacao',$horario);
+            $this->db->set('operador_atualizacao',$operador);
+            $this->db->where('paciente_id',$paciente_id);
+            $this->db->update('tb_paciente');
+            
+            $this->db->set('ativo','f'); 
+            $this->db->set('operador_atualizacao',$operador);
+            $this->db->set('data_atualizacao',$horario);
+            $this->db->where('paciente_id',$paciente_id);
+            $this->db->update('tb_paciente_contrato');  
+  
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('paciente_id', $paciente_id);
+            $this->db->set('plano_id', $_POST['plano']);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
+            if(isset($_POST['empresa_cadastro_id'])  && $_POST['empresa_cadastro_id'] != ""){
+               $this->db->set('associado_empresa_cadastro_id',$_POST['empresa_cadastro_id']);
+            }
+            $this->db->insert('tb_paciente_contrato');
+            $paciente_contrato_id = $this->db->insert_id();
+        
+   }
+   
+    
+   function gravartrasnformartitular($paciente_id){
+       $horario = date('Y-m-d H:i:s');
+       $operador = $this->session->userdata('operador_id');
+       
+       
+         $this->db->set('ativo','f'); 
+         $this->db->set('operador_atualizacao',$operador);
+         $this->db->set('data_atualizacao',$horario);
+         $this->db->where('paciente_id',$paciente_id);
+         $this->db->update('tb_paciente_contrato'); 
+
+         $this->db->set('empresa_id', null);
+         $this->db->set('data_atualizacao',$horario);
+         $this->db->set('operador_atualizacao',$operador);
+         $this->db->where('paciente_id',$paciente_id);
+         $this->db->update('tb_paciente');
+   }
+   
+ }
+
 
 ?>
