@@ -3806,16 +3806,12 @@ class paciente_model extends BaseModel {
             if ($_POST['nascimento'] != '') {
                 $this->db->set('nascimento', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['nascimento']))));
             }
-//            if ($_POST['financeiro_parceiro_id'] != '') {
-//                $this->db->set('financeiro_parceiro_id', $_POST['financeiro_parceiro_id']);
-//            }
+
             if (count($consulta_avulsa) > 0) {
                 $this->db->set('consulta_avulsa', $consulta_avulsa[0]->consulta_avulsa);
                 $this->db->set('consulta_coop', $consulta_avulsa[0]->consulta_coop);
             }
-//            if ($_POST['data_emissao'] != '') {
-//                $this->db->set('data_emissao', $_POST['data_emissao']);
-//            }
+
             if ($_POST['indicacao'] != '') {
                 $this->db->set('indicacao', $_POST['indicacao']);
             }
@@ -3840,17 +3836,13 @@ class paciente_model extends BaseModel {
             $this->db->set('complemento', $_POST['complemento']);
             if ($_POST['municipio_id'] != '') {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
-            }
-
+            } 
             if (@$_POST['empresa_cadastro_id'] != '') {
                 $this->db->set('empresa_id', @$_POST['empresa_cadastro_id']);
             } else {
                 $this->db->set('empresa_id', null);
-            }
-
-
-            $this->db->set('cep', $_POST['cep']);
-
+            } 
+            $this->db->set('cep', $_POST['cep']); 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
@@ -3886,19 +3878,6 @@ class paciente_model extends BaseModel {
                     }
                     $this->db->insert('tb_paciente_contrato');
                     $paciente_contrato_id = $this->db->insert_id();
-
-//                    $dia_menos_um = date('d') - 1;
-//                    $data_verificadora = date('Y-m-' . $dia_menos_um . '');
-////          echo $data_verificadora;die; 
-//                    $this->db->set('valor', 0.00);
-//                    $this->db->set('parcela', null);
-//                    $this->db->set('paciente_contrato_id', $paciente_contrato_id);
-////            $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
-//                    $this->db->set('data', $data_verificadora);
-//                    $this->db->set('data_cadastro', $horario);
-//                    $this->db->set('operador_cadastro', $operador_id);
-//                    $this->db->set('parcela_verificadora', 't');
-//                    $this->db->insert('tb_paciente_contrato_parcelas');
                 }
             } else { // update
                 $paciente_id = $_POST['paciente_id'];

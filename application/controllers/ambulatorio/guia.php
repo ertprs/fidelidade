@@ -197,10 +197,7 @@ class Guia extends BaseController {
             }
                             
         }
-        
-//       
-//        die;
-//       
+                            
         $data['titular'] = $this->guia->listartitular($paciente_id);
 //      var_dump($data['titular'] ); die;
         $data['guia'] = $this->guia->listar($paciente_id);
@@ -7689,6 +7686,15 @@ function geraCodigoBanco($numero) {
 //        $this->load->View('ambulatorio/impressaorecibomed', $data);
         $this->load->View('ambulatorio/impressaorecibo', $data);
     }
+    
+    
+    
+    function trasnformarfuncionario(){
+        
+        $this->load->View('ambulatorio/transformarfuncionario-form');
+    }
+    
+    
     
 }
 

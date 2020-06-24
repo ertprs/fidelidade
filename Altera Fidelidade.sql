@@ -937,3 +937,5 @@ INSERT INTO ponto.tb_perfil(
 
 
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN pessoa_id integer;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN campos_cadastro text;

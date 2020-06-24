@@ -97,9 +97,14 @@ class empresa_model extends Model {
             $this->db->set('logradouro', $_POST['endereco']);
             $this->db->set('numero', $_POST['numero']);
             $this->db->set('bairro', $_POST['bairro']);
+            
+            if (count($_POST['campos_obrigatorio']) > 0) {
+                $this->db->set('campos_cadastro', json_encode($_POST['campos_obrigatorio']));
+            } else {
+                $this->db->set('campos_cadastro', '');
+            }
 
-
-
+             
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
@@ -143,7 +148,8 @@ class empresa_model extends Model {
                                f.municipio_id,
                                c.nome as municipio,
                                c.estado,
-                               cep');
+                               cep,
+                               campos_cadastro');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -165,6 +171,7 @@ class empresa_model extends Model {
             $this->_estado = $return[0]->estado;
             $this->_cep = $return[0]->cep;
             $this->_cnes = $return[0]->cnes;
+            $this->_campos_cadastro = $return[0]->campos_cadastro;
         } else {
             $this->_empresa_id = null;
         }

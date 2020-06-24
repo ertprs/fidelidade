@@ -29,6 +29,9 @@ if (count($exames) > 0) {
             </a>
         </div>
     <? } ?>
+    
+     
+    
     <?
     $operador_id = $this->session->userdata('operador_id');
     $empresa = $this->session->userdata('empresa');

@@ -475,6 +475,11 @@ class empresa_model extends Model {
                  $this->db->set('codigobeneficiariosicoob',null); 
             }
             
+           if (count($_POST['campos_obrigatorio']) > 0) {
+                        $this->db->set('campos_cadastro', json_encode($_POST['campos_obrigatorio']));
+                    } else {
+                        $this->db->set('campos_cadastro', '');
+                    }
             
 
             $horario = date("Y-m-d H:i:s");
@@ -555,7 +560,8 @@ class empresa_model extends Model {
                                f.relacao_carencia,
                                f.agenciasicoob,
                                f.contacorrentesicoob,
-                               f.codigobeneficiariosicoob');
+                               f.codigobeneficiariosicoob,
+                               f.campos_cadastro');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -610,7 +616,8 @@ class empresa_model extends Model {
             $this->_relacao_carencia = $return[0]->relacao_carencia; 
             $this->_agenciasicoob = $return[0]->agenciasicoob; 
             $this->_contacorrentesicoob = $return[0]->contacorrentesicoob; 
-            $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob; 
+            $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob;
+            $this->_campos_cadastro = $return[0]->campos_cadastro; 
         } else {
             $this->_empresa_id = null;
         }

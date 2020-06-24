@@ -50,6 +50,9 @@ class pacientes extends BaseController {
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['listarindicacao'] = $this->paciente->listarindicacao();
         $data['parceiros'] = $this->exame->listarparceiros();
+        
+        $data['empresa'] = $this->paciente->listardadosempresa($this->session->userdata('empresa_id'));
+        
         $this->loadView('cadastros/paciente-ficha_1', $data);
     }
 

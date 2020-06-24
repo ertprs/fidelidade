@@ -49,11 +49,7 @@
                     </tr>
                     <tr>
                 <form method="get" action="<?php echo base_url() ?>cadastros/pacientes/pesquisar">
-<!--                        <th class="tabela_title" >
-                        <input type="text" name="prontuario" class="texto03" value="<?php echo @$_GET['prontuario']; ?>" />
-                        <input type="text" name="nome" class="texto08" value="<?php echo @$_GET['nome']; ?>" />
-                        <input type="text" name="nascimento" class="texto03" alt="date" value="<?php echo @$_GET['nascimento']; ?>" />
-                </th>-->
+ 
                     <th class="tabela_title" >
                         <input type="text" name="prontuario" class="texto02" value="<?php echo @$_GET['prontuario']; ?>" />
                     </th>
