@@ -6435,6 +6435,8 @@ table tr:hover  #achadoERRO{
         // var_dump($data['empresa']); die;
 
         $data['paciente'] = $this->paciente->listardadospaciente($paciente_id);
+
+
         $data['paciente_id'] = $paciente_id;
         if($data['empresa'][0]->tipo_declaracao == 2){
             $data['listacontrato'] = $this->paciente->listaridcontrato($paciente_id);
@@ -6446,11 +6448,12 @@ table tr:hover  #achadoERRO{
                 @$paciente_contrato_id = $data['listacontratodependente'][0]->paciente_contrato_id;
 
                 $data['listacontrato'] = $this->paciente->listaridcontrato2($paciente_contrato_id);
-                @$paciente = $data['listacontrato'][0]->paciente_id;
 
-                $data['paciente'] = $this->paciente->listardadospaciente($paciente);
-
-                
+                if(count($data['listacontrato']) > 0){
+                    @$paciente = $data['listacontrato'][0]->paciente_id;
+                    $data['paciente'] = $this->paciente->listardadospaciente($paciente);
+                }
+  
             }
             
             $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
