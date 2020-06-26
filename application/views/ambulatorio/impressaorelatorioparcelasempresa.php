@@ -11,10 +11,8 @@
     </head>
     <body>
         <h2>Relatório Empresa</h2>
-        <h3>Empresa: <?= $empresa[0]->nome; ?></h3>
-        
-        <h3>Mês: <?= $mes; ?></h3>
-        
+        <h3>Empresa: <?= $empresa[0]->nome; ?></h3> 
+        <h3>Mês: <?= $mes; ?></h3> 
         <hr>
         <table   border=1 cellspacing=0 cellpadding=2 >
             <tr>
@@ -27,19 +25,24 @@
             <?
             $valor_total = 0;
             $contador_total = 0;
+            //echo "<pre>";
+            //print_r($relatorio);
             foreach($relatorio as $item){
                 $valor_dependentes = 0;
                  $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
-                //  echo '<pre>';
-                //  print_r($dependentes);
+                 // echo '<pre>';
+                  // print_r($dependentes);
+                   $quantidade_clientes = 0;
+                   if(count($dependentes) > 0){
+                       $quantidade_clientes = $dependentes[0]->parcelas;
+                    }
                 //  die;
-            $i = 0;
-            $a = 1;
-                    foreach($dependentes as $item2){
-
+                    $i = 0;
+                    $a = 1;
+                    foreach($dependentes as $item2){ 
                         if($item2->situacao == "Dependente"){
-                            if($a > 3){
-                           $valor_dependentes += $item2->valoradcional;
+                            if($a >= $quantidade_clientes){
+                               $valor_dependentes += $item2->valoradcional;
                             }
                             $a++;
                             $i++;
@@ -53,7 +56,7 @@
                 $cnpj_cpf = preg_replace("/\D/", '', $item->cpf);
                 echo @preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $cnpj_cpf); ?>
                 </td>
-                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor, 2, ',', '.'); ?> (<?=$i;?>) </td>
+                <td   >R$ <?= number_format($item->valor, 2, ',', '.'); ?> (<?=$i;?>) </td>
                <td  title="Já incluso o valor dos Dependentes">R$ <?= number_format($item->valor + $valor_dependentes, 2, ',', '.'); ?></td>
                <? 
                $total_titular = ($item->valor + $valor_dependentes)*$mes;

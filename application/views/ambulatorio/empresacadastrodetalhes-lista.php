@@ -24,8 +24,7 @@ $perfil_id = $this->session->userdata('perfil_id');
         $ativo = 'f';
     }
     ?>
-
-
+ 
     <?
     if (count($quantidade_funcionarios) > 0 && $perfil_id != 10) {
         ?>
@@ -172,25 +171,13 @@ $perfil_id = $this->session->userdata('perfil_id');
                         </td>
                     </tr>
 
-                    <tr><td class="valores">
-
-
-
-                            <input required="" id="testec"   type="radio" name="testec" value=""/>1 x 0.00<br>
-
-                            <input required="" id="testec"   type="radio" name="testec" value=""/>5 x 0.00<br> 
-
-
-                            <input required="" id="testec"   type="radio" name="testec" value=" "/>6 x 0.00<br> 
-
-
-                            <input required="" id="ttesteceste"   type="radio" name="testec" value=" "/>10 x 0.00<br> 
-
+                    <tr><td class="valores">   
+                            <input required="" id="testec"   type="radio" name="testec" value=""/>1 x 0.00<br>  
+                            <input required="" id="testec"   type="radio" name="testec" value=""/>5 x 0.00<br>  
+                            <input required="" id="testec"   type="radio" name="testec" value=" "/>6 x 0.00<br>   
+                            <input required="" id="ttesteceste"   type="radio" name="testec" value=" "/>10 x 0.00<br>  
                             <input required="" id="testec"   type="radio" name="testec" value=" "/>11 x 0.00<br>  
-
-
-                            <input required="" id="testec"   type="radio" name="testec" value=" "/>12 x 0.00<br> 
-
+                            <input required="" id="testec"   type="radio" name="testec" value=" "/>12 x 0.00<br>  
 
                         </td></tr>
                     <tr><td> Preço:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="precototal"  readonly="false">  
@@ -253,11 +240,23 @@ $perfil_id = $this->session->userdata('perfil_id');
                       
                         foreach ($funcionarios as $item) {
                             $ii = 0;
+                        
                              $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
-                             foreach($dependentes as $item2){
-                                 if($item2->situacao == "Dependente"){
-                                     $ii++;
-                                 @$valor_dependentes{$item->forma_pagamento_id} += $item2->valoradcional;
+                             
+                              $quantidade_clientes = 0;
+                              if(count($dependentes) > 0){
+                                $quantidade_clientes = $dependentes[0]->parcelas;
+                              }
+                            
+                               $a = 1;
+                             foreach($dependentes as $item2){ 
+                                 if($item2->situacao == "Dependente"){  
+                                        if($a >= $quantidade_clientes){  
+                                             @$valor_dependentes{$item->forma_pagamento_id} += $item2->valoradcional; 
+                                            
+                                        }
+                                    $a++;
+                                    $ii++; 
                                  }
                              }
                              
@@ -333,11 +332,12 @@ $perfil_id = $this->session->userdata('perfil_id');
             <table>
                 <?
                 $planos = Array();
-                foreach ($quantidade_funcionarios as $item): ?>
+                foreach ($quantidade_funcionarios as $item): 
+                    ?>
                     <tr>
                         <td>
      <?php echo $item->parcelas . "x de " . $item->qtd_funcionarios . " x " . $item->valor . " = " . number_format($item->qtd_funcionarios * $item->valor, 2, ',', '.')." + ".number_format(@$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.')." = ".number_format(($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id}, 2, ',', '.');
-     @$valortotalempresa{$item->forma_pagamento_id} = ($item->qtd_funcionarios * $item->valor)+ @$valor_dependentes{$item->forma_pagamento_id};
+     @$valortotalempresa{$item->forma_pagamento_id} = ($item->qtd_funcionarios * $item->valor) + @$valor_dependentes{$item->forma_pagamento_id};
     
      $planos[] = Array('plano_id'=>$item->forma_pagamento_id, 'total'=>@$valortotalempresa{$item->forma_pagamento_id});
      

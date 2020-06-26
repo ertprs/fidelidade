@@ -12508,6 +12508,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
           AND qf.ativo = 'true'
           AND p.empresa_id = $empresa
           AND qf.ativo = 'true'
+          AND p.ativo = 'true'
           ORDER BY fp.nome,p.nome ASC
             ";  
           return $this->db->query($sql)->result(); 

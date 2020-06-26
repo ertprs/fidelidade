@@ -215,7 +215,7 @@ class paciente_model extends BaseModel {
 
     function listardependentescontrato($contrato_id) {
 
-        $this->db->select('o.nome as operador_ultima_impressao,p.nome, p.nascimento, p.paciente_id, situacao,contador_impressao,data_ultima_impressao,pcd.paciente_contrato_dependente_id,fp.valoradcional');
+        $this->db->select('o.nome as operador_ultima_impressao,p.nome, p.nascimento, p.paciente_id, situacao,contador_impressao,data_ultima_impressao,pcd.paciente_contrato_dependente_id,fp.valoradcional,fp.parcelas');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_id = p.paciente_id', 'left');
         $this->db->join('tb_paciente_contrato pt','pt.paciente_contrato_id = pcd.paciente_contrato_id','left');
