@@ -20,7 +20,6 @@ class app_model extends Model {
 
     function gravarPrecadastro($json_post){
         $horario = date("Y-m-d H:i:s");
-        $operador = $this->session->userdata('operador_id');
         $this->db->select('paciente_id, nome');
         $this->db->from('tb_paciente');
         // $this->db->where('nome', $json_post->nome);
@@ -50,7 +49,7 @@ class app_model extends Model {
         $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->telefone))));
         $this->db->set('whatsapp', str_replace("(", "", str_replace(")", "", str_replace("-", "", $json_post->whatsapp))));
         $this->db->set('data_cadastro', $horario);
-        $this->db->set('operador_cadastro', $operador);
+        $this->db->set('operador_cadastro', 1);
         $this->db->insert('tb_precadastro');
         $paciente_id =  $this->db->insert_id();
         return array(0, $json_post->nome);
