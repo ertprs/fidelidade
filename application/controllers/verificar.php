@@ -88,9 +88,8 @@ class Verificar extends Controller {
 
         $permissaoempresa = $this->guia->listarempresapermissoes($this->session->userdata('empresa_id'));
         $data['procedimentos'] = $this->guia->listarprocedimentosverificar();
-//         print_r($data['procedimentos'] );
-//       die;
-
+//      print_r($data['procedimentos'] );
+//      die; 
         if (@$_POST['cpf'] == "") {
             $cpf = "";
         } else {
@@ -274,14 +273,12 @@ class Verificar extends Controller {
                 $this->verificarcpf('no_exists');
             }
         } else {
-
             $nome = @$_POST['nome'];
             $data['titulares'] = $this->guia->listarpacientecpf($cpf, $paciente_id, $nome);
 
             if (@$permissaoempresa[0]->modificar_verificar == 't'  && $_POST['procedimento_convenio_id'] != "") {
                 $gravarvericadores = $this->guia->gravarverificados($cpf, $paciente_id, $nome);
             }
-
             $this->load->view('verificarcpf', $data);
         }
 

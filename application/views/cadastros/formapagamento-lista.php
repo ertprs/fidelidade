@@ -26,6 +26,7 @@
                     </tr>
                 </thead>
                 <?php
+                    $empresa_p = $this->guia->listarempresa();
                     $url      = $this->utilitario->build_query_params(current_url(), $_GET);
                     $consulta = $this->formapagamento->listar($_GET);
                     $total    = $consulta->count_all_results();
@@ -49,11 +50,17 @@
                                     <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamento/<?= $item->forma_pagamento_id ?>">Editar</a>
                                             <?php }?>
                                 </td>
-                                <td class="<?php echo $estilo_linha; ?>" width="70px;">  
-                                      <?php if($perfil_id != 10){?>
-                                    <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamentocarencia/<?= $item->forma_pagamento_id ?>">Carência</a>
-                                     <?php }?>
-                                </td>
+                                 <?php if($perfil_id != 10 && $empresa_p[0]->tipo_carencia != "ESPECIFICA"){?>
+                                   <td class="<?php echo $estilo_linha; ?>" width="70px;">   
+                                        <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamentocarencia/<?= $item->forma_pagamento_id ?>">Carência</a> 
+                                   </td>
+                                <?php }elseif($perfil_id != 10 && $empresa_p[0]->tipo_carencia == "ESPECIFICA"){?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="140px;">  
+                                      <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamentocarenciaespecifica/<?= $item->forma_pagamento_id ?>">Carência Específica</a>
+                                  </td>
+                                <?php }else{  ?>
+                                  <td class="<?php echo $estilo_linha; ?>" width="70px;"> </td>
+                                  <? } ?>
                                 <td class="<?php echo $estilo_linha; ?>" width="70px;">   
                                       <?php if($perfil_id != 10){?>
                                     <a href="<?= base_url() ?>cadastros/formapagamento/carregarformapagamentocomissao/<?= $item->forma_pagamento_id ?>">Comissão</a>
