@@ -367,6 +367,8 @@ class pacientes extends BaseController {
 
     function gravar() { 
 
+
+
         $paciente_id = $this->paciente->gravar();
         if ($paciente_id) {
             $data['mensagem'] = 'Paciente gravado com sucesso';
@@ -558,7 +560,19 @@ class pacientes extends BaseController {
     function gravardependente() {
   
         
-      
+        if(!isset($_POST['cpf_responsavel'])){
+
+            $verificarcpf = $this->paciente->verificarcpfpaciente($_POST['cpf']);
+
+            if($verificarcpf > 0){
+                $data['mensagem'] = 'Erro. CPF ja utilizado';
+                $this->session->set_userdata(array("mensagem_erro"=>"Erro. CPF ja utilizado"));
+                $this->session->set_flashdata('message', $data['mensagem']);
+                 redirect(base_url() . "cadastros/pacientes/novodependentecompleto2");
+            }
+
+        }
+
         $paciente_id = $this->paciente->gravardependente();
         // var_dump($paciente_id); die;
         $titular_id = $_POST['txtNomeid'];
@@ -1466,6 +1480,18 @@ class pacientes extends BaseController {
     }
     
     function gravardocumentoscompleto() {
+        if(!isset($_POST['cpf_responsavel'])){
+
+            $verificarcpf = $this->paciente->verificarcpfpaciente($_POST['cpf']);
+
+            if($verificarcpf > 0){
+                $data['mensagem'] = 'Erro. CPF ja utilizado';
+                $this->session->set_userdata(array("mensagem_erro"=>"Erro. CPF ja utilizado"));
+                $this->session->set_flashdata('message', $data['mensagem']);
+                 redirect(base_url() . "cadastros/pacientes/novo");
+            }
+
+        }
 
         $paciente_id = $this->paciente->gravardocumentos();
         $situacao = $_POST['situacao'];

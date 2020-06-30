@@ -4255,6 +4255,22 @@ class paciente_model extends BaseModel {
         $return = $this->db->count_all_results();
         return $return;
     }
+
+
+
+    function verificarcpfpaciente($cpf) {
+        $this->db->select('paciente_id');
+        $this->db->from('tb_paciente');
+        $this->db->where('cpf', str_replace("-", "", str_replace(".", "", $cpf)));
+        $this->db->where('ativo', 't');
+        // if ($paciente_id > 0) {
+        //     $this->db->where('paciente_id !=', $paciente_id);
+        // }
+        $this->db->where('cpfresp', 'f');
+        $return = $this->db->count_all_results();
+        return $return;
+    }
+    
     
     
     
