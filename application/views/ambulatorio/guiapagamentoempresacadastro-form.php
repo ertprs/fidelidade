@@ -233,7 +233,7 @@
                                              endif;
                                          else: ?>
                                             <div class="bt_link">
-                                                  <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoempresa/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                  <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoempresa/$item->paciente_contrato_parcelas_id"; ?>/<?= $empresa_cadastro_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
                                                 Confirmar
                                             </a>
                                             </div>

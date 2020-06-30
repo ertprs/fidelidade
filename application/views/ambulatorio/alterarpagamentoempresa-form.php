@@ -23,8 +23,8 @@
         <h3 class="singular">Alterar pagamento</h3>
         <div>
             <form name="form_faturar" id="form_faturar" action="<?= base_url() ?>ambulatorio/guia/gravaralterarpagamentoempresa/<?= $paciente_contrato_parcelas_id; ?>" method="post">
-                <fieldset>
-
+                <input type="hidden" name="empresa_cadastro_id" id="empresa_cadastro_id" value="<?= $empresa_cadastro_id; ?>">
+                <fieldset> 
                     <dl class="dl_desconto_lista">
                         <dt>
                             <label>Data</label>

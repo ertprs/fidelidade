@@ -11202,7 +11202,12 @@ ORDER BY ae.agenda_exames_id)";
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
-
+            $this->db->set('excluido','t');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('contrato_parcelas_id_empresa', $parcela_id);
+            $this->db->update('tb_paciente_contrato_parcelas');
+             
             $this->db->set('excluido', 't');
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
@@ -11576,14 +11581,20 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->set('operador_atualizacao', $operador_id);
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_paciente_contrato_parcelas');
-
-
+        
+          
+        $this->db->set('excluido','t');
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->where('contrato_parcelas_id_empresa', $paciente_contrato_parcelas_id);
+        $this->db->update('tb_paciente_contrato_parcelas');
+        
+ 
         $this->db->set('ativo', 'f');
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_entradas');
 
-
-
+ 
         $this->db->set('ativo', 'f');
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_entradas');
@@ -11609,15 +11620,30 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
         $this->db->where('pc.ativo', 't');
         $this->db->where('p.ativo', 't');
-        $this->db->where('empresa_id', $empresa_id);
+        $this->db->where('p.empresa_id', $empresa_id);
         return $this->db->get()->result();
     }
 
-    function confirmarparcelaverificadora($contrato_id) {
-        $this->db->set('empresa_iugu', 't');
-        $this->db->set('ativo', 'f');
-        $this->db->where('paciente_contrato_id', $contrato_id);
-        $this->db->update('tb_paciente_contrato_parcelas');
+    function confirmarparcelaverificadora($contrato_id,$paciente_contrato_parcelas_id) {
+              $this->db->select('');
+              $this->db->from('tb_paciente_contrato_parcelas');
+              $this->db->where('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+              $result =  $this->db->get()->result();  
+              $horario = date('Y-m-d H:i:s');
+              $operador_id  = $this->session->userdata('operador_id');
+              $data= $result[0]->data;    
+              $this->db->set('valor', 0.00);
+              $this->db->set('ativo','f');
+              $this->db->set('manual','t');
+              $this->db->set('parcela', null);
+              $this->db->set('paciente_contrato_id', $contrato_id);
+              $this->db->set('data', $data);
+              $this->db->set('data_cadastro', $horario);
+              $this->db->set('operador_cadastro', $operador_id);
+              $this->db->set('parcela_verificadora', 't'); 
+              $this->db->set('contrato_parcelas_id_empresa',$paciente_contrato_parcelas_id);
+              $this->db->insert('tb_paciente_contrato_parcelas');
+              $id = $this->db->insert_id();  
     }
 
     function listarpacientecarteirapadrao3($paciente_id = NULL) {

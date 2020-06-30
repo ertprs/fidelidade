@@ -943,3 +943,6 @@ ALTER TABLE ponto.tb_empresa ADD COLUMN campos_cadastro text;
 
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN quantidade_para_uso integer;
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN dias_carencia integer;
+
+--30/06/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN contrato_parcelas_id_empresa integer;
