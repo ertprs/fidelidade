@@ -91,7 +91,60 @@
         } else {
             $especialidade_liberado = 'Pendência';
         }
-    } else {
+    } elseif($empresa_p[0]->tipo_carencia  == "ESPECIFICA"){
+        
+        $data_atual = date('Y-m-d');        
+        $liberado = false;
+        $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id);
+        $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id); 
+        $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id); 
+        $quantidade_parcelas = $this->guia->listarnumpacelas($paciente_titular_id);
+        $quantidade_parcelas_pagas = $this->guia->listarparcelaspagasgeral($paciente_titular_id);        
+        $quantidade_para_uso = $carencia[0]->quantidade_para_uso;
+        $dias_carencia = $carencia[0]->dias_carencia;
+         
+        foreach ($parcelas as $item) {
+            $liberado = true;
+            if ($item->ativo == 't') {
+                break;
+            }
+        }
+        
+         if($liberado){
+            $data_carencia = date('Y-m-d', strtotime("+$dias_carencia days", strtotime($item->data)));
+         }
+         $exame_liberado = "Pendência";
+         $consulta_liberado = "Pendência";
+         $especialidade_liberado = "Pendência";
+     
+           $pg = 0;
+         foreach($quantidade_parcelas_pagas as $value){ 
+           if(!($value->taxa_adesao == 't')){
+             $pg++;  
+           }
+         } 
+         
+          if (count($parcelas) == 0) {
+              $exame_liberado = 'Liberado';
+              $consulta_liberado = 'Liberado';
+              $especialidade_liberado = 'Liberado'; 
+           }elseif($liberado && count($parcelas) > 0 && strtotime($data_atual) <= strtotime($data_carencia)){
+              $exame_liberado = 'Liberado';
+              $consulta_liberado = 'Liberado';
+              $especialidade_liberado = 'Liberado'; 
+           }   
+           if(($pg >= $quantidade_para_uso && count($parcelas) == 0) || ($liberado && count($parcelas) > 0 && strtotime($data_atual) <= strtotime($data_carencia) && $pg >= $quantidade_para_uso)){
+              $exame_liberado = 'Liberado';
+              $consulta_liberado = 'Liberado';
+              $especialidade_liberado = 'Liberado'; 
+           }else{
+              $exame_liberado = "Pendência";
+              $consulta_liberado = "Pendência";
+              $especialidade_liberado = "Pendência";
+           }  
+        //  var_dump($quantidade_para_uso); 
+          
+    }else{
 
         $parcelas = $this->guia->listarparcelaspacientetotal($paciente_titular_id);
         $carencia = $this->guia->listarparcelaspacientecarencia($paciente_titular_id);

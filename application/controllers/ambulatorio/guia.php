@@ -5223,14 +5223,8 @@ table tr:hover  #achadoERRO{
         $this->load->View('ambulatorio/alterardatapagamento-form', $data);
     }
 
-    function excluirparcelacontratoempresacadastro($parcela_id, $empresa_cadastro_id) {
-
-
-
-
-        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
-
-
+    function excluirparcelacontratoempresacadastro($parcela_id, $empresa_cadastro_id) {                          
+        $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);                           
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
 
@@ -5243,16 +5237,9 @@ table tr:hover  #achadoERRO{
                 $retorno->cancel();
             }
         }
-//        die('morreu');
-
+//        die('morreu'); 
         $ambulatorio_guia_id = $this->guia->excluirparcelacontratoempresacadastro($parcela_id);
-
-//        echo  "<pre>";
-//         
-//        echo $parcela_id;
-//        print_r($pagamento_iugu);die;
-
-
+                            
         if ($ambulatorio_guia_id == "-1") {
             $data['mensagem'] = 'Erro ao excluir parcela';
         } else {
@@ -5292,12 +5279,11 @@ table tr:hover  #achadoERRO{
     function confirmarpagamentoempresa($paciente_contrato_parcelas_id, $empresa_cadastro_id) {
 
         $res = $this->guia->funcionariosempresa($empresa_cadastro_id);
-
+      
         foreach ($res as $item) {
-            $this->guia->confirmarparcelaverificadora($item->paciente_contrato_id);
+            $this->guia->confirmarparcelaverificadora($item->paciente_contrato_id,$paciente_contrato_parcelas_id);
         }
-
-
+                            
         if ($this->guia->confirmarpagamentoautomaticoiuguempresa($paciente_contrato_parcelas_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
         } else {
@@ -6557,15 +6543,21 @@ table tr:hover  #achadoERRO{
      $this->load->View('ambulatorio/selecionardatavoucher',$data);
     }
     
-     function alterarpagamentoempresa($paciente_contrato_parcelas_id) {                                          
+     function alterarpagamentoempresa($paciente_contrato_parcelas_id,$empresa_cadastro_id) { 
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
         $data['contas'] = $this->guia->listarcontas();
+        $data['empresa_cadastro_id'] = $empresa_cadastro_id;
         $this->load->View('ambulatorio/alterarpagamentoempresa-form', $data);
     }
     
     
-    function gravaralterarpagamentoempresa($paciente_contrato_parcelas_id){
+    function gravaralterarpagamentoempresa($paciente_contrato_parcelas_id){ 
+          $res = $this->guia->funcionariosempresa($_POST['empresa_cadastro_id']);
+          
+          foreach ($res as $item) {
+             $this->guia->confirmarparcelaverificadora($item->paciente_contrato_id,$paciente_contrato_parcelas_id);
+          }                
          $this->guia->gravaralterardatapagamento($paciente_contrato_parcelas_id);
          $this->guia->confirmarpagamentoautomaticoiuguempresa($paciente_contrato_parcelas_id);
          redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
@@ -6708,13 +6700,7 @@ table tr:hover  #achadoERRO{
         $body_P = array();
         $body_P_con = '';
         
-        
-        
-        
-        
-        
-        
-        
+                            
         $L = array();
         $L[0] = '';
         $L[1] = '756';
@@ -6744,7 +6730,7 @@ table tr:hover  #achadoERRO{
        
         $body_con = implode($L); 
         $body_L[] = $body_con;
-        $body_P_con .= $body_con . "\n";
+        $body_P_con .= $body_con . "\r\n";
         
         $valor_total= 0;
         foreach($relatorio as $item){
@@ -6814,11 +6800,11 @@ table tr:hover  #achadoERRO{
         $P[40] =  $this->utilitario->preencherEsquerda('09',2,'0');  
         $P[41] =  $this->utilitario->preencherEsquerda('',10,'0');   
         $P[42] =  $this->utilitario->preencherDireita('',1,' ');   
-      $sequencia++;
-       $cont_linha++;
+        $sequencia++;
+        $cont_linha++;
         $body_con = implode($P);
         $body_P[] = $body_con;
-        $body_P_con .= $body_con . "\n"; 
+        $body_P_con .= $body_con . "\r\n"; 
      //fim do segmento
         $i++;
       
@@ -6851,7 +6837,7 @@ table tr:hover  #achadoERRO{
         $cont_linha++;
         $body_con = implode($Q);
         $body_Q[] = $body_con;
-        $body_P_con .= $body_con . "\n"; 
+        $body_P_con .= $body_con . "\r\n"; 
         
         //$t = 0 ;
        // foreach($Q as $ie){
@@ -6894,7 +6880,7 @@ table tr:hover  #achadoERRO{
       
         $body_con = implode($RT);
         $body_RT[] = $body_con;
-        $body_P_con .= $body_con . "\n"; 
+        $body_P_con .= $body_con . "\r\n"; 
 
 //print_r($body_P_con);
 
@@ -6917,7 +6903,7 @@ table tr:hover  #achadoERRO{
           $footer_R = implode($R);
 
         $string_geral = '';
-        $string_geral = $header_A . "\n" . $body_P_con . $footer_R;
+        $string_geral = $header_A . "\r\n" . $body_P_con . $footer_R;
         
         
        if (!is_dir("./upload/CNAB")) {
@@ -6932,7 +6918,7 @@ table tr:hover  #achadoERRO{
             $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
         }
         $hora = date('His');
-        $nome_arquivo = "CNAB240_" . $data_Mes . $cont_linha;
+        $nome_arquivo = "CNAB240_" . $data_Mes;
         $fp = fopen("./upload/CNAB/$nome_arquivo.REM", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
         $escreve = fwrite($fp, $string_geral);
 
@@ -6941,9 +6927,9 @@ table tr:hover  #achadoERRO{
         $zip = new ZipArchive;
         $this->load->helper('directory');
         $zip->open("./upload/CNAB/$nome_arquivo.zip", ZipArchive::CREATE);
-        $zip->addFile("./upload/CNAB/$nome_arquivo.txt", "$nome_arquivo.txt");
+        $zip->addFile("./upload/CNAB/$nome_arquivo.REM", "$nome_arquivo.REM");
         $zip->close();
-        unlink("./upload/CNAB/$nome_arquivo.txt");
+        unlink("./upload/CNAB/$nome_arquivo.REM");
 
         if (count($relatorio) > 0) {
             $messagem = "Arquivo gerado com sucesso";
@@ -6953,11 +6939,7 @@ table tr:hover  #achadoERRO{
 
         $this->session->set_flashdata('message', $messagem);
         redirect(base_url() . "ambulatorio/guia/relatoriocnab");
-        
-
-       
-        
-
+                            
     }
     
     

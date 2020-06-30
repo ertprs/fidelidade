@@ -17,8 +17,9 @@ class Formapagamento extends BaseController {
         parent::Controller();
         $this->load->model('cadastro/formapagamento_model', 'formapagamento');
         $this->load->model('cadastro/forma_model', 'forma');
-         $this->load->model('ambulatorio/procedimento_model', 'procedimento');
-                 $this->load->model('ambulatorio/procedimentoplano_model', 'procedimentoplano');
+        $this->load->model('ambulatorio/procedimento_model', 'procedimento');
+        $this->load->model('ambulatorio/procedimentoplano_model', 'procedimentoplano');
+        $this->load->model('ambulatorio/guia_model', 'guia');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -408,6 +409,15 @@ class Formapagamento extends BaseController {
          $this->formapagamento->excluirprocedimentoplano($procedimentos_plano_id);
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
         
+    }
+    
+    function carregarformapagamentocarenciaespecifica($formapagamento_id) {
+        $obj_formapagamento = new formapagamento_model($formapagamento_id);
+        $data['obj'] = $obj_formapagamento;
+        $data['conta'] = $this->forma->listarforma();
+        $data['credor_devedor'] = $this->formapagamento->listarcredordevedor();
+        //$this->carregarView($data, 'giah/servidor-form');
+        $this->loadView('cadastros/formapagamentocarenciaespecifica-form', $data);
     }
     
 }

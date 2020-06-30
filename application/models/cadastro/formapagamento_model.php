@@ -535,24 +535,36 @@ class formapagamento_model extends Model {
         try {
             /* inicia o mapeamento no banco */
             $forma_pagamento_id = $_POST['txtcadastrosformapagamentoid'];
-            if ($_POST['carencia_exame_mensal'] != '') {
+            if (isset($_POST['carencia_exame_mensal']) && $_POST['carencia_exame_mensal'] != '') {
                 $this->db->set('carencia_exame_mensal', 't');
             } else {
                 $this->db->set('carencia_exame_mensal', 'f');
             }
-            if ($_POST['carencia_consulta_mensal'] != '') {
+            if (isset($_POST['carencia_consulta_mensal']) && $_POST['carencia_consulta_mensal'] != '') {
                 $this->db->set('carencia_consulta_mensal', 't');
             } else {
                 $this->db->set('carencia_consulta_mensal', 'f');
             }
-            if ($_POST['carencia_especialidade_mensal'] != '') {
+            if (isset($_POST['carencia_especialidade_mensal']) && $_POST['carencia_especialidade_mensal'] != '') {
                 $this->db->set('carencia_especialidade_mensal', 't');
             } else {
                 $this->db->set('carencia_especialidade_mensal', 'f');
             }
-            $this->db->set('carencia_exame', $_POST['carencia_exame']);
+            if(isset($_POST['carencia_exame']) && $_POST['carencia_exame'] != ""){
+              $this->db->set('carencia_exame', $_POST['carencia_exame']);
+            }
+            if(isset($_POST['carencia_consulta']) && $_POST['carencia_consulta'] != ""){
             $this->db->set('carencia_consulta', $_POST['carencia_consulta']);
-            $this->db->set('carencia_especialidade', $_POST['carencia_especialidade']);
+            } 
+            if(isset($_POST['carencia_especialidade']) && $_POST['carencia_especialidade'] != ""){
+             $this->db->set('carencia_especialidade', $_POST['carencia_especialidade']);
+            } 
+            if(isset($_POST['txtquantidade_para_uso']) && $_POST['txtquantidade_para_uso'] != ""){
+                $this->db->set('quantidade_para_uso', $_POST['txtquantidade_para_uso']);  
+            }
+            if(isset($_POST['dias_carencia']) && $_POST['dias_carencia'] != ""){
+                $this->db->set('dias_carencia', $_POST['dias_carencia']);  
+            } 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('data_atualizacao', $horario);
@@ -610,7 +622,9 @@ class formapagamento_model extends Model {
                                valoradcional,
                                parcelas,
                                qtd_dias,
-                               nome_impressao');
+                               nome_impressao,
+                               quantidade_para_uso,
+                               dias_carencia');
             $this->db->from('tb_forma_pagamento');
             $this->db->where("forma_pagamento_id", $forma_pagamento_id);
             $query = $this->db->get();
@@ -656,6 +670,8 @@ class formapagamento_model extends Model {
             $this->_comissao_seguradora = $return[0]->comissao_seguradora;
             $this->_qtd_dias = $return[0]->qtd_dias;
             $this->_nome_impressao = $return[0]->nome_impressao;
+            $this->_quantidade_para_uso = $return[0]->quantidade_para_uso;
+            $this->_dias_carencia = $return[0]->dias_carencia;
         } else {
             $this->_forma_pagamento_id = null;
         }

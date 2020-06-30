@@ -225,11 +225,13 @@
                                 <option value="NORMAL" <?
                                 if (@$obj->_tipo_carencia == "NORMAL"):echo 'selected';
                                 endif;
-                                ?>>Normal</option>
-
+                                ?>>Normal</option> 
+                                 <option value="ESPECIFICA" <?
+                                if (@$obj->_tipo_carencia == "ESPECIFICA"):echo 'selected';
+                                endif;
+                                ?>>Específica </option> 
                             </select>
-                        </dd>
-
+                        </dd> 
                         <dt>
                             <label>Modelo de Declaração</label>
                         </dt>

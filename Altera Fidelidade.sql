@@ -928,8 +928,7 @@ ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN associado_empresa_cadastro_id 
 
 ALTER TABLE ponto.tb_entradas ADD COLUMN empresa_id integer;
 ALTER TABLE ponto.tb_saldo ADD COLUMN empresa_id integer;
-
-
+ 
 --17/06/2020
 INSERT INTO ponto.tb_perfil(
             perfil_id, nome, ativo)
@@ -939,3 +938,11 @@ INSERT INTO ponto.tb_perfil(
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN pessoa_id integer;
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN campos_cadastro text;
+ 
+--27/06/2020
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN quantidade_para_uso integer;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN dias_carencia integer;
+
+--30/06/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN contrato_parcelas_id_empresa integer;
