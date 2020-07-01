@@ -6734,7 +6734,8 @@ table tr:hover  #achadoERRO{
         
         $valor_total= 0;
         foreach($relatorio as $item){
-         
+              
+        $data_emissao = date('dmY',strtotime($item->data_cadastro));
         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
         
         $vencimento = $lista[0]->data;
@@ -6783,7 +6784,7 @@ table tr:hover  #achadoERRO{
         $P[23] = $this->utilitario->preencherDireita('',1,' ');
         $P[24] = $this->utilitario->preencherEsquerda('32',2,'0');
         $P[25] = $this->utilitario->preencherDireita('A',1,'0');
-        $P[26] = $this->utilitario->preencherEsquerda(date('dmY'),8,'0');
+        $P[26] = $this->utilitario->preencherEsquerda($data_emissao,8,'0');
         $P[27] = $this->utilitario->preencherEsquerda('',1,'0');
         $P[28] = $this->utilitario->preencherEsquerda("",8,'0');
         $P[29] = $this->utilitario->preencherEsquerda("",15,'0'); //  no manual diz (13)   
