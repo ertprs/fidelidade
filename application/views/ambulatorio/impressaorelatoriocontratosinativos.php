@@ -5,6 +5,7 @@
     <h4>BUSCANDO POR: <?= ($_POST['tipobusca'] == "I") ? "INATIVOS" : "ATIVOS"; ?></h4>
     <hr>
     <?
+     
     if (count($relatorio) > 0) {
         ?>
         <table border="1">
@@ -31,14 +32,45 @@
                     $total++;
                     ?>
                     <tr>
-                        <td ><?= $item->nome; ?></td>
+                        <td ><?
+                        if($item->situacao == 'Dependente'){
+                           echo  $item->depedente;
+                        }else{
+                           echo  $item->nome;
+                        } 
+                        ?></td>
                         <td ><?= $item->paciente_contrato_id; ?></td>
                         <td ><?= $item->plano; ?></td> 
-                        <td ><?= $item->telefone; ?></td>
-                        <td ><?= $item->celular; ?></td> 
+                        <td ><?
+                        if($item->situacao == 'Dependente'){
+                           echo   $item->telefonedependete; 
+                        }else{
+                          echo   $item->telefone;    
+                        }
+                        
+                        ?></td>
+                        <td ><?
+                         if($item->situacao == 'Dependente'){
+                            echo $item->celulardependente;
+                         }else{
+                             echo $item->celular; 
+                         }  
+                        ?></td> 
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
-                        <td ><?= $item->vendedor; ?></td>
-                        <td ><?= $item->indicacao; ?></td>
+                        <td ><?
+                          if($item->situacao == 'Dependente'){
+                            echo $item->vendedordependente;
+                          }else{
+                            echo $item->vendedor;    
+                          } 
+                        ?></td>
+                        <td ><?
+                           if($item->situacao == 'Dependente'){
+                              echo $item->indicacaodependete; 
+                           }else{
+                              echo $item->indicacao;  
+                           }  
+                        ?></td>
                         <? if($_POST['tipobusca'] == 'I'){ ?>
                         <td ><?= substr($item->data_atualizacao, 8, 2) . "/" . substr($item->data_atualizacao, 5, 2) . "/" . substr($item->data_atualizacao, 0, 4); ?></td>
                             <td><?= $item->operador; ?></td>

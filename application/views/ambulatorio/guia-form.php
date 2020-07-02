@@ -149,14 +149,13 @@
 
                                     <? } ?> 
                                     <td class="<?php echo $estilo_linha; ?>" width="30px;" >
-                                                <?php if($perfil_id != 10){?>
-                                        <div class="bt_link">
-                                            <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaocarteira/" . $item->paciente_id . "/" . $contrato_id."/".$item->paciente_contrato_dependente_id."/".$paciente_id ?> ', '_blank', 'width=1000,height=1000');">
-                                                Carteira  
-                                            </a>
-                                        </div> 
-                                                <?php }?>
-                                        
+                                        <?php if($perfil_id != 10){?>
+                                            <div class="bt_link">
+                                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/formapagamentoimpressaocarteira/" . $item->paciente_id . "/" . $contrato_id."/".$item->paciente_contrato_dependente_id."/".$paciente_id ?> ', '_blank', 'width=1000,height=1000');">
+                                                    Carteira  
+                                                </a>
+                                            </div> 
+                                        <?php }?> 
                                     </td>
 
                                     <td class="<?php echo $estilo_linha; ?>" width="30px;" title="Quantidade de Impressões feitas"><div class=" ">

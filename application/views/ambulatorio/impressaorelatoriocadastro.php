@@ -27,6 +27,8 @@
     </table>
     <hr>
     <?
+     
+    
     if (count($relatorio) > 0) {
         ?>
         <table border="1">
@@ -50,6 +52,12 @@
                 $total = 0;
                 
                 foreach ($relatorio as $item) :
+                   if($item->situacao == "Dependente"){
+                     $plano = $this->guia->listarplanodependente($item->paciente_id);  
+                   }else{
+                     $plano = Array();  
+                   } 
+                     
                   $cor = "";
                   $contpendenciaadesao = 0 ; 
                   if($item->situacao == "Titular"){  
@@ -65,7 +73,14 @@
                     <tr>
                         <td ><font style="color:<?= $cor; ?>;"><?= $item->paciente_id; ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= $item->nome; ?></td>
-                        <td ><font style="color:<?= $cor; ?>;"><?= $item->convenio; ?></td>
+                        <td ><font style="color:<?= $cor; ?>;"><?
+                           if($item->situacao == "Dependente"){
+                             echo  @$plano[0]->nome;
+                           }else{
+                             echo  $item->convenio;
+                           }
+                        
+                        ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= substr($item->nascimento, 8, 2) . "/" . substr($item->nascimento, 5, 2) . "/" . substr($item->nascimento, 0, 4); ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= ($item->cpf); ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= ($item->rg); ?></td>

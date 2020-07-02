@@ -57,6 +57,7 @@
                             <option value="PARCELA">PARCELA</option>
                             <option value="ADESÃO">ADESÃO</option>
                             <option value="CARTEIRA">CARTEIRA</option>
+                            <option value="VOUCHER">VOUCHER</option>
                         </select>
                     </dd>
                     <dt>

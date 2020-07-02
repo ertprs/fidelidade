@@ -304,12 +304,12 @@
                                                 <?php
                                                 if ($item->paciente_dependente_id != "" && $item->paciente_dependente_id != 0 && $this->session->userdata('cadastro') == 2) {
                                                     ?>
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->paciente_dependente_id ?>">Confirmar
+                                                <a style="cursor: pointer; " onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->paciente_dependente_id ?> ', '_blank', 'width=600,height=240');">Confirmar
                                                     </a>
                                                     <?
                                                 } else {
                                                     ?>
-                                                    <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Confirmar
+                                                <a  style="cursor: pointer; " onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamento/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>', '_blank', 'width=600,height=240');">Confirmar
                                                     </a>
                                                     <?php
                                                 }
@@ -652,7 +652,7 @@
                             <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
 
                                         <?php if($perfil_id != 10){?>
-                            <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
+                            <td  style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                                         <?php }?>
                            <? if ($perfil_id == 1) { ?>
 
@@ -676,7 +676,7 @@
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                            <?php if($perfil_id != 10){?>
                                         <div class="bt_link">
-                                            <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=240');">Confirmar
                                             </a>
                                         </div>
                                         <?php }?>
@@ -866,7 +866,7 @@ if($perfil_id != 10){
                         <? if ($item->ativo == 't') { ?>
                             <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
                             <?php if($perfil_id != 10){?>
-                            <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
+                            <td colspan="" style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                             <?php }?>
                                 <? if ($perfil_id == 1) { ?>
 
@@ -880,19 +880,15 @@ if($perfil_id != 10){
                                             </a>
                                         </div>
                                     </td>
-                                    <?
-                                } else {
-                                    ?>
-
+                                    <? } else { ?> 
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                         <div class="bt_link">
-                                            <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>">Confirmar
+                                            <a  style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=240');">Confirmar
                                             </a>
                                         </div>
                                     </td> 
                                 <? } ?>
-
-
+ 
                                 <?
                             }
 

@@ -796,14 +796,11 @@ class Guia extends BaseController {
         } else {
             $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
         }
-
         $data['contrato'] = $this->guia->listarinformacoesContrato($contrato_id);
         $this->guia->addimpressao($contrato_id, $paciente_id, $paciente_contrato_dependente_id);
         // var_dump($data['contrato']); die;
         $data['titular_id'] = $data['contrato'][0]->paciente_id;
-        $paciente_id = @$data['paciente'][0]->paciente_id;
-
-
+        $paciente_id = @$data['paciente'][0]->paciente_id;                          
 //        echo $paciente_titular;
 //        die;
         if (@$data['paciente'][0]->situacao == 'Titular') {
@@ -814,9 +811,8 @@ class Guia extends BaseController {
             $titular_id = @$retorno[0]->titular_id;
             $this->guia->confirmarpagamentocarteira($paciente_dependete_id, $contrato_id, $paciente_titular);
         }
-
+        
         $this->load->View('ambulatorio/impressaoficharonaldo', $data);
-
 ///////////////////////////////////////////////////////////////////////////////////////////////        
         // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
     }
@@ -1121,8 +1117,22 @@ class Guia extends BaseController {
         } else {
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
         }
-        $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "ambulatorio/guia/listarpagamentos/$paciente_id/$contrato_id");
+        $this->session->set_flashdata('message', $mensagem);  
+           if($mensagem != ""){
+                    echo "<html>
+                    <meta charset='UTF-8'>
+            <script type='text/javascript'>  
+            window.onunload = fechaEstaAtualizaAntiga;
+            function fechaEstaAtualizaAntiga() {
+                window.opener.location.reload();
+                }
+            window.close();
+                </script>
+                </html>";
+           }else{
+               redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+           }
+                            
     }
 
     function confirmarpagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
@@ -1137,11 +1147,28 @@ class Guia extends BaseController {
         }
 
         $this->session->set_flashdata('message', $mensagem);
-        if ($tipo == 'CONSULTA EXTRA') {
-            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
-        } else {
-            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");
-        }
+        
+         if($mensagem != ""){
+                    echo "<html>
+                    <meta charset='UTF-8'>
+            <script type='text/javascript'>  
+            window.onunload = fechaEstaAtualizaAntiga;
+            function fechaEstaAtualizaAntiga() {
+                window.opener.location.reload();
+                }
+            window.close();
+                </script>
+                </html>";
+           }else{
+               redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+           }
+        
+//        if ($tipo == 'CONSULTA EXTRA') {
+//            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+//        } else {
+//            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultacoop/$paciente_id/$contrato_id");
+//        }
+        
     }
 
     function cancelaragendamentocartao($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
@@ -1214,6 +1241,7 @@ class Guia extends BaseController {
         $data['paciente_id'] = $paciente_id;
         $data['contrato_id'] = $contrato_id;
         $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id);
+        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
         // echo '<pre>';
     //    var_dump($data['voucher']); die;
         $this->load->View('ambulatorio/voucherconsultaavulsa-form', $data);
@@ -4480,6 +4508,7 @@ class Guia extends BaseController {
         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
         $data['contas'] = $this->guia->listarcontas();
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
+        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos(); 
         $this->load->View('ambulatorio/alterarpagamento-form', $data);
     }
 
@@ -4609,6 +4638,7 @@ class Guia extends BaseController {
         $data['contrato_id'] = $contrato_id;
         $data['pagamento'] = $this->guia->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
         $data['contas'] = $this->guia->listarcontas();
+        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
         $this->load->View('ambulatorio/alterarpagamentoavulsas-form', $data);
     }
 
@@ -6651,13 +6681,10 @@ table tr:hover  #achadoERRO{
         $sufixo_cep = substr($empresa[0]->cep, -3);
         $cidade = $empresa[0]->municipio;
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
-        $relatorio = $this->guia->gerarcnab();
-        
-        
+        $relatorio = $this->guia->gerarcnab(); 
         //echo "<pre>";
         //print_r($relatorio);
-        //die();
-       
+        //die(); 
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
         $A[0] = '';     // Iniciando o indice zero do array;
@@ -7715,6 +7742,33 @@ function geraCodigoBanco($numero) {
       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
     
+    function formapagamentoimpressaocarteira($paciente_id,$contrato_id,$paciente_contrato_dependente_id,$paciente_titular){ 
+        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+        $data['paciente_id']    =    $paciente_id;
+        $data['contrato_id']    =    $contrato_id;
+        $data['paciente_contrato_dependente_id']    =    $paciente_contrato_dependente_id;
+        $data['paciente_titular']    =    $paciente_titular; 
+        $this->load->View('ambulatorio/formapagamentoimpressaocarteira',$data);   
+    } 
+    
+   function formapagementoconfirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $depende_id = NULL){     
+       $data['paciente_id'] = $paciente_id;
+       $data['contrato_id'] = $contrato_id;
+       $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+       $data['depende_id'] = $depende_id; 
+       $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+       $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+       $this->load->View('ambulatorio/formapagementoconfirmarpagamento',$data);
+   }
+    
+  function formapagementoconfirmarpagamentoconsultaavulsa($paciente_id, $contrato_id, $consultas_avulsas_id) {
+      $data['paciente_id'] = $paciente_id;
+      $data['contrato_id'] = $contrato_id;
+      $data['consultas_avulsas_id'] = $consultas_avulsas_id;
+      $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+      $data['pagamento'] = $this->guia->listaralterardataconsultaavulsa($consultas_avulsas_id);
+      $this->load->View('ambulatorio/formapagementoconfirmarpagamentoconsultaavulsa',$data);
+  }
     
 }
 
