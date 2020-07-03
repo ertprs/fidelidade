@@ -8,22 +8,22 @@
             }
             .cor_vermelha{
                 color: red;
-                font-size: 13px;
+                font-size: 14px;
             }
             .maior{
-                font-size: 13px !important;
+                font-size: 14px !important;
             }
             .letramenor{
-                font-size: 15px;
+                font-size: 14px;
             }
             .quebrar_pagina{
                 page-break-before: always
             }
             .cabecalho{
-                font-size: 22px !important;
+                font-size: 19px !important;
             }
             .letramenor2{
-                  font-size: 15px;
+                  font-size: 14px;
             }
         </style>
     </head>
@@ -224,19 +224,10 @@
             </td>
             </tr>
         </table>
-
-       <div class="quebrar_pagina"><div>
-
-        <!-- CABEÇALHO -->
-        <table align="center">
-        <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-        </table>
-
+ 
+ 
         <!-- CORPO -->
-        <table  style="width:100%;"  class='letramenor'>
-            <tr>
-                <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE </u></th>
-            </tr>
+        <table  style="width:100%;"  class='letramenor'> 
             
             <tr>
             <td align='justify'>
@@ -475,24 +466,11 @@
         RG/CPF:
         </b></td>
         </tr>
-    </table>
-
-
-    <div class="quebrar_pagina"><div>
-
-    <!-- CABEÇALHO -->
-    <table align="center">
-    <tr><td><img style="width:150px" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-    </table>
-
+    </table> 
     <!-- CORPO -->
-    <table  style="width:100%;"  class='letramenor'>
+    <table  style="width:100%;"  class='letramenor'> 
     <tr>
-        <th align="center" class="cabecalho"><u> TERMO DE USO CARTÃO SALUTE </u></th>
-    </tr>
-
-    <tr>
-    <td align='center'><br><br><b>ANEXO I</b><br><br></td>
+    <td align='center'> <b>ANEXO I</b><br><br></td>
     </tr>
 
     <tr>
@@ -526,196 +504,11 @@
     invalidez permanente total ou parcial por acidente, conforme a tabela a seguir: <br><br></td>
     </tr>
     </table>
-
-
     
- 
-    <!-- CORPO -->
-    <table  style="width:100%;" class='letramenor'>
+    
+    <!--tabela-->
   
-
-    <tr>
-    <td align='justify'><b>§ 3º</b> - No caso de invalidez parcial, a tabela dá a cada 
-    parte do corpo um percentual diferente. Assim, para saber como dar entrada, 
-    observe a tabela de valores para ter uma ideia do que poderá receber. 
-    No caso de invalidez parcial, ficará a cargo do médico que atender a 
-    vítima determinar a porcentagem da indenização. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>§ 4º</b> - Auxílio funeral, com capital segurado de até 
-    R$ 3.000,00 (três mil reais); <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>§ 5º</b> - Cesta básica alimentar, no valor de 
-    R$ 300,00 (trezentos reais) por período de 06 (seis) meses. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.3º</b> - O limite de idade estabelecido neste contrato é de 
-    74 (setenta e quatro) anos de vida para o cliente associado ou qualquer 
-    membro da composição familiar aceita pela SALUTE. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.4º</b> - A partir do ato de contratação geral 
-    (termo de adesão cliente) se adere igualmente a este seguro 
-    ofertado pela citada conveniada. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.5º</b> - A inclusão do cliente associado 
-    SALUTE no rol de segurados se dará imediatamente ao repasse da 
-    intermediadora à empresa seguradora conveniada, sendo esta data 
-    base de sua admissão e direito a uso do serviço do grupo de segurados SALUTE. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='center'><b>ANEXO II <br><br> ASSISTÊNCIA MÉDICA <br><br></b></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.1º</b> - A SALUTE se compromete em cada contrato, 
-    fornecer 02 (duas) consultas com o médico clínico geral ao ano, sob o 
-    preço do valor mensal. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Parágrafo único:</b> Em havendo necessidade de atendimentos 
-    extras com o clínico geral (extrapolando as duas consultas anuais), será 
-    obrigatoriamente cobrado o valor de R$ 20,00 (vinte reais) em cada consulta 
-    adicional. Estas consultas deverão ser agendadas diretamente na sede da Salute. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.2º</b> - Os atendimentos de saúde realizado nas 
-    cínicas credenciadas deverão ser previamente agendadas diretamente 
-    nestes estabelecimentos, cabendo ao paciente receber destes o local, 
-    a data e o horário do atendimento. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Parágrafo único:</b> A SALUTE não se responsabiliza 
-    pela frequência do cliente ou do profissional e ainda pelo atendimento, q
-    ue é feito com toda liberalidade pelo profissional conveniado, haja vista, 
-    ambas as relações serem diretas entre as partes – somente fazendo a 
-    intermediação do valor mais vantajoso ao cliente em teor de ofertar sua 
-    rede conveniada de profissionais de saúde. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.3º</b> - As consultas com o clínico geral ofertadas dentro 
-    do plano vigente (conforme o artigo 1) terão um prazo inicial de carência em 90 
-    (noventa) dias para a primeira consulta e de 180 (cento e oitenta) dias para a 
-    segunda consulta, ambas contando após o início de vigência do plano para com o 
-    CLIENTE SALUTE. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.4º</b> - Exames, procedimentos e consultas realizadas pela 
-    rede credenciada com profissionais de saúde serão pagas diretamente ao 
-    estabelecimento que prestará o serviço, sendo facultado ao mesmo estipular o 
-    valor de cada procedimento. <br><br></td>
-    </tr>
-
-    </table>
-
-    
-  
-   
-
-    <!-- CORPO -->
-    <table  style="width:100%;"  class='letramenor'>
-    
-    <tr>
-    <td align='justify'><b>Art.5º</b> - A SALUTE se compromete em manter atualizada a lista
-     de sua rede de saúde conveniada em seu site e/ou aplicativo e tais informações também 
-     estarão disponíveis em sua sede, a disposição de qualquer cliente. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='center'><b> <br> <br><br></b></td>
-    </tr>
-    <tr>
-        <td align='center'><b>&nbsp; <br><br></b></td> 
-    </tr>
-    <tr>
-        <td align='center'><b>ANEXO III</b> <br> <br><b>CRÉDITO <br><br></b></td> 
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art. 1º</b> - O cliente SALUTE após a adesão e devidamente 
-    autorizado pelo mesmo, poderá ser realizado em favor deste, análise de crédito 
-    e, caso aprovado, a SALUTE poderá, se assim desejar o cliente, ofertar lhes 
-    créditos pecuniários para diversas finalidades, através de empresa em sua 
-    rede conveniada, nesta especificidade. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Parágrafo único:</b> O cliente por meio deste, 
-    autoriza desde já, que a SALUTE possa a qualquer tempo lhe ofertar 
-    pacotes, programas de crédito, empréstimos e consignados. A Salute 
-    somente ofertará a disposição do cliente tal vantagem, cabendo a ele 
-    posteriormente decidir livremente em aceitar ou recusar o empréstimo 
-    que lhe é disposto. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.2º</b> - Havendo o aceite e o interesse real a 
-    oferta de empréstimo, o cliente SALUTE será convidado a conhecer as 
-    condições com a conveniada APROVA CRÉDITO que com ele procederá 
-    formalização de contrato, liberação de valores e demais disposições 
-    desta relação. <br><br></td>
-    </tr>
-
-    <tr>
-    <td align='justify'><b>Art.3º</b> - A SALUTE é mera intermediadora desta relação, 
-    advindo da mesma a prospecção e análise creditória, o empréstimo e demais 
-    consequências da relação financeira ficará a cargo da sua conveniada. <br><br></td>
-    </tr>
-
-    <tr>
-    <td>
-    <br><br><br><br><br><br>
-    <b>Fale Conosco: </b><br>
-    Salute Benefícios: (94) 99297-5157<br>
-    Agendamento de Consulta Clinica: (94) 99132-1153<br>
-    Agendamento de Consulta Jurídica: (94) 99297-5157<br>
-    Crédito Financeiro: (94) 99132-1149<br>
-    Auxílio Funeral: (94)  99147-8848 / 98106-9824<br>
-    </td>
-    </tr>
-
-    </table>
-    <div class="quebrar_pagina"><div>
-    <table border="0">
-        <tr >
-         <td>
-            <table>
-                <tr><td class='cor_vermelha'>“Tudo podemos em Deus, pois Ele nos fortalece"</td></tr>
-                <tr><td class='cor_vermelha'>Filipenses 4:13</td><tr>
-                <tr><td class='cor_vermelha'></td></tr>
-                <tr><td class='cor_vermelha maior'>Nós já aderimos a Código de Ética dos Corretores de Seguros</td></tr>
-            </table>
-         </td>
-         <!-- align="right" -->
-         <td>
-             <table>
-                <tr><td style="width:150px"><img style="width:80%" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-             </table>
-         </td>
-        </tr>
-        </table>
-
-        <table class="letramenor2">
-        <tr>
-        <td>De acordo com o texto, o valor máximo de indenização do é de R$ 10.000,00, a ser pago em casos de morte ou invalidez total permanente.</td>
-        </tr>
-        </table>
-
-
-        <table border="1" align="center" style="width:100%;" class="letramenor2" CELLSPACING="0" CELLPADDING="2">
+<table border="1" align="center" style="width:100%;" class="letramenor2" CELLSPACING="0" CELLPADDING="2">
            <tr>
             <th>Danos Corporais Totais <br> Repercussão na Íntegra do Patrimônio Físico</th>
             <th >Percentual <br> da Perda</th>
@@ -820,7 +613,11 @@
            <td align="center">10</td>
            </tr>
         </table>
-
+  <table class="letramenor2">
+      <tr>
+      <td>De acordo com o texto, o valor máximo de indenização é de R$ 10.000,00, a ser pago em casos de morte ou invalidez total permanente.</td>
+      </tr>
+      </table>
         <table class="letramenor2">
         <tr>
         <td>No caso de invalidez parcial, a tabela dá a cada parte do corpo um percentual diferente. Assim, para saber como dar entrada, fique por
@@ -837,10 +634,176 @@
             10.000,00 ou seja, R$ 7.000,00.</td>
         </tr>
         </table>
+    
+ 
+    <!-- CORPO -->
+    <table  style="width:100%;" class='letramenor'>
+  
 
+    <tr>
+    <td align='justify'><b>§ 3º</b> - No caso de invalidez parcial, a tabela dá a cada 
+    parte do corpo um percentual diferente. Assim, para saber como dar entrada, 
+    observe a tabela de valores para ter uma ideia do que poderá receber. 
+    No caso de invalidez parcial, ficará a cargo do médico que atender a 
+    vítima determinar a porcentagem da indenização. <br><br></td>
+    </tr>
 
+    <tr>
+    <td align='justify'><b>§ 4º</b> - Auxílio funeral, com capital segurado de até 
+    R$ 3.000,00 (três mil reais); <br><br></td>
+    </tr>
 
+    <tr>
+    <td align='justify'><b>§ 5º</b> - Cesta básica alimentar, no valor de 
+    R$ 300,00 (trezentos reais) por período de 06 (seis) meses. <br><br></td>
+    </tr>
 
+    <tr>
+    <td align='justify'><b>Art.3º</b> - O limite de idade estabelecido neste contrato é de 
+    74 (setenta e quatro) anos de vida para o cliente associado ou qualquer 
+    membro da composição familiar aceita pela SALUTE. <br><br></td>
+    </tr>
 
+    <tr>
+    <td align='justify'><b>Art.4º</b> - A partir do ato de contratação geral 
+    (termo de adesão cliente) se adere igualmente a este seguro 
+    ofertado pela citada conveniada. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.5º</b> - A inclusão do cliente associado 
+    SALUTE no rol de segurados se dará imediatamente ao repasse da 
+    intermediadora à empresa seguradora conveniada, sendo esta data 
+    base de sua admissão e direito a uso do serviço do grupo de segurados SALUTE. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='center'><b>ANEXO II <br><br> ASSISTÊNCIA MÉDICA <br><br></b></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.1º</b> - A SALUTE se compromete em cada contrato, 
+    fornecer 02 (duas) consultas com o médico clínico geral ao ano, sob o 
+    preço do valor mensal. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Parágrafo único:</b> Em havendo necessidade de atendimentos 
+    extras com o clínico geral (extrapolando as duas consultas anuais), será 
+    obrigatoriamente cobrado o valor de R$ 20,00 (vinte reais) em cada consulta 
+    adicional. Estas consultas deverão ser agendadas diretamente na sede da Salute. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.2º</b> - Os atendimentos de saúde realizado nas 
+    cínicas credenciadas deverão ser previamente agendadas diretamente 
+    nestes estabelecimentos, cabendo ao paciente receber destes o local, 
+    a data e o horário do atendimento. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Parágrafo único:</b> A SALUTE não se responsabiliza 
+    pela frequência do cliente ou do profissional e ainda pelo atendimento, q
+    ue é feito com toda liberalidade pelo profissional conveniado, haja vista, 
+    ambas as relações serem diretas entre as partes – somente fazendo a 
+    intermediação do valor mais vantajoso ao cliente em teor de ofertar sua 
+    rede conveniada de profissionais de saúde. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.3º</b> - As consultas com o clínico geral ofertadas dentro 
+    do plano vigente (conforme o artigo 1) terão um prazo inicial de carência em 90 
+    (noventa) dias para a primeira consulta e de 180 (cento e oitenta) dias para a 
+    segunda consulta, ambas contando após o início de vigência do plano para com o 
+    CLIENTE SALUTE. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.4º</b> - Exames, procedimentos e consultas realizadas pela 
+    rede credenciada com profissionais de saúde serão pagas diretamente ao 
+    estabelecimento que prestará o serviço, sendo facultado ao mesmo estipular o 
+    valor de cada procedimento. <br><br></td>
+    </tr> 
+    </table> 
+     
+    <!-- CORPO -->
+    <table  style="width:100%;"  class='letramenor'>
+    
+    <tr>
+    <td align='justify'><b>Art.5º</b> - A SALUTE se compromete em manter atualizada a lista
+     de sua rede de saúde conveniada em seu site e/ou aplicativo e tais informações também 
+     estarão disponíveis em sua sede, a disposição de qualquer cliente. <br><br></td>
+    </tr>
+ 
+    <tr>
+        <td align='center'><b>ANEXO III</b> <br> <br><b>CRÉDITO <br><br></b></td> 
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art. 1º</b> - O cliente SALUTE após a adesão e devidamente 
+    autorizado pelo mesmo, poderá ser realizado em favor deste, análise de crédito 
+    e, caso aprovado, a SALUTE poderá, se assim desejar o cliente, ofertar lhes 
+    créditos pecuniários para diversas finalidades, através de empresa em sua 
+    rede conveniada, nesta especificidade. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Parágrafo único:</b> O cliente por meio deste, 
+    autoriza desde já, que a SALUTE possa a qualquer tempo lhe ofertar 
+    pacotes, programas de crédito, empréstimos e consignados. A Salute 
+    somente ofertará a disposição do cliente tal vantagem, cabendo a ele 
+    posteriormente decidir livremente em aceitar ou recusar o empréstimo 
+    que lhe é disposto. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.2º</b> - Havendo o aceite e o interesse real a 
+    oferta de empréstimo, o cliente SALUTE será convidado a conhecer as 
+    condições com a conveniada APROVA CRÉDITO que com ele procederá 
+    formalização de contrato, liberação de valores e demais disposições 
+    desta relação. <br><br></td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.3º</b> - A SALUTE é mera intermediadora desta relação, 
+    advindo da mesma a prospecção e análise creditória, o empréstimo e demais 
+    consequências da relação financeira ficará a cargo da sua conveniada. <br><br></td>
+    </tr>
+
+    <tr>
+    <td>
+  
+    <b>Fale Conosco: </b><br>
+    Salute Benefícios: (94) 99297-5157<br>
+    Agendamento de Consulta Clinica: (94) 99132-1153<br>
+    Agendamento de Consulta Jurídica: (94) 99297-5157<br>
+    Crédito Financeiro: (94) 99132-1149<br>
+    Auxílio Funeral: (94)  99147-8848 / 98106-9824<br>
+    </td>
+    </tr>
+
+    </table>
+  
+    <table border="0">
+        <tr >
+         <td>
+            <table>
+                <tr><td class='cor_vermelha'>“Tudo podemos em Deus, pois Ele nos fortalece"</td></tr>
+                <tr><td class='cor_vermelha'>Filipenses 4:13</td><tr>
+                <tr><td class='cor_vermelha'></td></tr>
+                <tr><td class='cor_vermelha maior'>Nós já aderimos a Código de Ética dos Corretores de Seguros</td></tr>
+            </table>
+         </td>
+         <!-- align="right" -->
+         <td>
+             <table>
+                <tr><td style="width:150px"><img style="width:80%" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
+             </table>
+         </td>
+        </tr>
+        </table>
+
+      
+  
     </body>
 </html>
