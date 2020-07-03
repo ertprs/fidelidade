@@ -11198,7 +11198,13 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->set('valor', $valor);
             $this->db->set('data', $data);
             $this->db->set('tipo', $PAGA);
-            $this->db->set('classe', 'PARCELA');
+            
+            if($parcela[0]->taxa_adesao == 't'){
+                $this->db->set('classe', 'ADESÃO');
+            }else{
+                $this->db->set('classe', 'PARCELA'); 
+            }
+            
             $this->db->set('nome', $credor);
             if (@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
@@ -11606,7 +11612,8 @@ ORDER BY ae.agenda_exames_id)";
                             e.empresa_id,
                             e.nome as empresa,
                             pc.empresa_cadastro_id,
-                            ec.financeiro_credor_devedor_id as credor_id
+                            ec.financeiro_credor_devedor_id as credor_id,
+                            pcp.taxa_adesao
                             ');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
