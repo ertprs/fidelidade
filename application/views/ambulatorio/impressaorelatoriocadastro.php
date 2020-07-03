@@ -15,6 +15,15 @@
     
     <h4>RELATÓRIO DE CADASTRO</h4>
     <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
+    <h3>Financeiro: <?
+    if($financeiro == "Pendencia"){
+       echo "Pendência"; 
+    }elseif($financeiro == "Finalizado"){
+         echo "Finalizado"; 
+    }else{
+        echo "Todos"; 
+    } 
+    ?></h3>
     <table>
         <tr>
             <td>
@@ -66,7 +75,14 @@
                       $contpendenciaadesao = 0;
                   }
                   if($contpendenciaadesao > 0){
+                      if($financeiro == "Finalizado"){
+                         continue; 
+                      }
                      $cor = "red"; 
+                  }else{ 
+                       if($financeiro == "Pendencia"){
+                         continue; 
+                      }
                   }
                     $total++;
                     ?>

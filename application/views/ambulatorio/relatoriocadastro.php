@@ -27,6 +27,16 @@
                             <option value="dependente">Dependente</option>
                         </select>
                     </dd>
+                    <dt>
+                        <label>Financeiro</label>
+                    </dt>
+                    <dd>
+                        <select name="financeiro" id="financeiro">
+                            <option value="">TODOS</option>
+                            <option value="Pendencia">Pendência</option>
+                            <option value="Finalizado">Finalizado</option>
+                        </select>
+                    </dd>
                     
                 </dl>
                 <button type="submit" >Pesquisar</button>
@@ -34,9 +44,7 @@
             </form>
 
         </div>
-    </div>
-
-
+    </div> 
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>

@@ -11237,6 +11237,9 @@ ORDER BY ae.agenda_exames_id)";
             } else {
                 $this->db->set('conta', $conta_id);
             }
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+              $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
+            }
             $this->db->set('ativo', 't');
             $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->set('data_cadastro', $horario);

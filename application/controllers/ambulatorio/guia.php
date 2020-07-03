@@ -577,6 +577,7 @@ class Guia extends BaseController {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatoriocadastro();
+        $data['financeiro'] = $_POST['financeiro'];
 
         $this->load->View('ambulatorio/impressaorelatoriocadastro', $data);
     }
@@ -6577,7 +6578,8 @@ table tr:hover  #achadoERRO{
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
         $data['contas'] = $this->guia->listarcontas();
-        $data['empresa_cadastro_id'] = $empresa_cadastro_id;
+        $data['empresa_cadastro_id'] = $empresa_cadastro_id; 
+        $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos(); 
         $this->load->View('ambulatorio/alterarpagamentoempresa-form', $data);
     }
     
