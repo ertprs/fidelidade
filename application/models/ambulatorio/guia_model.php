@@ -6054,13 +6054,14 @@ ORDER BY p.nome";
         }
 
         // var_dump($credor); die;
-
+        $classe = "PARCELA";
         if ($tipo == 'EXTRA') {
             $plano = 'CONSULTA EXTRA';
+            $classe = "VOUCHER";
         } else {
             $plano = 'CONSULTA COPARTICIPAÇÃO';
         }
-
+          
 
         $this->db->select('forma_entradas_saida_id as conta_id,
                             descricao');
@@ -6113,16 +6114,7 @@ ORDER BY p.nome";
                 return true;
             }
             
-            $this->db->select('');
-            $this->db->from('tb_voucher_consulta');
-            $this->db->where('consulta_avulsa_id',$consultas_avulsas_id);
-            $this->db->where('ativo','t');
-            $voucher = $this->db->get()->result();
-            $classe = "PARCELA";
-            if(count($voucher) > 0){
-               $classe = "VOUCHER";
-            } 
-
+           
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');

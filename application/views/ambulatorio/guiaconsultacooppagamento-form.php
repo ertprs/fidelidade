@@ -159,7 +159,7 @@
 
                                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                     <div class="bt_link">
-                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=300,height=240');" >Confirmar
+                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=240');" >Confirmar
                                                         </a>
                                                     </div>
                                                 </td> 

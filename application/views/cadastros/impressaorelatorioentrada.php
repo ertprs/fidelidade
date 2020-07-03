@@ -67,8 +67,12 @@
                 
                 $total = 0;
                 $total_parcelas = 0;
+                $relatorio_array = Array();
                 foreach ($relatorioentrada as $item) :
-                    @$qtd_parcelas++;
+                    
+                    @$relatorio_array[$item->conta] += $item->valor + $valor;
+                     
+                 @$qtd_parcelas++;
                 @$qtd_parcelas_{$item->forma_entradas_saida_id}++;
                     $total += $item->valor;
                     ?>
@@ -98,15 +102,16 @@
                         <td ><?= $item->observacao; ?>&nbsp;</td>
                     </tr>
                 <? endforeach; ?>
+                    
+                    
                 <tr>
                     <td colspan="4"><b>TOTAL</b></td>
                     <td colspan="2"><b><?= number_format($total, 2, ",", "."); ?></b></td>
                 </tr>
 
-            </tbody>
+            </tbody> 
 
-
-            <?
+            <? 
         } else {
             ?>
             <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
@@ -116,25 +121,26 @@
     </table>
 </div> <!-- Final da DIV content -->
 <br>
- <?php  
- $conta = $this->forma->listarforma();   
- ?>
+ 
 <table  border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
                 <thead>
-                <th class="tabela_header">Descrição</th>
-                <th class="tabela_header">Valor</th>
+                    <tr>
+                        <th class="tabela_header" colspan="2">Resumo</th>
+                    </tr>
+                    <tr>
+                        <th class="tabela_header">Descrição</th>
+                        <th class="tabela_header">Valor</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <?
+                    <?   
                     $estilo_linha = "tabela_content01";
-                    foreach ($conta as $item) {
-                        ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                        $valor = $this->caixa->listarsomacontarelatorio($item->forma_entradas_saida_id,$txtdata_inicio,$txtdata_fim,$cliente);
+                 foreach($relatorio_array as $key => $val){ 
+                        ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01"; 
                         ?>
                         <tr>
-                            <td class="<?php echo $estilo_linha; ?>"><?= @$item->descricao; ?></td>
-                            <td class="<?php echo $estilo_linha; ?>"> 
-	                           R$<?= number_format(@$valor[0]->total, 2, ",", "."); ?></td>
+                            <td class="<?php echo $estilo_linha; ?>"> <?= $key;?> </td>
+                            <td class="<?php echo $estilo_linha; ?>">R$<?= number_format(@$val, 2, ",", "."); ?></td>
                         </tr>
                     <? } ?>
                 </tbody>
