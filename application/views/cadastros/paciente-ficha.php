@@ -162,12 +162,10 @@
                     ?> 
                        
                 </select>
-            </div>
-
-            <?if(@$obj->_situacao != "Dependente"){?>
+            </div> 
+         
             <div>
-                <label>Forma Pagamento *</label>
-
+                <label>Forma Pagamento </label> 
                 <select name="forma_rendimento_id" id="forma_rendimento_id" class="size2" >
                     <option value='' >Selecione</option>
                     <?php
@@ -183,8 +181,7 @@
                     }
                     ?> 
                 </select>
-            </div>
-                <?}?>
+            </div> 
 
             <div>
                 <label>Situacao</label>

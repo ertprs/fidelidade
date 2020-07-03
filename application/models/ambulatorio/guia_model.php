@@ -613,6 +613,7 @@ class guia_model extends Model {
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("pc.paciente_id", $paciente_id);
         $this->db->where("pc.ativo_admin", 't');
+        $this->db->where('pc.ativo','t');
         $this->db->orderby('pc.paciente_contrato_id');
         $return = $this->db->get();
         return $return->result();
@@ -10435,30 +10436,35 @@ ORDER BY ae.agenda_exames_id)";
         $horario = date('Y-m-d H:i:s');
 
         $operador = $this->session->userdata('operador_id');
-        $this->db->select('contador_impressao');
-        $this->db->from('tb_paciente_contrato_dependente');
-        $this->db->where('paciente_contrato_id', $contrato_id);
-        $this->db->where('paciente_id', $paciente_id);
-        $this->db->where('ativo', 't');
+        $this->db->select('pcd.contador_impressao,pc.paciente_contrato_id,pc.paciente_id');
+        $this->db->from('tb_paciente_contrato_dependente pcd');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcd.paciente_contrato_id','left');
+        $this->db->where('pcd.paciente_contrato_id', $contrato_id);
+        $this->db->where('pcd.paciente_id', $paciente_id);
+        $this->db->where('pcd.ativo', 't');
         $returno = $this->db->get()->result();
+ 
+        $parcela = $this->listarexames($returno[0]->paciente_id);
 
-        $valor_atual = $returno[0]->contador_impressao + 1;
-
+        if($paciente_id == $returno[0]->paciente_id){
+           $valor = $parcela[0]->valor_carteira_titular;
+        }else{
+           $valor = $parcela[0]->valor;
+        } 
+        $valor_atual = $returno[0]->contador_impressao + 1; 
 
         $this->db->where('paciente_contrato_dependente_id', $paciente_contrato_dependente_id);
         $this->db->set('contador_impressao', $valor_atual);
         $this->db->set('data_ultima_impressao', date('Y-m-d'));
         $this->db->set('ultimo_operador_impressao', $operador);
-        $this->db->update('tb_paciente_contrato_dependente');
-
+        $this->db->update('tb_paciente_contrato_dependente'); 
 
         $this->db->set('paciente_contrato_id', $contrato_id);
         $this->db->set('paciente_id', $paciente_id);
         $this->db->set('operador_cadastro', $operador);
         $this->db->set('data_cadastro', $horario);
-
+        $this->db->set('valor',$valor);
         $this->db->set('paciente_contrato_dependente_id', $paciente_contrato_dependente_id);
-
         $this->db->insert('tb_impressoes_contratro_dependente');
     }
 

@@ -112,10 +112,9 @@
                                 <th width="160px;" class="tabela_header">Cliente</th>
                                 <th width="70px;" class="tabela_header">Dt. Nascimento</th>
                                 <th width="70px;" class="tabela_header">Situacao</th>
-                                <th width="30px;" class="tabela_header" colspan="2"></th>
+                                <th width="30px;" class="tabela_header" colspan="3"></th>
                                 <th width="30px;" class="tabela_header" colspan="1"  title="Quantidade de Impressões feitas">Qtd. de Impressões</th>
                                 <th width="30px;" class="tabela_header" colspan="1" title="Data da última Impressão">Dt. impressão</th>
-
     <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
                             </tr>
                         </thead>
@@ -124,8 +123,7 @@
                             <?
                             $estilo_linha = "tabela_content01";
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                            ?>
-
+                            ?> 
                             <tbody>
                                 <tr>
                                     <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
@@ -148,6 +146,23 @@
                                         <td class="<?php echo $estilo_linha; ?>"></td>     
 
                                     <? } ?> 
+                                     
+                                    <?php
+                                    if($item->contador_impressao > 0){  ?>
+                                        <td class="<?php echo $estilo_linha; ?>" width="50px;">       
+                                          <div class="bt_link_new" style="width: 100px;">
+                                           <a target="_blank" href="<?= base_url() . "ambulatorio/guia/impressaorecibocarteira/" . @$paciente_id."/".$item->paciente_id; ?>">
+                                                Recibo
+                                            </a>
+                                          </div>
+                                        </td>
+                                    <?  }else{ ?> 
+                                        <td class="<?php echo $estilo_linha; ?>" width="50px;">   
+                                            
+                                        </td>
+                                        
+                                    <?}?>
+                                        
                                     <td class="<?php echo $estilo_linha; ?>" width="30px;" >
                                         <?php if($perfil_id != 10){?>
                                             <div class="bt_link">

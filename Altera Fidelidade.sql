@@ -953,3 +953,4 @@ ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN forma_rendimento_id integer;
 
 --03/07/2020
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN datas_json text;
+ALTER TABLE ponto.tb_impressoes_contratro_dependente ADD COLUMN valor numeric(10,2);

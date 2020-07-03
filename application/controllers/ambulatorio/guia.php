@@ -7770,6 +7770,38 @@ function geraCodigoBanco($numero) {
       $this->load->View('ambulatorio/formapagementoconfirmarpagamentoconsultaavulsa',$data);
   }
     
+  
+  function impressaorecibocarteira($titular_id,$dependente_id) {
+        $empresa_id =  $this->session->userdata('empresa_id'); 
+        $parcela = $this->guia->listarexames($titular_id);
+        $data['paciente'] = $this->paciente->listardados($dependente_id);
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+        $data['plano'] = $parcela[0]->plano;
+                            
+        $valor = 0;
+        if ($titular_id == $dependente_id) {
+            $valor = $parcela[0]->valor_carteira_titular;
+        } else {
+            $valor = $parcela[0]->valor;
+        }
+                            
+        $valor = number_format($valor, 2, ',', '.'); 
+        $data['valor'] = $valor;  
+        if ($valor == '0,00') {
+            $data['extenso'] = 'ZERO';
+        } else {
+            $valoreditado = str_replace(",", "", str_replace(".", "", $valor));
+            // if ($dinheiro == "t") {
+            $data['extenso'] = GExtenso::moeda($valoreditado);
+            // }
+        }
+        
+                            
+        $this->load->View('ambulatorio/impressaorecibocarteira', $data); 
+    }
+                            
+  
 }
 
 

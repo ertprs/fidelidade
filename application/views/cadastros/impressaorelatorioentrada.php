@@ -39,6 +39,8 @@
     <h4>PERIODO: <?= date('d/m/Y', strtotime($txtdata_inicio)); ?> ate <?= date('d/m/Y', strtotime($txtdata_fim)); ?></h4>
     <hr>
     <?
+    
+    
     if ($relatorioentrada > 0) {
         ?>
         <table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
