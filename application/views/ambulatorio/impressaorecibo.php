@@ -3,10 +3,19 @@
 <p style="text-align:center"><?=$empresa[0]->logradouro?> - <?=$empresa[0]->numero?> - <?=$empresa[0]->bairro?></p>
 <p style="text-align:center"><?=$empresa[0]->telefone?> - <?=$empresa[0]->celular?></p>
 <br clear="all">
+<?
+    
 
+$datas_json = json_decode($pagamento[0]->datas_json); 
+if($datas_json[0][0] != ""){
+   $data_referencia = $datas_json[0][0];
+}else{
+    $data_referencia = $pagamento[0]->data;
+}    
+?>
 </p><p><p><h2 align="Center"><FONT color="#333333" face="Engravers MT, Broadway BT">RECIBO</h2></FONT><br clear="all">
 
-</p><p>Recebi do Sr(a). <?=$paciente[0]->nome?> a quantia de R$ <?=$valor?> (<?=$extenso?>), referente à parcela de <?=date("d/m/Y", strtotime($pagamento[0]->data))?>
+</p><p>Recebi do Sr(a). <?=$paciente[0]->nome?> a quantia de R$ <?=$valor?> (<?=$extenso?>), referente à parcela de <?= date("d/m/Y", strtotime($data_referencia)); ?>
  do plano <?=$pagamento[0]->plano;?>, dando-lhe por este recibo a devida quitação.
 
 

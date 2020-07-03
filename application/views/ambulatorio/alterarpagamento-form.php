@@ -35,6 +35,7 @@ $operador_id = $this->session->userdata('operador_id');
                         </dt>
                         <dd>
                             <input type="text" name="data" id="data" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
+                            <input type="hidden" name="data_antiga" id="data_antiga" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
                         </dd>
                         <? if($perfil_id == 1 || $operador_id == 1){ ?>
                             <dt>

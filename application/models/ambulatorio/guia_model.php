@@ -7209,13 +7209,26 @@ AND data <= '$data_fim'";
 
     function gravaralterardatapagamento($paciente_contrato_parcelas_id) {
         try {
-
-            $this->db->select('data_cartao_iugu');
+            $data_post =  date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))); 
+            $data_antiga =  date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_antiga'])));
+           
+            
+            $this->db->select('data_cartao_iugu,datas_json');
             $this->db->from('tb_paciente_contrato_parcelas pc');
             $this->db->where("paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
             $this->db->orderby("data");
             $retorno_data = $this->db->get()->result();
-
+                
+            $datas = json_decode($retorno_data[0]->datas_json, TRUE); 
+            $datas[] = [$data_antiga]; 
+            $datas[] = [$data_post]; 
+            
+            if(isset($_POST['data_adm']) && $_POST['data_adm'] != ""){
+               $data_adm = date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_adm'])));
+               $datas[0] = [$data_adm]; 
+               $datas[count($datas)] = [$data_antiga]; 
+            } 
+            
             /* inicia o mapeamento no banco */
             $horario = date("Y-m-d H:i:s");
             $hora = date("H:i:s");
@@ -7226,6 +7239,7 @@ AND data <= '$data_fim'";
             if (@$retorno_data[0]->data_cartao_iugu != '') {
                 $this->db->set('data_cartao_iugu', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             }
+            $this->db->set('datas_json',json_encode($datas));
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
             $erro = $this->db->_error_message();
@@ -7501,9 +7515,7 @@ AND data <= '$data_fim'";
 //        var_dump($data_adesao);
 //        var_dump($data_receber);
 //        die;
-
-
-
+ 
 
         if ($return[0]->credor_devedor_id == "") {
 
@@ -7536,8 +7548,7 @@ AND data <= '$data_fim'";
         } else {
             $financeiro_credor_devedor_id = $return[0]->credor_devedor_id;
         }
-
-
+ 
         $data_atual = date("d/m/Y");
 //        $data_adesao = date("Y-m-d");
 //        echo '<pre>';
@@ -7561,12 +7572,15 @@ AND data <= '$data_fim'";
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->set('data', $data_adesao);
+            $datas[] = [$data_adesao]; 
+            $this->db->set('datas_json',json_encode($datas));
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
         }
  
         for ($i = 1; $i <= $parcelas; $i++) {
+            $datas = Array();
             $this->db->set('adesao_digitada', $_POST['adesao']);
             $this->db->set('valor', $ajuste);
             if ($ajuste == 0.00) {
@@ -7577,6 +7591,8 @@ AND data <= '$data_fim'";
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->set('data', $data_receber);
+            $datas[] = [$data_receber]; 
+            $this->db->set('datas_json',json_encode($datas));
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
@@ -7596,7 +7612,9 @@ AND data <= '$data_fim'";
                     $this->db->set('parcela', $i);
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
+                    $datas[] = [$data_receber]; 
                     $this->db->set('data', $data_receber);
+                    $this->db->set('datas_json',json_encode($datas));
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
                     $this->db->insert('tb_paciente_contrato_parcelas');
@@ -7616,6 +7634,8 @@ AND data <= '$data_fim'";
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
                     $this->db->set('data', $data_receber);
+                     $datas[] = [$data_receber]; 
+                    $this->db->set('datas_json',json_encode($datas));
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
                     $this->db->insert('tb_paciente_contrato_parcelas');

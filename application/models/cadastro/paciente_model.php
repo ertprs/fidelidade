@@ -275,7 +275,7 @@ class paciente_model extends BaseModel {
     }
 
     function listarpagamentoscontratoparcela($paciente_contrato_parcelas_id) {
-        $this->db->select('valor, data, cp.ativo, paciente_contrato_parcelas_id, fp.nome as plano, multa_atraso, juros, observacao');
+        $this->db->select('valor, data, cp.ativo, paciente_contrato_parcelas_id, fp.nome as plano, multa_atraso, juros, observacao,cp.datas_json');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
@@ -4457,7 +4457,7 @@ class paciente_model extends BaseModel {
     }
     
     function listarparcelaspagas($contrato_id){  
-        $this->db->select('valor, data, cp.ativo, paciente_contrato_parcelas_id, fp.nome as plano, multa_atraso, juros, observacao');
+        $this->db->select('valor, data, cp.ativo, paciente_contrato_parcelas_id, fp.nome as plano, multa_atraso, juros, observacao,cp.datas_json');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
