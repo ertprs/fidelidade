@@ -7572,7 +7572,10 @@ function geraCodigoBanco($numero) {
 
         $nome = $_FILES['arquivo']['name'];
         $nome_arq = $_FILES['arquivo'];
-                            
+         
+        
+        
+        
 
         if (!is_dir("./upload/retornoimportadoscnab")) {
             mkdir("./upload/retornoimportadoscnab");
@@ -7585,11 +7588,7 @@ function geraCodigoBanco($numero) {
             $destino = "./upload/retornoimportadoscnab/$chave_pasta";
             chmod($destino, 0777);
         }
-
-
-
-
-
+                            
         $configuracao = array(
             'upload_path' => './upload/retornoimportadoscnab/' . $chave_pasta . '',
             'allowed_types' => 'txt',
@@ -7647,9 +7646,23 @@ function geraCodigoBanco($numero) {
         function lerarquivoretornoimportadocnab($nome_arquivo = NULL) {
             $chave_pasta = $this->session->userdata('empresa_id');    
             
-             if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
-        
-           }
+          $arquivo6 = fopen('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+          // Lê o conteúdo do arquivo  
+          //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
+          while (!feof($arquivo6)) {
+              //Mostra uma linha do arquivo 
+              $linha = fgets($arquivo6, 1024);
+              $segmento =  substr($linha, 13, 1);
+              $nosso_numero =  substr($linha, 37, 15);
+              $servico =  substr($linha, 15, 2);
+              if ($segmento == "T") {
+                  //    print_r($servico);    
+                    //  echo "<br>";                           
+               }
+          } 
+//             if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
+//        
+//           }
             
             redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
            
