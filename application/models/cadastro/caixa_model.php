@@ -412,10 +412,16 @@ class caixa_model extends Model {
                $this->db->where('p.situacao','Dependente');
         }
         
-        if($_POST['empresa'] != "0"){
-                $this->db->where('s.empresa_cadastro_id',$_POST['empresa']); 
+         
+        if($_POST['empresa'] != "" && substr($_POST['empresa'], 0,1) != "E"){
+            $this->db->where('s.empresa_id',$_POST['empresa']);
+            $this->db->where("(s.empresa_cadastro_id is null )");
         }
         
+        if(substr($_POST['empresa'], 0,1) == "E"){
+            $empresa_id = substr($_POST['empresa'], 1);
+            $this->db->where("(s.empresa_cadastro_id = $empresa_id)");
+        } 
         
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));

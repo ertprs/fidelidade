@@ -527,9 +527,10 @@ class Caixa extends BaseController {
         $data['credordevedor'] = $this->caixa->listarcredordevedor();
         $data['operador'] = $this->operador->listaroperadores();
         $data['tipo'] = $this->tipo->listartipo();
-        $data['forma_rendimento'] = $this->caixa->listarformarendimento();
-        $data['empresas'] = $this->guia->listarempresacadastro(); 
-      
+        $data['forma_rendimento'] = $this->caixa->listarformarendimento(); 
+        $data['empresacadastro'] = $this->guia->listarempresacadastro();
+        $data['empresa'] = $this->guia->listarempresas();
+
         $this->loadView('ambulatorio/relatorioentrada', $data);
     }
 

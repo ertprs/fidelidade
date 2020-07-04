@@ -124,12 +124,22 @@
                       </dt>
                       <dd>
                           <select name="empresa" id="empresa" class="size2">
-                        <? 
-                        foreach ($empresas as $value) : ?>
-                            <option value="<?= $value->empresa_cadastro_id; ?>" ><?php echo $value->nome; ?></option>
-                        <? endforeach; ?>
-                              <option value="0">TODOS</option>
-                          </select>
+                           <option value="">TODOS</option>
+                            <?php 
+                            foreach($empresa as $value){
+                                ?>                            
+                               <option value="<?= $value->empresa_id ?>"><?= $value->nome ?></option>
+                            <?                               
+                            }
+                            ?> 
+                           <?php if(count($empresacadastro) > 0){?>
+                            <optgroup label="Outras">
+                            <?php foreach($empresacadastro as $item){?>
+                                 <option value="E<?= $item->empresa_cadastro_id; ?>"><?= $item->nome; ?></option>
+                            <?php }?>
+                           </optgroup>
+                               <?php }?>
+                        </select>
                       </dd>
                     </dl>
 
