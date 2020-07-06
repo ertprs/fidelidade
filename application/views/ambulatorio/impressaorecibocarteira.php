@@ -7,7 +7,7 @@
  
 </p><p><p><h2 align="Center"><FONT color="#333333" face="Engravers MT, Broadway BT">RECIBO</h2></FONT><br clear="all">
 
-</p><p>Recebi do Sr(a). <?=$paciente[0]->nome?> a quantia de R$ <?=$valor?> (<?=$extenso?>),
+</p><p>Recebi do Sr(a). <?=$paciente[0]->nome?> a quantia de R$ <?=$valor?> (<?=$extenso?>), referente ao pagamento da carteira do
 plano <?= $plano;?>, dando-lhe por este recibo a devida quitação.
 <br clear="all"> 
 <br clear="all">

@@ -4620,9 +4620,10 @@ class Guia extends BaseController {
     }
 
     function gravaralterarpagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+                            
         // chamando na propria tela  a função alterando a data 
-        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
-         // chamando uma função existente confirmando o pagamento;
+//        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
+        // chamando uma função existente confirmando o pagamento;
         //botei essa $paciente_id duas vezes para que quando for dependente pegar o credor devedor do dependente
         if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $paciente_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
@@ -7189,7 +7190,7 @@ if(@!function_exists(formata_numdoc))
 			}
 	}
         
-        while(strlen($paciente_contrato_id) < 7) {
+       while(strlen($paciente_contrato_id) < 7) {
            $paciente_contrato_id = "1".$paciente_contrato_id; 
        }
         $NossoNumero = formata_numdoc($paciente_contrato_id,7);  // Até 7 dígitos, número sequencial iniciado em 1 (Ex.: 1, 2...)
@@ -7656,10 +7657,12 @@ function geraCodigoBanco($numero) {
               $nosso_numero =  substr($linha, 37, 15);
               $servico =  substr($linha, 15, 2);
               if ($segmento == "T") {
-                  //    print_r($servico);    
-                    //  echo "<br>";                           
+                       print_r($nosso_numero);    
+                     echo "<br>";                           
                }
           } 
+          
+          die();
 //             if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
 //        
 //           }

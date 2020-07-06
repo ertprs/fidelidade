@@ -173,14 +173,14 @@
                         
                     }
                     ?>
-                    <br><br>
+                    
             </td>
             </tr>
 
             <tr align='center'>
             <td>
             <i>Têm entre si, justo e acordado o presente contrato, regido pelas seguintes <br>cláusulas: </i>
-            <br><br>
+           
             </td>
             </tr>
 
@@ -189,14 +189,14 @@
             <b>Art. 1º</b> Serão oferecidos aos clientes, através do presente contrato de adesão,
             convênios com empresas de prestação de serviços e produtos nas áreas de 
             saúde, educação, lazer, esportes seguros, alimentação, dentre outros, 
-            sob custos reduzidos pelo uso do Cartão SALUTE. <br><br>
+            sob custos reduzidos pelo uso do Cartão SALUTE.  
             </td>
             </tr>
 
             <tr>
             <td align='justify'>
              <b>§1º</b> A Salute intermediará a relação entre cliente e empresas conveniadas. 
-             <br><br>
+              
             </td>
             </tr>
 
@@ -208,7 +208,7 @@
              CONTRATADA informa que a atualização da lista de empresas poderá ser 
              acessada em seu site eletrônico oficial, bem como através do envio de 
              comunicação eletrônica (e-mail). 
-             <br><br>
+              
             </td>
             </tr>
 
@@ -234,7 +234,7 @@
             <b>§4º</b> Fica estabelecido como grupo familiar, o cliente, seu cônjuge e filhos. 
             Excepcionalmente, será aceita a adição ao contrato de sogro e sogra do cliente; 
             porém em hipótese nenhuma tios, primos, sobrinhos etc. ou qualquer membro familiar 
-            a partir do terceiro grau de parentesco. <br><br>
+            a partir do terceiro grau de parentesco.  
             </td>
             </tr>
             
@@ -242,7 +242,7 @@
             <td align='justify'>
             <b>§5º</b> Somente o CLIENTE, associado e adimplente com suas obrigações financeiras 
             junto a esta empresa, terá direito aos serviços de descontos e vantagens 
-            intermediados. <br><br>
+            intermediados.  
             </td>
             </tr>
             
@@ -251,7 +251,7 @@
             <b>Art. 2º</b> O CLIENTE associado obriga-se a pagar, por si e pela sua família inscrita, 
             o valor de R$ 65,00 mensalmente, mediante autorização de débitos, em anexo ao 
             presente contrato, conforme sua exclusiva escolha (cartão de débito, cartão de 
-            crédito, ou pagamento direto junto à empresa). <br><br>
+            crédito, ou pagamento direto junto à empresa). 
             </td>
             </tr>
             
@@ -259,14 +259,14 @@
             <td align='justify'>
             <b>Parágrafo único:</b> A inadimplência, no valor da adesão, renovação ou mensalidade, 
             suspende os serviços e vantagens do associado e sua família, após 05 dias do 
-            vencimento. <br><br>
+            vencimento. 
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
             <b>Art. 3º</b> – O presente contrato tem validade de 12 (doze) meses, renovando-se 
-            automaticamente. <br><br>
+            automaticamente.  
             </td>
             </tr>
             
@@ -275,38 +275,44 @@
             <b>§1º</b> Poderá o cliente associado ao plano SALUTE rescindir somente após o 
             decimo segundo pagamento do presente contrato, sem quaisquer ônus, desde 
             que comunique a central SALUTE seu desligamento, conforme dispõe o 
-            artigo 49º do Código de Defesa do Consumidor. <br><br>
+            artigo 49º do Código de Defesa do Consumidor.  
             </td>
             </tr>
-            
             <tr>
             <td align='justify'>
-            <b>§2º</b> A renovação do presente contrato se dará tacitamente por prazo 
+            <b>§2º</b> No caso de rescisão imotivada antes do período contratual de 12 meses, o contratante
+             arcará com multa rescisória equivalente a 50% (cinquenta por cento) sobre o valor da soma das
+             parcelas vincendas. 
+            </td>
+            </tr>
+            <tr>
+            <td align='justify'>
+            <b>§3º</b> A renovação do presente contrato se dará tacitamente por prazo 
             adicional de um ano, sendo requerida sua rescisão após o aditivo anual, 
-            só poderá rescindir depois de igual período. <br><br>
+            só poderá rescindir depois de igual período.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§3º</b> O valor da mensalidade será reajustado anualmente, na proporção 
-            da variação do INPC. <br><br>
+            <b>§4º</b> O valor da mensalidade será reajustado anualmente, na proporção 
+            da variação do INPC.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§4º </b>É de inteira responsabilidade do cliente associado, manter a empresa, 
+            <b>§5º </b>É de inteira responsabilidade do cliente associado, manter a empresa, 
             ou contratada SALUTE informado sobre quaisquer alterações no seu cadastro 
-            pessoal e familiar. <br><br>
+            pessoal e familiar.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§5º</b> O Cartão SALUTE não se responsabiliza pelas informações pessoais 
+            <b>§6º</b> O Cartão SALUTE não se responsabiliza pelas informações pessoais 
             prestadas pelos clientes associados na adesão, reservando-se ao 
-            direito de regresso, em caso de fraude. <br><br>
+            direito de regresso, em caso de fraude.  
             </td>
             </tr>
             
@@ -316,7 +322,7 @@
             cláusulas do presente contrato. Tudo que usar ou comprar, será 
             pago ao prestador conveniado diretamente, assegurando apenas os 
             preços e descontos que constem nas informações no site e em seus 
-            materiais de divulgação. <br><br>
+            materiais de divulgação.  
             </td>
             </tr>
         </table>
@@ -330,14 +336,14 @@
     <tr>
     <td align='justify'>
     <b>Art.5º</b> O presente contrato deverá ser devidamente interpretado 
-    de acordo com as regras previstas no Código Civil Direito brasileiro. <br><br>
+    de acordo com as regras previstas no Código Civil Direito brasileiro.  
     </td>
     </tr>
 
     <tr>
     <td align='justify'>
     <b>Parágrafo único:</b> Nesta ocasião, o cliente associado 
-    recebe uma via do contrato de adesão firmado entre as partes. <br><br>
+    recebe uma via do contrato de adesão firmado entre as partes.  
     </td>
     </tr>
 
@@ -345,7 +351,7 @@
     <td align='justify'>
     <b>Art.6º</b> As partes elegem exclusivamente o foro da comarca de 
     Marabá, com renúncia expressa de qualquer outro, por mais 
-    privilegiado que seja, para dirimir questões oriundas deste. <br><br>
+    privilegiado que seja, para dirimir questões oriundas deste.  
     </td>
     </tr>
 
@@ -353,7 +359,7 @@
     <td align='justify'>
     Estando ambas em comum acordo e cientes dos direitos e 
     obrigações adquiridas por este termo, assinam na presença 
-    de duas testemunhas. <br><br>
+    de duas testemunhas.  
     </td>
     </tr>
 
@@ -416,7 +422,7 @@
         <td align='center'> ______________________________________</td>
         </tr>
         <tr>
-        <td align='center'> <b><?= $empresa[0]->nome?> <br><br> CNPJ 
+        <td align='center'> <b><?= $empresa[0]->nome?> <br>  CNPJ 
         <?
                         $nbr_cnpj = @$empresa[0]->cnpj;
                         //30.869.446/0001-18
@@ -436,14 +442,16 @@
                         } else {
                             echo "_______________";
                         }
-            ?> <br><br> CONTRATADA</b> <br><br><br><br></td>
+            ?> <br> CONTRATADA</b> <br>
+            <b> (assinado digitalmente)</b><br><br><br></td>
         </tr>
 
         <tr>
         <td align='center'><b>__________________________________________ <br>
+                 CONTRATANTE:<br>
                             NOME: <?=$paciente[0]->nome?><br><br>
                             CPF: <?=$monta_cpf?> <br><br>
-                            CONTRATANTE: <br><br>
+                             
         </b></td>
         </tr>
 
@@ -455,14 +463,14 @@
 
         <tr>
         <td><b>
-        I – NOME: <br><br>
+        I – NOME: <br> 
         RG/CPF:
-        </b><br><br><br></td>
+        </b><br><br> </td>
         </tr>
 
         <tr>
         <td><b>
-        II – NOME: <br><br>
+        II – NOME: <br> 
         RG/CPF:
         </b></td>
         </tr>
@@ -470,13 +478,12 @@
     <!-- CORPO -->
     <table  style="width:100%;"  class='letramenor'> 
     <tr>
-    <td align='center'> <b>ANEXO I</b><br><br></td>
+    <td align='center' style="border:1px solid black;"> <b>ANEXO I</b><br><br></td>
     </tr>
 
     <tr>
-    <td align='center'><b>SEGURADORA CONVENIADA – SEGURO DE VIDA PORTO SEGURO</b> <br><br></td>
-    </tr>
-
+    <td align='left'><b>SEGURADORA CONVENIADA – SEGURO DE VIDA PORTO SEGURO</b>  </td>
+    </tr> 
     <tr>
     <td align='justify'><b>Art.1º</b> - Por este termo o cliente associado SALUTE adere ao 
     seguro de acidentes pessoais, ofertado pela empresa SALUTE, a partir de convênio 
@@ -484,31 +491,31 @@
     Piracicaba, 618 - Campos Elíseos - São Paulo - CEP 01216-010 - CNPJ 61.198.164/0001-60, 
     e intermediado pela THOMAZ CORRETORA DE SEGUROS, pessoa jurídica de direito privado 
     inscrita regularmente em CNPJ: 00.500.837/0001-01 e sediada à Travessa Quintino Bocaiuva, 
-    1127, 3º andar, Belém – PA, Bairro do Reduto, CEP: 66053-240. <br><br></td>
+    1127, 3º andar, Belém – PA, Bairro do Reduto, CEP: 66053-240. </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.2º</b> - A adesão refere a cobertura em Seguro de Acidentes 
     Pessoais Coletivos da Porto Seguro, sendo os serviços 
-    à disposição do cliente associado: <br><br></td>
+    à disposição do cliente associado: </td>
     </tr>
 
     <tr>
     <td align='justify'><b>§1º</b> - O referido seguro, terá um custo per capita 
     incluído na mensalidade do cliente SALUTE abrangendo sua pessoa e a 
-    composição familiar registrada, conforme disposto no termo de condições gerais. <br><br></td>
+    composição familiar registrada, conforme disposto no termo de condições gerais. </td>
     </tr>
 
     <tr>
     <td align='justify'><b>§2º</b> - A cobertura refere-se a: morte acidental, 
-    invalidez permanente total ou parcial por acidente, conforme a tabela a seguir: <br><br></td>
+    invalidez permanente total ou parcial por acidente, conforme a tabela a seguir: </td>
     </tr>
     </table>
     
     
     <!--tabela-->
   
-<table border="1" align="center" style="width:100%;" class="letramenor2" CELLSPACING="0" CELLPADDING="2">
+<table border="1" align="center" style="width:100%; font-size: 12px;" class="letramenor2" CELLSPACING="0" CELLPADDING="2">
            <tr>
             <th>Danos Corporais Totais <br> Repercussão na Íntegra do Patrimônio Físico</th>
             <th >Percentual <br> da Perda</th>
@@ -615,25 +622,10 @@
         </table>
   <table class="letramenor2">
       <tr>
-      <td>De acordo com o texto, o valor máximo de indenização é de R$ 10.000,00, a ser pago em casos de morte ou invalidez total permanente.</td>
+      <td></td>
       </tr>
       </table>
-        <table class="letramenor2">
-        <tr>
-        <td>No caso de invalidez parcial, a tabela dá a cada parte do corpo um percentual diferente. Assim, para saber como dar entrada, fique por
-            dentro desses valores para ter uma ideia do que poderá receber.<br></td>
-        </tr>
-
-        <tr>
-        <td>É importante destacar, contudo, que no caso de invalidez parcial, ficará a cargo do médico que atender a vítima determinar a
-            porcentagem da indenização. Para entender essa conta, considere o seguinte exemplo:<br></td>
-        </tr>
-
-        <tr>
-        <td>Suponha que João se envolveu em um acidente, e perdeu o movimento de um dos braços. Ele terá direito a 70% do valor total de R$
-            10.000,00 ou seja, R$ 7.000,00.</td>
-        </tr>
-        </table>
+         
     
  
     <!-- CORPO -->
@@ -645,60 +637,72 @@
     parte do corpo um percentual diferente. Assim, para saber como dar entrada, 
     observe a tabela de valores para ter uma ideia do que poderá receber. 
     No caso de invalidez parcial, ficará a cargo do médico que atender a 
-    vítima determinar a porcentagem da indenização. <br><br></td>
+    vítima determinar a porcentagem da indenização.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>§ 4º</b> - Auxílio funeral, com capital segurado de até 
-    R$ 3.000,00 (três mil reais); <br><br></td>
+    R$ 3.000,00 (três mil reais);  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>§ 5º</b> - Cesta básica alimentar, no valor de 
-    R$ 300,00 (trezentos reais) por período de 06 (seis) meses. <br><br></td>
+    R$ 300,00 (trezentos reais) por período de 06 (seis) meses.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.3º</b> - O limite de idade estabelecido neste contrato é de 
     74 (setenta e quatro) anos de vida para o cliente associado ou qualquer 
-    membro da composição familiar aceita pela SALUTE. <br><br></td>
+    membro da composição familiar aceita pela SALUTE.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.4º</b> - A partir do ato de contratação geral 
     (termo de adesão cliente) se adere igualmente a este seguro 
-    ofertado pela citada conveniada. <br><br></td>
+    ofertado pela citada conveniada. </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.5º</b> - A inclusão do cliente associado 
     SALUTE no rol de segurados se dará imediatamente ao repasse da 
     intermediadora à empresa seguradora conveniada, sendo esta data 
-    base de sua admissão e direito a uso do serviço do grupo de segurados SALUTE. <br><br></td>
+    base de sua admissão e direito a uso do serviço do grupo de segurados SALUTE. </td>
+    </tr>
+    <tr>
+    <td align='justify'><b>Art.6º</b> - O CLIENTE SALUTE para acionar o SEGURO de acidentes pessoais, deve entrar em
+        contato <b>diretamente com a SALUTE</b> no contato previsto no rodapé da página.  </td>
+    </tr>
+    <tr>
+        <td align='justify'><b>Art.7º</b> - O serviço de <b>atendimento funerário é disponibilizado pelo contato AUXÍLIO
+FUNERAL</b>, constando também no rodapé da página.  </td>
     </tr>
 
     <tr>
-    <td align='center'><b>ANEXO II <br><br> ASSISTÊNCIA MÉDICA <br><br></b></td>
+        <td align='center' style="border:1px solid black;"><b>ANEXO II </b> </td>
     </tr>
+    <tr>
+    <td align='left'><b>ASSISTÊNCIA MÉDICA  </b></td>
+    </tr>
+    
 
     <tr>
     <td align='justify'><b>Art.1º</b> - A SALUTE se compromete em cada contrato, 
     fornecer 02 (duas) consultas com o médico clínico geral ao ano, sob o 
-    preço do valor mensal. <br><br></td>
+    preço do valor mensal.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Parágrafo único:</b> Em havendo necessidade de atendimentos 
     extras com o clínico geral (extrapolando as duas consultas anuais), será 
     obrigatoriamente cobrado o valor de R$ 20,00 (vinte reais) em cada consulta 
-    adicional. Estas consultas deverão ser agendadas diretamente na sede da Salute. <br><br></td>
+    adicional. Estas consultas deverão ser agendadas diretamente na sede da Salute.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.2º</b> - Os atendimentos de saúde realizado nas 
     cínicas credenciadas deverão ser previamente agendadas diretamente 
     nestes estabelecimentos, cabendo ao paciente receber destes o local, 
-    a data e o horário do atendimento. <br><br></td>
+    a data e o horário do atendimento.  </td>
     </tr>
 
     <tr>
@@ -707,7 +711,7 @@
     ue é feito com toda liberalidade pelo profissional conveniado, haja vista, 
     ambas as relações serem diretas entre as partes – somente fazendo a 
     intermediação do valor mais vantajoso ao cliente em teor de ofertar sua 
-    rede conveniada de profissionais de saúde. <br><br></td>
+    rede conveniada de profissionais de saúde.  </td>
     </tr>
 
     <tr>
@@ -715,14 +719,14 @@
     do plano vigente (conforme o artigo 1) terão um prazo inicial de carência em 90 
     (noventa) dias para a primeira consulta e de 180 (cento e oitenta) dias para a 
     segunda consulta, ambas contando após o início de vigência do plano para com o 
-    CLIENTE SALUTE. <br><br></td>
+    CLIENTE SALUTE.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.4º</b> - Exames, procedimentos e consultas realizadas pela 
     rede credenciada com profissionais de saúde serão pagas diretamente ao 
     estabelecimento que prestará o serviço, sendo facultado ao mesmo estipular o 
-    valor de cada procedimento. <br><br></td>
+    valor de cada procedimento.  </td>
     </tr> 
     </table> 
      
@@ -732,11 +736,14 @@
     <tr>
     <td align='justify'><b>Art.5º</b> - A SALUTE se compromete em manter atualizada a lista
      de sua rede de saúde conveniada em seu site e/ou aplicativo e tais informações também 
-     estarão disponíveis em sua sede, a disposição de qualquer cliente. <br><br></td>
+     estarão disponíveis em sua sede, a disposição de qualquer cliente.  </td>
     </tr>
  
     <tr>
-        <td align='center'><b>ANEXO III</b> <br> <br><b>CRÉDITO <br><br></b></td> 
+        <td align='center' style="border:1px solid black;"><b>ANEXO III </b></td> 
+    </tr>
+    <tr>
+        <td align='left'><b>CRÉDITO </b></td> 
     </tr>
 
     <tr>
@@ -744,7 +751,7 @@
     autorizado pelo mesmo, poderá ser realizado em favor deste, análise de crédito 
     e, caso aprovado, a SALUTE poderá, se assim desejar o cliente, ofertar lhes 
     créditos pecuniários para diversas finalidades, através de empresa em sua 
-    rede conveniada, nesta especificidade. <br><br></td>
+    rede conveniada, nesta especificidade.  </td>
     </tr>
 
     <tr>
@@ -753,7 +760,7 @@
     pacotes, programas de crédito, empréstimos e consignados. A Salute 
     somente ofertará a disposição do cliente tal vantagem, cabendo a ele 
     posteriormente decidir livremente em aceitar ou recusar o empréstimo 
-    que lhe é disposto. <br><br></td>
+    que lhe é disposto.  </td>
     </tr>
 
     <tr>
@@ -761,49 +768,16 @@
     oferta de empréstimo, o cliente SALUTE será convidado a conhecer as 
     condições com a conveniada APROVA CRÉDITO que com ele procederá 
     formalização de contrato, liberação de valores e demais disposições 
-    desta relação. <br><br></td>
+    desta relação.  </td>
     </tr>
 
     <tr>
     <td align='justify'><b>Art.3º</b> - A SALUTE é mera intermediadora desta relação, 
     advindo da mesma a prospecção e análise creditória, o empréstimo e demais 
-    consequências da relação financeira ficará a cargo da sua conveniada. <br><br></td>
+    consequências da relação financeira ficará a cargo da sua conveniada. </td>
     </tr>
-
-    <tr>
-    <td>
-  
-    <b>Fale Conosco: </b><br>
-    Salute Benefícios: (94) 99297-5157<br>
-    Agendamento de Consulta Clinica: (94) 99132-1153<br>
-    Agendamento de Consulta Jurídica: (94) 99297-5157<br>
-    Crédito Financeiro: (94) 99132-1149<br>
-    Auxílio Funeral: (94)  99147-8848 / 98106-9824<br>
-    </td>
-    </tr>
-
+ 
     </table>
-  
-    <table border="0">
-        <tr >
-         <td>
-            <table>
-                <tr><td class='cor_vermelha'>“Tudo podemos em Deus, pois Ele nos fortalece"</td></tr>
-                <tr><td class='cor_vermelha'>Filipenses 4:13</td><tr>
-                <tr><td class='cor_vermelha'></td></tr>
-                <tr><td class='cor_vermelha maior'>Nós já aderimos a Código de Ética dos Corretores de Seguros</td></tr>
-            </table>
-         </td>
-         <!-- align="right" -->
-         <td>
-             <table>
-                <tr><td style="width:150px"><img style="width:80%" src="<?= base_url() . "upload/empresalogo/" . @$empresa_id . "/" . @$arquivo_pasta[0] ?>" ></td></tr>
-             </table>
-         </td>
-        </tr>
-        </table>
-
-      
-  
+    
     </body>
 </html>

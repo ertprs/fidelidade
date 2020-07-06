@@ -957,3 +957,6 @@ ALTER TABLE ponto.tb_impressoes_contratro_dependente ADD COLUMN valor numeric(10
 
 --04/07/2020
 ALTER TABLE ponto.tb_empresa ADD COLUMN campos_cadastro_dependente text;
+
+--06/07/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_pagamento date;

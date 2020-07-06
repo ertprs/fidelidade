@@ -44,17 +44,7 @@
                         <dd>
                             <input type="text" name="data" id="data" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
                             <input type="hidden" name="data_antiga" id="data_antiga" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>                         
-                        </dd>
-                        <? if($this->session->userdata('operador_id') == 1){?>
-                           <dt>
-                               <label>Data do recibo</label>
-                           </dt>
-                           <dd>
-                                  <input type="text" name="data_adm" id="data_adm" alt="date" />
-                           </dd>
-                        <?}?>
-                        
-                        
+                        </dd>                          
                         <dt>
                             <label>Juros</label>
                         </dt>
