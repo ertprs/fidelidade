@@ -18,9 +18,7 @@
         <table>
             <tr>
                 <td>Forma de pagamento</td>
-            </tr>
-            <tr>
-                <td>
+               <td>
                     <select name="forma_rendimento_id" name="forma_rendimento_id">
                         <?
                         foreach($forma_pagamentos as $item){  ?>
@@ -31,6 +29,23 @@
                     </select>
                 </td>
             </tr>
+            
+            <tr>
+                <td>Conta</td>
+                 <td>
+                     <select  name="conta">
+                         <option value="" >Selecione</option>
+                         <?
+                         foreach ($contas as $conta) {
+                             ?> 
+                             <option value=<?= $conta->forma_entradas_saida_id ?>  ><?= $conta->descricao; ?></option> 
+                             <?
+                         }
+                         ?>
+                     </select>
+                </td>
+            </tr> 
+            
             <tr>
                 <td><input type="submit" value="Enviar"></td>
             </tr>

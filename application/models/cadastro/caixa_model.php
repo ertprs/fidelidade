@@ -357,7 +357,7 @@ class caixa_model extends Model {
 
     function relatorioentrada() {
           
-        $this->db->select('s.valor,
+        $this->db->select(' s.valor,
                             s.entradas_id,
                             s.observacao,
                             s.data,

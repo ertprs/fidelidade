@@ -4498,12 +4498,10 @@ class Guia extends BaseController {
 //        }
     }
 
-    function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {
-                            
+    function alterarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $dependente_id = NULL) {  
         if ($dependente_id != "" && $this->session->userdata('cadastro') == 2 && $dependente_id != $paciente_id) {
             $paciente_id = $dependente_id;
-        }
-                            
+        }                    
         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
         $data['paciente_id'] = $paciente_id;
         $data['contrato_id'] = $contrato_id;
@@ -7767,6 +7765,7 @@ function geraCodigoBanco($numero) {
         $data['contrato_id']    =    $contrato_id;
         $data['paciente_contrato_dependente_id']    =    $paciente_contrato_dependente_id;
         $data['paciente_titular']    =    $paciente_titular; 
+        $data['contas'] = $this->guia->listarcontas();
         $this->load->View('ambulatorio/formapagamentoimpressaocarteira',$data);   
     } 
     

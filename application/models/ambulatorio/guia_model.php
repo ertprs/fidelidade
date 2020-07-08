@@ -5713,15 +5713,17 @@ ORDER BY p.nome";
             $this->db->where('ativo', 'true');
             $this->db->where('conta_interna', 'true');
             $conta = $this->db->get()->result();
-
-            if (count($conta) > 0) {
-                $conta_id = $conta[0]->conta_id;
-            } else {
-                $conta_id = $parcela[0]->conta_id;
+   
+            if(isset($_POST['conta']) && $_POST['conta'] != ""){
+                  $conta_id = $_POST['conta'];
+            }else{
+                if (count($conta) > 0) {
+                    $conta_id = $conta[0]->conta_id;
+                } else {
+                    $conta_id = $parcela[0]->conta_id;
+                }
             }
-
-            //gravando na entrada
-
+            //gravando na entrada 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
