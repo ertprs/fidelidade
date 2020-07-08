@@ -11315,9 +11315,10 @@ ORDER BY ae.agenda_exames_id)";
 
     function listarimpressoescarteira($paciente_contrato_dependente_id) {
 
-        $this->db->select('id.data_cadastro, o.nome as operador_cadastro');
+        $this->db->select('id.data_cadastro, o.nome as operador_cadastro,pc.paciente_id as titular_id,id.paciente_id as dependente_id,id.impressoes_contratro_dependente_id');
         $this->db->from('tb_impressoes_contratro_dependente id');
         $this->db->join('tb_operador o', 'o.operador_id = id.operador_cadastro', 'left');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = id.paciente_contrato_id','left');
         $this->db->where('id.paciente_contrato_dependente_id', $paciente_contrato_dependente_id);
         $this->db->where('id.ativo', 't');
         return $this->db->get()->result();
@@ -12787,6 +12788,16 @@ if($return[0]->financeiro_credor_devedor_id == ""){
        
     }
     
+    
+    function listarimpressaocarteira($impressoes_contratro_dependente_id){
+        $this->db->select('id.data_cadastro, o.nome as operador_cadastro,pc.paciente_id as titular_id,id.paciente_id as dependente_id,id.impressoes_contratro_dependente_id,id.valor');
+        $this->db->from('tb_impressoes_contratro_dependente id');
+        $this->db->join('tb_operador o', 'o.operador_id = id.operador_cadastro', 'left');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = id.paciente_contrato_id','left');
+        $this->db->where('id.impressoes_contratro_dependente_id', $impressoes_contratro_dependente_id);
+        $this->db->where('id.ativo', 't');
+        return $this->db->get()->result();
+    }
     
     
 }

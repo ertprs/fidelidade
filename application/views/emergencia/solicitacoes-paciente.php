@@ -119,9 +119,9 @@
      
            $pg = 0;
          foreach($quantidade_parcelas_pagas as $value){ 
-           if(!($value->taxa_adesao == 't')){
+//           if(!($value->taxa_adesao == 't')){
              $pg++;  
-           }
+//           }
          } 
          
           if (count($parcelas) == 0) {

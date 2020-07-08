@@ -13,7 +13,10 @@ plano <?= $plano;?>, dando-lhe por este recibo a devida quitação.
 <br clear="all">
 </p><p>
 <?
-$MES = date("m");
+
+
+
+$MES = date("m",strtotime($data));
 
 switch ($MES) {
     case "01": $mes = 'Janeiro';
@@ -42,7 +45,7 @@ switch ($MES) {
         break;
 }
 ?>
-</p><p>Local e Data: <?=$empresa[0]->municipio?>, <?=date("d")?> de <?=$mes?> de <?=date("Y")?>.
+</p><p>Local e Data: <?= $empresa[0]->municipio?>, <?= date("d",strtotime($data))?> de <?=$mes?> de <?=date("Y",strtotime($data))?>.
 <br clear="all">
 <br clear="all">
 

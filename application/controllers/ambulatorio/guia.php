@@ -7789,23 +7789,34 @@ function geraCodigoBanco($numero) {
   }
     
   
-  function impressaorecibocarteira($titular_id,$dependente_id) {
+  function impressaorecibocarteira($titular_id,$dependente_id,$impressoes_contratro_dependente_id=NULL) {
         $empresa_id =  $this->session->userdata('empresa_id'); 
         $parcela = $this->guia->listarexames($titular_id);
         $data['paciente'] = $this->paciente->listardados($dependente_id);
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['plano'] = $parcela[0]->plano;
-                            
+        
+        $listarimpressao = $this->guia->listarimpressaocarteira($impressoes_contratro_dependente_id);
+            
+        $data['data'] = $listarimpressao[0]->data_cadastro;               
+       
         $valor = 0;
-        if ($titular_id == $dependente_id) {
-            $valor = $parcela[0]->valor_carteira_titular;
-        } else {
-            $valor = $parcela[0]->valor;
+        
+        if($listarimpressao[0]->valor != ""){
+           $valor = $listarimpressao[0]->valor;
+        }else{
+            if ($titular_id == $dependente_id) {
+                $valor = $parcela[0]->valor_carteira_titular;
+            } else {
+                $valor = $parcela[0]->valor;
+            }
         }
                             
         $valor = number_format($valor, 2, ',', '.'); 
         $data['valor'] = $valor;  
+        
+                            
         if ($valor == '0,00') {
             $data['extenso'] = 'ZERO';
         } else {
@@ -7813,8 +7824,7 @@ function geraCodigoBanco($numero) {
             // if ($dinheiro == "t") {
             $data['extenso'] = GExtenso::moeda($valoreditado);
             // }
-        }
-        
+        }                
                             
         $this->load->View('ambulatorio/impressaorecibocarteira', $data); 
     }
