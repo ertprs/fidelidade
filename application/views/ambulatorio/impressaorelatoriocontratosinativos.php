@@ -5,6 +5,8 @@
     <h4>BUSCANDO POR: <?= ($_POST['tipobusca'] == "I") ? "INATIVOS" : "ATIVOS"; ?></h4>
     <hr>
     <?
+//    echo "<pre>"; 
+//    print_r($relatorio);
      
     if (count($relatorio) > 0) {
         ?>
@@ -28,12 +30,15 @@
             <tbody>
                 <?php
                 $total = 0;
+                $arrayTESTE = Array();
                 foreach ($relatorio as $item) :
                     $total++;
+                
+                
                     ?>
                     <tr>
                         <td ><?
-                        if($item->situacao == 'Dependente'){
+                        if($item->situacao == 'Dependente'  ){
                            echo  $item->depedente;
                         }else{
                            echo  $item->nome;
@@ -59,8 +64,10 @@
                         <td ><?= substr($item->data_cadastro, 8, 2) . "/" . substr($item->data_cadastro, 5, 2) . "/" . substr($item->data_cadastro, 0, 4); ?></td>
                         <td ><?
                           if($item->situacao == 'Dependente'){
+                              @$arrayTESTE[$item->vendedordependente]++;
                             echo $item->vendedordependente;
                           }else{
+                              @$arrayTESTE[$item->vendedor]++;
                             echo $item->vendedor;    
                           } 
                         ?></td>
@@ -95,6 +102,8 @@
             <h4>N&atilde;o h&aacute; resultados para esta consulta.</h4>
             <?
         }
+//        echo "<pre>";
+//        print_r(@$arrayTESTE);
         ?>
 
 </div> <!-- Final da DIV content -->

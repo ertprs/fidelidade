@@ -327,8 +327,20 @@ class guia_model extends Model {
         }else{
             $paciente_dependente_id = 0; 
         }   
-
-        $this->db->select('p.nome, p.paciente_id,
+        
+if($_POST['tipopaciente'] == 'dependente'){
+        $sql = "            opi.nome as indicacao,
+                            pd.nome as depedente,
+                            pd.situacao,
+                            pd.telefone as telefonedependete,
+                            pd.celular as celulardependente,
+                            opd.nome as vendedordependente,
+                            opid.nome as indicacaodependete,
+                            p.empresa_id"; 
+}else{
+    $sql = "p.situacao, opi.nome as indicacao";
+} 
+        $this->db->select("p.nome, p.paciente_id,
                             pc.paciente_contrato_id,
                             fp.nome as plano,
                             o.nome as operador,
@@ -337,34 +349,30 @@ class guia_model extends Model {
                             pc.data_cadastro,
                             p.telefone,
                             p.celular,
-                            opi.nome as indicacao,
-                            pd.nome as depedente,
-                            pd.situacao,
-                            pd.telefone as telefonedependete,
-                            pd.celular as celulardependente,
-                            opd.nome as vendedordependente,
-                            opid.nome as indicacaodependete');
+                            $sql");
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = pc.operador_atualizacao', 'left');
         $this->db->join('tb_operador op', 'op.operador_id = p.vendedor', 'left');
+        $this->db->join('tb_operador opi', 'opi.operador_id = p.pessoaindicacao', 'left');
+      if($_POST['tipopaciente'] == 'dependente'){
         $this->db->join('tb_paciente_contrato_dependente pcd','pcd.paciente_contrato_id = pc.paciente_contrato_id','left'); 
         $this->db->join('tb_paciente pd','pd.paciente_id = pcd.paciente_id','left');
-        $this->db->join('tb_operador opi', 'opi.operador_id = p.pessoaindicacao', 'left');
+       
         $this->db->join('tb_operador opd', 'opd.operador_id = pd.vendedor', 'left');
-        $this->db->join('tb_operador opid', 'opid.operador_id = pd.pessoaindicacao', 'left');
+        $this->db->join('tb_operador opid', 'opid.operador_id = pd.pessoaindicacao', 'left'); 
+      }
         
         $this->db->where('p.ativo', 'true');
 
         if($_POST['tipopaciente'] == 'dependente'){ 
              $this->db->where('pd.situacao','Dependente');
         }else{ 
-             $this->db->where("(pd.situacao = 'Titular'  or pd.situacao is null)");
+             $this->db->where("(p.situacao = 'Titular')");
         } 
         
-        if ($_POST['tipobusca'] == "I") {
-           
+        if ($_POST['tipobusca'] == "I") { 
             $this->db->where('pc.ativo', 'f');
         }
         if ($_POST['tipobusca'] == "A") {
@@ -416,7 +424,7 @@ class guia_model extends Model {
         
         if($_POST['empresa_id'] != "" && substr($_POST['empresa_id'], 0,1) != "E"){
             $this->db->where('pc.empresa_id',$_POST['empresa_id']);
-            $this->db->where("(pc.empresa_cadastro_id is null )");
+            $this->db->where("(pc.empresa_cadastro_id is null and p.empresa_id is null )"); 
         }
         
         if(substr($_POST['empresa_id'], 0,1) == "E"){
@@ -2470,7 +2478,7 @@ ORDER BY p.nome";
 
     function relatoriocomissao() {
 
-        $this->db->select('pc.paciente_id,
+        $this->db->select(' pc.paciente_id,
                             pc.plano_id,
                             fp.nome as plano,
                             p.forma_rendimento_id,
@@ -2480,21 +2488,20 @@ ORDER BY p.nome";
                             fp.comissao_vendedor,
                             fp.comissao_gerente,
                             fp.comissao_seguradora,
-                            o.nome as vendedor');
+                            o.nome as vendedor,
+                            pc.paciente_contrato_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
-//        $this->db->where('pcp.excluido', 'false');
-
+        $this->db->where('p.ativo', 'true');
+//        $this->db->where('pcp.excluido', 'false'); 
         if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
             $this->db->where_in('p.vendedor', @$_POST['vendedor']);
-        }
-
-        // $this->db->where('p.vendedor', $_POST['vendedor']);
-
+        } 
+        // $this->db->where('p.vendedor', $_POST['vendedor']); 
         // Se algum dia for preciso fazer com que o relatório mostre todos os vendedores ao não colocar o filtro
         // É necessário se atentar ao fato de quê a lógica por trás da comissão não olha para mais de um vendedor
         // ao mesmo tempo, sendo assim, vai ser preciso refazer uma parte.
@@ -5543,8 +5550,7 @@ ORDER BY p.nome";
         if ($this->session->userdata('cadastro') == 2 && $depende_id != "" && $depende_id != $paciente_id) {
             $paciente_id = $depende_id;
             $credor = $parcela[0]->financeiro_credor_devedor_id_dependente;
-        }
-          
+        } 
 //       echo "Credor: ".$credor ; echo '<br>';
 //       echo "paciente : ".$paciente_id ; echo '<br>';
 //       die; 
@@ -5601,7 +5607,7 @@ ORDER BY p.nome";
             $this->db->set('valor', $valor);
 //        $inicio = $_POST['inicio'];
 
-            $this->db->set('data', $data_parcela);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             $this->db->set('tipo', $plano);
             if($parcela[0]->taxa_adesao == 't'){
                 $this->db->set('classe', 'ADESÃO');
@@ -5643,7 +5649,7 @@ ORDER BY p.nome";
 
             $this->db->set('nome', $credor);
             $this->db->set('data_cadastro', $horario);
-            $this->db->set('data', $data_parcela);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->set('empresa_id',$empresa_id);
             $this->db->insert('tb_saldo');

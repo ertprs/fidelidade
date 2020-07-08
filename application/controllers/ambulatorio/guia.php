@@ -488,9 +488,10 @@ class Guia extends BaseController {
     }
 
     function relatoriocontratosinativos() {
-      $data['empresa'] = $this->guia->listarempresas();
+        $data['empresa'] = $this->guia->listarempresas();
         $data['planos'] = $this->formapagamento->listarforma();
-        $data['vencedor'] = $this->operador_m->listarvendedor(1);
+//        $data['vencedor'] = $this->operador_m->listarvendedor(1);
+         $data['vencedor'] = $this->paciente->listarvendedor();
         $data['forma']  = $this->formapagamento->listarformaRendimentoPaciente();
         $data['empresacadastro'] = $this->guia->listarempresacadastro();
         $data['listarindicacao'] = $this->paciente->listarindicacao();

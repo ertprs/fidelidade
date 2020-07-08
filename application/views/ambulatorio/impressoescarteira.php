@@ -18,16 +18,10 @@
                 ?>
                 <tr>
                     <td><?= $item->operador_cadastro; ?></td>
-
-
                     <td><?
                         $date = $item->data_cadastro;
                         $ts = strtotime($date);
-                        echo date('d/m/Y H:i:s', $ts);
-                        ?></td>
-
-
-
+                        echo date('d/m/Y H:i:s', $ts);?></td>  
                 </tr>
 
 
