@@ -145,9 +145,7 @@
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
                                         <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
-                                        <? if ($perfil_id == 1) { ?>
-
-
+                                        <? if ($perfil_id == 1) { ?>  
                                             <? if (@$empresapermissao[0]->confirm_outra_data == 't') { ?>
 
                                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">

@@ -6081,11 +6081,9 @@ ORDER BY p.nome";
         $this->db->where('conta_interna', 'true');
         $conta = $this->db->get()->result();
 
-        if ($credor_obj[0]->conta_id == "") {
-
+        if ($credor_obj[0]->conta_id == "") { 
             $conta_id = $conta[0]->conta_id;
-        } else {
-
+        } else { 
             $conta_id = $credor_obj[0]->conta_id;
         }
 
@@ -6094,7 +6092,10 @@ ORDER BY p.nome";
         $valor = $parcela[0]->valor;
         if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
            $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
+        }else{
+           $valor = 0; 
         }
+        
 
         $this->db->select('financeiro_maior_zero');
         $this->db->from('tb_empresa');
@@ -6102,15 +6103,14 @@ ORDER BY p.nome";
 
         $return = $this->db->get()->result();
 
+      
         if ($return[0]->financeiro_maior_zero == 't' && $valor <= 0) {
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('manual', 't');
-            $this->db->set('ativo', 'f');
-            if(isset($_POST['valor']) && $_POST['valor'] != ""){
-               $this->db->set('valor',$valor); 
-            }
+            $this->db->set('ativo', 'f'); 
+            $this->db->set('valor',$valor);  
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
