@@ -6081,7 +6081,7 @@ ORDER BY p.nome";
         $this->db->where('conta_interna', 'true');
         $conta = $this->db->get()->result();
 
-        if ($credor_obj[0]->conta_id == "") { 
+        if (@$credor_obj[0]->conta_id == "") { 
             $conta_id = $conta[0]->conta_id;
         } else { 
             $conta_id = $credor_obj[0]->conta_id;
@@ -6113,6 +6113,7 @@ ORDER BY p.nome";
             $this->db->set('valor',$valor);  
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->set('paciente_pagamento', $paciente_id);
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
             $this->db->update('tb_consultas_avulsas');
         } else {
@@ -6180,6 +6181,7 @@ ORDER BY p.nome";
             }
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->set('paciente_pagamento', $paciente_id);
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
             $this->db->update('tb_consultas_avulsas');
         }

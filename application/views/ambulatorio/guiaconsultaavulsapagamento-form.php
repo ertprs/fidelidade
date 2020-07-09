@@ -85,7 +85,7 @@
                         <?
                         $key = $empresa[0]->iugu_token;
                         Iugu::setApiKey($key);
-                        $contador = 0;
+                        $contador = 0; 
                         foreach ($listarpagamentoscontrato as $item) {
                             $contador ++;
 //                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
@@ -146,11 +146,10 @@
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
                                         <td style="width: 130px" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacaoavulso/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>" target="_blank">=> <?= @$item->observacao ?></a></td>
                                         <? if ($perfil_id == 1) { ?>  
-                                            <? if (@$empresapermissao[0]->confirm_outra_data == 't') { ?>
-
+                                            <? if (@$empresapermissao[0]->confirm_outra_data == 't') { ?> 
                                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                     <div class="bt_link">
-                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoconsultaavulsa/$item->dependente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
                                                             Confirmar
                                                         </a>
                                                     </div>
@@ -161,7 +160,7 @@
 
                                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                                     <div class="bt_link">
-                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=300,height=240');">Confirmar
+                                                        <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $item->dependente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=300,height=240');">Confirmar
                                                         </a>
                                                     </div>
                                                 </td> 

@@ -661,7 +661,7 @@
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                           <?php if($perfil_id != 10){?>
                                                 <div class="bt_link">
-                                                    <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                                    <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarpagamentoconsultaavulsa/$item->dependente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
                                                         Confirmar
                                                     </a>
                                                 </div>
@@ -676,7 +676,7 @@
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                            <?php if($perfil_id != 10){?>
                                         <div class="bt_link">
-                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=240');">Confirmar
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/formapagementoconfirmarpagamentoconsultaavulsa/<?= $item->dependente_id ?>/<?= $contrato_id ?>/<?= $item->consultas_avulsas_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=240');">Confirmar
                                             </a>
                                         </div>
                                         <?php }?>

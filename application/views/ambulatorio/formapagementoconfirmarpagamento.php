@@ -43,7 +43,9 @@ $operador_id = $this->session->userdata('operador_id');
                 <td>Valor</td>
                 <td> <input type="text" id="valor" name="valor" style="text-align: right;" alt="decimal" class="texto02" value="<?=  number_format($pagamento[0]->valor, 2, ',', '.'); ?>"  /></td> 
             </tr>
-     <? }?>
+     <? }else{?>
+            <input type="hidden" id="valor" name="valor" style="text-align: right;" alt="decimal" class="texto02" value="<?=  number_format($pagamento[0]->valor, 2, ',', '.'); ?>"  />
+     <?}?>
           
             <tr>
                 <td><input type="submit" value="Enviar"></td>

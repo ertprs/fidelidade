@@ -1,6 +1,6 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar Observação Contrato</a></h3>
+        <h3><a href="#">Gerar Relatorio Observação Contrato</a></h3>
         <div>
             <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatorioobscontrato">  
                   <dl>
