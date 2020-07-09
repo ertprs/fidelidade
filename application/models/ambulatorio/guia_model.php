@@ -12800,6 +12800,18 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     }
     
     
+    function relatorioobscontrato(){ 
+        $this->db->select('oc.observacao,op.nome as operador,oc.data_cadastro,oc.observacao_contrato_id');
+        $this->db->from('tb_observacao_contrato oc');
+        $this->db->join('tb_operador op', 'op.operador_id = oc.operador_cadastro', 'left'); 
+        $this->db->where('oc.data_cadastro >=', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['txtdata_inicio'])))." 00:00:00");
+        $this->db->where('oc.data_cadastro <=', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['txtdata_fim'])))." 23:59:59");
+        $this->db->where('oc.ativo', 't');
+        return $this->db->get()->result();
+        
+        
+    }
+    
 }
 
 ?>

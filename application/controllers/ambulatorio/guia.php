@@ -506,7 +506,7 @@ class Guia extends BaseController {
     function relatoriotitularsemcontrato() {
         //        $data['empresa'] = $this->guia->listarempresas();
                 $this->loadView('ambulatorio/relatoriotitularsemcontrato');
-            }
+      } 
 
     function gerarelatoriocontratosinativos() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
@@ -7828,6 +7828,20 @@ function geraCodigoBanco($numero) {
                             
         $this->load->View('ambulatorio/impressaorecibocarteira', $data); 
     }
+    
+    function relatorioobscontrato() {
+        //        $data['empresa'] = $this->guia->listarempresas();
+        $this->loadView('ambulatorio/relatorioobscontrato');
+    } 
+    
+    
+    function gerarelatorioobscontrato(){
+     $data['relatorio'] = $this->guia->relatorioobscontrato();
+     $data['data_inicio'] = $_POST['txtdata_inicio'];
+     $data['data_fim'] = $_POST['txtdata_fim']; 
+     $this->load->View('ambulatorio/impressaorelatorioobscontrato', $data); 
+                            
+    } 
                             
   
 }
