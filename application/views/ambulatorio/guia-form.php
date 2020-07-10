@@ -115,7 +115,6 @@
                                 <th width="30px;" class="tabela_header" colspan="2"></th>
                                 <th width="30px;" class="tabela_header" colspan="1"  title="Quantidade de Impressões feitas">Qtd. de Impressões</th>
                                 <th width="30px;" class="tabela_header" colspan="1" title="Data da última Impressão">Dt. impressão</th>
-
     <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
                             </tr>
                         </thead>
@@ -124,8 +123,7 @@
                             <?
                             $estilo_linha = "tabela_content01";
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
-                            ?>
-
+                            ?> 
                             <tbody>
                                 <tr>
                                     <td class="<?php echo $estilo_linha; ?>"><?= $item->nome; ?></td>
@@ -148,15 +146,17 @@
                                         <td class="<?php echo $estilo_linha; ?>"></td>     
 
                                     <? } ?> 
-                                    <td class="<?php echo $estilo_linha; ?>" width="30px;" >
-                                                <?php if($perfil_id != 10){?>
-                                        <div class="bt_link">
-                                            <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/impressaocarteira/" . $item->paciente_id . "/" . $contrato_id."/".$item->paciente_contrato_dependente_id."/".$paciente_id ?> ', '_blank', 'width=1000,height=1000');">
-                                                Carteira  
-                                            </a>
-                                        </div> 
-                                                <?php }?>
+                                     
+                                    
                                         
+                                    <td class="<?php echo $estilo_linha; ?>" width="30px;" >
+                                        <?php if($perfil_id != 10){?>
+                                            <div class="bt_link">
+                                                <a onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/formapagamentoimpressaocarteira/" . $item->paciente_id . "/" . $contrato_id."/".$item->paciente_contrato_dependente_id."/".$paciente_id ?> ', '_blank', 'width=1000,height=1000');">
+                                                    Carteira  
+                                                </a>
+                                            </div> 
+                                        <?php }?> 
                                     </td>
 
                                     <td class="<?php echo $estilo_linha; ?>" width="30px;" title="Quantidade de Impressões feitas"><div class=" ">

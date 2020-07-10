@@ -1,8 +1,23 @@
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">Gerar Relatório Titulares Sem Contrato</a></h3>
+        <h3><a href="#">Gerar Relatorio Observação Contrato</a></h3>
         <div>
-            <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatoriotitularsemcontrato">   
+            <form method="post" action="<?= base_url() ?>ambulatorio/guia/gerarelatorioobscontrato">  
+                  <dl>
+                    <dt>
+                        <label> Data inicio</label>
+                    </dt>
+                    <dd>
+                        <input id="txtdata_inicio" name="txtdata_inicio"  required="">                        
+                    </dd>
+                    <dt>
+                        <label> Data fim</label>
+                     </dt>
+                    <dd>
+                        <input id="txtdata_fim" name="txtdata_fim" required="">                        
+                    </dd>
+                     </dl>
+                    
                 <button type="submit" >Pesquisar</button> 
             </form> 
         </div>
@@ -41,21 +56,5 @@
         $("#accordion").accordion();
     });
 
-    $(function () {
-        $('#tipo').change(function () {
-            if ($(this).val()) {
-                $('.carregando').show();
-                $.getJSON('<?= base_url() ?>autocomplete/classeportiposaida', {tipo: $(this).val(), ajax: true}, function (j) {
-                    options = '<option value="">TODOS</option>';
-                    for (var c = 0; c < j.length; c++) {
-                        options += '<option value="' + j[c].classe + '">' + j[c].classe + '</option>';
-                    }
-                    $('#classe').html(options).show();
-                    $('.carregando').hide();
-                });
-            } else {
-                $('#classe').html('<option value="">TODOS</option>');
-            }
-        });
-    });
+    
 </script>

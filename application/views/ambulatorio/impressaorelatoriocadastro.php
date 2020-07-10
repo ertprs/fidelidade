@@ -15,6 +15,15 @@
     
     <h4>RELATÓRIO DE CADASTRO</h4>
     <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
+    <h3>Financeiro: <?
+    if($financeiro == "Pendencia"){
+       echo "Pendência"; 
+    }elseif($financeiro == "Finalizado"){
+         echo "Finalizado"; 
+    }else{
+        echo "Todos"; 
+    } 
+    ?></h3>
     <table>
         <tr>
             <td>
@@ -27,6 +36,8 @@
     </table>
     <hr>
     <?
+     
+    
     if (count($relatorio) > 0) {
         ?>
         <table border="1">
@@ -50,6 +61,12 @@
                 $total = 0;
                 
                 foreach ($relatorio as $item) :
+                   if($item->situacao == "Dependente"){
+                     $plano = $this->guia->listarplanodependente($item->paciente_id);  
+                   }else{
+                     $plano = Array();  
+                   } 
+                     
                   $cor = "";
                   $contpendenciaadesao = 0 ; 
                   if($item->situacao == "Titular"){  
@@ -58,14 +75,28 @@
                       $contpendenciaadesao = 0;
                   }
                   if($contpendenciaadesao > 0){
+                      if($financeiro == "Finalizado"){
+                         continue; 
+                      }
                      $cor = "red"; 
+                  }else{ 
+                       if($financeiro == "Pendencia"){
+                         continue; 
+                      }
                   }
                     $total++;
                     ?>
                     <tr>
                         <td ><font style="color:<?= $cor; ?>;"><?= $item->paciente_id; ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= $item->nome; ?></td>
-                        <td ><font style="color:<?= $cor; ?>;"><?= $item->convenio; ?></td>
+                        <td ><font style="color:<?= $cor; ?>;"><?
+                           if($item->situacao == "Dependente"){
+                             echo  @$plano[0]->nome;
+                           }else{
+                             echo  $item->convenio;
+                           }
+                        
+                        ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= substr($item->nascimento, 8, 2) . "/" . substr($item->nascimento, 5, 2) . "/" . substr($item->nascimento, 0, 4); ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= ($item->cpf); ?></td>
                         <td ><font style="color:<?= $cor; ?>;"><?= ($item->rg); ?></td>

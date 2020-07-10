@@ -289,7 +289,7 @@
                 <br>
                 <div>
                     <dt>
-                        <label title="Definir os campos que serao obrigatorios no cadastro de paciente.">Campos Obrigatorios</label>
+                        <label title="Definir os campos que serao obrigatorios no cadastro de paciente.">Campos Obrigatorios Titular</label>
                     </dt>
                     <dd>
                         <?
@@ -340,7 +340,55 @@
                 </div>
                 
                 <br>
-                <br>
+               
+                 <div>
+                    <dt>
+                        <label title="Definir os campos que serao obrigatorios no cadastro de paciente.">Campos Obrigatorios Dependente</label>
+                    </dt>
+                    <dd>
+                        <?
+                        if (@$obj->_campos_cadastro_dependente != '') {
+                            $campos_obrigatorios_dependente = json_decode(@$obj->_campos_cadastro_dependente);
+                        } else {
+                            $campos_obrigatorios_dependente = array();
+                        }
+                         
+                        ?>
+                        <select name="campos_obrigatorio_dependente[]" style="width: 47%;" class="chosen-select" data-placeholder="Selecione os campos..." multiple>
+                            <option value="nome" <?= (in_array('nome', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Nome</option> 
+                            <option value="nascimento" <?= (in_array('nascimento', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Nascimento</option>
+                            <option value="nome_mae" <?= (in_array('nome_mae', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Nome da Mãe</option>
+                            <option value="nome_pai" <?= (in_array('nome_pai', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Nome do Pai</option>                          
+                            <option value="email" <?= (in_array('email', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Email</option>
+                            <option value="sexo" <?= (in_array('sexo', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Sexo</option>
+                            <option value="tipologradouro" <?= (in_array('tipologradouro', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>T. logradouro</option>
+                            <option value="cpf" <?= (in_array('cpf', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>CPF</option>
+                            <option value="rg" <?= (in_array('rg', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>RG</option>                          
+                            <option value="endereco" <?= (in_array('endereco', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Endereço</option>
+                            <option value="numero" <?= (in_array('numero', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Número</option>
+                            <option value="complemento" <?= (in_array('complemento', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Complemento</option>
+                            <option value="indicacao" <?= (in_array('indicacao', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Indicacao</option>
+                            <option value="bairro" <?= (in_array('bairro', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Bairro</option>
+                            <option value="municipio" <?= (in_array('municipio', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Município</option>
+                            <option value="cep" <?= (in_array('cep', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>CEP</option>
+                            <option value="telefone1" <?= (in_array('telefone1', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Telefone 1</option>
+                            <option value="telefone2" <?= (in_array('telefone2', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Celular</option>                                                                       
+                            <option value="numero_carteira" <?= (in_array('numero_carteira', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Número Carteira</option>                          
+                            <option value="ocupacao" <?= (in_array('ocupacao', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Ocupação</option>                                                     
+                            <option value="estado_civil" <?= (in_array('estado_civil', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Estado civil</option>                
+                            <option value="grau_parentesco" <?= (in_array('grau_parentesco', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Grau de parentesco</option>           
+                            <option value="forma_pagamento" <?= (in_array('forma_pagamento', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Forma de pagamento</option>
+                            <option value="vendedor" <?= (in_array('vendedor', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>vendedor</option>
+                            <option value="pessoa_indicacao" <?= (in_array('pessoa_indicacao', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Pessoa indicação</option>
+                            <option value="parceiro" <?= (in_array('parceiro', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Parceiro</option>
+                            <option value="cod_paciente" <?= (in_array('cod_paciente', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Cód. Paciente</option>
+                            <option value="reativar" <?= (in_array('reativar', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>reativar</option>                          
+                            <option value="uf_expedido" <?= (in_array('uf_expedido', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>UF Expedido</option>
+                            <option value="data_emissao" <?= (in_array('data_emissao', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Data Emissão</option>
+                            <option value="outro_documento" <?= (in_array('outro_documento', $campos_obrigatorios_dependente)) ? 'selected' : ''; ?>>Outro documento</option>                      
+                        </select>
+                    </dd>
+                </div>
                 <br>
                 <table>
                     <tr>

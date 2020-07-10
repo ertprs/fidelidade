@@ -53,12 +53,11 @@
         }
 
     }
-    // var_dump($forma_comissao_v);
-    //  die;
+//    echo "<pre>";
+//     print_r($relatorio);
+//     die;
     ?>
-    <? if (count($relatorio) > 0) {
-        ?>
-
+    <? if (count($relatorio) > 0) {   ?> 
         <table border="1">
             <thead>
                 <tr>
@@ -81,10 +80,23 @@
                 $totalporvendedor = 0;
                 $valorvendedortotal = 0;
                 $pegarnomevendedor = 0;
+                $totaldepedente = 0;
+//                 echo "<pre>";
+//                 print_r($relatorio);
+//                 die();
                 foreach ($relatorio as $item) :   
                     
-                    if($_POST['tipopesquisa'] == '2'){
-
+                    $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
+                 
+                 foreach($dependentes as $item2){ 
+                                 if($item2->situacao == "Dependente"){  
+                                     $totaldepedente += $item2->valoradcional;
+                                             @$valor_dependentes{$item->paciente_contrato_id} += $item2->valoradcional;  
+                                 }
+                             } 
+//                   print_r($valor_dependentes);
+                             
+                    if($_POST['tipopesquisa'] == '2'){ 
                         if($pegarnomevendedor == 0){
                             $operadorvendedor = $item->vendedor;
                             $pegarnomevendedor++;
@@ -111,11 +123,10 @@
                     if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
                         $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
                     }else{
-                        $valor_comissao = $item->comissao;
+                        $valor_comissao = $item->comissao ;
                     }                                     
                     $valortotal = $valortotal + $valor_comissao;
-                    $valorvendedortotal = $valorvendedortotal + $valor_comissao;
-
+                    $valorvendedortotal = $valorvendedortotal + $valor_comissao; 
 
                     ?>                      
                     <tr>
@@ -123,7 +134,7 @@
                         <td ><font size="-2"><?= $item->plano; ?></td>
                         <td ><font size="-2"><?= $item->vendedor; ?></td>
                         <td ><font size="-2"><?= $item->forma_rendimento; ?></td>
-                        <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao, 2, ',', '.'); ?></td>
+                        <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao + @$valor_dependentes{$item->paciente_contrato_id}, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($valor_comissao, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_gerente, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_seguradora, 2, ',', '.'); ?></td>
@@ -136,10 +147,8 @@
                         $operadorvendedor = $item->vendedor; 
                     }
                 }
-                ?>
-
-                <? endforeach; 
-                
+                ?> 
+                <? endforeach;  
                 if($_POST['tipopesquisa'] == '2'){?>
                 <tr class="cinza">
                         <td COLSPAN = 4><font size="-1">TOTAL VENDEDOR: <?=$totalporvendedor?></td>
@@ -147,8 +156,7 @@
                         <td style='text-align: center;' ><font size="-1">VALOR TOTAL VENDEDOR: <?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
                 </tr>
 
-                <?}?>
-
+                <?}?> 
                     <tr>
                         <td COLSPAN = 4><font size="-1">TOTAL: <?=$total?></td>
                         <!-- <td COLSPAN = 3></td> -->

@@ -135,8 +135,7 @@
                                <option value="<?= $value->empresa_id ?>"><?= $value->nome ?></option>
                             <?                               
                             }
-                            ?>
-                               
+                            ?> 
                                <?php if(count($empresacadastro) > 0){?>
                           <optgroup label="Outras">
                             <?php foreach($empresacadastro as $item){?>

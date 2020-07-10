@@ -64,7 +64,7 @@
                     </dt>
                     <dd>
                         <select name="vendedor[]" id="vendedor" class="chosen-select" data-placeholder="Selecione os campos..." multiple>
-                            <option value=""></option>
+                            <option value="0">TODOS</option>
                             <?php
                             foreach ($listarvendedor as $item) {
                                 ?>

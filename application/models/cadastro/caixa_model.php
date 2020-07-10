@@ -357,7 +357,7 @@ class caixa_model extends Model {
 
     function relatorioentrada() {
           
-        $this->db->select('s.valor,
+        $this->db->select(' s.valor,
                             s.entradas_id,
                             s.observacao,
                             s.data,
@@ -371,7 +371,8 @@ class caixa_model extends Model {
                             fe.forma_entradas_saida_id,s.nome,
                             p.situacao,
                             s.paciente_contrato_parcelas_id,
-                            s.empresa_cadastro_id');
+                            s.empresa_cadastro_id,
+                            s.forma_rendimento_id');
         $this->db->from('tb_entradas s');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
@@ -383,7 +384,9 @@ class caixa_model extends Model {
         $this->db->where("(p.ativo = 'true' or s.empresa_cadastro_id is not null)");
       
         if (@$_POST['forma_pagamento'] != 0) {
-            $this->db->where('p.forma_rendimento_id ', $_POST['forma_pagamento']);
+          $forma_pagamento =   $_POST['forma_pagamento'];
+          $this->db->where("(CASE WHEN s.forma_rendimento_id is null THEN p.forma_rendimento_id = $forma_pagamento ELSE s.forma_rendimento_id = $forma_pagamento END)");           
+
         }
         if ($_POST['credordevedor'] != 0) {
             $this->db->where('fcd.financeiro_credor_devedor_id ', $_POST['credordevedor']);
@@ -409,10 +412,16 @@ class caixa_model extends Model {
                $this->db->where('p.situacao','Dependente');
         }
         
-        if($_POST['empresa'] != "0"){
-                $this->db->where('s.empresa_cadastro_id',$_POST['empresa']); 
+         
+        if($_POST['empresa'] != "" && substr($_POST['empresa'], 0,1) != "E"){
+            $this->db->where('s.empresa_id',$_POST['empresa']);
+            $this->db->where("(s.empresa_cadastro_id is null )");
         }
         
+        if(substr($_POST['empresa'], 0,1) == "E"){
+            $empresa_id = substr($_POST['empresa'], 1);
+            $this->db->where("(s.empresa_cadastro_id = $empresa_id)");
+        } 
         
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));

@@ -946,3 +946,20 @@ ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN dias_carencia integer;
 
 --30/06/2020
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN contrato_parcelas_id_empresa integer;
+
+--02/07/2020
+ALTER TABLE ponto.tb_entradas ADD COLUMN forma_rendimento_id integer;
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN forma_rendimento_id integer;
+
+--03/07/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN datas_json text;
+ALTER TABLE ponto.tb_impressoes_contratro_dependente ADD COLUMN valor numeric(10,2);
+
+--04/07/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN campos_cadastro_dependente text;
+
+--06/07/2020
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_pagamento date;
+
+--09/07/2020
+ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN paciente_pagamento integer;

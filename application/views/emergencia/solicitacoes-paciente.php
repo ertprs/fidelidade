@@ -119,9 +119,9 @@
      
            $pg = 0;
          foreach($quantidade_parcelas_pagas as $value){ 
-           if(!($value->taxa_adesao == 't')){
+//           if(!($value->taxa_adesao == 't')){
              $pg++;  
-           }
+//           }
          } 
          
           if (count($parcelas) == 0) {
@@ -247,12 +247,9 @@
                     <td width="100px;">
                         <div class="bt_linkm">
                             <a  onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/impressaodeclaracaopaciente/<?= $paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=1000,height=1000');">Declaração</a>
-
-                        </div></td>
-
-
-
-                    <? if ($perfil_id == 1) { ?>             
+                        </div>
+                    </td> 
+                    <? if ($perfil_id == 1 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  ) { ?>             
                         <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
                                 VENDEDOR : <?= @$paciente[0]->vendedor_nome; ?> 
                             </div></td>
@@ -260,8 +257,7 @@
                             <td width="900px;" style="font-family: arial; font-size: 13px;"><div class="">  
                                 INDICAÇÃO : <?= @$paciente[0]->nome_indicacao; ?> 
                             </div></td>
-                    <? }
-                    ?>
+                    <? }?>
                 </tr>
             </table>            
         </div>

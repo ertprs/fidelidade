@@ -51,6 +51,21 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>Forma de Pagamento</td>
+                                <td>
+                                    <select name="forma_rendimento_id" name="forma_rendimento_id">
+                                        <? foreach($forma_pagamentos as $item){  ?>
+                                          <option value="<?=  $item->forma_rendimento_id; ?>"
+                                                <?
+                                                if (@$voucher[0]->forma_rendimento_id == $item->forma_rendimento_id):echo 'selected';
+                                                endif;
+                                                ?>   
+                                                  ><?= $item->nome?></option> 
+                                        <? } ?>  
+                                    </select>
+                                </td>
+                            </tr> 
+                            <tr>
                                 <td>
                                     Parceiro:
                                 </td>

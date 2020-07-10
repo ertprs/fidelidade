@@ -316,34 +316,31 @@ class guia_model extends Model {
     }
 
     function relatoriocontratosinativos() {
-
-        if($_POST['tipopaciente'] == 'titular'){
-            if(isset($_POST['paciente_titular_id'])){
-                $titular_id = $_POST['paciente_titular_id'];
-            }    
-        }elseif($_POST['tipopaciente'] == 'dependente'){
-            // $this->paciente->listaridcontrato_dependente($paciente_id);
-            $this->db->select('paciente_contrato_id');
-            $this->db->from('tb_paciente_contrato_dependente');
-            $this->db->where('paciente_id', $_POST['paciente_dependente_id']);
-            $return = $this->db->get()->result();
-
-            $contrato_id = $return[0]->paciente_contrato_id;
-
-            $this->db->select('paciente_id');
-            $this->db->from('tb_paciente_contrato');
-            $this->db->where('paciente_contrato_id', $contrato_id);
-            $var = $this->db->get()->result();
-
-            $titular_id = $var[0]->paciente_id;
-
-
+ 
+        if(isset($_POST['paciente_titular_id'])){
+            $titular_id = $_POST['paciente_titular_id'];
         }else{
-            $titular_id = 0;
-        }
-
-
-        $this->db->select('p.nome, p.paciente_id,
+           $titular_id = 0; 
+        } 
+        if(isset($_POST['paciente_dependente_id'])){
+            $paciente_dependente_id = $_POST['paciente_dependente_id'];
+        }else{
+            $paciente_dependente_id = 0; 
+        }   
+        
+if($_POST['tipopaciente'] == 'dependente'){
+        $sql = "            opi.nome as indicacao,
+                            pd.nome as depedente,
+                            pd.situacao,
+                            pd.telefone as telefonedependete,
+                            pd.celular as celulardependente,
+                            opd.nome as vendedordependente,
+                            opid.nome as indicacaodependete,
+                            p.empresa_id"; 
+}else{
+    $sql = "p.situacao, opi.nome as indicacao";
+} 
+        $this->db->select("p.nome, p.paciente_id,
                             pc.paciente_contrato_id,
                             fp.nome as plano,
                             o.nome as operador,
@@ -352,19 +349,37 @@ class guia_model extends Model {
                             pc.data_cadastro,
                             p.telefone,
                             p.celular,
-                            opi.nome as indicacao');
+                            $sql");
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = pc.operador_atualizacao', 'left');
         $this->db->join('tb_operador op', 'op.operador_id = p.vendedor', 'left');
         $this->db->join('tb_operador opi', 'opi.operador_id = p.pessoaindicacao', 'left');
+      if($_POST['tipopaciente'] == 'dependente'){
+        $this->db->join('tb_paciente_contrato_dependente pcd','pcd.paciente_contrato_id = pc.paciente_contrato_id','left'); 
+        $this->db->join('tb_paciente pd','pd.paciente_id = pcd.paciente_id','left');
+       
+        $this->db->join('tb_operador opd', 'opd.operador_id = pd.vendedor', 'left');
+        $this->db->join('tb_operador opid', 'opid.operador_id = pd.pessoaindicacao', 'left'); 
+      }
+        
         $this->db->where('p.ativo', 'true');
 
-        if ($_POST['tipobusca'] == "I") {
+        if($_POST['tipopaciente'] == 'dependente'){ 
+             $this->db->where('pd.situacao','Dependente');
+        }else{ 
+             $this->db->where("(p.situacao = 'Titular')");
+        } 
+        
+        if ($_POST['tipobusca'] == "I") { 
             $this->db->where('pc.ativo', 'f');
         }
         if ($_POST['tipobusca'] == "A") {
+            if($_POST['tipopaciente'] == 'dependente'){ 
+              $this->db->where('pcd.ativo','t');
+            }
+            
             $this->db->where('pc.ativo', 't');
         }
 //        if ($_POST['plano'] > 0) {
@@ -409,7 +424,7 @@ class guia_model extends Model {
         
         if($_POST['empresa_id'] != "" && substr($_POST['empresa_id'], 0,1) != "E"){
             $this->db->where('pc.empresa_id',$_POST['empresa_id']);
-            $this->db->where("(pc.empresa_cadastro_id is null )");
+            $this->db->where("(pc.empresa_cadastro_id is null and p.empresa_id is null )"); 
         }
         
         if(substr($_POST['empresa_id'], 0,1) == "E"){
@@ -417,10 +432,18 @@ class guia_model extends Model {
             //empresa_id é na verdade empresa_cadastro_id da tabela tb_empresa_cadastro
             $this->db->where("(pc.associado_empresa_cadastro_id = $empresa_id or p.empresa_id = $empresa_id )");
         }
-
-        if($titular_id != 0){
+ 
+        if($titular_id != 0 && $_POST['tipopaciente'] == 'titular'){
              $this->db->where('pc.paciente_id', $titular_id); 
          }
+         
+        if($paciente_dependente_id != 0 && $_POST['tipopaciente'] == 'dependente'){
+             $this->db->where('pd.paciente_id', $paciente_dependente_id); 
+         } 
+        if($_POST['tipopaciente'] == 'dependente'){ 
+             $this->db->groupby('pc.paciente_contrato_id,p.nome,p.paciente_id,fp.nome,o.nome,op.nome,opi.nome,pd.nome,pd.situacao,pd.telefone,pd.celular,opid.nome,opd.nome');
+        }
+         
         $this->db->orderby('p.nome');
         $this->db->orderby('pc.paciente_contrato_id');
         $return = $this->db->get();
@@ -533,13 +556,15 @@ class guia_model extends Model {
                             m.nome as municipio,
                             p.rg,
                             p.telefone,
-                            p.celular');
+                            p.celular  ');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = p.convenio_id', 'left');
-        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left'); 
         $this->db->where('p.ativo', 'true');
         $this->db->where('p.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('p.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        
+        
         $this->db->orderby('p.nome');
         $this->db->orderby('fp.nome');
         
@@ -549,6 +574,7 @@ class guia_model extends Model {
         if($_POST['cliente'] == "dependente"){
            $this->db->where('p.situacao','Dependente') ;
         }
+        
         $return = $this->db->get();
         return $return->result();
     }
@@ -595,6 +621,7 @@ class guia_model extends Model {
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->where("pc.paciente_id", $paciente_id);
         $this->db->where("pc.ativo_admin", 't');
+        $this->db->where('pc.ativo','t');
         $this->db->orderby('pc.paciente_contrato_id');
         $return = $this->db->get();
         return $return->result();
@@ -776,7 +803,8 @@ class guia_model extends Model {
                             m.nome as municipio,
                             fp.razao_social as parceiro,
                             vc.data_cadastro,
-                            vc.gratuito');
+                            vc.gratuito,
+                            vc.forma_rendimento_id');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = vc.parceiro_id', 'left');
         $this->db->join('tb_municipio m', 'm.municipio_id = fp.municipio_id', 'left');
@@ -793,7 +821,8 @@ class guia_model extends Model {
                             pcp.paciente_contrato_parcelas_id,
                             pcp.parcela,
                             pcp.data,
-                            pcp.data_cadastro');
+                            pcp.data_cadastro,
+                            pcp.valor');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
         $this->db->orderby('pcp.parcela');
@@ -805,7 +834,8 @@ class guia_model extends Model {
 
         $this->db->select('pcp.consultas_avulsas_id,
                             pcp.data,
-                            pcp.data_cadastro');
+                            pcp.data_cadastro,
+                            valor');
         $this->db->from('tb_consultas_avulsas pcp');
         $this->db->where("pcp.consultas_avulsas_id", $consultas_avulsas_id);
 //        $this->db->orderby('pcp.parcela');
@@ -2448,7 +2478,7 @@ ORDER BY p.nome";
 
     function relatoriocomissao() {
 
-        $this->db->select('pc.paciente_id,
+        $this->db->select(' pc.paciente_id,
                             pc.plano_id,
                             fp.nome as plano,
                             p.forma_rendimento_id,
@@ -2458,21 +2488,20 @@ ORDER BY p.nome";
                             fp.comissao_vendedor,
                             fp.comissao_gerente,
                             fp.comissao_seguradora,
-                            o.nome as vendedor');
+                            o.nome as vendedor,
+                            pc.paciente_contrato_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
         $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
-//        $this->db->where('pcp.excluido', 'false');
-
+        $this->db->where('p.ativo', 'true');
+//        $this->db->where('pcp.excluido', 'false'); 
         if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
             $this->db->where_in('p.vendedor', @$_POST['vendedor']);
-        }
-
-        // $this->db->where('p.vendedor', $_POST['vendedor']);
-
+        } 
+        // $this->db->where('p.vendedor', $_POST['vendedor']); 
         // Se algum dia for preciso fazer com que o relatório mostre todos os vendedores ao não colocar o filtro
         // É necessário se atentar ao fato de quê a lógica por trás da comissão não olha para mais de um vendedor
         // ao mesmo tempo, sendo assim, vai ser preciso refazer uma parte.
@@ -5510,14 +5539,18 @@ ORDER BY p.nome";
         $info_paciente = $this->listarinforpaciente($paciente_id);
         $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
         $valor = $parcela[0]->valor;
+        
+        if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
+           $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
+        }
+        
         $paciente_id = $parcela[0]->paciente_id;
         $credor = $parcela[0]->financeiro_credor_devedor_id;
   
         if ($this->session->userdata('cadastro') == 2 && $depende_id != "" && $depende_id != $paciente_id) {
             $paciente_id = $depende_id;
             $credor = $parcela[0]->financeiro_credor_devedor_id_dependente;
-        }
-          
+        } 
 //       echo "Credor: ".$credor ; echo '<br>';
 //       echo "paciente : ".$paciente_id ; echo '<br>';
 //       die; 
@@ -5551,6 +5584,9 @@ ORDER BY p.nome";
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('manual', 't');
             $this->db->set('ativo', 'f');
+            if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
+               $this->db->set('valor', $valor);
+            }
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
@@ -5571,7 +5607,7 @@ ORDER BY p.nome";
             $this->db->set('valor', $valor);
 //        $inicio = $_POST['inicio'];
 
-            $this->db->set('data', $data_parcela);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             $this->db->set('tipo', $plano);
             if($parcela[0]->taxa_adesao == 't'){
                 $this->db->set('classe', 'ADESÃO');
@@ -5586,6 +5622,9 @@ ORDER BY p.nome";
                 $this->db->set('conta', @$_POST['conta']);
             } else {
                 $this->db->set('conta', $conta_id);
+            }
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+              $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
             }
 //        $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
@@ -5610,7 +5649,7 @@ ORDER BY p.nome";
 
             $this->db->set('nome', $credor);
             $this->db->set('data_cadastro', $horario);
-            $this->db->set('data', $data_parcela);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->set('empresa_id',$empresa_id);
             $this->db->insert('tb_saldo');
@@ -5621,14 +5660,17 @@ ORDER BY p.nome";
             $this->db->set('manual', 't');
             $this->db->set('ativo', 'f');
             $this->db->set('data_atualizacao', $horario);
+            if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
+               $this->db->set('valor', $valor);
+            }
+            
+            $this->db->set('data_pagamento',date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
         }
-
-
-
-
+        
+ 
 
         $erro = $this->db->_error_message();
         if (trim($erro) != "") // erro de banco
@@ -5671,26 +5713,33 @@ ORDER BY p.nome";
             $this->db->where('ativo', 'true');
             $this->db->where('conta_interna', 'true');
             $conta = $this->db->get()->result();
-
-            if (count($conta) > 0) {
-                $conta_id = $conta[0]->conta_id;
-            } else {
-                $conta_id = $parcela[0]->conta_id;
+   
+            if(isset($_POST['conta']) && $_POST['conta'] != ""){
+                  $conta_id = $_POST['conta'];
+            }else{
+                if (count($conta) > 0) {
+                    $conta_id = $conta[0]->conta_id;
+                } else {
+                    $conta_id = $parcela[0]->conta_id;
+                }
             }
-
-            //gravando na entrada
-
+            //gravando na entrada 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('valor', $valor);
 //        $inicio = $_POST['inicio'];
-
+ 
+            $this->db->set('empresa_id',$this->session->userdata('empresa_id'));
             $this->db->set('data', $data);
             $this->db->set('tipo', $plano);
             $this->db->set('classe', 'CARTEIRA');
             $this->db->set('nome', $credor);
             $this->db->set('conta', $conta_id);
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+                $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
+            }
+            
 //        $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
@@ -6016,13 +6065,14 @@ ORDER BY p.nome";
         }
 
         // var_dump($credor); die;
-
+        $classe = "PARCELA";
         if ($tipo == 'EXTRA') {
             $plano = 'CONSULTA EXTRA';
+            $classe = "VOUCHER";
         } else {
             $plano = 'CONSULTA COPARTICIPAÇÃO';
         }
-
+          
 
         $this->db->select('forma_entradas_saida_id as conta_id,
                             descricao');
@@ -6031,18 +6081,21 @@ ORDER BY p.nome";
         $this->db->where('conta_interna', 'true');
         $conta = $this->db->get()->result();
 
-        if ($credor_obj[0]->conta_id == "") {
-
+        if (@$credor_obj[0]->conta_id == "") { 
             $conta_id = $conta[0]->conta_id;
-        } else {
-
+        } else { 
             $conta_id = $credor_obj[0]->conta_id;
         }
 
         // var_dump($conta_id); die;
         //gravando na entrada
         $valor = $parcela[0]->valor;
-
+        if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
+           $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
+        }else{
+           $valor = 0; 
+        }
+        
 
         $this->db->select('financeiro_maior_zero');
         $this->db->from('tb_empresa');
@@ -6050,14 +6103,17 @@ ORDER BY p.nome";
 
         $return = $this->db->get()->result();
 
+      
         if ($return[0]->financeiro_maior_zero == 't' && $valor <= 0) {
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('manual', 't');
-            $this->db->set('ativo', 'f');
+            $this->db->set('ativo', 'f'); 
+            $this->db->set('valor',$valor);  
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->set('paciente_pagamento', $paciente_id);
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
             $this->db->update('tb_consultas_avulsas');
         } else {
@@ -6069,7 +6125,8 @@ ORDER BY p.nome";
             if(count($contEntrada) > 0){
                 return true;
             }
-
+            
+           
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");
             $operador_id = $this->session->userdata('operador_id');
@@ -6078,7 +6135,9 @@ ORDER BY p.nome";
 
             $this->db->set('data', $data_consulta_avul);
             $this->db->set('tipo', $plano);
-            $this->db->set('classe', 'PARCELA');
+            
+            $this->db->set('classe',$classe);
+            
             $this->db->set('nome', $credor);
 
             if (@$_POST['conta'] != "") {
@@ -6090,6 +6149,9 @@ ORDER BY p.nome";
 //          $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+              $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
+            }
             $this->db->insert('tb_entradas');
             $entradas_id = $this->db->insert_id();
             $erro = $this->db->_error_message();
@@ -6109,14 +6171,17 @@ ORDER BY p.nome";
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_saldo');
 
-
             /////////////////////////////////////////////////
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
             $this->db->set('manual', 't');
             $this->db->set('ativo', 'f');
+            if(isset($_POST['valor']) && $_POST['valor'] != ""){
+              $this->db->set('valor',$valor); 
+            }
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->set('paciente_pagamento', $paciente_id);
             $this->db->where('consultas_avulsas_id', $consultas_avulsas_id);
             $this->db->update('tb_consultas_avulsas');
         }
@@ -6724,13 +6789,14 @@ AND data <= '$data_fim'";
             $this->db->set('horario', $hora);
             $this->db->set('consulta_avulsa_id', $consulta_avulsa_id);
             $this->db->set('parceiro_id', $_POST['parceiro_id']);
-
             if (isset($_POST['gratuito'])) {
                 $this->db->set('gratuito', 't');
             } else {
                 $this->db->set('gratuito', 'f');
             }
-
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+                $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
+            }
             $this->db->set('data_cadastro', $cadastro);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_voucher_consulta');
@@ -7156,23 +7222,31 @@ AND data <= '$data_fim'";
 
     function gravaralterardatapagamento($paciente_contrato_parcelas_id) {
         try {
-
-            $this->db->select('data_cartao_iugu');
+            $data_post =  date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))); 
+            $data_antiga =  date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data_antiga'])));
+           $operador_id = $this->session->userdata('operador_id');
+            
+            $this->db->select('data_cartao_iugu,datas_json');
             $this->db->from('tb_paciente_contrato_parcelas pc');
             $this->db->where("paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
             $this->db->orderby("data");
             $retorno_data = $this->db->get()->result();
-
+                
+            $datas = json_decode($retorno_data[0]->datas_json, TRUE); 
+            $datas[] = ['data'=>$data_antiga,'operador_id'=>$operador_id]; 
+            $datas[] = ['data'=>$data_post,'operador_id'=>$operador_id]; 
+              
             /* inicia o mapeamento no banco */
             $horario = date("Y-m-d H:i:s");
             $hora = date("H:i:s");
-            $operador_id = $this->session->userdata('operador_id');
+          
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             if (@$retorno_data[0]->data_cartao_iugu != '') {
                 $this->db->set('data_cartao_iugu', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
             }
+            $this->db->set('datas_json',json_encode($datas));
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
             $erro = $this->db->_error_message();
@@ -7448,9 +7522,7 @@ AND data <= '$data_fim'";
 //        var_dump($data_adesao);
 //        var_dump($data_receber);
 //        die;
-
-
-
+ 
 
         if ($return[0]->credor_devedor_id == "") {
 
@@ -7483,8 +7555,7 @@ AND data <= '$data_fim'";
         } else {
             $financeiro_credor_devedor_id = $return[0]->credor_devedor_id;
         }
-
-
+ 
         $data_atual = date("d/m/Y");
 //        $data_adesao = date("Y-m-d");
 //        echo '<pre>';
@@ -7508,12 +7579,15 @@ AND data <= '$data_fim'";
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->set('data', $data_adesao);
+            $datas[] = ['data'=>$data_adesao,'operador_id'=>$operador_id]; 
+            $this->db->set('datas_json',json_encode($datas));
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
         }
  
         for ($i = 1; $i <= $parcelas; $i++) {
+            $datas = Array();
             $this->db->set('adesao_digitada', $_POST['adesao']);
             $this->db->set('valor', $ajuste);
             if ($ajuste == 0.00) {
@@ -7524,6 +7598,8 @@ AND data <= '$data_fim'";
             $this->db->set('paciente_contrato_id', $paciente_contrato_id);
             $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
             $this->db->set('data', $data_receber);
+            $datas[] = ['data'=>$data_receber,'operador_id'=>$operador_id]; 
+            $this->db->set('datas_json',json_encode($datas));
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_paciente_contrato_parcelas');
@@ -7543,7 +7619,9 @@ AND data <= '$data_fim'";
                     $this->db->set('parcela', $i);
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
+                    $datas[] = ['data'=>$data_receber,'operador_id'=>$operador_id]; 
                     $this->db->set('data', $data_receber);
+                    $this->db->set('datas_json',json_encode($datas));
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
                     $this->db->insert('tb_paciente_contrato_parcelas');
@@ -7563,6 +7641,8 @@ AND data <= '$data_fim'";
                     $this->db->set('paciente_contrato_id', $paciente_contrato_id);
                     $this->db->set('financeiro_credor_devedor_id', $financeiro_credor_devedor_id);
                     $this->db->set('data', $data_receber);
+                     $datas[] = ['data'=>$data_receber,'operador_id'=>$operador_id]; 
+                    $this->db->set('datas_json',json_encode($datas));
                     $this->db->set('data_cadastro', $horario);
                     $this->db->set('operador_cadastro', $operador_id);
                     $this->db->insert('tb_paciente_contrato_parcelas');
@@ -10362,30 +10442,35 @@ ORDER BY ae.agenda_exames_id)";
         $horario = date('Y-m-d H:i:s');
 
         $operador = $this->session->userdata('operador_id');
-        $this->db->select('contador_impressao');
-        $this->db->from('tb_paciente_contrato_dependente');
-        $this->db->where('paciente_contrato_id', $contrato_id);
-        $this->db->where('paciente_id', $paciente_id);
-        $this->db->where('ativo', 't');
+        $this->db->select('pcd.contador_impressao,pc.paciente_contrato_id,pc.paciente_id');
+        $this->db->from('tb_paciente_contrato_dependente pcd');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcd.paciente_contrato_id','left');
+        $this->db->where('pcd.paciente_contrato_id', $contrato_id);
+        $this->db->where('pcd.paciente_id', $paciente_id);
+        $this->db->where('pcd.ativo', 't');
         $returno = $this->db->get()->result();
+ 
+        $parcela = $this->listarexames($returno[0]->paciente_id);
 
-        $valor_atual = $returno[0]->contador_impressao + 1;
-
+        if($paciente_id == $returno[0]->paciente_id){
+           $valor = $parcela[0]->valor_carteira_titular;
+        }else{
+           $valor = $parcela[0]->valor;
+        } 
+        $valor_atual = $returno[0]->contador_impressao + 1; 
 
         $this->db->where('paciente_contrato_dependente_id', $paciente_contrato_dependente_id);
         $this->db->set('contador_impressao', $valor_atual);
         $this->db->set('data_ultima_impressao', date('Y-m-d'));
         $this->db->set('ultimo_operador_impressao', $operador);
-        $this->db->update('tb_paciente_contrato_dependente');
-
+        $this->db->update('tb_paciente_contrato_dependente'); 
 
         $this->db->set('paciente_contrato_id', $contrato_id);
         $this->db->set('paciente_id', $paciente_id);
         $this->db->set('operador_cadastro', $operador);
         $this->db->set('data_cadastro', $horario);
-
+        $this->db->set('valor',$valor);
         $this->db->set('paciente_contrato_dependente_id', $paciente_contrato_dependente_id);
-
         $this->db->insert('tb_impressoes_contratro_dependente');
     }
 
@@ -11145,12 +11230,21 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->set('valor', $valor);
             $this->db->set('data', $data);
             $this->db->set('tipo', $PAGA);
-            $this->db->set('classe', 'PARCELA');
+            
+            if($parcela[0]->taxa_adesao == 't'){
+                $this->db->set('classe', 'ADESÃO');
+            }else{
+                $this->db->set('classe', 'PARCELA'); 
+            }
+            
             $this->db->set('nome', $credor);
             if (@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
             } else {
                 $this->db->set('conta', $conta_id);
+            }
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+              $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
             }
             $this->db->set('ativo', 't');
             $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
@@ -11223,9 +11317,10 @@ ORDER BY ae.agenda_exames_id)";
 
     function listarimpressoescarteira($paciente_contrato_dependente_id) {
 
-        $this->db->select('id.data_cadastro, o.nome as operador_cadastro');
+        $this->db->select('id.data_cadastro, o.nome as operador_cadastro,pc.paciente_id as titular_id,id.paciente_id as dependente_id,id.impressoes_contratro_dependente_id');
         $this->db->from('tb_impressoes_contratro_dependente id');
         $this->db->join('tb_operador o', 'o.operador_id = id.operador_cadastro', 'left');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = id.paciente_contrato_id','left');
         $this->db->where('id.paciente_contrato_dependente_id', $paciente_contrato_dependente_id);
         $this->db->where('id.ativo', 't');
         return $this->db->get()->result();
@@ -11553,7 +11648,8 @@ ORDER BY ae.agenda_exames_id)";
                             e.empresa_id,
                             e.nome as empresa,
                             pc.empresa_cadastro_id,
-                            ec.financeiro_credor_devedor_id as credor_id
+                            ec.financeiro_credor_devedor_id as credor_id,
+                            pcp.taxa_adesao
                             ');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
@@ -12599,15 +12695,16 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                             gpi.pdf_cover_carne,
                             gpi.carnet_id,
                             gpi.num_carne,
-                            cp.paciente_dependente_id
+                            cp.paciente_dependente_id,
+                            cp.data_cadastro
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_gerencianet gpi', 'gpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
-        $this->db->where('cp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
-        $this->db->where('cp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->where('cp.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])))." 00:00:00");
+        $this->db->where('cp.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])))." 23:23:59");
         $this->db->where('cp.ativo','t');
         $this->db->where("cp.excluido", 'f');
         $this->db->where("cp.taxa_adesao", 'f');
@@ -12679,6 +12776,43 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         return $return->result();
     }
     
+    
+    function listarplanodependente($paciente_id){
+       $this->db->select('fp.nome');
+       $this->db->from('tb_paciente_contrato_dependente pcd');
+       $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcd.paciente_contrato_id','left');
+       $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pc.plano_id','left');
+       $this->db->where('pcd.ativo','t');
+       $this->db->where('pc.ativo','t');
+       $this->db->where('pcd.paciente_id',$paciente_id); 
+       return $this->db->get()->result();
+       
+       
+    }
+    
+    
+    function listarimpressaocarteira($impressoes_contratro_dependente_id){
+        $this->db->select('id.data_cadastro, o.nome as operador_cadastro,pc.paciente_id as titular_id,id.paciente_id as dependente_id,id.impressoes_contratro_dependente_id,id.valor');
+        $this->db->from('tb_impressoes_contratro_dependente id');
+        $this->db->join('tb_operador o', 'o.operador_id = id.operador_cadastro', 'left');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = id.paciente_contrato_id','left');
+        $this->db->where('id.impressoes_contratro_dependente_id', $impressoes_contratro_dependente_id);
+        $this->db->where('id.ativo', 't');
+        return $this->db->get()->result();
+    }
+    
+    
+    function relatorioobscontrato(){ 
+        $this->db->select('oc.observacao,op.nome as operador,oc.data_cadastro,oc.observacao_contrato_id');
+        $this->db->from('tb_observacao_contrato oc');
+        $this->db->join('tb_operador op', 'op.operador_id = oc.operador_cadastro', 'left'); 
+        $this->db->where('oc.data_cadastro >=', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['txtdata_inicio'])))." 00:00:00");
+        $this->db->where('oc.data_cadastro <=', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['txtdata_fim'])))." 23:59:59");
+        $this->db->where('oc.ativo', 't');
+        return $this->db->get()->result();
+        
+        
+    }
     
 }
 

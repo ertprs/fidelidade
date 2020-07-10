@@ -16,6 +16,18 @@
             dateFormat: 'dd/mm/yy'
         });
     });
+    
+     $(function () {
+        $("#data_adm").datepicker({
+            autosize: true,
+            changeYear: true,
+            changeMonth: true,
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            buttonImage: '<?= base_url() ?>img/form/date.png',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
 
 </script>
 <body bgcolor="#C0C0C0">
@@ -31,7 +43,8 @@
                         </dt>
                         <dd>
                             <input type="text" name="data" id="data" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
-                        </dd>
+                            <input type="hidden" name="data_antiga" id="data_antiga" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>                         
+                        </dd>                          
                         <dt>
                             <label>Juros</label>
                         </dt>

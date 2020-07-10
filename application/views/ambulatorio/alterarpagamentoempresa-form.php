@@ -18,6 +18,7 @@
     });
 
 </script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <body bgcolor="#C0C0C0">
     <div class="content"> <!-- Inicio da DIV content -->
         <h3 class="singular">Alterar pagamento</h3>
@@ -33,8 +34,18 @@
                             <input type="text" name="data" id="data" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
                         </dd>
                         <dt>
+                            <label>Forma de Pagamento</label>
+                        </dt> 
+                        <dd>
+                             <select name="forma_rendimento_id" name="forma_rendimento_id">
+                                <? foreach($forma_pagamentos as $item){  ?>
+                                  <option value="<?=  $item->forma_rendimento_id; ?>"><?= $item->nome?></option> 
+                                <? } ?>  
+                            </select>
+                        </dd>
+                        <dt>
                             <label>Conta</label>
-                        </dt>                        
+                        </dt>   
                         <dd>
                             <select  name="conta">
                                 <option value="" >Selecione</option>

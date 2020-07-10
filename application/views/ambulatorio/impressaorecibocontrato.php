@@ -22,6 +22,14 @@
  <?php 
  $valor_total = 0.00;
  foreach($pagamentos as $item){
+     $data_referencia = "";
+    
+ $datas_json = json_decode($item->datas_json); 
+if($datas_json[0][0] != ""){
+   $data_referencia = $datas_json[0][0];
+}else{
+   $data_referencia = $item->data;
+}    
      
  $valor_total += $item->valor;
  $valor = number_format($item->valor, 2, ',', '.');
@@ -35,7 +43,7 @@
 
         
  ?>
- <p>Recebi do Sr(a). <?=$paciente[0]->nome?> a quantia de R$ <?= $valor; ?> (<?=$extenso?>), referente à parcela de <?=date("d/m/Y", strtotime($item->data))?>
+ <p>Recebi do Sr(a). <?=$paciente[0]->nome?> a quantia de R$ <?= $valor; ?> (<?=$extenso?>), referente à parcela de <?=date("d/m/Y", strtotime($data_referencia))?>
  do plano <?= $item->plano;?>, dando-lhe por este recibo a devida quitação.
 
  <?php }?>

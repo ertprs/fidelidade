@@ -19,6 +19,11 @@
     });
 
 </script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<?
+$perfil_id = $this->session->userdata('perfil_id');
+$operador_id = $this->session->userdata('operador_id');
+?>
 <body bgcolor="#C0C0C0">
     <div class="content"> <!-- Inicio da DIV content -->
         <h3 class="singular">Alterar pagamento</h3>
@@ -33,25 +38,43 @@
                         <dd>
                             <input type="text" name="data" id="data" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
                         </dd>
+                        <? if($perfil_id == 1 || $operador_id == 1){ ?>
+                            <dt>
+                                <label>Valor</label>
+                            </dt>
+                            <dd>
+                                <input type="text" id="valor" name="valor" style="text-align: right;" alt="decimal" class="texto02" value="<?=  number_format($pagamento[0]->valor, 2, ',', '.'); ?>"  />
+                            </dd>
+                        <? }else{?> 
+                               <input type="hidden" id="valor" name="valor" style="text-align: right;" alt="decimal" class="texto02" value="<?=  number_format($pagamento[0]->valor, 2, ',', '.'); ?>"  />              
+                        <?}?>
+                            
+                        <dt>
+                            <label>Forma de Pagamento</label>
+                        </dt> 
+                        <dd>
+                            <select name="forma_rendimento_id" name="forma_rendimento_id">
+                                <? foreach($forma_pagamentos as $item){  ?>
+                                  <option value="<?=  $item->forma_rendimento_id; ?>"><?= $item->nome?></option> 
+                                <? } ?>  
+                            </select>
+                        </dd>
                         <dt>
                             <label>Conta</label>
-                        </dt>
-                        
+                        </dt> 
                         <dd>
                             <select  name="conta">
                                 <option value="" >Selecione</option>
                                 <?
                                 foreach($contas as $conta){ 
                                     ?> 
-                         <option value=<?= $conta->forma_entradas_saida_id ?>  ><?= $conta->descricao; ?></option> 
-                                <?    
+                                    <option value=<?= $conta->forma_entradas_saida_id ?>  ><?= $conta->descricao; ?></option> 
+                                 <?    
                                 }
                                 ?>
                             </select>
-                        </dd>
-                        
-                    </dl>    
-
+                        </dd> 
+                    </dl> 
                     <hr/>
                     <button type="submit" name="btnEnviar" >Enviar</button>
             </form>
@@ -59,3 +82,13 @@
         </div>
     </div> <!-- Final da DIV content -->
 </body>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.maskedinput.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>js/maskedmoney.js"></script>
+
+<script>
+    
+    
+    $("#valor").maskMoney({prefix:'', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
+
+</script>
+
