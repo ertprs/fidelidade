@@ -436,6 +436,11 @@
                             <input type="checkbox" name="relacao_carencia"   <? if (@$obj->_relacao_carencia == 't') echo "checked"; ?>> 
                             <label>Situação de pagamento em relação a carência</label>  
                         </td>  -->
+
+                        <td>
+                            <input type="checkbox" name="contratos_inativos"   <? if (@$obj->_contratos_inativos == 't') echo "checked"; ?>> 
+                            <label>Contratos Inativos</label>  
+                        </td>
                     </tr>
                 </table> 
                 <br>
