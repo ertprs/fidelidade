@@ -105,6 +105,9 @@ if (count($exames) > 0) {
             <?
             $guia_id = 0;
             $cancelado = 0;
+            // echo '<pre>';
+            // print_r($exames);
+            // die;
             if (count($exames) > 0) {
                 ?>
                 <table >

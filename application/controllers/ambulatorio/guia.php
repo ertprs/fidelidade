@@ -144,11 +144,19 @@ class Guia extends BaseController {
 
     function pesquisar($paciente_id) {
                             
-        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);        
-        $data['exames'] = $this->guia->listarexames($paciente_id);
-        $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
+        $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
+
         $data['permissao'] = $this->empresa->listarpermissoes();
-        
+
+        if($data['permissao'][0]->contratos_inativos == 't'){
+            $data['exames'] = $this->guia->listarexamesinativos($paciente_id);   
+        }else{
+            $data['exames'] = $this->guia->listarexames($paciente_id);   
+        }
+        // echo '<pre>';
+        // print_r($data['exames']);
+        // die;
+        $contrato_ativo = $this->guia->listarcontratoativo($paciente_id);
 //         echo "<pre>";
         if (count($contrato_ativo) > 0) { 
         

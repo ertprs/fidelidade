@@ -459,6 +459,13 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('relacao_carencia', 'f');
             }
+
+            if (isset($_POST['contratos_inativos'])) {
+                $this->db->set('contratos_inativos', 't');
+            } else {
+                $this->db->set('contratos_inativos', 'f');
+            }
+
             if($_POST['agenciaSicoob'] != ""){
                  $this->db->set('agenciasicoob',$_POST['agenciaSicoob']);
             }else{
@@ -564,6 +571,7 @@ class empresa_model extends Model {
                                f.tipo_declaracao,
                                f.carteira_padao_6,
                                f.relacao_carencia,
+                               f.contratos_inativos,
                                f.agenciasicoob,
                                f.contacorrentesicoob,
                                f.codigobeneficiariosicoob,
@@ -621,6 +629,7 @@ class empresa_model extends Model {
             $this->_modificar_verificar = $return[0]->modificar_verificar;
             $this->_forma_dependente = $return[0]->forma_dependente;
             $this->_relacao_carencia = $return[0]->relacao_carencia; 
+            $this->_contratos_inativos = $return[0]->contratos_inativos; 
             $this->_agenciasicoob = $return[0]->agenciasicoob; 
             $this->_contacorrentesicoob = $return[0]->contacorrentesicoob; 
             $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob;

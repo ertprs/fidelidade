@@ -627,6 +627,28 @@ if($_POST['tipopaciente'] == 'dependente'){
         return $return->result();
     }
 
+    function listarexamesinativos($paciente_id) {
+
+        $this->db->select('pc.paciente_contrato_id,
+                            fp.nome as plano,
+                            p.situacao,
+                            pc.ativo,
+                            fp.nome as plano,
+                            fp.valor_carteira as valor,
+                            fp.valor_carteira_titular as valor_carteira_titular,
+                            fp.conta_id,
+                            pc.data_cadastro,
+                            fp.forma_pagamento_id');
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->where("pc.paciente_id", $paciente_id);
+        $this->db->where("pc.ativo_admin", 't');
+        $this->db->orderby('pc.paciente_contrato_id');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarcontratoativo($paciente_id) { 
         $this->db->select('pc.paciente_contrato_id,
                             fp.nome as plano,

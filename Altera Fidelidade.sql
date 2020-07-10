@@ -997,3 +997,7 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas_sicoob
   OWNER TO postgres;
 
 
+
+--10/07/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN contratos_inativos boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN contratos_inativos SET DEFAULT false;
