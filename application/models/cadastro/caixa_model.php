@@ -366,9 +366,11 @@ class caixa_model extends Model {
                             fe.descricao as conta,
                             s.tipo,
                             s.classe,
-                            fr.nome as forma_rendimento,
+                            fre.nome as forma_rendimento,
+                            fr.nome as forma_rendimento2,
                             p.paciente_id,
-                            fe.forma_entradas_saida_id,s.nome,
+                            fe.forma_entradas_saida_id,
+                            s.nome,
                             p.situacao,
                             s.paciente_contrato_parcelas_id,
                             s.empresa_cadastro_id,
@@ -380,6 +382,7 @@ class caixa_model extends Model {
         $this->db->join('tb_operador o', 'o.operador_id = s.operador_cadastro', 'left');
         $this->db->join('tb_paciente p', 'p.credor_devedor_id = s.nome', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
+        $this->db->join('tb_forma_rendimento fre', 'fre.forma_rendimento_id = s.forma_rendimento_id', 'left');
         $this->db->where('s.ativo', 'true');
         $this->db->where("(p.ativo = 'true' or s.empresa_cadastro_id is not null)");
       

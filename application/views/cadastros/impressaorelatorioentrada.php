@@ -66,16 +66,16 @@
                 <?php
 //                echo "<pre>";
 //                print_r($relatorioentrada);
-                
+                $tipoEntradaArray = Array();
                 $total = 0;
                 $total_parcelas = 0;
                 $relatorio_array = Array();
                 foreach ($relatorioentrada as $item) :
-                    
+                    @$tipoEntradaArray[$item->classe]++; 
                     @$relatorio_array[$item->conta] += $item->valor + $valor;
                      
-                 @$qtd_parcelas++;
-                @$qtd_parcelas_{$item->forma_entradas_saida_id}++;
+                    @$qtd_parcelas++;
+                    @$qtd_parcelas_{$item->forma_entradas_saida_id}++;
                     $total += $item->valor;
                     ?>
                     <tr>
@@ -97,7 +97,7 @@
                             <td ><?= $item->operador; ?></td>
                         <? } ?>
                         <? if ($mostrar_form_pagamento == 'SIM'): ?>
-                            <td ><?= $item->forma_rendimento; ?>&nbsp;</td>
+                            <td ><?= ($item->forma_rendimento  != "" ) ? $item->forma_rendimento : $item->forma_rendimento2 ; ?>&nbsp;</td>
                         <? endif; ?>
 
 
@@ -123,7 +123,11 @@
     </table>
 </div> <!-- Final da DIV content -->
 <br>
- 
+  
+<?
+//echo "<pre>";
+//print_r($tipoEntradaArray);
+?>
 <table  border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
                 <thead>
                     <tr>
@@ -147,6 +151,12 @@
                     <? } ?>
                 </tbody>
                  <tfoot>
+                     <? foreach($tipoEntradaArray as $key => $item){?>
+                      <tr>
+                        <th class="tabela_footer"> <?= $key; ?> </th>
+                         <th class="tabela_footer" > <?= $item; ?> </th>
+                    </tr> 
+                     <?}?>
                     <tr>
                         <th class="tabela_footer" colspan="2">
                             Total Parcelas: <?=  @$qtd_parcelas; ?>

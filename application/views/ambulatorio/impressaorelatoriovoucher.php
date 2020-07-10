@@ -24,10 +24,10 @@
                 <th>Operador Cadastro</th>
             </tr>
             <?php 
-            foreach($relatorio  as $item){
-                $data = date("d/m/Y", strtotime(str_replace('-', '/', $item->data)));
-
-                if($item->gratuito == 't'){
+            $valor_total = 0;
+            foreach($relatorio  as $item){ 
+                $data = date("d/m/Y", strtotime(str_replace('-', '/', $item->data))); 
+                if($item->gratuito == 't'){ 
                 ?>
                 <tr class="corverde">
                 <td><?= $item->paciente; ?></td>
@@ -38,6 +38,7 @@
                 </tr>
                 <?
                 }else{
+                     $valor_total += $item->valor;
                 ?>
             <tr>
                 <td><?= $item->paciente; ?></td>
@@ -50,6 +51,10 @@
             }
             }
             ?>
+            <tr>
+                <td colspan="2">Total</td>
+                 <td colspan="3">R$   <?= number_format($valor_total, 2, ',', '.'); ?></td>
+            </tr>
           
         </table>
     </body>

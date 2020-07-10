@@ -963,3 +963,37 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_pagamento date;
 
 --09/07/2020
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN paciente_pagamento integer;
+ALTER TABLE ponto.tb_forma_rendimento_comissao ADD COLUMN percentual boolean;
+ALTER TABLE ponto.tb_forma_rendimento_comissao ALTER COLUMN percentual SET DEFAULT false;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN percetual_comissao_vendedor_mensal boolean;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao_vendedor_mensal SET DEFAULT false;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN percetual_comissao_vendedor boolean;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao_vendedor SET DEFAULT false;
+
+
+--10/07/2020
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN percetual_comissao boolean;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao SET DEFAULT false;
+
+
+
+
+
+CREATE TABLE ponto.tb_paciente_contrato_parcelas_sicoob
+(
+  paciente_contrato_parcelas_sicoob_id integer NOT NULL ,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  cod_servico integer,
+  mensagem text,
+  paciente_contrato_parcelas_id integer,
+  nossonumero text,
+  CONSTRAINT tb_paciente_contrato_parcelas_sicoob_pkey PRIMARY KEY (paciente_contrato_parcelas_sicoob_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_sicoob
+  OWNER TO postgres;
+
+

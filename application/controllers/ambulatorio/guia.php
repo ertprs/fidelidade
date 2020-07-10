@@ -6948,7 +6948,7 @@ table tr:hover  #achadoERRO{
             $data_Mes = date("m", strtotime($relatorio[0]->data)); // Associando o primeiro item do array.
         }
         $hora = date('His');
-        $nome_arquivo = "CNAB240_" . $data_Mes;
+        $nome_arquivo = "CNAB240";
         $fp = fopen("./upload/CNAB/$nome_arquivo.REM", "w+"); // Abre o arquivo para escrever com o ponteiro no inicio
         $escreve = fwrite($fp, $string_geral);
 
@@ -7654,18 +7654,18 @@ function geraCodigoBanco($numero) {
               $linha = fgets($arquivo6, 1024);
               $segmento =  substr($linha, 13, 1);
               $nosso_numero =  substr($linha, 37, 15);
-              $servico =  substr($linha, 15, 2);
-              if ($segmento == "T") {
-                       print_r($nosso_numero);    
-                     echo "<br>";                           
+              $servico =  substr($linha, 15, 2); 
+              if ($segmento == "T") { 
+                   $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
+                   $mensagem = $this->servicosicoob($servico);
+                   if($paciente_contrato_parcelas_id != ""){
+                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
+                   }         
                }
-          } 
-          
-          die();
-//             if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '')) {    
-//        
-//           }
-            
+          }                
+//        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
+             unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
+//        } 
             redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
            
         }
@@ -7842,8 +7842,210 @@ function geraCodigoBanco($numero) {
      $this->load->View('ambulatorio/impressaorelatorioobscontrato', $data); 
                             
     } 
-                            
+            
+    
+  function listarparcelanossonumero($nossonumero){
+     
+     $parcelas =   $this->guia->listarparcelanossonumero();
+     foreach($parcelas as $item){
+       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
+       $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' ');   
+       if(substr($nossonumero, 0, 9) == substr($formata_nosso_numero, 0, 9)){ 
+             return   $item->paciente_contrato_parcelas_id;                           
+       }                 
+       
+     }
+  }
   
+  function servicosicoob($cod){
+        switch ($cod) {
+         case 02:
+             return "Entrada Confirmada";
+             break;
+         case 03:
+             return "Entrada Rejeitada";
+             break;
+         case 04:
+             return "Transferência de Carteira/Entrada";
+             break;
+         case 05:
+             return "Transferência de Carteira/Baixa";
+             break;
+         case 06:
+             return "Liquidação";
+             break;
+         case 07:
+             return "Confirmação do Recebimento da Instrução de Desconto";
+             break;
+         case 08:
+             return "Confirmação do Recebimento do Cancelamento do Desconto";
+             break;
+         case 09:
+             return "Baixa";
+             break;  
+         case 11:
+             return " Títulos em Carteira (Em Ser)";
+             break;
+         case 12:
+             return "Confirmação Recebimento Instrução de Abatimento";
+             break;
+         case 13:
+             return "Confirmação Recebimento Instrução de Cancelamento Abatimento";
+             break;
+         case 14:
+             return " Confirmação Recebimento Instrução Alteração de Vencimento";
+             break;
+         case 15:
+             return "Franco de Pagamento";
+             break; 
+         case 17:
+             return "Liquidação Após Baixa ou Liquidação Título Não Registrado";
+             break; 
+         case 19:
+             return "Confirmação Recebimento Instrução de Protesto";
+             break;
+         case 20:
+             return "Confirmação Recebimento Instrução de Sustação/Cancelamento de Protesto";
+             break; 
+         case 23:
+             return "Remessa a Cartório (Aponte em Cartório)";
+             break;
+         case 24:
+             return " Retirada de Cartório e Manutenção em Carteira";
+             break;
+         case 25:
+             return "Protestado e Baixado (Baixa por Ter Sido Protestado)";
+             break;
+         case 26:
+             return " Instrução Rejeitada";
+             break;
+         case 27:
+             return " Confirmação do Pedido de Alteração de Outros Dados";
+             break;
+         case 28:
+             return " Débito de Tarifas/Custas";
+             break;
+         case 29:
+             return "Ocorrências do Pagador";
+             break;
+         
+         case 30:
+             return " Alteração de Dados Rejeitada";
+             break; 
+         
+         case 33:
+             return "Confirmação da Alteração dos Dados do Rateio de Crédito";
+             break;
+         
+         case 34:
+             return "Confirmação do Cancelamento dos Dados do Rateio de Crédito";
+             break;
+         
+         case 35:
+             return "Confirmação do Desagendamento do Débito Automático";
+             break;
+         
+         case 36:
+             return "Confirmação de envio de e-mail/SMS";
+             break;
+         
+         case 37:
+             return "Envio de e-mail/SMS rejeitado";
+             break;
+         
+         case 38:
+             return "Confirmação de alteração do Prazo Limite de Recebimento (a data deve ser";
+             break;
+         
+         case 39:
+             return "Confirmação de Dispensa de Prazo Limite de Recebimento";
+             break;
+         
+         case 40:
+             return "Confirmação da alteração do número do título dado pelo Beneficiário";
+             break;
+         
+         case 41:
+             return "Confirmação da alteração do número controle do Participante";
+             break;
+         
+         case 42:
+             return "Confirmação da alteração dos dados do Pagador";
+             break; 
+         case 43:
+             return "Confirmação da alteração dos dados do Pagadorr/Avalista";
+             break;
+         case 44:
+             return " Título pago com cheque devolvido";
+             break;
+         case 45:
+             return "Título pago com cheque compensado";
+             break;
+         case 46:
+             return "Instrução para cancelar protesto confirmada";
+             break;
+         case 47:
+             return "Instrução para protesto para fins falimentares confirmada";
+             break;
+         case 48:
+             return " Confirmação de instrução de transferência de carteira/modalidade de cobrança";
+             break;
+         case 49:
+             return "Alteração de contrato de cobrança";
+             break;
+         case 50:
+             return "Título pago com cheque pendente de liquidação";
+             break;
+         case 51:
+             return "Título DDA reconhecido pelo Pagador";
+             break;
+         case 52:
+             return "Título DDA não reconhecido pelo Pagador";
+             break;
+         case 53:
+             return "Título DDA recusado pela CIP";
+             break;
+         case 54:
+             return "Confirmação da Instrução de Baixa/Cancelamento de Título Negativado sem Protesto";
+             break;
+         case 55:
+             return "Confirmação de Pedido de Dispensa de Multa";
+             break;
+         case 56:
+             return " Confirmação do Pedido de Cobrança de Multa";
+             break;
+         case 57:
+             return "Confirmação do Pedido de Alteração de Cobrança de Juros";
+             break;
+         case 58:
+             return "Confirmação do Pedido de Alteração do Valor/Data de Desconto";
+             break;
+         case 59:
+             return " Confirmação do Pedido de Alteração do Beneficiário do Título";
+             break;
+         case 60:
+             return "Confirmação do Pedido de Dispensa de Juros de Mora";
+             break;
+         case 80:
+             return " Confirmação da instrução de negativação";
+             break;
+         case 85:
+             return "Confirmação de Desistência de Protesto";
+             break;
+         case 86:
+             return "Confirmação de cancelamento do Protesto";
+             break;
+         default:
+             return "Erro desconhecido";
+         
+         
+        }
+      
+      
+      
+  }
+    
+    
 }
 
 

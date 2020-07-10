@@ -2722,7 +2722,10 @@ ORDER BY p.nome";
                             pcp.data_atualizacao,
                             fp.comissao_vendedor_mensal,
                             fp.comissao_gerente_mensal,
-                            o.nome as vendedor');
+                            o.nome as vendedor,
+                            fp.percetual_comissao_vendedor_mensal,
+                            fp.percetual_comissao_vendedor,
+                            pc.paciente_contrato_id');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
@@ -2731,12 +2734,10 @@ ORDER BY p.nome";
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcp.ativo', 'false');
-        $this->db->where('pcp.excluido', 'false');
-
+        $this->db->where('pcp.excluido', 'false'); 
         if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
             $this->db->where_in('p.vendedor', @$_POST['vendedor']);
-        }
-
+        } 
         //$this->db->where('p.vendedor', $_POST['vendedor']);
         // $this->db->where("pcp.data >=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         // $this->db->where("pcp.data <=", date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
@@ -12809,10 +12810,84 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->where('oc.data_cadastro >=', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['txtdata_inicio'])))." 00:00:00");
         $this->db->where('oc.data_cadastro <=', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['txtdata_fim'])))." 23:59:59");
         $this->db->where('oc.ativo', 't');
-        return $this->db->get()->result();
+        return $this->db->get()->result(); 
+    }
+    
+    
+    function listarparcelanossonumero(){  
+        
+         $this->db->select('valor, pc.ativo as contrato,
+                            cp.data, 
+                            cp.ativo, 
+                            cp.manual,
+                            cp.debito,
+                            pc.paciente_id,
+                            cp.observacao,
+                            cpi.pdf, 
+                            url, 
+                            invoice_id, 
+                            cp.taxa_adesao,
+                            cp.data_cartao_iugu, 
+                            cp.pago_cartao, 
+                            cpi.status,cpi.codigo_lr,
+                            cp.paciente_contrato_id, 
+                            cp.paciente_contrato_parcelas_id,
+                            paciente_contrato_parcelas_iugu_id,
+                            p.credor_devedor_id,
+                            p.empresa_id,
+                            cp.empresa_iugu,
+                            pc.pago_todos_iugu,
+                            gpi.link as link_gerencianet,
+                            gpi.pdf as pdf_gerencianet,
+                            gpi.charge_id,
+                            gpi.carne,
+                            gpi.link_carne,
+                            gpi.cover_carne,
+                            gpi.pdf_carnet,
+                            gpi.pdf_cover_carne,
+                            gpi.carnet_id,
+                            gpi.num_carne,
+                            cp.paciente_dependente_id
+                            ');
+        $this->db->from('tb_paciente_contrato_parcelas cp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas_gerencianet gpi', 'gpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left'); 
+        $this->db->where("cp.excluido", 'f');
+        $this->db->where("cp.ativo", 't'); 
+        $this->db->orderby("data"); 
+        $return = $this->db->get()->result();
+        return $return;
         
         
     }
+    
+    
+    function registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem){
+        $horario = date('Y-m-d H:i:s');
+        $operador  = $this->session->userdata('operador_id'); 
+        $this->db->set('data_cadastro',$horario);
+        $this->db->set('operador_cadastro',$operador);
+        $this->db->set('nossonumero',$nosso_numero);
+        $this->db->set('mensagem',$mensagem);
+        $this->db->set('cod_servico',$servico);
+        $this->db->set('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+        $this->db->insert('tb_paciente_contrato_parcelas_sicoob');
+        
+    }
+    
+    function listarsituacaoparcelasicoob($paciente_contrato_parcelas_id){
+        
+        $this->db->select('*');
+        $this->db->from('tb_paciente_contrato_parcelas_sicoob');
+        $this->db->where('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id); 
+        $this->db->orderby('paciente_contrato_parcelas_sicoob_id','desc');
+        return $this->db->get()->result(); 
+       
+    }
+    
+    
     
 }
 

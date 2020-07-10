@@ -336,14 +336,11 @@ class formapagamento_model extends Model {
         }
         if (count($return2) > 0) {
             return -12;
-        }
-
+        } 
         $horario = date("Y-m-d H:i:s");
-        $operador_id = $this->session->userdata('operador_id');
-
+        $operador_id = $this->session->userdata('operador_id'); 
         $this->db->set('data_cadastro', $horario);
         $this->db->set('operador_cadastro', $operador_id);
-
         $this->db->set('plano_id', $_POST['plano_id']);
         $this->db->set('forma_rendimento_id', $_POST['forma_rendimento_id']);
         $this->db->set('valor_comissao', str_replace(",", ".", str_replace(".", "", $_POST['valor_comissao'])));
@@ -476,6 +473,24 @@ class formapagamento_model extends Model {
             $this->db->set('valoradcional', str_replace(",", ".", str_replace(".", "", $_POST['valoradcional'])));
             $this->db->set('parcelas', str_replace(".", "", $parcelas));
             $this->db->set('conta_id', $_POST['conta']);
+             if(isset($_POST['percetual_comissao_vendedor_mensal'])){
+                $this->db->set('percetual_comissao_vendedor_mensal','t');
+             }else{
+                $this->db->set('percetual_comissao_vendedor_mensal','f');    
+             }
+            
+             if(isset($_POST['percetual_comissao_vendedor'])){
+                $this->db->set('percetual_comissao_vendedor','t');
+             }else{
+                 $this->db->set('percetual_comissao_vendedor','f');      
+             }
+             
+             if(isset($_POST['percetual_comissao'])){
+                $this->db->set('percetual_comissao','t');
+             }else{
+                 $this->db->set('percetual_comissao','f');      
+             }
+            
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
 
@@ -624,7 +639,10 @@ class formapagamento_model extends Model {
                                qtd_dias,
                                nome_impressao,
                                quantidade_para_uso,
-                               dias_carencia');
+                               dias_carencia,
+                               percetual_comissao_vendedor_mensal,
+                               percetual_comissao_vendedor,
+                               percetual_comissao');
             $this->db->from('tb_forma_pagamento');
             $this->db->where("forma_pagamento_id", $forma_pagamento_id);
             $query = $this->db->get();
@@ -672,6 +690,9 @@ class formapagamento_model extends Model {
             $this->_nome_impressao = $return[0]->nome_impressao;
             $this->_quantidade_para_uso = $return[0]->quantidade_para_uso;
             $this->_dias_carencia = $return[0]->dias_carencia;
+            $this->_percetual_comissao_vendedor_mensal = $return[0]->percetual_comissao_vendedor_mensal;
+            $this->_percetual_comissao_vendedor = $return[0]->percetual_comissao_vendedor;
+            $this->_percetual_comissao = $return[0]->percetual_comissao;
         } else {
             $this->_forma_pagamento_id = null;
         }

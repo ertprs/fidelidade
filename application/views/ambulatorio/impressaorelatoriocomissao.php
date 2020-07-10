@@ -72,52 +72,57 @@
                 </tr>
             </thead>
             <hr>
-            <tbody>
-     
+            <tbody> 
                 <?php
                 $valortotal = 0;
                 $total = 0;
                 $totalporvendedor = 0;
                 $valorvendedortotal = 0;
+                $valorvtotalcomissao = 0;
+                $valorvtotalcomissaoGERAL = 0;
                 $pegarnomevendedor = 0;
                 $totaldepedente = 0;
-//                 echo "<pre>";
+//                echo "<pre>";
 //                 print_r($relatorio);
-//                 die();
-                foreach ($relatorio as $item) :   
-                    
-                    $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id);
+//                   die();
+             
+                foreach ($relatorio as $item) :
+                 $pagamento = $this->paciente->listarparcelas($item->paciente_contrato_id);
+                 $comissao = 0;   
                  
+                 if(@$pagamento[0]->associado_empresa_cadastro_id > 0){
+                     $pagamento[0]->valor = $pagamento[0]->valor_empresa; 
+                 }
+                
+                 $dependentes =  $this->paciente->listardependentescontrato($item->paciente_contrato_id); 
                  foreach($dependentes as $item2){ 
-                                 if($item2->situacao == "Dependente"){  
-                                     $totaldepedente += $item2->valoradcional;
-                                             @$valor_dependentes{$item->paciente_contrato_id} += $item2->valoradcional;  
-                                 }
-                             } 
-//                   print_r($valor_dependentes);
+                    if($item2->situacao == "Dependente"){  
+                        $totaldepedente += $item2->valoradcional;
+                                @$valor_dependentes{$item->paciente_contrato_id} += $item2->valoradcional;  
+                     }
+                 } 
+//               print_r($valor_dependentes);
                              
                     if($_POST['tipopesquisa'] == '2'){ 
                         if($pegarnomevendedor == 0){
                             $operadorvendedor = $item->vendedor;
                             $pegarnomevendedor++;
-                        }
-    
+                        } 
                         if($item->vendedor != $operadorvendedor){
                             ?>
-                        <tr class="cinza">
+                    <tr class="cinza">
                         <td COLSPAN = 4><font size="-1">TOTAL VENDEDOR: <?=$totalporvendedor?></td>
+                        <td style='text-align: center;' ><font size="-1">VALOR TOTAL COMISSÃO: <?= number_format($valorvtotalcomissao, 2, ',', '.'); ?></td>
                         <!-- <td COLSPAN = 3></td> -->
                         <td style='text-align: center;' ><font size="-1">VALOR TOTAL VENDEDOR: <?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
-                    </tr>
-                                            
-                            <?
+                    </tr>                 
+                    <?
                             $valorvendedortotal = 0;
+                            $valorvtotalcomissao = 0; 
                             $totalporvendedor = 0;
                             }
     
-                        }
-
-
+                        }  
                     $total++;
                     $totalporvendedor++;
                     if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
@@ -126,23 +131,30 @@
                         $valor_comissao = $item->comissao ;
                     }                                     
                     $valortotal = $valortotal + $valor_comissao;
-                    $valorvendedortotal = $valorvendedortotal + $valor_comissao; 
-
+                    $valorvendedortotal = $valorvendedortotal + $valor_comissao;  
+                     
+                    if(isset($pagamento[0]->percetual_comissao) && $pagamento[0]->percetual_comissao == "t"){
+                       if(isset($pagamento[0]->valor)){ 
+                         $comissao  = ($pagamento[0]->valor * $item->comissao) /100;  
+                       }    
+                    }else{ 
+                         $comissao  = $item->comissao;   
+                    }  
+                    $valorvtotalcomissao += $comissao;
+                     $valorvtotalcomissaoGERAL +=  $comissao;
                     ?>                      
                     <tr>
-                        <td ><font size="-2"><?= $item->paciente; ?></td>
-                        <td ><font size="-2"><?= $item->plano; ?></td>
-                        <td ><font size="-2"><?= $item->vendedor; ?></td>
-                        <td ><font size="-2"><?= $item->forma_rendimento; ?></td>
-                        <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao + @$valor_dependentes{$item->paciente_contrato_id}, 2, ',', '.'); ?></td>
+                        <td><font size="-2"><?= $item->paciente; ?></td>
+                        <td><font size="-2"><?= $item->plano; ?></td>
+                        <td><font size="-2"><?= $item->vendedor; ?></td>
+                        <td><font size="-2"><?= $item->forma_rendimento; ?></td>
+                        <td style='text-align: center;' ><font size="-2"><?= number_format($comissao, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($valor_comissao, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_gerente, 2, ',', '.'); ?></td>
                         <td style='text-align: center;' ><font size="-2"><?= number_format($item->comissao_seguradora, 2, ',', '.'); ?></td>
-                    </tr>
-
-                    <?   
-                    
-                    if($_POST['tipopesquisa'] == '2'){
+                    </tr> 
+                <? 
+                if($_POST['tipopesquisa'] == '2'){
                     if($operadorvendedor != $item->vendedor){
                         $operadorvendedor = $item->vendedor; 
                     }
@@ -152,13 +164,14 @@
                 if($_POST['tipopesquisa'] == '2'){?>
                 <tr class="cinza">
                         <td COLSPAN = 4><font size="-1">TOTAL VENDEDOR: <?=$totalporvendedor?></td>
+                        <td style='text-align: center;' ><font size="-1">VALOR TOTAL COMISSÃO: <?= number_format($valorvtotalcomissao, 2, ',', '.'); ?> </td>
                         <!-- <td COLSPAN = 3></td> -->
                         <td style='text-align: center;' ><font size="-1">VALOR TOTAL VENDEDOR: <?= number_format($valorvendedortotal, 2, ',', '.'); ?></td>
-                </tr>
-
+                </tr> 
                 <?}?> 
                     <tr>
                         <td COLSPAN = 4><font size="-1">TOTAL: <?=$total?></td>
+                         <td style='text-align: center;' ><font size="-1">VALOR TOTAL: <?= number_format($valorvtotalcomissaoGERAL, 2, ',', '.');  ?> </td>
                         <!-- <td COLSPAN = 3></td> -->
                         <td style='text-align: center;' ><font size="-1">VALOR TOTAL: <?= number_format($valortotal, 2, ',', '.'); ?></td>
                     </tr>

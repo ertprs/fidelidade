@@ -4466,8 +4466,7 @@ class paciente_model extends BaseModel {
         $this->db->where('cp.excluido','f');
         $this->db->where('cp.ativo','f');
         $return = $this->db->get();
-        return $return->result();
-         
+        return $return->result(); 
     }
     
     
@@ -4908,6 +4907,27 @@ class paciente_model extends BaseModel {
          $this->db->where('paciente_id',$paciente_id);
          $this->db->update('tb_paciente');
    }
+   
+   
+    function listarparcelas($contrato_id){  
+        $this->db->select('cp.valor, data,cp.taxa_adesao, cp.ativo, paciente_contrato_parcelas_id, fp.nome as plano, multa_atraso, juros, cp.observacao,cp.datas_json,fp.percetual_comissao,pc.associado_empresa_cadastro_id,qf.valor as valor_empresa,fp.percetual_comissao_vendedor');
+        $this->db->from('tb_paciente_contrato_parcelas cp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left'); 
+        $this->db->join('tb_qtd_funcionarios_empresa qf','qf.forma_pagamento_id  = pc.plano_id','left');
+        $this->db->join('tb_paciente p','pc.paciente_id = p.paciente_id','left');
+        $this->db->where("cp.paciente_contrato_id", $contrato_id);  
+        $this->db->orderby("data");
+        $this->db->where('cp.excluido','f');
+        $this->db->where('pc.ativo','t');
+        $this->db->where("(cp.taxa_adesao = 'true' or  pc.associado_empresa_cadastro_id is not null)");
+//        $this->db->where('cp.ativo','f');
+        $return = $this->db->get();
+        return $return->result(); 
+        
+        
+    } 
+   
    
  }
 
