@@ -48,7 +48,7 @@
                 <td><?= $item->operador; ?></td>
             </tr>
             <?
-            }
+             }
             }
             ?>
             <tr>
