@@ -27,6 +27,21 @@
                 <fieldset>
 
                     <dl class="dl_desconto_lista">
+
+                        <dt>
+                            <label>Status</label>
+                        </dt>
+
+                        <select name="status" required>
+                        <option value="">Selecione</option>
+                        <? foreach($status as $item){?>
+                            <option value="<?=$item->status_id?>" 
+                            <? if ($pagamento['0']->status_id == $item->status_id):echo 'selected'; 
+                            endif;?>>
+                            <?=$item->nome?></option>
+                        <? } ?>
+                        </select>
+                        
                         <dt>
                             <label>Obsevação</label>
                         </dt>

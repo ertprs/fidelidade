@@ -770,7 +770,8 @@ if($_POST['tipopaciente'] == 'dependente'){
                             pcp.parcela,
                             pcp.observacao,
                             pcp.data,
-                            pcp.data_cadastro');
+                            pcp.data_cadastro,
+                            pcp.status_id');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
         $this->db->orderby('pcp.parcela');
@@ -7214,6 +7215,7 @@ AND data <= '$data_fim'";
             $this->db->set('data_atualizacao', $horario);
             $this->db->set('operador_atualizacao', $operador_id);
             $this->db->set('observacao', $_POST['observacao']);
+            $this->db->set('status_id', $_POST['status']);
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->update('tb_paciente_contrato_parcelas');
             $erro = $this->db->_error_message();

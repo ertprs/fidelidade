@@ -37,6 +37,7 @@ class Guia extends BaseController {
         $this->load->model('seguranca/operador_model', 'operador_m');
         $this->load->model('ambulatorio/GExtenso', 'GExtenso');
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+        $this->load->model('ambulatorio/manterstatus_model', 'manterstatus');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -1220,6 +1221,7 @@ class Guia extends BaseController {
         $data['paciente_id'] = $paciente_id;
         $data['contrato_id'] = $contrato_id;
         $data['pagamento'] = $this->guia->listarparcelaobservacao($paciente_contrato_parcelas_id);
+        $data['status'] = $this->manterstatus->listartodos();
 //        var_dump($data['pagamento']); die;
         $this->load->View('ambulatorio/alterarobservacaopagamento-form', $data);
     }

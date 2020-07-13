@@ -34,6 +34,11 @@ class pacientes extends BaseController {
         $this->loadView('cadastros/pacientes-lista', $data);
     }
 
+    public function gerenciarcobranca($limite = 50){
+        $data["limite_paginacao"] = $limite;
+        $this->loadView('cadastros/gerenciarcobranca-lista', $data);
+    }
+
     public function pesquisarsubstituir($args = array()) {
         $data['paciente_temp_id'] = $args;
         $this->loadView('cadastros/pacientes-listasubstituir', $data);
