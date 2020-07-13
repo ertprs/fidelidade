@@ -981,7 +981,7 @@ ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao SET DEFAULT
 
 CREATE TABLE ponto.tb_paciente_contrato_parcelas_sicoob
 (
-  paciente_contrato_parcelas_sicoob_id integer NOT NULL ,
+  paciente_contrato_parcelas_sicoob_id serial NOT NULL ,
   data_cadastro timestamp without time zone,
   operador_cadastro integer,
   cod_servico integer,
