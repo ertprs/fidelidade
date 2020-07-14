@@ -137,6 +137,57 @@ class paciente_model extends BaseModel {
         return $this->db;
     }
 
+
+    function listargerenciarcobranca($args = array()) {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+        // var_dump($perfil_id);die;
+        $this->db->select('p.*, m.nome as cidade, m.estado, pc.paciente_contrato_id');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+        $this->db->where("(p.ativo ='true' or p.reativar = 't' )");
+        $this->db->where('p.situacao', 'Titular');
+        $this->db->where('pc.ativo', 't');
+
+
+        // $this->db->join('tb_operador opv','opv.operador_id = p.vendedor','left');
+        // $this->db->join('tb_operador opi','opi.operador_id = p.pessoaindicacao','left');
+
+
+
+        if ($args) {
+            if (isset($args['prontuario']) && strlen($args['prontuario']) > 0) {
+                $this->db->where('paciente_id', $args['prontuario']);
+//                $this->db->where('ativo', 'true');
+            } 
+            elseif (isset($args['nome']) && strlen($args['nome']) > 0) {
+                $this->db->where('p.nome ilike', '%' . $args['nome'] . '%');
+            } 
+            
+            if (isset($args['cpf']) && strlen($args['cpf']) > 0) {   
+                $args['cpf'] = str_replace("-", "", str_replace(".", "", $_GET['cpf']));
+                $this->db->where('p.cpf ilike',"%".$args['cpf']."%");   
+                // $this->db->where('p.ativo', 'true');          
+           }
+        }
+
+
+
+        return $this->db;
+    }
+
+    function ultimaparcelapaga($contrato_id){
+        $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('ativo', 'f');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
+        $this->db->limit('1');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function listardados($paciente_id) {
         $this->db->select('pc.pago_todos_iugu,p.empresa_id,op.nome as vendedor_nome,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, fr.nome as pagamento,p.cpf,p.data_cadastro, ind.nome as nome_indicacao');
         $this->db->from('tb_paciente p');

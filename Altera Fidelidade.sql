@@ -1001,3 +1001,22 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas_sicoob
 --10/07/2020
 ALTER TABLE ponto.tb_empresa ADD COLUMN contratos_inativos boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN contratos_inativos SET DEFAULT false;
+
+
+CREATE TABLE ponto.tb_status_parcela
+(
+  status_id serial NOT NULL PRIMARY KEY,
+  nome varchar(100),
+  ativo boolean DEFAULT TRUE,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_status_parcela
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN status_id INTEGER;

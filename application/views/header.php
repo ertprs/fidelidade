@@ -304,6 +304,8 @@ $data['permissao'] = $this->db->get()->result();
                                         <? }
                                         ?>
 
+                                        <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/gerenciarcobranca">Gerenciar Cobranças</a></span></li>
+
 
 
                                     <? } ?>
@@ -441,7 +443,8 @@ $data['permissao'] = $this->db->get()->result();
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/motivocancelamento">Motivo cancelamento</a></span></ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/indicacao">Manter indica&ccedil;&atilde;o</a></span></ul>
                                         <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/errosgerencianet">Manter Erros</a></span></ul>
-                                        <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarenviosparauigu">Manter envio cartão Iugu</a></span></ul>                                      
+                                        <ul><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/listarenviosparauigu">Manter envio cartão Iugu</a></span></ul>
+                                        <ul><span class="file"><a href="<?= base_url() ?>ambulatorio/manterstatus">Manter Status</a></span></ul>                             
                                     <? } ?>
 
                                 </li>
