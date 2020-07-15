@@ -144,7 +144,8 @@ class Guia extends BaseController {
     }
 
     function pesquisar($paciente_id) {
-                            
+        
+        $data['status'] = $this->manterstatus->listartodos();
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
 
         $data['permissao'] = $this->empresa->listarpermissoes();

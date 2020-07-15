@@ -12350,6 +12350,7 @@ ORDER BY ae.agenda_exames_id)";
         $horario = date('Y-m-d H:i:s');
         $operador = $this->session->userdata('operador_id');
         $this->db->set('observacao', $_POST['observacao']);
+        $this->db->set('status_id', $_POST['status']);
         $this->db->set('paciente_id', $paciente_id);
         $this->db->set('data_cadastro', $horario);
         $this->db->set('operador_cadastro', $operador);

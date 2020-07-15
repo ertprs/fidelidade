@@ -332,6 +332,19 @@ if (count($exames) > 0) {
                 <form action="<?= base_url() ?>ambulatorio/guia/gravarobservacaopaciente/<?= $paciente[0]->paciente_id; ?>" method="post" target="_blank">
                     <table>
                         <tr>
+                        <td><label><b>STATUS</b></label></td>
+
+                        <td> 
+                            <select name="status" required>
+                        <option value="">Selecione</option>
+                        <? foreach($status as $item){?>
+                            <option value="<?=$item->status_id?>">
+                            <?=$item->nome?></option>
+                        <? } ?>
+                        </select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td> <textarea type="text" name="observacao" id="observacao" style=""></textarea>
                             </td>
                         </tr>
