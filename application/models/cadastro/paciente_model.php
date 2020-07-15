@@ -158,7 +158,7 @@ class paciente_model extends BaseModel {
 
         if ($args) {
             if (isset($args['prontuario']) && strlen($args['prontuario']) > 0) {
-                $this->db->where('paciente_id', $args['prontuario']);
+                $this->db->where('p.paciente_id', $args['prontuario']);
 //                $this->db->where('ativo', 'true');
             } 
             elseif (isset($args['nome']) && strlen($args['nome']) > 0) {
@@ -188,11 +188,23 @@ class paciente_model extends BaseModel {
         return $return;
     }
 
-    function ultimaparcelapagapormes($contrato_id){
+    function ultimaparcelapagapormes($contrato_id, $mes = NULL){
         $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('ativo', 'f');
         $this->db->where('paciente_contrato_id', $contrato_id);
+        if($mes != 0){
+
+            $ano = date('Y');
+            $ultimo_dia = cal_days_in_month(CAL_GREGORIAN, $mes , $ano);
+            // echo $ultimo_dia;
+
+            $data_inicio = $ano.'-'.$mes.'-01';
+            $data_final = $ano.'-'.$mes.'-'.$ultimo_dia;
+
+            $this->db->where('data >=', $data_inicio);
+            $this->db->where('data <=', $data_final);
+        }
         $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
         $this->db->limit('1');
         $return = $this->db->get()->result();

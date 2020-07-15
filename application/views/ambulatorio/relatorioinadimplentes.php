@@ -87,10 +87,10 @@
                         </dd>
 
                         <dt>
-                            <label>Ultima Parcela Paga</label>
+                            <label>Ultimo Mês Pago</label>
                         </dt>
                         <dd>
-                            <input type="number" name="ultimaparcela" id="ultimaparcela" min="0" value="" />
+                            <input type="number" name="ultimaparcela" id="ultimaparcela" min="0" max="12" value="" />
                         </dd>
                     </div>                    
                     <div id="bairrodiv">

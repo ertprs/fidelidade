@@ -62,9 +62,16 @@
             </thead>
             <tbody>
                 <?php
+                                    if ($_POST['ultimaparcela'] < 10) {
+                                        $_POST['ultimaparcela'] = str_replace('0', '', $_POST['ultimaparcela'] );  
+                                        $mes = "0".$_POST['ultimaparcela'];  
+                                    }else{
+                                         $mes = $_POST['ultimaparcela']; 
+                                    } 
                 $total = 0;
                 $qtd_pacientes = 0;
                 $qtd_parcelas = 0;
+                $totalnovosla = 0;
                 foreach ($relatorio as $item) :
                     // echo '<pre>';
                     // print_r($relatorio);
@@ -72,12 +79,33 @@
 
 
                     $parcela = $this->paciente->ultimaparcelapagapormes($item->paciente_contrato_id);
-                        
-                    if($_POST['ultimaparcela'] != ''){
-                        if(@$parcela[0]->parcela != $_POST['ultimaparcela']){
+
+                    $ultimomes = $this->paciente->ultimaparcelapagapormes($item->paciente_contrato_id, $mes);
+                       
+
+                    
+                    if($_POST['ultimaparcela'] != 0){
+                        if(count($ultimomes) == 0){
                             continue;
                         }
+
+                        $ano = date('Y');
+                        $dia = cal_days_in_month(CAL_GREGORIAN, $mes , $ano);
+                        $data = $ano.'-'.$mes.'-'.$dia;
+
+                        if($parcela[0]->data > $data){
+                            continue;
+                        }
+
+                        $data = $ano.'-'.$mes.'-01';
+                        if($parcela[0]->data < $data){
+                            continue;
+                        }
+
+
                     }
+
+
 
                     if ($cont_parcelas{$item->paciente_id}{$item->valor} >= $parcelas) {
                         $total = $total + $item->valor;
