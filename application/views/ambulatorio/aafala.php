@@ -9,7 +9,6 @@ onclick="get_id('1','pt','fm');">
 <a href="javascript:void(0);" 
 onclick="get_id('1','pt','fm');">
 Ouça este texto</a></div>-->
-
 <?
 
 $paciente = $chamada[0]->paciente;
