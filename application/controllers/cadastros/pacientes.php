@@ -78,6 +78,10 @@ class pacientes extends BaseController {
         $data['listarvendedor'] = $this->paciente->listarvendedor();
         $data['parceiros'] = $this->exame->listarparceiros();
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
+        $data['empresa'] = $this->paciente->listardadosempresa($this->session->userdata('empresa_id'));
+        // echo '<pre>';
+        // print_r($data['empresa']);
+        // die;
         $this->loadView('cadastros/paciente-fichadependente_1', $data);
     }
 

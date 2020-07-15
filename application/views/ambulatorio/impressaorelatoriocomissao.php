@@ -88,6 +88,8 @@
              
                 foreach ($relatorio as $item) :
                  $pagamento = $this->paciente->listarparcelas($item->paciente_contrato_id);
+                    //  echo '<pre>';
+                    //  print_r($pagamento);
                  $comissao = 0;   
                  
                  if(@$pagamento[0]->associado_empresa_cadastro_id > 0){
@@ -101,7 +103,8 @@
                                 @$valor_dependentes{$item->paciente_contrato_id} += $item2->valoradcional;  
                      }
                  } 
-//               print_r($valor_dependentes);
+            //      echo '<pre>';
+            //    print_r($valor_dependentes);
                              
                     if($_POST['tipopesquisa'] == '2'){ 
                         if($pegarnomevendedor == 0){
@@ -129,8 +132,14 @@
                         $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
                     }else{
                         $valor_comissao = $item->comissao ;
-                    }                                     
+                    }    
+                    // print_r($valor_comissao);                       
                     $valortotal = $valortotal + $valor_comissao;
+                    // echo '<pre>';
+                    // print_r($valortotal);
+                    // echo ' - ';
+                    // print_r($valor_comissao);
+                    // echo '<br>';
                     $valorvendedortotal = $valorvendedortotal + $valor_comissao;  
                      
                     if(isset($pagamento[0]->percetual_comissao) && $pagamento[0]->percetual_comissao == "t"){
