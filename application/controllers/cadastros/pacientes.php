@@ -565,9 +565,7 @@ class pacientes extends BaseController {
         
     }
 
-    function gravardependente() {
-  
-        
+    function gravardependente() {  
         if(!isset($_POST['cpf_responsavel'])){
 
             $verificarcpf = $this->paciente->verificarcpfpaciente($_POST['cpf']);
@@ -577,38 +575,44 @@ class pacientes extends BaseController {
                 $this->session->set_userdata(array("mensagem_erro"=>"Erro. CPF ja utilizado"));
                 $this->session->set_flashdata('message', $data['mensagem']);
                  redirect(base_url() . "cadastros/pacientes/novodependentecompleto2");
-            }
-
-        }
-
+            } 
+        } 
         $paciente_id = $this->paciente->gravardependente();
         // var_dump($paciente_id); die;
         $titular_id = $_POST['txtNomeid'];
         $empresa_p = $this->guia->listarempresa();
-        $titular_flag = $empresa_p[0]->titular_flag;
- 
-        $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O DEPENDENTE');
-     
-        $this->paciente->gravardependente2($paciente_id);
- 
+        $titular_flag = $empresa_p[0]->titular_flag; 
+        $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O DEPENDENTE'); 
+        $this->paciente->gravardependente2($paciente_id); 
         $contrato_id = $this->paciente->listarcontratotitular();
 
         // if ($this->session->userdata('cadastro') == 2) {
 
         //     $this->guia->geraparcelasdependente($paciente_id, $contrato_id);
-        // }
-
-        if ($_POST['financeiro_parceiro_id'] > 0) {
-
-            $parceiro_id = $_POST['financeiro_parceiro_id'];
-
+        // }  
+          if($_POST['financeiro_parceiro_id'] != ""){
+             $parceiro_post = $_POST['financeiro_parceiro_id'];
+          }else{
+             $parceiropadrao =  $this->parceiro->parceiropadrao(); 
+             if(count($parceiropadrao) > 0){
+                $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+             }else{
+               $parceiro_post = 0;  
+             }
+          }   
+        if ($_POST['financeiro_parceiro_id'] > 0) {  
             $parceiros = $this->paciente->listarparceirosurl($parceiro_id);
-            // var_dump($parceiros); die;
-
+            // var_dump($parceiros); die; 
             foreach ($parceiros as $key => $value) {
+                $parceiro_id = 0;
                 $retorno_paciente = $this->paciente->listardados($paciente_id);
+                
                 if ($titular_flag == 't') {
                     $retorno_paciente[0]->paciente_id = $titular_id;
+                }
+                
+                if($parceiro_post == $value->financeiro_parceiro_id){
+                  $parceiro_id = $value->convenio_id;
                 }
 
                 // echo '<pre>';
@@ -620,7 +624,8 @@ class pacientes extends BaseController {
                 // var_dump($url); die;
                 $postdata = http_build_query(
                         array(
-                            'body' => $json_paciente
+                            'body' => $json_paciente,
+                            'parceriamed_id' => $parceiro_id
                         )
                 );
 
@@ -632,8 +637,9 @@ class pacientes extends BaseController {
                 ));
 
                 $context = stream_context_create($opts);
-
-                $result = file_get_contents($url, false, $context);
+                if($value->endereco_ip != ""){
+                  $result = file_get_contents($url, false, $context);
+                }
                 // var_dump($result); die;
             }
         }
@@ -1283,26 +1289,28 @@ class pacientes extends BaseController {
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
 
-        $pacientes = $this->paciente->listartodospacientes();
+        $pacientes = $this->paciente->listartodospacientes(); 
+//         echo "<pre>";
+//         print_r($pacientes);
+//         echo count($pacientes);
+//         die;
 
-//        echo "<pre>";
-//        var_dump($pacientes);
-//        echo count($pacientes); 
-//        die;
-
-        foreach ($parceiros as $key => $value) {
-
+        foreach ($parceiros as $key => $value) {   
             foreach ($pacientes as $item) {
+                $parceiro_id = 0;
+                $parceiro_post = $item->parceiro_id;
                 $retorno_paciente = $this->paciente->listardados($item->paciente_id);
                 $json_paciente = json_encode($retorno_paciente);
-
                 // $fields = array('' => $_POST['body']);
                 $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
-
+                if($parceiro_post == $value->financeiro_parceiro_id){
+                  $parceiro_id = $value->convenio_id;
+                } 
 //             var_dump($url); die;
                 $postdata = http_build_query(
                         array(
-                            'body' => $json_paciente
+                            'body' => $json_paciente,
+                            'parceriamed_id' => $parceiro_id
                         )
                 );
 
@@ -1312,13 +1320,16 @@ class pacientes extends BaseController {
                         'header' => 'Content-type: application/x-www-form-urlencoded',
                         'content' => $postdata
                 ));
-                $context = stream_context_create($opts);
-                $result = file_get_contents($url, false, $context);
+              
+                  $context = stream_context_create($opts);
+                if($value->endereco_ip != ""){
+                   $result = file_get_contents($url, false, $context);
                 // var_dump($result); die; 
+                 }
             }
         }
 
-
+  redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
 //        if ($situacao == 'Titular') {
 //            redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
 //        } else {
@@ -1504,29 +1515,26 @@ class pacientes extends BaseController {
         $paciente_id = $this->paciente->gravardocumentos();
         $situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
-        $paciente_id = $this->paciente->gravar2($paciente_id);
-       
+        $paciente_id = $this->paciente->gravar2($paciente_id); 
         $r =  $this->paciente->gravar5($paciente_id);
         
-          $parceiros = $this->paciente->listarparceirosurl();
-          if($_POST['parceiro_id'] != ""){
-             $parceiro_post = $_POST['parceiro_id'];
-          }else{
-             $parceiropadrao =  $this->parceiro->parceiropadrao(); 
-             if(count($parceiropadrao) > 0){
-                $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
-             }else{
-               $parceiro_post = 0;  
-             }
-          }
-         
+        $parceiros = $this->paciente->listarparceirosurl();
+        if($_POST['parceiro_id'] != ""){
+           $parceiro_post = $_POST['parceiro_id'];
+        }else{
+           $parceiropadrao =  $this->parceiro->parceiropadrao(); 
+           if(count($parceiropadrao) > 0){
+              $parceiro_post = $parceiropadrao[0]->financeiro_parceiro_id;
+           }else{
+             $parceiro_post = 0;  
+           }
+        } 
           
         foreach ($parceiros as $key => $value) {
             $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
-            // $fields = array('' => $_POST['body']);
-            
+            // $fields = array('' => $_POST['body']); 
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
          
             if($parceiro_post == $value->financeiro_parceiro_id){
@@ -1553,10 +1561,9 @@ class pacientes extends BaseController {
             }
         //  var_dump($result); die;
         }
-        if ($r != "-1") {
-
-            $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O TITULAR');
-
+        
+        if ($r != "-1") { 
+            $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O TITULAR'); 
             $data['mensagem'] = 'Paciente gravado com sucesso';
         } else {
             $data['mensagem'] = 'Erro. Paciente com falta de informação';

@@ -4097,7 +4097,7 @@ class paciente_model extends BaseModel {
     }
 
     function listartodospacientes() {
-        $this->db->select('paciente_id');
+        $this->db->select('paciente_id,parceiro_id');
         $this->db->from('tb_paciente');
         $this->db->where('ativo', 't');
         return $this->db->get()->result();
