@@ -542,6 +542,32 @@ if($_POST['tipopaciente'] == 'dependente'){
         return $return->result();
     }
 
+
+    function relatorioauditoria(){
+        $this->db->select('ad.acao, ad.paciente_id, ad.data_cadastro, o.nome as operador, p.nome as paciente');
+        $this->db->from('tb_auditoria_cadastro ad');
+        $this->db->join('tb_operador o', 'ad.operador_cadastro = o.operador_id', 'left');
+        $this->db->join('tb_paciente p', 'ad.paciente_id = p.paciente_id', 'left');
+        $this->db->where('ad.ativo', 't');
+
+        if($_POST['operador'] != 0){
+            $this->db->where('operador_cadastro', $_POST['operador']);
+        }
+
+        if($_POST['txtdata_inicio'] != ""){
+            $this->db->where('ad.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");   
+           }
+        if( $_POST['txtdata_fim'] != ""){
+             $this->db->where('ad.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+           }
+        
+           $this->db->orderby('p.nome, ad.data_cadastro');
+
+
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function relatoriocadastro() {
         $this->db->select('p.nome,
                             p.paciente_id,
@@ -7224,6 +7250,37 @@ AND data <= '$data_fim'";
         } catch (Exception $exc) {
             return -1;
         }
+    }
+
+    function auditoriacadastro($paciente, $acao){
+        $horario = date("Y-m-d H:i:s");
+        $hora = date("H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+
+        $this->db->set('acao', $acao);
+        $this->db->set('paciente_id', $paciente);
+        $this->db->set('operador_cadastro', $operador_id);
+        $this->db->set('data_cadastro', $horario);
+        $this->db->insert('tb_auditoria_cadastro');
+
+    }
+
+    function informacaoparcela($parcela){
+        $this->db->select('data');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('paciente_contrato_parcelas_id', $parcela);
+        $return = $this->db->get()->result();
+
+        return $return;
+    }
+
+    function listaroperadores(){
+        $this->db->select('operador_id, nome');
+        $this->db->from('tb_operador');
+        $this->db->where('ativo', 't');
+        $return = $this->db->get()->result();
+
+        return $return;
     }
 
     function gravaralterarobservacaoavulsa($consulta_avulsa_id) {

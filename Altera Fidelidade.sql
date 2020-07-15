@@ -1020,3 +1020,19 @@ ALTER TABLE ponto.tb_status_parcela
   OWNER TO postgres;
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN status_id INTEGER;
+
+
+CREATE TABLE ponto.tb_auditoria_cadastro
+(
+  auditoria_id serial NOT NULL PRIMARY KEY,
+  paciente_id integer,
+  acao varchar(100),
+  ativo boolean DEFAULT TRUE,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_auditoria_cadastro
+  OWNER TO postgres;

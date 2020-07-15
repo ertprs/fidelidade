@@ -550,6 +550,18 @@ class Guia extends BaseController {
         $this->load->View('ambulatorio/impressaorelatoriodependentes', $data);
     }
 
+    function gerarelatorioauditoria() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatorioauditoria();
+
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
+
+        $this->load->View('ambulatorio/impressaorelatorioauditoria', $data);
+    }
+
     function relatoriovendedores() {
 //        $data['empresa'] = $this->guia->listarempresas();
         $this->loadView('ambulatorio/relatoriovendedores');
@@ -763,12 +775,20 @@ class Guia extends BaseController {
 
     function impressaoficha($paciente_contrato_id = NULL) {
         $this->load->plugin('mpdf');
+
+
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['exame'] = $this->guia->listarparcelas($paciente_contrato_id);
         $data['paciente'] = $this->guia->listarinformacoesContrato($paciente_contrato_id);
         $data['dependente'] = $this->guia->listardependentes($paciente_contrato_id);
         $data['titular_id'] = @$data['paciente'][0]->paciente_id;
+
+        // echo '<pre>';
+        // print_r($data['titular_id']);
+        // die;
+
+         $this->guia->auditoriacadastro($data['titular_id'], 'IMPRIMIU A CARTEIRA');
 
         $data['emissao'] = date("d-m-Y");
         foreach ($data['exame'] as $value) {
@@ -796,6 +816,9 @@ class Guia extends BaseController {
 
     function impressaocarteira($paciente_id, $contrato_id, $paciente_contrato_dependente_id = NULL, $paciente_titular = NULL) {
         $empresa_id = $this->session->userdata('empresa_id');
+
+        $this->guia->auditoriacadastro($paciente_id, 'IMPRIMIU A CARTEIRA');
+
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
         $data['dependente'] = $this->guia->listardependentes($contrato_id);
@@ -1111,6 +1134,9 @@ class Guia extends BaseController {
     }
 
     function excluir($paciente_id, $contrato_id) {
+
+        $this->guia->auditoriacadastro($paciente_id, 'EXCLUIU A DEPENDENTE DO CONTRATO '.$contrato_id);
+
         if ($this->guia->excluir($paciente_id, $contrato_id)) {
             $mensagem = 'Sucesso ao excluir a dependente';
         } else {
@@ -1122,6 +1148,12 @@ class Guia extends BaseController {
     }
 
     function confirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $depende_id = NULL) {
+        
+        $parcela = $this->guia->informacaoparcela($paciente_contrato_parcelas_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
+        $this->guia->auditoriacadastro($paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO '.$contrato_id.' DA PARCELA '.$data);
+
+
         $this->guia->verificarcredordevedorgeral($paciente_id);
         if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $depende_id)) {
             $mensagem = 'Sucesso ao confirmar pagamento';
@@ -1185,6 +1217,11 @@ class Guia extends BaseController {
     function cancelaragendamentocartao($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 
 //        var_dump($valor); die;
+
+        $parcela = $this->guia->informacaoparcela($paciente_contrato_parcelas_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
+        $this->guia->auditoriacadastro($paciente_id, 'CANCELOU O AGENDAMENTO DO '.$contrato_id.' DA PARCELA '.$data);
+
         if ($this->guia->cancelaragendamentocartao($paciente_contrato_parcelas_id, $contrato_id)) {
             $mensagem = 'Sucesso ao cancelar agendamento';
         } else {
@@ -1324,6 +1361,15 @@ class Guia extends BaseController {
     }
 
     function gravaralterarobservacao($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+
+        $parcelas = $this->guia->informacaoparcela($paciente_contrato_parcelas_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcelas[0]->data)));
+        // echo '<pre>';
+        // print_r($data);
+        // die;
+
+
+        $this->guia->auditoriacadastro($paciente_id, 'ALTEROU A OBSERVACAO DO CONTRATO '.$contrato_id.' DA PARCELA '.$data);
 
         $this->guia->gravaralterarobservacao($paciente_contrato_parcelas_id);
 //        $alert = "Observacao";
@@ -2074,6 +2120,7 @@ class Guia extends BaseController {
 
     function excluircontrato($paciente_id, $contrato_id) {
 //   
+        $this->guia->auditoriacadastro($paciente_id, 'EXCLUIU O CONTRATO '.$contrato_id);
 
         $ambulatorio_guia_id = $this->guia->excluircontrato($paciente_id, $contrato_id);
 
@@ -2089,8 +2136,16 @@ class Guia extends BaseController {
         redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
     }
 
+    function relatorioauditoria(){
+        $data['operadores'] = $this->guia->listaroperadores();
+        $this->loadView('ambulatorio/relatorioauditoria-form', $data);  
+    }
+
     function ativarcontrato($paciente_id, $contrato_id) {
 //        var_dump($contrato_id); die;
+
+        $this->guia->auditoriacadastro($paciente_id, 'REATIVOU O CONTRATO '.$contrato_id);
+
         $ambulatorio_guia_id = $this->guia->ativarcontrato($paciente_id, $contrato_id);
 
         redirect(base_url() . "ambulatorio/guia/pesquisar/$paciente_id");
@@ -2099,6 +2154,10 @@ class Guia extends BaseController {
     function excluirparcelacontrato($paciente_id, $contrato_id, $parcela_id, $carnet_id = NULL, $num_carne = NULL) {
 
         $this->cancelarparcelaexcluir($paciente_id, $contrato_id, $parcela_id);
+
+        $parcela = $this->guia->informacaoparcela($parcela_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
+        $this->guia->auditoriacadastro($paciente_id, 'EXCLUIU A PARCELA '.$data.' DO CONTRATO '.$contrato_id);
         
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);
         $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoparcelagerencianet($parcela_id);
@@ -2323,8 +2382,13 @@ class Guia extends BaseController {
     }
 
     function gravardependentes() {
+
         $paciente_id = $_POST['txtpaciente_id'];
         $contrato_id = $_POST['txtcontrato_id'];
+        $dependente_id = $_POST['dependente'];
+
+        $this->guia->auditoriacadastro($dependente_id, 'ADICIONOU O DEPENDENTE NO CONTRATO '.$contrato_id);
+
         $ambulatorio_guia_id = $this->guia->gravardependentes($paciente_id, $contrato_id);
         if ($this->session->userdata('cadastro') == 2) {
              $dependente_id = $_POST['dependente'];
@@ -4629,6 +4693,12 @@ class Guia extends BaseController {
     }
 
     function gravaralterarpagamento($paciente_contrato_parcelas_id, $paciente_id, $contrato_id) {
+
+        $parcela = $this->guia->informacaoparcela($paciente_contrato_parcelas_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
+
+        $this->guia->auditoriacadastro($paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO '.$contrato_id.' DA PARCELA '.$data);
+        
                             
         // chamando na propria tela  a função alterando a data 
 //        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
@@ -5211,7 +5281,10 @@ table tr:hover  #achadoERRO{
     }
 
     function cancelarparcela($paciente_id = NULL, $contrato_id = NULL, $paciente_contrato_parcelas_id = NULL) {
-
+        $parcela = $this->guia->informacaoparcela($paciente_contrato_parcelas_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
+        
+        $this->guia->auditoriacadastro($paciente_id, 'CANCELOU A PARCELA DO CONTRATO '.$contrato_id.' PARCELA '.$data);
 
         $this->guia->cancelarparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id);
 
@@ -5219,6 +5292,10 @@ table tr:hover  #achadoERRO{
     }
 
     function cancelarparcelaexcluir($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
+
+        $parcela = $this->guia->informacaoparcela($paciente_contrato_parcelas_id);
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
+         $this->guia->auditoriacadastro($paciente_id, 'CANCELOU A PARCELA DO CONTRATO '.$contrato_id.' PARCELA '.$data);
 
         $this->guia->cancelarparcela($paciente_id, $contrato_id, $paciente_contrato_parcelas_id);
     }

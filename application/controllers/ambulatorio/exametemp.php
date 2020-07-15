@@ -395,6 +395,9 @@ class Exametemp extends BaseController {
     }
 
     function excluirpaciente($paciente_id) {
+
+        $this->guia->auditoriacadastro($paciente_id, 'EXCLUIU O CLIENTE');
+
         $pagamento = $this->paciente->listarparcelaiuguexclusaopaciente($paciente_id);
 //        var_dump($pagamento); die;
         $empresa = $this->guia->listarempresa();

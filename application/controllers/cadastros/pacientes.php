@@ -331,6 +331,7 @@ class pacientes extends BaseController {
         $obj_paciente = new paciente_model($paciente_id);
         $data['obj'] = $obj_paciente;
         $data['idade'] = 1;
+        $data['empresa'] = $this->paciente->listardadosempresa($this->session->userdata('empresa_id'));
         if ($this->session->userdata('cadastro') == 1) {
             $this->loadView('cadastros/paciente-ficha_alternativo', $data);
         } else {
@@ -425,6 +426,8 @@ class pacientes extends BaseController {
             $result = file_get_contents($url, false, $context);
             // var_dump($result); die;
         }
+
+        $this->guia->auditoriacadastro($paciente_id, 'ALTEROU O CADASTRO');
 
         $this->session->set_flashdata('message', $data['mensagem']);
         redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
@@ -584,7 +587,7 @@ class pacientes extends BaseController {
         $empresa_p = $this->guia->listarempresa();
         $titular_flag = $empresa_p[0]->titular_flag;
  
-        
+        $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O DEPENDENTE');
      
         $this->paciente->gravardependente2($paciente_id);
  
@@ -1551,6 +1554,9 @@ class pacientes extends BaseController {
         //  var_dump($result); die;
         }
         if ($r != "-1") {
+
+            $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O TITULAR');
+
             $data['mensagem'] = 'Paciente gravado com sucesso';
         } else {
             $data['mensagem'] = 'Erro. Paciente com falta de informação';

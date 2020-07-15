@@ -485,6 +485,7 @@
 
                                                     <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->carnet_id ?>/<?= $item->num_carne ?>">Excluir
                                                     </a>
+                                                    </a>
 
                                                 </div>  
                                             </td> 

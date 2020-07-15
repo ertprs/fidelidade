@@ -306,6 +306,9 @@ $data['permissao'] = $this->db->get()->result();
 
                                         <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/gerenciarcobranca">Gerenciar Cobranças</a></span></li>
 
+                                        <? if($perfil_id == 1){?>
+                                        <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioauditoria">Relatorio Auditoria</a></span></li>
+                                        <? } ?>
 
 
                                     <? } ?>
