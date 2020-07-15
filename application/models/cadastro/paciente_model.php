@@ -188,6 +188,17 @@ class paciente_model extends BaseModel {
         return $return;
     }
 
+    function ultimaparcelapagapormes($contrato_id){
+        $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('ativo', 'f');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
+        $this->db->limit('1');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function listardados($paciente_id) {
         $this->db->select('pc.pago_todos_iugu,p.empresa_id,op.nome as vendedor_nome,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, fr.nome as pagamento,p.cpf,p.data_cadastro, ind.nome as nome_indicacao');
         $this->db->from('tb_paciente p');

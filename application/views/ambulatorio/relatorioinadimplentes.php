@@ -85,6 +85,13 @@
                         <dd>
                             <input type="number" name="parcelas" id="parcelas" min="0" value="0" />
                         </dd>
+
+                        <dt>
+                            <label>Ultima Parcela Paga</label>
+                        </dt>
+                        <dd>
+                            <input type="number" name="ultimaparcela" id="ultimaparcela" min="0" value="" />
+                        </dd>
                     </div>                    
                     <div id="bairrodiv">
                         <dt>

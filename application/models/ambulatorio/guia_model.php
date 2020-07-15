@@ -150,7 +150,8 @@ class guia_model extends Model {
                             p.paciente_id,
                             p.cpf,
                             fr.nome as forma_pagamento,
-                            pc.plano_id');
+                            pc.plano_id,
+                            pc.paciente_contrato_id');
         $this->db->from('tb_paciente_contrato pc');
         $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');

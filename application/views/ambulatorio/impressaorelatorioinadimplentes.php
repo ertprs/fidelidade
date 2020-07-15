@@ -51,9 +51,11 @@
                     <th class="tabela_header">Endereço</th>
                     <th class="tabela_header">Bairro</th>
                     <th class="tabela_header">Complemento</th>
-                    <th class="tabela_header">Fone</th>
+                    <th class="tabela_header">Fone 1</th>
+                    <th class="tabela_header">Fone 2</th>
                     <th class="tabela_header">Data</th>
                     <th class="tabela_header">Parcelas</th>
+                    <th class="tabela_header">Ultima Parcela Paga </th>
                     <th class="tabela_header">Valor</th>
 
                 </tr>
@@ -64,8 +66,22 @@
                 $qtd_pacientes = 0;
                 $qtd_parcelas = 0;
                 foreach ($relatorio as $item) :
+                    // echo '<pre>';
+                    // print_r($relatorio);
+                    // die;
+
+
+                    $parcela = $this->paciente->ultimaparcelapagapormes($item->paciente_contrato_id);
+                        
+                    if($_POST['ultimaparcela'] != ''){
+                        if(@$parcela[0]->parcela != $_POST['ultimaparcela']){
+                            continue;
+                        }
+                    }
+
                     if ($cont_parcelas{$item->paciente_id}{$item->valor} >= $parcelas) {
                         $total = $total + $item->valor;
+
 ///////////////////////////////////////////////////////////////////////////////////////////                
 //////-> verifica se o paciente já foi colocado na tabela com o valor dele, eu botei o valor e o id do paciente pq: se o cara tiver adesão vai mostrar separado.
                         if (@$verificar{$item->paciente_id}{$item->valor} >= 1) {
@@ -84,13 +100,15 @@
                                 <td ><?= @$item->logradouro . " " . $item->numero . " " . $item->complemento . " "; ?></td>
                                 <td ><?= @$item->bairro ?></td>
                                 <td ><?= @$item->complemento ?> </td>
-                                <td ><?= @$item->celular . "/" . $item->telefone; ?></td>
+                                <td ><?= @$item->celular; ?></td>
+                                <td ><?= @$item->telefone; ?></td>
                                 <td ><?
                 foreach (@$datas{$item->paciente_id}{$item->valor} as $data) {
                     echo substr(@$data, 8, 2) . "/" . substr(@$data, 5, 2) . "/" . substr(@$data, 0, 4) . "<br>";
                 }
                             ?></td>
                                 <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td>
+                                <td ><?= "Parcela ".@$parcela[0]->parcela." <br> ".substr(@$parcela[0]->data, 8, 2) . '/' . substr(@$parcela[0]->data, 5, 2) . '/' . substr(@$parcela[0]->data, 0, 4) ?></td>
                                 <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
 
 

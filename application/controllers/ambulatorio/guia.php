@@ -3788,8 +3788,9 @@ class Guia extends BaseController {
         $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
         $data['relatorio'] = $this->guia->relatoriocomissaovendedor();
         // $data['relatorio_forma'] = $this->guia->relatoriocomissaovendedorFormaRend();
+        
         // echo '<pre>'; 
-        // var_dump($data['relatorio_forma']);
+        // print_r($data['relatorio']);
         // die;
         $this->load->View('ambulatorio/impressaorelatoriocomissaovendedor', $data);
     }
