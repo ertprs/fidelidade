@@ -241,8 +241,9 @@ class guia_model extends Model {
         $this->db->where('pcp.ativo', 'true'); //Não pago
         $this->db->where('pcp.excluido', 'false');
         $this->db->where('pcd.ativo', 'true');
-        $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
-        $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->where('pcp.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
+        $this->db->where('pcp.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        $this->db->where('pcp.data >', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('p.nome');
         $this->db->orderby('pcp.data');
         $return = $this->db->get();
@@ -2783,7 +2784,15 @@ ORDER BY p.nome";
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
         $this->db->join('tb_operador o', 'o.operador_id = p.vendedor', 'left');
         $this->db->where('pc.ativo', 'true');
-        $this->db->where('pcp.ativo', 'false');
+
+        if($_POST['situacao'] == 0){
+
+        }else if($_POST['situacao'] == 1){
+            $this->db->where('pcp.ativo', 'false');
+        }else{
+            $this->db->where('pcp.ativo', 'true');
+        }
+
         $this->db->where('pcp.excluido', 'false'); 
         if (count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {
             $this->db->where_in('p.vendedor', @$_POST['vendedor']);

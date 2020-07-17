@@ -90,6 +90,13 @@
                  $pagamento = $this->paciente->listarparcelas($item->paciente_contrato_id);
                     //  echo '<pre>';
                     //  print_r($pagamento);
+                    //  die;
+                    // 2742, 2749
+
+                    if(count($pagamento) == 0){
+                        continue;
+                    }
+                    
                  $comissao = 0;   
                  
                  if(@$pagamento[0]->associado_empresa_cadastro_id > 0){

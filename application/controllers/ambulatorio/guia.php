@@ -239,9 +239,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicov();
 
-//        echo "<pre>";
-//        print_r($relatorio);
-//        die;
+       echo "<pre>";
+       print_r($relatorio);
+       die;
 
         $empresa = $this->guia->listarempresassicov();
         // Definições de variaveis com informação do banco e afins.  

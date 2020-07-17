@@ -4995,7 +4995,7 @@ class paciente_model extends BaseModel {
         $this->db->where('cp.excluido','f');
         $this->db->where('pc.ativo','t');
         $this->db->where("(cp.taxa_adesao = 'true' or  pc.associado_empresa_cadastro_id is not null)");
-//        $this->db->where('cp.ativo','f');
+       $this->db->where('cp.ativo','f');
         $return = $this->db->get();
         return $return->result(); 
         
