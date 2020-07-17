@@ -1036,3 +1036,6 @@ WITH (
 );
 ALTER TABLE ponto.tb_auditoria_cadastro
   OWNER TO postgres;
+
+
+ALTER TABLE ponto.tb_observacao_contrato ADD COLUMN status_id INTEGER;

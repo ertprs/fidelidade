@@ -144,7 +144,8 @@ class Guia extends BaseController {
     }
 
     function pesquisar($paciente_id) {
-                            
+        
+        $data['status'] = $this->manterstatus->listartodos();
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
 
         $data['permissao'] = $this->empresa->listarpermissoes();
@@ -238,9 +239,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicov();
 
-//        echo "<pre>";
-//        print_r($relatorio);
-//        die;
+       echo "<pre>";
+       print_r($relatorio);
+       die;
 
         $empresa = $this->guia->listarempresassicov();
         // Definições de variaveis com informação do banco e afins.  
@@ -3788,8 +3789,9 @@ class Guia extends BaseController {
         $data['vendedor'] = $this->guia->listarvendedor($_POST['vendedor']);
         $data['relatorio'] = $this->guia->relatoriocomissaovendedor();
         // $data['relatorio_forma'] = $this->guia->relatoriocomissaovendedorFormaRend();
+        
         // echo '<pre>'; 
-        // var_dump($data['relatorio_forma']);
+        // print_r($data['relatorio']);
         // die;
         $this->load->View('ambulatorio/impressaorelatoriocomissaovendedor', $data);
     }
