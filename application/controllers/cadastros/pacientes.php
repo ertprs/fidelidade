@@ -627,8 +627,7 @@ class pacientes extends BaseController {
                 $postdata = http_build_query(
                         array(
                             'body' => $json_paciente,
-                            'parceriamed_id' => $parceiro_id,
-                            'dependente' => 'true'
+                            'parceriamed_id' => $parceiro_id
                         )
                 );
 
