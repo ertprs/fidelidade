@@ -1732,6 +1732,18 @@ class paciente_model extends BaseModel {
         }
     }
 
+    function confirmarprecadastro($precadastro_id){
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+
+        $this->db->set('ativo', 'f');
+        $this->db->set('operador_atualizacao', $operador);
+        $this->db->set('data_atualizacao', $horario);
+        $this->db->where('precadastro_id', $precadastro_id);
+        $this->db->update('tb_precadastro');
+
+    }
+
     function gravar2($paciente_id = NULL) {
 
         try {
