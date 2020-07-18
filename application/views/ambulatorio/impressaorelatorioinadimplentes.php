@@ -51,21 +51,65 @@
                     <th class="tabela_header">Endereço</th>
                     <th class="tabela_header">Bairro</th>
                     <th class="tabela_header">Complemento</th>
-                    <th class="tabela_header">Fone</th>
+                    <th class="tabela_header">Fone 1</th>
+                    <th class="tabela_header">Fone 2</th>
                     <th class="tabela_header">Data</th>
                     <th class="tabela_header">Parcelas</th>
+                    <th class="tabela_header">Ultima Parcela Paga </th>
                     <th class="tabela_header">Valor</th>
 
                 </tr>
             </thead>
             <tbody>
                 <?php
+                                    if ($_POST['ultimaparcela'] < 10) {
+                                        $_POST['ultimaparcela'] = str_replace('0', '', $_POST['ultimaparcela'] );  
+                                        $mes = "0".$_POST['ultimaparcela'];  
+                                    }else{
+                                         $mes = $_POST['ultimaparcela']; 
+                                    } 
                 $total = 0;
                 $qtd_pacientes = 0;
                 $qtd_parcelas = 0;
+                $totalnovosla = 0;
                 foreach ($relatorio as $item) :
+                    // echo '<pre>';
+                    // print_r($relatorio);
+                    // die;
+
+
+                    $parcela = $this->paciente->ultimaparcelapagapormes($item->paciente_contrato_id);
+
+                    $ultimomes = $this->paciente->ultimaparcelapagapormes($item->paciente_contrato_id, $mes);
+                       
+
+                    
+                    if($_POST['ultimaparcela'] != 0){
+                        if(count($ultimomes) == 0){
+                            continue;
+                        }
+
+                        $ano = date('Y');
+                        $dia = cal_days_in_month(CAL_GREGORIAN, $mes , $ano);
+                        $data = $ano.'-'.$mes.'-'.$dia;
+
+                        if($parcela[0]->data > $data){
+                            continue;
+                        }
+
+                        $data = $ano.'-'.$mes.'-01';
+                        if($parcela[0]->data < $data){
+                            continue;
+                        }
+
+
+                    }
+
+
+
                     if ($cont_parcelas{$item->paciente_id}{$item->valor} >= $parcelas) {
                         $total = $total + $item->valor;
+
 ///////////////////////////////////////////////////////////////////////////////////////////                
 //////-> verifica se o paciente já foi colocado na tabela com o valor dele, eu botei o valor e o id do paciente pq: se o cara tiver adesão vai mostrar separado.
                         if (@$verificar{$item->paciente_id}{$item->valor} >= 1) {
@@ -84,13 +128,15 @@
                                 <td ><?= @$item->logradouro . " " . $item->numero . " " . $item->complemento . " "; ?></td>
                                 <td ><?= @$item->bairro ?></td>
                                 <td ><?= @$item->complemento ?> </td>
-                                <td ><?= @$item->celular . "/" . $item->telefone; ?></td>
+                                <td ><?= @$item->celular; ?></td>
+                                <td ><?= @$item->telefone; ?></td>
                                 <td ><?
                 foreach (@$datas{$item->paciente_id}{$item->valor} as $data) {
                     echo substr(@$data, 8, 2) . "/" . substr(@$data, 5, 2) . "/" . substr(@$data, 0, 4) . "<br>";
                 }
                             ?></td>
                                 <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td>
+                                <td ><?= "Parcela ".@$parcela[0]->parcela." <br> ".substr(@$parcela[0]->data, 8, 2) . '/' . substr(@$parcela[0]->data, 5, 2) . '/' . substr(@$parcela[0]->data, 0, 4) ?></td>
                                 <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
 
 

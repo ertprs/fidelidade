@@ -198,7 +198,7 @@
 
 
                         foreach ($listarpagamentoscontrato as $item) {
-
+                         $situacaoparcelasicoob = $this->guia->listarsituacaoparcelasicoob($item->paciente_contrato_parcelas_id);
                           
                             $contador ++;
 //                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
@@ -261,12 +261,11 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
-                                                    <?php  if($perfil_id != 10){ ?>
-                                        <td style="width: 130px"  class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                                                    <?php }?>
-                                        <? if ($item->contrato == 't') { ?>
-                                                                  
-                                          
+                                          <?php  if($perfil_id != 10){ ?>
+                                        <td style="width: 130px"  class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a>  <span style="color: #888001;font-weight: bold" > <?=  (count($situacaoparcelasicoob) > 0) ? $situacaoparcelasicoob[0]->mensagem : ''; ?></span></td>
+                                                   
+                                        <?php }?>
+                                        <? if ($item->contrato == 't') { ?>  
                                                 <?
                                                 if ($empresapermissao[0]->confirm_outra_data == 't') {
                                                     ?>
@@ -486,6 +485,7 @@
 
                                                     <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontrato/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->carnet_id ?>/<?= $item->num_carne ?>">Excluir
                                                     </a>
+                                                    </a>
 
                                                 </div>  
                                             </td> 
@@ -534,9 +534,12 @@
                       <td colspan="3" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
                        <?
                     }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                       
                        ?>
-                       <td colspan="2" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
-                      <?
+                     
+                       <td colspan="1" class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a></td>
+                       <td colspan="1" class="<?php echo $estilo_linha; ?>"><?=  (count($situacaoparcelasicoob) > 0) ? $situacaoparcelasicoob[0]->mensagem : ''; ?></td>
+                        <?
                     }else{
                          if($perfil_id != 10){
                         ?>

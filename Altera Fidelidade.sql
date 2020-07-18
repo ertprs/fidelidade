@@ -963,7 +963,79 @@ ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN data_pagamento date;
 
 --09/07/2020
 ALTER TABLE ponto.tb_consultas_avulsas ADD COLUMN paciente_pagamento integer;
+ALTER TABLE ponto.tb_forma_rendimento_comissao ADD COLUMN percentual boolean;
+ALTER TABLE ponto.tb_forma_rendimento_comissao ALTER COLUMN percentual SET DEFAULT false;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN percetual_comissao_vendedor_mensal boolean;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao_vendedor_mensal SET DEFAULT false;
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN percetual_comissao_vendedor boolean;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao_vendedor SET DEFAULT false;
+
+
+--10/07/2020
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN percetual_comissao boolean;
+ALTER TABLE ponto.tb_forma_pagamento ALTER COLUMN percetual_comissao SET DEFAULT false;
+
+
+
+
+
+CREATE TABLE ponto.tb_paciente_contrato_parcelas_sicoob
+(
+  paciente_contrato_parcelas_sicoob_id serial NOT NULL ,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  cod_servico integer,
+  mensagem text,
+  paciente_contrato_parcelas_id integer,
+  nossonumero text,
+  CONSTRAINT tb_paciente_contrato_parcelas_sicoob_pkey PRIMARY KEY (paciente_contrato_parcelas_sicoob_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_paciente_contrato_parcelas_sicoob
+  OWNER TO postgres;
+
+
 
 --10/07/2020
 ALTER TABLE ponto.tb_empresa ADD COLUMN contratos_inativos boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN contratos_inativos SET DEFAULT false;
+
+
+CREATE TABLE ponto.tb_status_parcela
+(
+  status_id serial NOT NULL PRIMARY KEY,
+  nome varchar(100),
+  ativo boolean DEFAULT TRUE,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer,
+  data_atualizacao timestamp without time zone,
+  operador_atualizacao integer
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_status_parcela
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN status_id INTEGER;
+
+
+CREATE TABLE ponto.tb_auditoria_cadastro
+(
+  auditoria_id serial NOT NULL PRIMARY KEY,
+  paciente_id integer,
+  acao varchar(100),
+  ativo boolean DEFAULT TRUE,
+  data_cadastro timestamp without time zone,
+  operador_cadastro integer
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_auditoria_cadastro
+  OWNER TO postgres;
+
+
+ALTER TABLE ponto.tb_observacao_contrato ADD COLUMN status_id INTEGER;

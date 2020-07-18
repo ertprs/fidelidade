@@ -1,7 +1,0 @@
-A2902713              C & B ADMINISTRADORA104CAIXA ECON. FEDERAL 2019061300001605DEBITO AUTOMATICO                                                    
-F2538                     1111013000820413  2019061300000000000189000Pagamento por debito automatico sistema Fidelidade          2000004846221377    0
-F2538                     1111013000820413  2019061300000000000189000Pagamento por debito automatico sistema Fidelidade          2000004846221377    0
-F2538                     1111013000820413  2019061300000000000189000Pagamento por debito automatico sistema Fidelidade          2000004846221377    0
-F2538                     1111013000820413  2019061300000000000189000Pagamento por debito automatico sistema Fidelidade          2000004846221377    0
-F2916                     2183013000222511  2019061300000000000189000Pagamento por debito automatico sistema Fidelidade          2000002699830313    0
-Z0000070000000000000945000000000000000000                                                                                                             

@@ -28,6 +28,19 @@
                     </dd>
 
                     <dt>
+                        <label>Situação</label>
+                    </dt>
+                    <dd>
+                        <select name="situacao" id="situacao" class="size2">
+                            <option value="0">TODAS</option>
+                            <option value="1">PAGAS</option>
+                            <option value="2">NÃO PAGAS</option>
+                         
+                        </select>
+                    </dd>
+
+
+                    <dt>
                         <label>Organizar Por</label>
                     </dt>
                     <dd>
@@ -65,7 +78,7 @@
                     </dt>
                     <dd>
                         <select name="vendedor[]" id="vendedor" class="chosen-select" data-placeholder="Selecione os campos..." multiple>
-                            <option value=""></option>
+                            <option value="0" >TODOS</option>
                             <?php
                             foreach ($listarvendedor as $item) {
                                 ?>

@@ -80,7 +80,16 @@
                 $npagas= 0;
                 $pagas= 0;
                 $pegarnomevendedor = 0;
-                foreach ($relatorio as $item) :
+                  
+                foreach ($relatorio as $item) : 
+                 $pagamento = $this->paciente->listarparcelas($item->paciente_contrato_id); 
+ 
+//                 if(isset($pagamento[0]->associado_empresa_cadastro_id) && $pagamento[0]->associado_empresa_cadastro_id > 0){
+//                     $item->valor = $pagamento[0]->valor_empresa; 
+//                     echo "<pre>";
+//                     print_r($pagamento);
+//                 } 
+                    
 
                     if($_POST['tipopesquisa'] == '2'){
 
@@ -105,8 +114,14 @@
                     // if(isset($forma_comissao_v[$item->plano_id][$item->forma_rendimento_id])){
                         // $valor_comissao = $forma_comissao_v[$item->plano_id][$item->forma_rendimento_id];
                     // }else{
-                        $valor_comissao = $item->comissao_vendedor_mensal;
+                      
                     // } 
+                    if($item->percetual_comissao_vendedor_mensal == "t"){
+                        $valor_comissao = ($item->comissao_vendedor_mensal * $item->valor)/100;
+                    }else{
+                        $valor_comissao = $item->comissao_vendedor_mensal;
+                    } 
+                        
                     if ($item->ativo == 't') {
                         $npagas = $npagas + $valor_comissao + $item->comissao_gerente_mensal; 
                     }else{
@@ -116,6 +131,7 @@
                         $valortotal = $valortotal + $valor_comissao;
                         $valorvendedortotal = $valorvendedortotal + $valor_comissao;
                     }
+                     
 
                     ?>                      
                     <tr>

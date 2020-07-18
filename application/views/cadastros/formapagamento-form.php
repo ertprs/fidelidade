@@ -146,18 +146,20 @@
                     </dt>
                     <dd>
                         <input type="text" name="comissao" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao; ?>" />
+                     Percentual?  <input type="checkbox" name="percetual_comissao" id="percetual_comissao" <?= (@$obj->_percetual_comissao == "t") ? 'checked' : '' ; ?>>
                     </dd>
                     <dt>
                         <label>Comiss&atilde;o Vendedor Mensal</label>
                     </dt>
                     <dd>
                         <input type="text" name="comissao_vendedor_mensal" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor_mensal; ?>" />
+                        Percentual? <input type="checkbox" name="percetual_comissao_vendedor_mensal" id="percetual_comissao_vendedor_mensal" <?= (@$obj->_percetual_comissao_vendedor_mensal == "t") ? 'checked' : '' ; ?>>
                     </dd>
                     <dt>
                         <label>Comiss&atilde;o Vendedor</label>
                     </dt>
                     <dd>
-                        <input type="text" name="comissao_vendedor" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor; ?>" />
+                        <input type="text" name="comissao_vendedor" class="texto02" id="comissao" alt="decimal" value="<?= @$obj->_comissao_vendedor; ?>" />                      
                     </dd>
                     <dt>
                         <label>Comiss&atilde;o Gerente Mensal</label>

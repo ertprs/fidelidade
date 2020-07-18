@@ -137,6 +137,80 @@ class paciente_model extends BaseModel {
         return $this->db;
     }
 
+
+    function listargerenciarcobranca($args = array()) {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+        // var_dump($perfil_id);die;
+        $this->db->select('p.*, m.nome as cidade, m.estado, pc.paciente_contrato_id');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+        $this->db->where("(p.ativo ='true' or p.reativar = 't' )");
+        $this->db->where('p.situacao', 'Titular');
+        $this->db->where('pc.ativo', 't');
+
+
+        // $this->db->join('tb_operador opv','opv.operador_id = p.vendedor','left');
+        // $this->db->join('tb_operador opi','opi.operador_id = p.pessoaindicacao','left');
+
+
+
+        if ($args) {
+            if (isset($args['prontuario']) && strlen($args['prontuario']) > 0) {
+                $this->db->where('p.paciente_id', $args['prontuario']);
+//                $this->db->where('ativo', 'true');
+            } 
+            elseif (isset($args['nome']) && strlen($args['nome']) > 0) {
+                $this->db->where('p.nome ilike', '%' . $args['nome'] . '%');
+            } 
+            
+            if (isset($args['cpf']) && strlen($args['cpf']) > 0) {   
+                $args['cpf'] = str_replace("-", "", str_replace(".", "", $_GET['cpf']));
+                $this->db->where('p.cpf ilike',"%".$args['cpf']."%");   
+                // $this->db->where('p.ativo', 'true');          
+           }
+        }
+
+
+
+        return $this->db;
+    }
+
+    function ultimaparcelapaga($contrato_id){
+        $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('ativo', 'f');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
+        $this->db->limit('1');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
+    function ultimaparcelapagapormes($contrato_id, $mes = NULL){
+        $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('ativo', 'f');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        if($mes != 0){
+
+            $ano = date('Y');
+            $ultimo_dia = cal_days_in_month(CAL_GREGORIAN, $mes , $ano);
+            // echo $ultimo_dia;
+
+            $data_inicio = $ano.'-'.$mes.'-01';
+            $data_final = $ano.'-'.$mes.'-'.$ultimo_dia;
+
+            $this->db->where('data >=', $data_inicio);
+            $this->db->where('data <=', $data_final);
+        }
+        $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
+        $this->db->limit('1');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function listardados($paciente_id) {
         $this->db->select('pc.pago_todos_iugu,p.empresa_id,op.nome as vendedor_nome,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, fr.nome as pagamento,p.cpf,p.data_cadastro, ind.nome as nome_indicacao');
         $this->db->from('tb_paciente p');
@@ -4046,9 +4120,9 @@ class paciente_model extends BaseModel {
     }
 
     function listartodospacientes() {
-        $this->db->select('paciente_id');
+        $this->db->select('paciente_id,parceiro_id,situacao,cpf');
         $this->db->from('tb_paciente');
-        $this->db->where('ativo', 't');
+        $this->db->where('ativo', 't'); 
         return $this->db->get()->result();
     }
 
@@ -4466,8 +4540,7 @@ class paciente_model extends BaseModel {
         $this->db->where('cp.excluido','f');
         $this->db->where('cp.ativo','f');
         $return = $this->db->get();
-        return $return->result();
-         
+        return $return->result(); 
     }
     
     
@@ -4908,6 +4981,27 @@ class paciente_model extends BaseModel {
          $this->db->where('paciente_id',$paciente_id);
          $this->db->update('tb_paciente');
    }
+   
+   
+    function listarparcelas($contrato_id){  
+        $this->db->select('cp.valor, data,cp.taxa_adesao, cp.ativo, paciente_contrato_parcelas_id, fp.nome as plano, multa_atraso, juros, cp.observacao,cp.datas_json,fp.percetual_comissao,pc.associado_empresa_cadastro_id,qf.valor as valor_empresa,fp.percetual_comissao_vendedor');
+        $this->db->from('tb_paciente_contrato_parcelas cp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left'); 
+        $this->db->join('tb_qtd_funcionarios_empresa qf','qf.forma_pagamento_id  = pc.plano_id','left');
+        $this->db->join('tb_paciente p','pc.paciente_id = p.paciente_id','left');
+        $this->db->where("cp.paciente_contrato_id", $contrato_id);  
+        $this->db->orderby("data");
+        $this->db->where('cp.excluido','f');
+        $this->db->where('pc.ativo','t');
+        $this->db->where("(cp.taxa_adesao = 'true' or  pc.associado_empresa_cadastro_id is not null)");
+       $this->db->where('cp.ativo','f');
+        $return = $this->db->get();
+        return $return->result(); 
+        
+        
+    } 
+   
    
  }
 
