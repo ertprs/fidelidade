@@ -7685,8 +7685,10 @@ function geraCodigoBanco($numero) {
             'max_size' => '0'
         );
 
+
         $this->load->library('upload');
         $this->upload->initialize($configuracao);
+
 
         if ($this->upload->do_upload('arquivo'))
             $data['mensagem'] = 'Arquivo salvo com sucesso.';
@@ -7694,6 +7696,10 @@ function geraCodigoBanco($numero) {
             $erro = $this->upload->display_errors();
         $data['mensagem'] = 'Erro';
 
+
+
+        // print_r($erro   );
+        // die;
 
 
 
@@ -7745,13 +7751,15 @@ function geraCodigoBanco($numero) {
               $nosso_numero =  substr($linha, 37, 15);
               $servico =  substr($linha, 15, 2); 
               if ($segmento == "T") { 
+                //   print_r($nosso_numero);
+                //   echo '<br>';
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
                    if($paciente_contrato_parcelas_id != ""){
                       $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
                    }         
                }
-          }                
+          }               
 //        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
 //        } 
@@ -7936,9 +7944,11 @@ function geraCodigoBanco($numero) {
   function listarparcelanossonumero($nossonumero){
      
      $parcelas =   $this->guia->listarparcelanossonumero();
+
      foreach($parcelas as $item){
-       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
-       $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' ');   
+       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');    
+       $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
+
        if(substr($nossonumero, 0, 9) == substr($formata_nosso_numero, 0, 9)){ 
              return   $item->paciente_contrato_parcelas_id;                           
        }                 

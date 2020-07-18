@@ -12908,7 +12908,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     
     function listarparcelanossonumero(){  
         
-         $this->db->select('valor, pc.ativo as contrato,
+         $this->db->select("valor, pc.ativo as contrato,
                             cp.data, 
                             cp.ativo, 
                             cp.manual,
@@ -12940,7 +12940,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                             gpi.carnet_id,
                             gpi.num_carne,
                             cp.paciente_dependente_id
-                            ');
+                            ");
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
