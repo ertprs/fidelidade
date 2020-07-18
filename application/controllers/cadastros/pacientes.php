@@ -564,9 +564,7 @@ class pacientes extends BaseController {
         
         
 //        redirect(base_url() . "cadastros/pacientes/carregardocumentosalternativo/$paciente_id");
-        
-        
-        
+          
     }
 
     function gravardependente() {  
@@ -629,7 +627,8 @@ class pacientes extends BaseController {
                 $postdata = http_build_query(
                         array(
                             'body' => $json_paciente,
-                            'parceriamed_id' => $parceiro_id
+                            'parceriamed_id' => $parceiro_id,
+                            'dependente' => 'true'
                         )
                 );
 
@@ -1294,9 +1293,9 @@ class pacientes extends BaseController {
         $parceiros = $this->paciente->listarparceirosurl();
 
         $pacientes = $this->paciente->listartodospacientes(); 
-//         echo "<pre>";
+//          echo "<pre>";
 //         print_r($pacientes);
-//         echo count($pacientes);
+//          echo count($pacientes);
 //         die;
 
         foreach ($parceiros as $key => $value) {   

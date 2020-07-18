@@ -1,15 +1,12 @@
 
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3 class="singular"><a href="#">Multifuncao Medico Geral</a></h3>
-
-        <div>
-
+        <h3 class="singular"><a href="#">Multifuncao Medico Geral</a></h3> 
+        <div> 
             <?
             $salas = $this->exame->listartodassalas();
             $medicos = $this->operador_m->listarmedicos();
-            ?>
-
+            ?> 
             <table>
                 <thead>
                 <form method="get" action="<?= base_url() ?>ambulatorio/exame/multifuncaomedicogeral">
