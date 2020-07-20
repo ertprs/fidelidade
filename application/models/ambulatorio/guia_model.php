@@ -12712,9 +12712,13 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             $mes = "0".$_POST['mes'];  
         }else{
              $mes = $_POST['mes']; 
-        } 
+        }
+        $ano = date('Y');
+        $dia = cal_days_in_month(CAL_GREGORIAN, $mes , $ano);
+
+        $data = $ano.'-'.$mes.'-'.$dia;
+        // print_r($data);
         $empresa = $_POST['empresa_cadastro_id'];
-          $ano = date('Y');
           $sql = "SELECT qf.*,p.nome as paciente,fp.nome as forma,pc.paciente_contrato_id,p.cpf
           FROM ponto.tb_qtd_funcionarios_empresa qf
           LEFT JOIN ponto.tb_paciente_contrato pc  ON qf.forma_pagamento_id = pc.plano_id
@@ -12726,6 +12730,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
           AND p.empresa_id = $empresa
           AND qf.ativo = 'true'
           AND p.ativo = 'true'
+          AND p.data_cadastro <= '$data'
           ORDER BY fp.nome,p.nome ASC
             ";  
           return $this->db->query($sql)->result(); 

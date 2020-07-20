@@ -5328,6 +5328,9 @@ table tr:hover  #achadoERRO{
 
     function listarpagamentosempresa($paciente_contrato_id = NULL, $empresa_cadastro_id = NULL) {
         $data['listarpagamentoscontrato'] = $this->paciente->listarpagamentoscontratoempresacontrato($paciente_contrato_id);
+        // echo '<pre>';
+        // print_r($data['listarpagamentoscontrato']);
+        // die;
         $data['empresa_cadastro_id'] = $empresa_cadastro_id;
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $paciente_contrato_id;
