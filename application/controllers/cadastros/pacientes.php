@@ -615,8 +615,7 @@ class pacientes extends BaseController {
                 
                 if($parceiro_post == $value->financeiro_parceiro_id){
                   $parceiro_id = $value->convenio_id;
-                }
-
+                } 
                 // echo '<pre>';
                 // var_dump($retorno_paciente); die;
                 $json_paciente = json_encode($retorno_paciente);
@@ -627,8 +626,7 @@ class pacientes extends BaseController {
                 $postdata = http_build_query(
                         array(
                             'body' => $json_paciente,
-                            'parceriamed_id' => $parceiro_id,
-                            'dependente' => 'true'
+                            'parceriamed_id' => $parceiro_id
                         )
                 );
 
