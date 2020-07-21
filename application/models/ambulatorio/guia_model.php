@@ -43,6 +43,28 @@ class guia_model extends Model {
         return $return->result();
     }
 
+    function listarparcelaspacienteSICOOBAPI($paciente_contrato_id) {
+
+          $link = base_url()."ambulatorio/guia/gerarboletosicoobAPP/";
+         //$link = 'ambulatorio/guia/gerarboletosicoob/';
+
+        $this->db->select(" pcp.ativo as pagamento_pendente,
+                            pcp.data,
+                            pcp.valor,
+                            CONCAT(('$link'),(pc.paciente_id),('/'),(pc.paciente_contrato_id),('/'),(pcp.paciente_contrato_parcelas_id)) as link_boleto
+                            ");
+        $this->db->from('tb_paciente_contrato pc');
+        $this->db->join('tb_paciente_contrato_parcelas pcp', 'pcp.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->where("pc.paciente_id", $paciente_contrato_id);
+        // $this->db->where("pcp.ativo", 'f');
+        $this->db->where("pc.ativo", 't');
+        $this->db->where("pcp.excluido", 'f');
+        $this->db->orderby('pcp.data');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarpacientecpf($cpf = NULL, $paciente_id = NULL, $nome = NULL) {
         try {
             if ($cpf == "" && $paciente_id == "" && $nome == "") {
@@ -10986,6 +11008,38 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->from('tb_empresa e');
         $this->db->join('tb_municipio m', 'm.municipio_id = e.municipio_id', 'left');
         $this->db->where('empresa_id', $empresa_id);
+        $this->db->where('e.ativo', 't');
+        $this->db->orderby('empresa_id');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarempresaporidAPP() {
+        $this->db->select('e.razao_social,
+                            e.logradouro,
+                            e.numero,
+                            e.nome,
+                            e.banco,
+                            e.email,
+                            e.tipo_carencia,
+                            e.telefone,
+                            e.producaomedicadinheiro,
+                            e.celular,
+                            e.iugu_token,
+                            e.modelo_carteira,
+                            m.nome as municipio,
+                            e.bairro,
+                            e.impressao_tipo,
+                            e.agenciasicoob,
+                            e.contacorrentesicoob,
+                            e.codigobeneficiariosicoob,
+                            e.cnpj,
+                            e.cep,
+                            m.codigo_ibge,
+                            m.estado');
+        $this->db->from('tb_empresa e');
+        $this->db->join('tb_municipio m', 'm.municipio_id = e.municipio_id', 'left');
+        // $this->db->where('empresa_id', $empresa_id);
         $this->db->where('e.ativo', 't');
         $this->db->orderby('empresa_id');
         $return = $this->db->get();

@@ -1,7 +1,15 @@
+<?
+$imagem = base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'';
+?>
 <style>
     td{
         font-size: 17px;
         font-family: arial;
+    }
+
+    #marca{
+    background: url("<?$imagem?>");
+    opacity: 0.5;
     }
     
 </style>
@@ -11,10 +19,11 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     ?>
 
     <table>
+    <div id="marca">
         <tbody>
-            <tr>
-                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
-            </tr>
+            <!-- <tr>
+                <td width="30%" ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+            </tr> -->
             <tr>
                 <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
@@ -30,6 +39,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
             </tr>
 
         </tbody>
+    </div>
     </table>
 
     <?
@@ -41,15 +51,16 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     ?>
 
 <table border="0">
+<div id="marca">
         <tbody>
-            <tr>
-                <td ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
-            </tr>
+            <!-- <tr>
+                <td ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+            </tr> -->
             <tr>
                 <td colspan="2">NOME: <b><?= @$paciente[0]->nome; ?></b></td>
             </tr>
             <tr>
-                <td width="15%">CPF: <b><?
+                <td>CPF: <b><?
                         if (strlen(preg_replace("/\D/", '', @$paciente[0]->cpf)) === 11) {
                             echo preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", @$paciente[0]->cpf);
                         } else {
@@ -60,6 +71,8 @@ if ($permissao[0]->carteira_padao_1 == 't') {
             </tr>
             <tr>
                 <td >MATRICULA: <b>0<?= @$titular_id; ?></b></td>
+            </tr>
+            <tr>
                 <td >VENCIMENTO: <?
                     if (@$paciente[0]->qtd_dias == "" || @$paciente[0]->qtd_dias == 0) {
                         @$qtd_dias = 0;
@@ -78,6 +91,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
             </tr>
  
         </tbody>
+    </div>
     </table>
 
     <?
@@ -85,17 +99,18 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     $empresa_id = 1;
     ?>
         <table >
-  
+        <div id="marca">
             <tbody align="right">
-                <tr>
-                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
-                </tr>
+                <!-- <tr>
+                <td width="30%" ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+                </tr> -->
                 <tr>
                     <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
                 </tr>
                 <tr>
                     <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
                 </tr>
+
                 <? if(@$paciente[0]->paciente_contrato_id == ''){?>
                 <tr>
                 <td >CONTRATO: <b><?= @$contrato[0]->paciente_contrato_id;?></b></td>
@@ -108,6 +123,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
                 <?}
                 ?>
             </tbody>
+         </div>
         </table>
     <?
     } else {

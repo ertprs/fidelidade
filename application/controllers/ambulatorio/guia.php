@@ -6751,6 +6751,41 @@ table tr:hover  #achadoERRO{
     $this->load->View('ambulatorio/boletosicoob',$data); 
 
   }
+
+  function gerarboletosicoobAPP($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
+    $this->load->plugin('mpdf');
+    // $empresa_id = $this->session->userdata('empresa_id');
+    $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+    $empresa = $this->guia->listarempresaporidAPP();
+    $valor  =   str_replace(".", ",",$lista[0]->valor);
+   // DADOS DO BOLETO PARA O SEU CLIENTE
+   $taxa_boleto = 0;
+   $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+   $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+   $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+   $data['vencimento'] = $lista[0]->data;
+   $data['paciente'] = $lista[0]->paciente;
+   $data['municipio'] = $lista[0]->municipio;
+   $data['estado'] = $lista[0]->estado;
+   $data['cep'] = $lista[0]->cep;
+   $data['logradouro'] = $lista[0]->logradouro;
+   
+   //Dados da empresa
+   $data['cnpj'] = $empresa[0]->cnpj;
+   $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+   $data['estadoEmpresa'] = $empresa[0]->estado;
+   $data['municipioEmpresa'] = $empresa[0]->municipio;
+   $data['cedente'] = $empresa[0]->nome;
+   
+ //  echo "<pre>";
+//  print_r($empresa);
+   $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+   $data['agencia'] = $empresa[0]->agenciasicoob;  
+   $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+// NÃO ALTERAR!    
+    $this->load->View('ambulatorio/boletosicoob',$data); 
+
+    }
   
     
     function relatoriocnab() {

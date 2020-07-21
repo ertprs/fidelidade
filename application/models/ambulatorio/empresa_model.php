@@ -647,6 +647,13 @@ class empresa_model extends Model {
         return $this->db->get()->result();
     }
 
+    function listarpermissoesparcelas() {
+        $this->db->select('');
+        $this->db->from('tb_empresa');
+        // $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        return $this->db->get()->result();
+    }
+
     function listarempresalogada() {
 
         $this->db->select('');

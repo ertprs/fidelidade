@@ -480,16 +480,28 @@ class app_model extends Model {
 
     function listarEmpresas() {
 
-        $this->db->select('empresa_id as id,
-                            nome,
-                            logradouro as endereco,
-                            email,
-                            telefone as telefone_01,
-                            celular as telefone_02
-                            ');
-        $this->db->from('tb_empresa');
-        $this->db->where("ativo", 't');
-        $this->db->orderby('empresa_id');
+        // $this->db->select('empresa_id as id,
+        //                     nome,
+        //                     logradouro as endereco,
+        //                     email,
+        //                     telefone as telefone_01,
+        //                     celular as telefone_02
+        //                     ');
+        // $this->db->from('tb_empresa');
+        // $this->db->where("ativo", 't');
+        // $this->db->orderby('empresa_id');
+
+        $this->db->select('financeiro_parceiro_id as id,
+        fantasia as nome,
+        logradouro as endereco,
+        telefone as telefone_01,
+        celular as telefone_02');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where('ativo', 'true');
+        $this->db->where('parceriapadrao', 'true');
+        $this->db->orderby('financeiro_parceiro_id');
+
+
         $return = $this->db->get();
         return $return->result();
     }
@@ -598,6 +610,8 @@ class app_model extends Model {
                             celular as telefone_02');
         $this->db->from('tb_financeiro_parceiro');
         $this->db->where('ativo', 'true');
+        $this->db->where("(parceriapadrao is NULL OR parceriapadrao = FALSE)");
+        $this->db->orderby('financeiro_parceiro_id');
         $return = $this->db->get();
         return $return->result();
     }

@@ -455,6 +455,13 @@
                                             <?
                                         }
                                     }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                                        // echo '<pre>';
+                                        // print_r($empresapermissao[0]->agenciasicoob);
+                                        // echo '<br>';
+                                        // print_r($empresapermissao[0]->contacorrentesicoob);
+                                        // echo '<br>';
+                                        // print_r($empresapermissao[0]->codigobeneficiariosicoob);
+                                        // die;
                                      ?>
                                         <td  class="<?php echo $estilo_linha; ?>">
                                             
