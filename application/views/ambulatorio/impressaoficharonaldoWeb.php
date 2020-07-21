@@ -1,5 +1,6 @@
-<?
+<?php
 $imagem = base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'';
+// echo $imagem;
 ?>
 <style>
     td{
@@ -8,7 +9,7 @@ $imagem = base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pa
     }
 
     #marca{
-    background: url("<?$imagem?>");
+    background: url("<?=$imagem?>");
     opacity: 0.5;
     }
     

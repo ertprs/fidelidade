@@ -4,4 +4,5 @@
         $config['mailpath'] = '/usr/sbin/sendmail';
         $config['charset'] = 'utf-8';
         $config['wordwrap'] = TRUE;
+        
 //        $this->email->initialize($config);

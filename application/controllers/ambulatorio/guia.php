@@ -1311,11 +1311,14 @@ class Guia extends BaseController {
     function reenviaremail($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
 //        var_dump($paciente_contrato_parcelas_id); die;
         $empresa = $this->guia->listarempresa();
+
         $pagamento = $this->guia->listarparcelareenviaremail($paciente_contrato_parcelas_id);
+        
         $email = $pagamento[0]->cns;
         $url = $pagamento[0]->url;
         $nome_emp = $empresa[0]->nome;
         $data = date("d/m/Y", strtotime($pagamento[0]->data));
+
 //        var_dump($pagamento);
 //        die;
         $assunto = "$nome_emp referente a: $data";
@@ -1333,13 +1336,19 @@ class Guia extends BaseController {
         $config['smtp_host'] = 'ssl://smtp.gmail.com';
         $config['smtp_port'] = '465';
         $config['smtp_user'] = 'stgsaude@gmail.com';
-        $config['smtp_pass'] = 'saude1234';
+        $config['smtp_pass'] = 'saude@2020';
         $config['validate'] = TRUE;
         $config['mailtype'] = 'html';
         $config['charset'] = 'utf-8';
         $config['newline'] = "\r\n";
 
+
+        // echo '<pre>';
+        // print_r($config);
+        // die;
+
         $this->email->initialize($config);
+        
         if (@$empresa[0]->email != '') {
             $this->email->from($empresa[0]->email, $empresa[0]->nome);
         } else {
@@ -1353,8 +1362,12 @@ class Guia extends BaseController {
         if ($this->email->send()) {
             $alert = "Email enviado com sucesso";
         } else {
-            $alert = "Envio de Email malsucedido";
+             $alert = "Envio de Email malsucedido";
+
+            // print_r($this->email->print_debugger());
+            // die;
         }
+
 //        var_dump($teste); die;
         $this->session->set_flashdata('message', $alert);
 //        redirect(base_url() . "ambulatorio/guia/relatoriocaixa", $data);
