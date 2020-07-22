@@ -9262,7 +9262,7 @@ ORDER BY ae.agenda_exames_id)";
         if ($empresa_id == null) {
             $empresa_id = 1;
         }
-        $this->db->select('e.razao_social,
+        $this->db->select('e.empresa_id,e.razao_social,
                             e.logradouro,
                             e.numero,
                             e.nome,

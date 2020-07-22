@@ -797,6 +797,32 @@ class Guia extends BaseController {
                 $data['adesao'] = $value->data;
         }
 
+        $data['empresa'] = $this->guia->listarempresa();
+        $empresa_id = $data['empresa'][0]->empresa_id;
+
+        $this->load->helper('directory');
+
+        if (!is_dir("./upload/empresalogo")) {
+            mkdir("./upload/empresalogo");
+            $destino = "./upload/empresalogo";
+            chmod($destino, 0777);
+        }
+
+        if (!is_dir("./upload/empresalogo/$empresa_id")) {
+            mkdir("./upload/empresalogo/$empresa_id");
+            $destino = "./upload/empresalogo/$empresa_id";
+            chmod($destino, 0777);
+        }
+
+        $data['arquivo_pasta'] = directory_map("./upload/empresalogo/$empresa_id/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+           
+        }
+
+        // print_r($empresa_id);
+        // die;
+
         if ($data['empresa'][0]->modelo_carteira == 1) {
             $this->load->View('ambulatorio/impressaoficharonaldo', $data);
         } elseif ($data['empresa'][0]->modelo_carteira == 2) {

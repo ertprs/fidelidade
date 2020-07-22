@@ -8,9 +8,12 @@ $imagem = base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pa
         font-family: arial;
     }
 
-    #marca{
-    background: url("<?=$imagem?>");
-    opacity: 0.5;
+    table{
+    background-image:linear-gradient( rgba(255,255,255,.8) 0%,rgba(255,255,255,.15) 100%), url("<?=$imagem?>"); 
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    /* width: 200px;
+    height: 200px; */
     }
     
 </style>
@@ -20,7 +23,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     ?>
 
     <table>
-    <div id="marca">
+    
         <tbody>
             <!-- <tr>
                 <td width="30%" ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
@@ -40,7 +43,6 @@ if ($permissao[0]->carteira_padao_1 == 't') {
             </tr>
 
         </tbody>
-    </div>
     </table>
 
     <?
@@ -52,7 +54,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     ?>
 
 <table border="0">
-<div id="marca">
+
         <tbody>
             <!-- <tr>
                 <td ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
@@ -92,7 +94,6 @@ if ($permissao[0]->carteira_padao_1 == 't') {
             </tr>
  
         </tbody>
-    </div>
     </table>
 
     <?
@@ -100,7 +101,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     $empresa_id = 1;
     ?>
         <table >
-        <div id="marca">
+        
             <tbody align="right">
                 <!-- <tr>
                 <td width="30%" ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
@@ -124,7 +125,6 @@ if ($permissao[0]->carteira_padao_1 == 't') {
                 <?}
                 ?>
             </tbody>
-         </div>
         </table>
     <?
     } else {

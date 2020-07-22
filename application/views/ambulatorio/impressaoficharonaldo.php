@@ -477,12 +477,14 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
     </table>
 
     <?
-} elseif ($data['permissao'][0]->carteira_padao_6 == 't') {
+} elseif ($data['permissao'][0]->carteira_padao_6 == 'f') {
+    // print_r($empresa_id)
 ?>
+
     <table align="right">
         <tbody>
             <tr>
-                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+                <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . $empresa[0]->empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
             </tr>
             <tr>
                 <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
@@ -505,6 +507,53 @@ if ($data['permissao'][0]->carteira_padao_1 == 't') {
     </table>
 <?
 }else{
+
+$imagem = base_url() . 'upload/empresalogo/' . @$empresa[0]->empresa_id . '/' . @$arquivo_pasta[0] .'';
+//  echo $imagem;
+    ?>
+
+<style>
+    td{
+        font-size: 17px;
+        font-family: arial;
+    }
+
+    /* table{
+    background-image:linear-gradient( rgba(255,255,255,.8) 0%,rgba(255,255,255,.15) 100%), url("<?=$imagem?>"); 
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    /* width: 200px;
+    height: 200px; */
+    } */
+    
+    
+</style>
+
+    <table align="right">
+        <tbody>
+                <!-- <tr>
+                    <td width="8%" ><img width="8%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa[0]->empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
+                </tr> -->
+            <!-- <tr>
+                <td >MATRICULAA: <b>000<?= $titular_id; ?></b></td>
+            </tr>
+            <tr>
+                <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
+            </tr>
+            <? if(@$paciente[0]->paciente_contrato_id == ''){?>
+            <tr>
+            <td >CONTRATO: <b><?= @$contrato[0]->paciente_contrato_id;?></b></td>
+            </tr>
+            <?}else{
+            ?>
+            <tr>
+                <td >CONTRATO: <b><?= @$paciente[0]->paciente_contrato_id;?></b></td>
+            </tr> -->
+            <?}
+            ?>
+        </tbody>
+    </table>
+<?
     
 }
 ?>
