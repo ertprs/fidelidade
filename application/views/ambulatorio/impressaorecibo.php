@@ -21,7 +21,11 @@ if($pagamento[0]->data_pagamento != ""){
 <br clear="all">
 </p><p>
 <?
-$MES = date("m",strtotime($data_pagamento));
+$data_hoje = date('Y-m-d');
+$MES = date("m",strtotime($data_hoje));
+// print_r($data_referencia);
+// print_r($MES);
+// die;
 
 switch ($MES) {
     case "01": $mes = 'Janeiro';
@@ -50,7 +54,7 @@ switch ($MES) {
         break;
 }
 ?>
-</p><p>Local e Data: <?=$empresa[0]->municipio?>, <?=date("d",strtotime($data_pagamento))?> de <?=$mes?> de <?=date("Y",strtotime($data_pagamento))?>.
+</p><p>Local e Data: <?=$empresa[0]->municipio?>, <?=date("d",strtotime($data_hoje))?> de <?=$mes?> de <?=date("Y",strtotime($data_hoje))?>.
 <br clear="all">
 <br clear="all">
 

@@ -6690,6 +6690,9 @@ table tr:hover  #achadoERRO{
     
     
     function gravaralterarpagamentoempresa($paciente_contrato_parcelas_id){ 
+        // echo '<pre>';
+        // print_r($_POST);
+        // die;
           $res = $this->guia->funcionariosempresa($_POST['empresa_cadastro_id']);
           
           foreach ($res as $item) {
@@ -7842,7 +7845,8 @@ function geraCodigoBanco($numero) {
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
         $data['pagamento'] = $pagamento;
-        // var_dump($pagamento); die;
+        // echo '<pre>';
+        // print_r($pagamento); die;
         $valor_total = 0;
 
         $data['paciente'] = $this->paciente->listadadosempresacadastro($empresa_cadastro_id);
