@@ -7328,19 +7328,31 @@ if(@!function_exists(formata_numdoc))
 					{
 						$num= "0".$num; 
 					}
-				return $num;
+                return $num;
+                
+                echo $num;
+                echo '<br>';
 			}
-	}
-        
+    }
+
+
        while(strlen($paciente_contrato_id) < 7) {
            $paciente_contrato_id = "1".$paciente_contrato_id; 
        }
+
+
         $NossoNumero = formata_numdoc($paciente_contrato_id,7);  // Até 7 dígitos, número sequencial iniciado em 1 (Ex.: 1, 2...)
 
         $qtde_nosso_numero = strlen($NossoNumero);
+
+        echo $qtde_nosso_numero;
+        echo '<br>';
+
         $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$num_contrato_con),10).formata_numdoc($NossoNumero,7);
         $cont=0;
         $calculoDv = 0;
+
+
         for($num=0;$num<=strlen($sequencia);$num++)
 	{
 		$cont++;
@@ -7360,9 +7372,12 @@ if(@!function_exists(formata_numdoc))
 			{
 				$constante = 7;
 				$cont = 0;
-			}
-		$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
-	}
+            }
+
+        $calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+
+    }
+
         $Resto = $calculoDv % 11;
 if($Resto == 0 || $Resto == 1)
 	{
@@ -7371,7 +7386,8 @@ if($Resto == 0 || $Resto == 1)
 else
 	{
 		$Dv = 11 - $Resto;
-	}    
+    }
+        
        return $NossoNumero.$Dv;  
    //  include("./sicoob/funcoes_bancoob.php"); 
    }
@@ -7807,13 +7823,16 @@ function geraCodigoBanco($numero) {
               if ($segmento == "T") { 
                 //   print_r($nosso_numero);
                 //   echo '<br>';
+                //   die;
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
+
                    if($paciente_contrato_parcelas_id != ""){
                       $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
                    }         
                }
-          }               
+          }       
+        //   die;        
 //        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
 //        } 
@@ -8001,7 +8020,7 @@ function geraCodigoBanco($numero) {
      $parcelas =   $this->guia->listarparcelanossonumero();
 
      foreach($parcelas as $item){
-       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');    
+       $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0'); 
        $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
 
        if(substr($nossonumero, 0, 9) == substr($formata_nosso_numero, 0, 9)){ 

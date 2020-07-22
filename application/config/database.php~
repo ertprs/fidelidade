@@ -39,7 +39,7 @@ $active_record = TRUE;
 
 //$db['default']['hostname'] = "172.30.40.2";
 
-$db['default']['hostname'] = "localhost";
+$db['default']['hostname'] = "192.168.30.3";
 //$db['default']['hostname'] = "192.168.254.10";
 //$db['default']['hostname'] = "172.30.116.22";
 $db['default']['username'] = "postgres";

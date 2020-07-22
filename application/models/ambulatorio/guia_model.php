@@ -263,9 +263,9 @@ class guia_model extends Model {
         $this->db->where('pcp.ativo', 'true'); //Não pago
         $this->db->where('pcp.excluido', 'false');
         $this->db->where('pcd.ativo', 'true');
-        $this->db->where('pcp.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");
-        $this->db->where('pcp.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
-        $this->db->where('pcp.data >', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        $this->db->where('pcp.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
+        $this->db->where('pcp.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
+        // $this->db->where('pcp.data >', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         $this->db->orderby('p.nome');
         $this->db->orderby('pcp.data');
         $return = $this->db->get();
