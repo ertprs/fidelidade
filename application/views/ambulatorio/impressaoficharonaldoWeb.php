@@ -1,22 +1,3 @@
-<?php
-$imagem = base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'';
-// echo $imagem;
-?>
-<style>
-    td{
-        font-size: 17px;
-        font-family: arial;
-    }
-
-    table{
-    background-image:linear-gradient( rgba(255,255,255,.8) 0%,rgba(255,255,255,.15) 100%), url("<?=$imagem?>"); 
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    /* width: 200px;
-    height: 200px; */
-    }
-    
-</style>
 <meta charset="UTF-8">
 <?
 if ($permissao[0]->carteira_padao_1 == 't') {
@@ -25,19 +6,27 @@ if ($permissao[0]->carteira_padao_1 == 't') {
     <table>
     
         <tbody>
-            <!-- <tr>
-                <td width="30%" ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
-            </tr> -->
+            <tr>
+                <td><br></td>
+            </tr>
             <tr>
                 <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
+            </tr>
+            <tr>
+                <td><br></td>
             </tr>
             <tr>
                 <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
             </tr>
             <tr>
+                <td><br></td>
+            </tr>
+            <tr>
                 <td >NASCIMENTO: <b><?= substr(@$paciente[0]->nascimento, 8, 2) . '/' . substr(@$paciente[0]->nascimento, 5, 2) . '/' . substr(@$paciente[0]->nascimento, 0, 4); ?></b></td>
             </tr>
-
+            <tr>
+                <td><br></td>
+            </tr>
             <tr>
                 <td><?= $empresa[0]->razao_social; ?>: <b><?= "(" . substr(@$empresa[0]->telefone, 0, 2) . ")" . substr(@$empresa[0]->telefone, 3, 4) . "-" . substr(@$empresa[0]->telefone, 7, 4); ?></b></td>
             </tr>
@@ -56,11 +45,14 @@ if ($permissao[0]->carteira_padao_1 == 't') {
 <table border="0">
 
         <tbody>
-            <!-- <tr>
-                <td ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
-            </tr> -->
+            <tr>
+                <td><br></td>
+            </tr>
             <tr>
                 <td colspan="2">NOME: <b><?= @$paciente[0]->nome; ?></b></td>
+            </tr>
+            <tr>
+                <td><br></td>
             </tr>
             <tr>
                 <td>CPF: <b><?
@@ -73,10 +65,16 @@ if ($permissao[0]->carteira_padao_1 == 't') {
                         ?></b></td>
             </tr>
             <tr>
+                <td><br></td>
+            </tr>
+            <tr>
                 <td >MATRICULA: <b>0<?= @$titular_id; ?></b></td>
             </tr>
             <tr>
-                <td >VENCIMENTO: <?
+                <td><br></td>
+            </tr>
+            <tr>
+                <td >VENCIMENTO: <b><?
                     if (@$paciente[0]->qtd_dias == "" || @$paciente[0]->qtd_dias == 0) {
                         @$qtd_dias = 0;
                     } else {
@@ -90,7 +88,7 @@ if ($permissao[0]->carteira_padao_1 == 't') {
                    
                     }
                     
-                    ?> <b> </b></td>
+                    ?></b></td>
             </tr>
  
         </tbody>
@@ -103,14 +101,20 @@ if ($permissao[0]->carteira_padao_1 == 't') {
         <table >
         
             <tbody align="right">
-                <!-- <tr>
-                <td width="30%" ><img width="30%" src="<?= base_url() . 'upload/empresalogo/' . @$empresa_id . '/' . @$arquivo_pasta[0] .'' ?>" ></b></td>
-                </tr> -->
+                <tr>
+                <td><br></td>
+                </tr>
                 <tr>
                     <td >MATRICULA: <b>000<?= $titular_id; ?></b></td>
                 </tr>
                 <tr>
+                <td><br></td>
+                </tr>
+                <tr>
                     <td >NOME: <b><?= @$paciente[0]->nome; ?></b></td>
+                </tr>
+                <tr>
+                <td><br></td>
                 </tr>
 
                 <? if(@$paciente[0]->paciente_contrato_id == ''){?>

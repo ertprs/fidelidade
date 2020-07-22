@@ -1373,6 +1373,7 @@ class pacientes extends BaseController {
 //        $config['upload_path'] = "/home/sisprod/projetos/clinica/upload/paciente/" . $paciente_id . "/";
         $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|doc|docx|xls|xlsx|ppt';
         $config['max_size'] = '0';
+        $config['file_name'] = 'logo.jpg';
         $config['overwrite'] = FALSE;
         $config['encrypt_name'] = FALSE;
         $this->load->library('upload', $config);

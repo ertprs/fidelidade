@@ -695,7 +695,10 @@ class AppPacienteAPI extends Controller {
         $resposta = $return;
         // var_dump("{$base_url}autocomplete/impressaoCarteiraWeb?paciente_id=$paciente_antigo_id&cpf=$cpf");
         // die;
-        // echo json_encode($resposta);
+
+        // echo $return;
+        // echo '<br>';
+        // echo $resposta;
         
         if($resposta != NULL){
             $obj->status = 200;
@@ -704,6 +707,13 @@ class AppPacienteAPI extends Controller {
             $obj->status = 404;
             $obj->data = [];
         }
+
+        echo '<pre>';
+        $teste = json_encode($obj);
+        $final = json_decode($teste);
+
+        print_r($final);
+        // die;
 
         echo json_encode($obj); 
     }
