@@ -7371,8 +7371,8 @@ if(@!function_exists(formata_numdoc))
 
         $qtde_nosso_numero = strlen($NossoNumero);
 
-        echo $qtde_nosso_numero;
-        echo '<br>';
+        // echo $qtde_nosso_numero;
+        // echo '<br>';
 
         $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$num_contrato_con),10).formata_numdoc($NossoNumero,7);
         $cont=0;
@@ -7862,7 +7862,11 @@ function geraCodigoBanco($numero) {
 //        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
 //        } 
-            redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+                $messagem = "Arquivo Lindo com sucesso";
+
+                $this->session->set_flashdata('message', $messagem);
+
+            redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
            
         }
         
@@ -8042,8 +8046,14 @@ function geraCodigoBanco($numero) {
             
     
   function listarparcelanossonumero($nossonumero){
+     $numero_contrato_parcela = substr($nossonumero, 2, 7);
+     $parcelas =   $this->guia->listarparcelanossonumero($numero_contrato_parcela);
      
-     $parcelas =   $this->guia->listarparcelanossonumero();
+    //  echo '<pre>';
+    //  print_r($parcelas);
+    //  echo '<br>';
+    //  print_r($numero_contrato_parcela);
+    //  die;
 
      foreach($parcelas as $item){
        $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0'); 

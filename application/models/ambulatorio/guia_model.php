@@ -585,7 +585,7 @@ if($_POST['tipopaciente'] == 'dependente'){
              $this->db->where('ad.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
            }
         
-           $this->db->orderby('p.nome, ad.data_cadastro');
+           $this->db->orderby('ad.data_cadastro, o.nome, p.nome');
 
 
         $return = $this->db->get();
@@ -12965,7 +12965,17 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     }
     
     
-    function listarparcelanossonumero(){  
+    function listarparcelanossonumero($parcela){  
+
+        $parcela = "".$parcela."";
+
+        // CASE WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 2 THEN CONCAT(('11111'),(cp.paciente_contrato_parcelas_id))
+        // WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 3 THEN CONCAT(('1111'),(cp.paciente_contrato_parcelas_id))
+        // WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 4 THEN CONCAT(('111'),(cp.paciente_contrato_parcelas_id))
+        // WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 5 THEN CONCAT(('11'),(cp.paciente_contrato_parcelas_id))
+        // WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 6 THEN CONCAT(('1'),(cp.paciente_contrato_parcelas_id))
+        // ELSE cp.paciente_contrato_parcelas_id::text
+        // END as novonumero, 
         
          $this->db->select("valor, pc.ativo as contrato,
                             cp.data, 
@@ -12999,7 +13009,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                             gpi.carnet_id,
                             gpi.num_carne,
                             cp.paciente_dependente_id
-                            ");
+                            ", FALSE);
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
         $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
@@ -13007,6 +13017,16 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left'); 
         $this->db->where("cp.excluido", 'f');
         $this->db->where("cp.ativo", 't'); 
+
+        $this->db->where(
+        "(CASE WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 1 THEN CONCAT(('111111'),(cp.paciente_contrato_parcelas_id))
+        WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 2 THEN CONCAT(('11111'),(cp.paciente_contrato_parcelas_id))
+        WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 3 THEN CONCAT(('1111'),(cp.paciente_contrato_parcelas_id))
+        WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 4 THEN CONCAT(('111'),(cp.paciente_contrato_parcelas_id))
+        WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 5 THEN CONCAT(('11'),(cp.paciente_contrato_parcelas_id))
+        WHEN LENGTH(cp.paciente_contrato_parcelas_id::text) = 6 THEN CONCAT(('1'),(cp.paciente_contrato_parcelas_id))
+        END) LIKE '%$parcela%'"
+        ); 
         $this->db->orderby("data"); 
         $return = $this->db->get()->result();
         return $return;
