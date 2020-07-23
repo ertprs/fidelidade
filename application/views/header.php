@@ -275,6 +275,7 @@ $data['permissao'] = $this->db->get()->result();
                             <li><span class="folder">Cadastro</span>
                                 <ul>
                                     <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 6 || $perfil_id == 5 || $perfil_id == 10) { ?>
+                                        <!-- <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/google">Agenda Google</a></span></li> -->
                                         <? if ($this->session->userdata('cadastro') == 1) { ?>
                                            <?php if($perfil_id != 10){?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novoalternativo">Novo Titular</a></span></li>         

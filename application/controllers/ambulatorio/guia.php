@@ -38,6 +38,11 @@ class Guia extends BaseController {
         $this->load->model('ambulatorio/GExtenso', 'GExtenso');
         $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->model('ambulatorio/manterstatus_model', 'manterstatus');
+
+        $this->load->library('googleplus');
+        $this->load->model('calendario/googlecalendar_model', 'googlecalendar');
+        // $this->load->library('googleplus');
+        
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -8257,6 +8262,39 @@ function geraCodigoBanco($numero) {
       
       
       
+  }
+
+  function google(){
+    $this->load->model('calendario/auth_model');
+
+    $data['user'] = $this->googlecalendar->getUserInfo();
+    $data['events'] = $this->googlecalendar->getEvents();
+    $data['todayEventsCount'] = count($data['events']);
+    $this->loadview('ambulatorio/dashboardgoogle', $data);
+  }
+
+  function agendagoogle(){
+    $data = array('loginUrl' => $this->googlecalendar->loginUrl());
+
+    $this->loadView('ambulatorio/loginagendagoogle', $data); 
+  }
+
+  function oauth()
+  {
+
+      $code = $this->input->get('code', true);
+      $this->googlecalendar->login($code);
+      redirect(base_url(), 'refresh');
+
+  }
+
+   function logout()
+  {
+
+      $this->googleplus->revokeToken();
+      $this->session->sess_destroy();
+      redirect(base_url() . "ambulatorio/guia/agendagoogle/", "refresh");
+
   }
     
     
