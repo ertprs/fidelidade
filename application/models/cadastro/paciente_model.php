@@ -188,6 +188,20 @@ class paciente_model extends BaseModel {
         return $return;
     }
 
+    function parcelasatrasadas($contrato_id){
+        $data = date('Y-m-d');
+
+        $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('ativo', 't');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->where('data <=', $data);
+        // $this->db->orderby('data_atualizacao', 'desc');
+        // $this->db->limit('1');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
     function ultimaparcelapagapormes($contrato_id, $mes = NULL){
         $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
         $this->db->from('tb_paciente_contrato_parcelas');
