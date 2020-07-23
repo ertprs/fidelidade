@@ -7862,9 +7862,9 @@ function geraCodigoBanco($numero) {
 //        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
 //        } 
-                $messagem = "Arquivo Lindo com sucesso";
 
-                $this->session->set_flashdata('message', $messagem);
+            $messagem = "Arquivo Lindo com sucesso";
+            $this->session->set_flashdata('message', $messagem);
 
             redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
            
@@ -7873,7 +7873,7 @@ function geraCodigoBanco($numero) {
         
          function verarquivoimportadocnab($nome_arquivo = NULL) {
              
-              redirect(base_url() . "seguranca/operador/pesquisarrecepcao", $data);
+              redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
          }
         
         

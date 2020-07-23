@@ -182,7 +182,7 @@ class paciente_model extends BaseModel {
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('ativo', 'f');
         $this->db->where('paciente_contrato_id', $contrato_id);
-        $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
+        $this->db->orderby('data_atualizacao', 'desc');
         $this->db->limit('1');
         $return = $this->db->get()->result();
         return $return;
