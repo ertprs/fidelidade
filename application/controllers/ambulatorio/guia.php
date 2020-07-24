@@ -39,8 +39,8 @@ class Guia extends BaseController {
         $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->model('ambulatorio/manterstatus_model', 'manterstatus');
 
-        $this->load->library('googleplus');
-        $this->load->model('calendario/googlecalendar_model', 'googlecalendar');
+        // $this->load->library('googleplus');
+        // $this->load->model('calendario/googlecalendar_model', 'googlecalendar');
         // $this->load->library('googleplus');
         
         $this->load->library('mensagem');
