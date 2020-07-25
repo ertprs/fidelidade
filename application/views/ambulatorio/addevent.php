@@ -1,34 +1,66 @@
-<?if(isset($message)){
-        echo "<script>alert('$message');</script>";
+<?
+if(isset($message)){
+    redirect(base_url().'ambulatorio/guia/google/'.$message);
 }
-$empresa_id = $this->session->userdata('empresa_id');
-$this->db->select('ep.api_google');
-$this->db->from('tb_empresa ep');
 
-$this->db->where('ep.empresa_id', $empresa_id);
-$data['permissao'] = $this->db->get()->result();
 ?>
 <div class="content"> <!-- Inicio da DIV content -->
     <div id="accordion">
-        <h3><a href="#">&nbsp;&nbsp;&nbsp; DashBoard Google</a></h3>
-        <div>
+        <h3><a href="#">&nbsp;&nbsp;&nbsp; Adicionar Eventos Agenda Google</a></h3>
+
+
+
+        <form action="<?=base_url().'ambulatorio/guia/addEvent'?>" method="POST">
         <table>
             <tr>
-                 <td> <a href="<?php echo base_url() ?>ambulatorio/guia/addEvent">Adicionar Eventos</a> </td>
-            </tr>
-            <!-- <tr>
-                <td><br></td>
+                 <td> <a href="<?php echo base_url() ?>ambulatorio/guia/google">Agenda Google</a> </td>
             </tr>
             <tr>
-                <td> <a href="<?php echo base_url() ?>event/eventList">Lista de Eventos</a> </td>
-            </tr> -->
+            <td><br><br><br></td>
+            </tr>
+            <tr colspan="2"><th>Adicionar Agendamos Google</th></tr>
+
+            <tr>
+                <td><label>Titular:</label>
+                    <?= form_input( array( 'name' => 'summary_id', 'id' => 'summary_id', 'type' => 'text' , 'class' => 'texto_id' , 'required' => true  ) );?>
+                    <?= form_input( array( 'name' => 'summary', 'id' => 'summary', 'class' => 'texto10' , 'required' => true  ) );?>
+                </td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+            </tr>
+
+            <tr>
+                <td><label>Data Da Agenda:</label>
+
+                <?= form_input( array( 'name' => 'startDate', 'type' => 'text' , 'class' => 'texto1' , 'id' => 'startDate', 'alt' => 'date', 'required' => 'true' ) );?>
+                
+                <label>Hora Inicio:</label>
+                <?= form_input( array( 'name' => 'startTime', 'type' => 'time' , 'class' => 'form-control' , 'required' => 'true' ) );?>
+                
+                <label>Hora FIm:</label>
+                <?= form_input( array( 'name' => 'endTime', 'type' => 'time' , 'class' => 'form-control' , 'required' => 'true' ) );?>
+                </td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+            </tr>
+
+            <tr>
+            <td><label>Descrição</label> <br>
+            <?= form_textarea( array( 'name' => 'description', 'class' => 'form-control' , 'rows' => '3' ) );?>
+            </tr>
+
+            <tr>
+            <td><?= form_submit( array( 'value' => 'Adicionar Evento' , 'class' => 'btn btn-primary' , 'style' => 'margin-top:15px;' ) );?></td>
+            </tr>
+
         </table>
-        <br>
-        <center>
-        <?=$data['permissao'][0]->api_google?>
-        </center>
-        
+        </form>
     </div> 
+
 </div> <!-- Final da DIV content -->
 <link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.9.1.js" ></script>

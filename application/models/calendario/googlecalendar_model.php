@@ -23,7 +23,6 @@ class Googlecalendar_model extends Model
         $token = $this->session
             ->userdata('google_calendar_access_token');
 
-
         if ($token) {
 
             $this->googleplus
@@ -58,6 +57,7 @@ class Googlecalendar_model extends Model
         $login = $this->googleplus
             ->client
             ->authenticate($code);
+
 
         if ($login) {
 
@@ -156,28 +156,27 @@ class Googlecalendar_model extends Model
     {
 
 
-        //date format is => 2016-06-18T17:00:00+03:00
-
         $event = new Google_Service_Calendar_Event(
             array(
                 'summary'     => $data['summary'],
                 'description' => $data['description'],
                 'start'       => array(
                     'dateTime' => $data['start'],
-                    'timeZone' => 'Europe/Istanbul',
+                    'timeZone' => 'America/Fortaleza',
                 ),
                 'end'         => array(
-                    'dateTime' => $data['start'],
-                    'timeZone' => 'Europe/Istanbul',
-                ),
-                'attendees'   => array(
-                    array('email' => 'omerkamcili@gmail.com'),
+                    'dateTime' => $data['end'],
+                    'timeZone' => 'America/Fortaleza',
                 ),
             )
         );
+        $array = array();
+        $token_teste = json_decode($this->session->userdata('google_calendar_access_token'));
+        // echo '<pre>';
+        // print_r($token_teste);
+        // die;
 
-
-        return $this->calendar->events->insert($calendarId, $event);
+        return $this->calendar->events->insert($calendarId, $event, $array, $token_teste);
 
 
     }

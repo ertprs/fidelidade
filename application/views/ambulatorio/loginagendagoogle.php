@@ -11,7 +11,7 @@
                 </div>
                 <div class="panel-body">
                 <br>
-                    <a class="btn btn-block btn-social btn-google-plus" href="<?= $loginUrl; ?>">
+                    <a  href="<?= $loginUrl; ?> ">
                         <i class="fa fa-google-plus"></i> Clique aqui
                     </a>
                 </div>

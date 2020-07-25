@@ -301,6 +301,7 @@ class empresa_model extends Model {
             $this->db->set('razao_social', $_POST['txtrazaosocial']);
             $this->db->set('cep', $_POST['CEP']);
             $this->db->set('banco', $_POST['banco']);
+            $this->db->set('api_google', $_POST['api_google']);
             $this->db->set('cadastro', $_POST['cadastro']);
             $this->db->set('cnes', $_POST['txtCNES']);
             $this->db->set('codigo_convenio_banco', $_POST['codigo_convenio_banco']);
@@ -465,6 +466,11 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('contratos_inativos', 'f');
             }
+            if (isset($_POST['agenda_google'])) {
+                $this->db->set('agenda_google', 't');
+            } else {
+                $this->db->set('agenda_google', 'f');
+            }
 
             if($_POST['agenciaSicoob'] != ""){
                  $this->db->set('agenciasicoob',$_POST['agenciaSicoob']);
@@ -572,11 +578,13 @@ class empresa_model extends Model {
                                f.carteira_padao_6,
                                f.relacao_carencia,
                                f.contratos_inativos,
+                               f.agenda_google,
                                f.agenciasicoob,
                                f.contacorrentesicoob,
                                f.codigobeneficiariosicoob,
                                f.campos_cadastro,
-                               f.campos_cadastro_dependente');
+                               f.campos_cadastro_dependente,
+                               f.api_google');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -630,6 +638,8 @@ class empresa_model extends Model {
             $this->_forma_dependente = $return[0]->forma_dependente;
             $this->_relacao_carencia = $return[0]->relacao_carencia; 
             $this->_contratos_inativos = $return[0]->contratos_inativos; 
+            $this->_agenda_google = $return[0]->agenda_google;
+            $this->_api_google = $return[0]->api_google;
             $this->_agenciasicoob = $return[0]->agenciasicoob; 
             $this->_contacorrentesicoob = $return[0]->contacorrentesicoob; 
             $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob;

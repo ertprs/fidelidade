@@ -181,6 +181,12 @@
                         <textarea name="banco" rows="1" cols="50"><?= @$obj->_banco; ?></textarea>
                     </dd>
                     <dt>
+                        <label>API Agenda Google</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="api_google" class="texto10" value='<?= @$obj->_api_google; ?>' />
+                    </dd>
+                    <dt>
                         <label>Titular ao cadastrar na integração</label>
                     </dt>
                     <dd>
@@ -440,6 +446,13 @@
                         <td>
                             <input type="checkbox" name="contratos_inativos"   <? if (@$obj->_contratos_inativos == 't') echo "checked"; ?>> 
                             <label>Contratos Inativos</label>  
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="agenda_google"   <? if (@$obj->_agenda_google == 't') echo "checked"; ?>> 
+                            <label>Agenda Google</label>  
                         </td>
                     </tr>
                 </table> 

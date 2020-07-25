@@ -22,6 +22,7 @@ $this->db->from('tb_empresa ep');
 
 $this->db->where('ep.empresa_id', $empresa_id);
 $data['permissao'] = $this->db->get()->result();
+
 ?>
 <!DOCTYPE html PUBLIC "-//carreW3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="pt-BR" >
@@ -275,7 +276,11 @@ $data['permissao'] = $this->db->get()->result();
                             <li><span class="folder">Cadastro</span>
                                 <ul>
                                     <? if ($perfil_id == 1 || $perfil_id == 2 || $perfil_id == 4 || $perfil_id == 8 || $perfil_id == 9  || $perfil_id == 6 || $perfil_id == 5 || $perfil_id == 10) { ?>
-                                        <!-- <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/google">Agenda Google</a></span></li> -->
+
+                                        <?if($data['permissao'][0]->agenda_google == 't'){?>
+                                        <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/google">Agenda Google</a></span></li>
+                                        <?}?>
+
                                         <? if ($this->session->userdata('cadastro') == 1) { ?>
                                            <?php if($perfil_id != 10){?>
                                             <li><span class="file"><a href="<?= base_url() ?>cadastros/pacientes/novoalternativo">Novo Titular</a></span></li>         

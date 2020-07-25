@@ -1039,3 +1039,8 @@ ALTER TABLE ponto.tb_auditoria_cadastro
 
 
 ALTER TABLE ponto.tb_observacao_contrato ADD COLUMN status_id INTEGER;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN agenda_google boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN agenda_google SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN api_google text;

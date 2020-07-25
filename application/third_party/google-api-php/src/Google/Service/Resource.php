@@ -79,9 +79,10 @@ class Google_Service_Resource
    * @return Google_Http_Request|expected_class
    * @throws Google_Exception
    */
-  public function call($name, $arguments, $expected_class = null)
+  public function call($name, $arguments, $expected_class = null, $token_array = NULL)
   {
     if (! isset($this->methods[$name])) {
+      // die;
       $this->client->getLogger()->error(
           'Service method unknown',
           array(
@@ -99,30 +100,48 @@ class Google_Service_Resource
     $method = $this->methods[$name];
     $parameters = $arguments[0];
 
+
+
     // postBody is a special case since it's not defined in the discovery
     // document as parameter, but we abuse the param entry for storing it.
     $postBody = null;
+
+
+
     if (isset($parameters['postBody'])) {
+      // die;
+
       if ($parameters['postBody'] instanceof Google_Model) {
         // In the cases the post body is an existing object, we want
         // to use the smart method to create a simple object for
         // for JSONification.
         $parameters['postBody'] = $parameters['postBody']->toSimpleObject();
+
       } else if (is_object($parameters['postBody'])) {
         // If the post body is another kind of object, we will try and
         // wrangle it into a sensible format.
         $parameters['postBody'] =
             $this->convertToArrayAndStripNulls($parameters['postBody']);
       }
+
+
       $postBody = json_encode($parameters['postBody']);
+
+
+
       if ($postBody === false && $parameters['postBody'] !== false) {
         throw new Google_Exception("JSON encoding failed. Ensure all strings in the request are UTF-8 encoded.");
       }
+
+
       unset($parameters['postBody']);
     }
 
+
     // TODO: optParams here probably should have been
     // handled already - this may well be redundant code.
+
+  
     if (isset($parameters['optParams'])) {
       $optParams = $parameters['optParams'];
       unset($parameters['optParams']);
@@ -137,6 +156,9 @@ class Google_Service_Resource
         $this->stackParameters,
         $method['parameters']
     );
+
+
+
     foreach ($parameters as $key => $val) {
       if ($key != 'postBody' && ! isset($method['parameters'][$key])) {
         $this->client->getLogger()->error(
@@ -151,6 +173,7 @@ class Google_Service_Resource
         throw new Google_Exception("($name) unknown parameter: '$key'");
       }
     }
+
 
     foreach ($method['parameters'] as $paramName => $paramSpec) {
       if (isset($paramSpec['required']) &&
@@ -172,12 +195,14 @@ class Google_Service_Resource
         $value = $parameters[$paramName];
         $parameters[$paramName] = $paramSpec;
         $parameters[$paramName]['value'] = $value;
+
         unset($parameters[$paramName]['required']);
       } else {
         // Ensure we don't pass nulls.
         unset($parameters[$paramName]);
       }
     }
+
 
     $this->client->getLogger()->info(
         'Service Call',
@@ -189,11 +214,14 @@ class Google_Service_Resource
         )
     );
 
+
     $url = Google_Http_REST::createRequestUri(
         $this->servicePath,
         $method['path'],
         $parameters
     );
+
+
     $httpRequest = new Google_Http_Request(
         $url,
         $method['httpMethod'],
@@ -206,16 +234,27 @@ class Google_Service_Resource
     } else {
       $httpRequest->setBaseComponent($this->client->getBasePath());
     }
+    
+
 
     if ($postBody) {
       $contentTypeHeader = array();
       $contentTypeHeader['content-type'] = 'application/json; charset=UTF-8';
       $httpRequest->setRequestHeaders($contentTypeHeader);
+
       $httpRequest->setPostBody($postBody);
     }
 
-    $httpRequest = $this->client->getAuth()->sign($httpRequest);
+
+
+
+    // $array_teste = $this->client->getAuth()->sign($token_array);
+    $httpRequest = $this->client->getAuth()->sign($httpRequest, $token_array);
+  //  echo '<pre>';
+  //   print_r($httpRequest);
+  //   die;
     $httpRequest->setExpectedClass($expected_class);
+
 
     if (isset($parameters['data']) &&
         ($parameters['uploadType']['value'] == 'media' || $parameters['uploadType']['value'] == 'multipart')) {
@@ -228,15 +267,16 @@ class Google_Service_Resource
       );
     }
 
+
     if (isset($parameters['alt']) && $parameters['alt']['value'] == 'media') {
       $httpRequest->enableExpectedRaw();
     }
+
 
     if ($this->client->shouldDefer()) {
       // If we are in batch or upload mode, return the raw request.
       return $httpRequest;
     }
-
     return $this->client->execute($httpRequest);
   }
 

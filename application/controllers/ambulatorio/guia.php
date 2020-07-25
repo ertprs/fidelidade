@@ -39,9 +39,8 @@ class Guia extends BaseController {
         $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->model('ambulatorio/manterstatus_model', 'manterstatus');
 
-        // $this->load->library('googleplus');
-        // $this->load->model('calendario/googlecalendar_model', 'googlecalendar');
-        // $this->load->library('googleplus');
+        $this->load->library('googleplus');
+        $this->load->model('calendario/googlecalendar_model', 'googlecalendar');
         
         $this->load->library('mensagem');
         $this->load->library('utilitario');
@@ -8264,7 +8263,11 @@ function geraCodigoBanco($numero) {
       
   }
 
-  function google(){
+  function google($message = null){
+
+    if(isset($message)){
+        $data['message'] = $message;
+    }
     $this->load->model('calendario/auth_model');
 
     $data['user'] = $this->googlecalendar->getUserInfo();
@@ -8279,12 +8282,23 @@ function geraCodigoBanco($numero) {
     $this->loadView('ambulatorio/loginagendagoogle', $data); 
   }
 
+  function GoogleaddEvent(){
+
+    $this->loadView('ambulatorio/loginagendagoogle', $data); 
+  }
+
   function oauth()
   {
 
       $code = $this->input->get('code', true);
       $this->googlecalendar->login($code);
-      redirect(base_url(), 'refresh');
+
+    $data['user'] = $this->googlecalendar->getUserInfo();
+    $data['events'] = $this->googlecalendar->getEvents();
+    $data['todayEventsCount'] = count($data['events']);
+
+    $this->loadview('ambulatorio/dashboardgoogle', $data);
+    //   redirect(base_url(), 'refresh');
 
   }
 
@@ -8294,6 +8308,39 @@ function geraCodigoBanco($numero) {
       $this->googleplus->revokeToken();
       $this->session->sess_destroy();
       redirect(base_url() . "ambulatorio/guia/agendagoogle/", "refresh");
+
+  }
+
+  public function addEvent()
+  {
+
+      $data = array();
+
+      if ($_POST) {
+
+        $_POST['descricao'] = 'Paciente: '.$_POST['summary'].'<br>ID: '.$_POST['summary_id'].'<br>Descrição: '.$_POST['description'];
+
+        $_POST['data'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['startDate'])));
+
+          $event = array(
+              'summary'     => $_POST['summary'],
+              'start'       => $_POST['data'].'T'.$_POST['startTime'].':00-03:00',
+              'end'         => $_POST['data'].'T'.$_POST['endTime'].':00-03:00',
+              'description' => $_POST['descricao'],
+
+          );
+
+          $foo = $this->googlecalendar->addEvent('primary', $event);
+
+          if ($foo->status == 'confirmed') {
+
+                $data['message'] = 'Evento Adicionado com Sucesso';
+
+          }
+
+
+      }
+       $this->loadview('ambulatorio/addevent', $data);
 
   }
     

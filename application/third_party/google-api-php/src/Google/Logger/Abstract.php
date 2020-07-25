@@ -280,7 +280,6 @@ abstract class Google_Logger_Abstract
             'datetime' => new DateTime(),
         )
     );
-
     $this->write($message);
   }
 

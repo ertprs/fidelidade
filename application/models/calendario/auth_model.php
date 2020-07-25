@@ -10,13 +10,7 @@ class auth_model extends Model
 
         parent::__construct();
 
-        // $this->load->model('calendario/googlecalendar_model', 'googlecalendar');
-
-        // $this->load->library('session');
-
         if ( ! $this->googlecalendar->isLogin()) {
-
-            // $this->session->sess_destroy();
 
             redirect(base_url() . "ambulatorio/guia/agendagoogle/", "refresh");
 

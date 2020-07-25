@@ -3002,6 +3002,21 @@ class Autocomplete extends Controller {
         echo json_encode($var);
     }
 
+    function pacientetitularrelatorioid() {
+        if (isset($_GET['term'])) {
+            $result = $this->exame->listarautocompletepacientetitularid($_GET['term']);
+        } else {
+            $result = $this->exame->listarautocompletepacientetitularid();
+        }
+        foreach ($result as $item) {
+            $retorno['value'] = $item->nome;
+            $retorno['id'] = $item->paciente_id;
+        
+            $var[] = $retorno;
+        }
+        echo json_encode($var);
+    }
+
     function pacientedependenterelatorio() {
         if (isset($_GET['term'])) {
             $result = $this->exame->listarautocompletepacientedependente($_GET['term']);

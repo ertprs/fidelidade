@@ -39,35 +39,35 @@ class Googleplus
 
     public function getAuthenticate()
     {
-
+        
         return $this->client->authenticate();
 
     }
 
     public function getAccessToken()
     {
-
+        
         return $this->client->getAccessToken();
 
     }
 
     public function setAccessToken()
     {
-
         return $this->client->setAccessToken();
+        
 
     }
 
     public function revokeToken()
     {
-
+        
         return $this->client->revokeToken();
 
     }
 
     public function client()
     {
-        
+
         return $this->client;
 
     }

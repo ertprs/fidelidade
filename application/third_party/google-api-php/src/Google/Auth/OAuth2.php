@@ -110,11 +110,19 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
     );
     $request->disableGzip();
     $response = $this->client->getIo()->makeRequest($request);
-
+    // LEONARDO PAREI AQUI
     if ($response->getResponseHttpCode() == 200) {
       $this->setAccessToken($response->getResponseBody());
       $this->token['created'] = time();
+
+      // $this->load->library('session');
+      // $this->session->set_userdata('token_google',$this->token);
+      // echo '<pre>';
+      // print_r($this->token);
+      // die;
+
       return $this->getAccessToken();
+
     } else {
       $decodedResponse = json_decode($response->getResponseBody(), true);
       if ($decodedResponse != null && $decodedResponse['error']) {
@@ -181,6 +189,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
    */
   public function setAccessToken($token)
   {
+    
     $token = json_decode($token, true);
     if ($token == null) {
       throw new Google_Auth_Exception('Could not json decode the token');
@@ -188,6 +197,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
     if (! isset($token['access_token'])) {
       throw new Google_Auth_Exception("Invalid token format");
     }
+
     $this->token = $token;
   }
 
@@ -221,43 +231,73 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
    * @return Google_Http_Request
    * @throws Google_Auth_Exception
    */
-  public function sign(Google_Http_Request $request)
+  public function sign(Google_Http_Request $request, $token_array = null)
   {
+    $token_novo = [];
+    if($token_array){
+      foreach($token_array as $key=>$item){
+        $token_novo[$key] = $item;
+      }
+    }
+      // echo '<pre>';
+      // print_r($token_array);
+    // print_r($token_novo);
+    // die;
+
     // add the developer key to the request before signing it
     if ($this->client->getClassConfig($this, 'developer_key')) {
       $request->setQueryParam('key', $this->client->getClassConfig($this, 'developer_key'));
     }
+    //  print_r($this->token);
 
     // Cannot sign the request without an OAuth access token.
-    if (null == $this->token && null == $this->assertionCredentials) {
-      return $request;
+    if($this->token){
+      if (null == $this->token && null == $this->assertionCredentials) {
+        return $request;
+      }
+    }else{
+      if (null == $token_novo && null == $this->assertionCredentials) {
+        return $request;
+      }
     }
+
+      // die('nao');
 
     // Check if the token is set to expire in the next 30 seconds
     // (or has already expired).
-    if ($this->isAccessTokenExpired()) {
-      if ($this->assertionCredentials) {
-        $this->refreshTokenWithAssertion();
-      } else {
-        $this->client->getLogger()->debug('OAuth2 access token expired');
-        if (! array_key_exists('refresh_token', $this->token)) {
-          $error = "The OAuth 2.0 access token has expired,"
-                  ." and a refresh token is not available. Refresh tokens"
-                  ." are not returned for responses that were auto-approved.";
 
-          $this->client->getLogger()->error($error);
-          throw new Google_Auth_Exception($error);
+    if($this->token){
+      if ($this->isAccessTokenExpired()) {
+        if ($this->assertionCredentials) {
+          $this->refreshTokenWithAssertion();
+        } else {
+          $this->client->getLogger()->debug('OAuth2 access token expired');
+          if (! array_key_exists('refresh_token', $this->token)) {
+            $error = "The OAuth 2.0 access token has expired,"
+                    ." and a refresh token is not available. Refresh tokens"
+                    ." are not returned for responses that were auto-approved.";
+  
+            $this->client->getLogger()->error($error);
+            throw new Google_Auth_Exception($error);
+          }
+          $this->refreshToken($this->token['refresh_token']);
         }
-        $this->refreshToken($this->token['refresh_token']);
       }
     }
 
     $this->client->getLogger()->debug('OAuth2 authentication');
 
     // Add the OAuth2 header to the request
-    $request->setRequestHeaders(
+    if($this->token){
+      $request->setRequestHeaders(
         array('Authorization' => 'Bearer ' . $this->token['access_token'])
-    );
+      );
+    }else{
+      $request->setRequestHeaders(
+        array('Authorization' => 'Bearer ' . $token_novo['access_token'])
+      );
+    }
+
 
     return $request;
   }

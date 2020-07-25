@@ -2215,6 +2215,7 @@ class Google_Service_Analytics_ManagementAccountUserLinks_Resource extends Googl
    */
   public function insert($accountId, Google_Service_Analytics_EntityUserLink $postBody, $optParams = array())
   {
+    die;
     $params = array('accountId' => $accountId, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('insert', array($params), "Google_Service_Analytics_EntityUserLink");

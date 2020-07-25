@@ -1494,11 +1494,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * supports event attachments. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function insert($calendarId, Google_Service_Calendar_Event $postBody, $optParams = array())
-  {
+  public function insert($calendarId, Google_Service_Calendar_Event $postBody, $optParams = array(), $token_array = NULL)
+  { 
     $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
-    return $this->call('insert', array($params), "Google_Service_Calendar_Event");
+    return $this->call('insert', array($params), "Google_Service_Calendar_Event", $token_array);
   }
 
   /**

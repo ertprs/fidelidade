@@ -19,6 +19,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        
         $this->success = json_encode(['access_token' => 'token', 'expires_in' => 500, 'token_type' => 'bearer']);
     }
 
@@ -47,7 +48,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $request->client = $client;
         $webResponse = $request->send('POST', '/v1/authorize', ['json' => ['grant_type' => 'client_credentials']]);
-
+        
         $this->assertEquals($webResponse['access_token'], 'token');
     }
 
