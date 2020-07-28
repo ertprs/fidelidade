@@ -6793,8 +6793,9 @@ table tr:hover  #achadoERRO{
         $data['municipioEmpresa'] = $empresa[0]->municipio;
         $data['cedente'] = $empresa[0]->nome;
         
-      //  echo "<pre>";
-     //  print_r($empresa);
+    //     echo "<pre>";
+    //   print_r($lista);
+    //   die;
         $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
         $data['agencia'] = $empresa[0]->agenciasicoob;  
         $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
@@ -7859,18 +7860,23 @@ function geraCodigoBanco($numero) {
                 //   print_r($nosso_numero);
                 //   echo '<br>';
                 //   die;
+                //var_dump($servico);
+                //echo '<br>';
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
+                //    echo $servico.' - '.$mensagem;
+                //    echo '<br>';
+
                    if($paciente_contrato_parcelas_id != ""){
-                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
+                     $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
                    }         
                }
           }       
         //   die;        
-//        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
+       if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
-//        } 
+       } 
 
             $messagem = "Arquivo Lindo com sucesso";
             $this->session->set_flashdata('message', $messagem);
@@ -8076,6 +8082,11 @@ function geraCodigoBanco($numero) {
   }
   
   function servicosicoob($cod){
+      //var_dump($cod);
+    //   if($cod == '09'){
+    //       $cod = '09';
+    //   }
+
         switch ($cod) {
          case 02:
              return "Entrada Confirmada";
@@ -8098,9 +8109,9 @@ function geraCodigoBanco($numero) {
          case 08:
              return "Confirmação do Recebimento do Cancelamento do Desconto";
              break;
-         case 09:
-             return "Baixa";
-             break;  
+        case 9:
+            return "Baixa";
+            break;
          case 11:
              return " Títulos em Carteira (Em Ser)";
              break;

@@ -5593,7 +5593,7 @@ ORDER BY p.nome";
             if ($total > $retorno[0]->parcelas) {
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor - '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = TRUE";
                 $this->db->query($sql);
             }
         }
@@ -7956,7 +7956,7 @@ AND data <= '$data_fim'";
 
                     $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = TRUE";
                     $this->db->query($sql);
                 }
 
