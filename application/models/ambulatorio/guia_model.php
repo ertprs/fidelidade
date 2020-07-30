@@ -12816,7 +12816,8 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     
     
     function gerarcnab(){
-     $this->db->select('valor, pc.ativo as contrato,
+     $this->db->select('p.nome as titular,
+     valor, pc.ativo as contrato,
                             cp.data, 
                             cp.ativo, 
                             cp.manual,

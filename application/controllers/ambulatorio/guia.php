@@ -6865,9 +6865,9 @@ table tr:hover  #achadoERRO{
         $cidade = $empresa[0]->municipio;
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab(); 
-        //echo "<pre>";
-        //print_r($relatorio);
-        //die(); 
+        // echo "<pre>";
+        // print_r($relatorio);
+        // die(); 
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
         $A[0] = '';     // Iniciando o indice zero do array;
@@ -6944,7 +6944,7 @@ table tr:hover  #achadoERRO{
         
         $valor_total= 0;
         foreach($relatorio as $item){
-              
+        $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
         
@@ -7031,7 +7031,7 @@ table tr:hover  #achadoERRO{
         $Q[7] = $this->utilitario->preencherEsquerda('01',2,'0');
         $Q[8] = $this->utilitario->preencherEsquerda('1',1,'0');
         $Q[9] = $this->utilitario->preencherEsquerda($cpf,15,'0');
-        $Q[10] = $this->utilitario->preencherDireita($nome,40,' ');
+        $Q[10] = $this->utilitario->preencherDireita($titular,40,' ');
         $Q[11] = $this->utilitario->preencherDireita($endereco,40,' ');
         $Q[12] = $this->utilitario->preencherDireita($bairro,15,' ');
         $Q[13] = $this->utilitario->preencherEsquerda($cep_ep,5,'0');
@@ -7040,7 +7040,7 @@ table tr:hover  #achadoERRO{
         $Q[16] = $this->utilitario->preencherDireita($codigoUF,2,' ');
         $Q[17] =  $this->utilitario->preencherEsquerda('2',1,'0');
         $Q[18] =  $this->utilitario->preencherEsquerda($cnpj,15,'0');
-        $Q[19] = $this->utilitario->preencherDireita($nome,40,' ');
+        $Q[19] = $this->utilitario->preencherDireita($titular,40,' ');
         $Q[20] = $this->utilitario->preencherEsquerda("",3,'0');
         $Q[21] = $this->utilitario->preencherDireita("",20,' ');
         $Q[22] = $this->utilitario->preencherDireita("",8,' ');
@@ -7093,9 +7093,9 @@ table tr:hover  #achadoERRO{
         $body_RT[] = $body_con;
         $body_P_con .= $body_con . "\r\n"; 
 
-//print_r($body_P_con);
+print_r($body_P_con);
 
-//die();
+die();
 
 
 
@@ -7883,7 +7883,7 @@ function geraCodigoBanco($numero) {
             $messagem = "Arquivo Lindo com sucesso";
             $this->session->set_flashdata('message', $messagem);
 
-            redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+            redirect(base_url() . "ambulatorio/guia/importararquivoretornocnab");
            
         }
         
