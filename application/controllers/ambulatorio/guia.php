@@ -422,9 +422,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
 
-        echo '<pre>';
-        print_r($data['relatorio']);
-        die;
+        // echo '<pre>';
+        // print_r($data['relatorio']);
+        // die;
 
         $data['ordenar'] = $_POST['ordenar'];
         $data['parcelas'] = $_POST['parcelas'];
@@ -2031,9 +2031,9 @@ class Guia extends BaseController {
 //      APAGAR COBRANÇA
         $invoice = Iugu_Invoice::fetch($pagamento[0]->invoice_id);
 //        $invoice->cancel();
-        echo '<pre>';
-        var_dump($invoice);
-        die;
+        // echo '<pre>';
+        // var_dump($invoice);
+        // die;
 //        die;
         //GERANDO A COBRANÇA
 //        var_dump($gerar);
@@ -4090,7 +4090,9 @@ class Guia extends BaseController {
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
         $data['pagamento'] = $pagamento;
-        // var_dump($pagamento); die;
+        // echo '<pre>';
+        //  print_r($pagamento); 
+        //  die;
         $valor_total = 0;
 
         $data['paciente'] = $this->paciente->listardados($paciente_id);

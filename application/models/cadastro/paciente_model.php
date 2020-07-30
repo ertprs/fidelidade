@@ -181,6 +181,7 @@ class paciente_model extends BaseModel {
         $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('ativo', 'f');
+        $this->db->where('excluido', 'f');
         $this->db->where('paciente_contrato_id', $contrato_id);
         $this->db->orderby('data_atualizacao', 'desc');
         $this->db->limit('1');
@@ -194,6 +195,7 @@ class paciente_model extends BaseModel {
         $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('ativo', 't');
+        $this->db->where('excluido', 'f');
         $this->db->where('paciente_contrato_id', $contrato_id);
         $this->db->where('data <=', $data);
         // $this->db->orderby('data_atualizacao', 'desc');

@@ -9,8 +9,10 @@
 $data_pagamento = "";
 if($pagamento[0]->data_pagamento != ""){
   $data_pagamento =   $pagamento[0]->data_pagamento;
-} 
-    
+}else{
+    $data_pagamento = $pagamento[0]->data;
+}
+
     $data_referencia = $pagamento[0]->data;
     
 ?>
@@ -21,8 +23,8 @@ if($pagamento[0]->data_pagamento != ""){
 <br clear="all">
 </p><p>
 <?
-$data_hoje = date('Y-m-d');
-$MES = date("m",strtotime($data_hoje));
+// $data_hoje = date('Y-m-d');
+$MES = date("m",strtotime($data_pagamento));
 // print_r($data_referencia);
 // print_r($MES);
 // die;
@@ -54,7 +56,7 @@ switch ($MES) {
         break;
 }
 ?>
-</p><p>Local e Data: <?=$empresa[0]->municipio?>, <?=date("d",strtotime($data_hoje))?> de <?=$mes?> de <?=date("Y",strtotime($data_hoje))?>.
+</p><p>Local e Data: <?=$empresa[0]->municipio?>, <?=date("d",strtotime($data_pagamento))?> de <?=$mes?> de <?=date("Y",strtotime($data_pagamento))?>.
 <br clear="all">
 <br clear="all">
 
