@@ -647,6 +647,15 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
+    function listarparceirosagenda() {
+        $this->db->select('fantasia, financeiro_parceiro_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("ativo", 't');
+        $this->db->where("fantasia != ''");
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarparceirosurl($parceiro_id = null) {
         $this->db->select('endereco_ip, financeiro_parceiro_id,convenio_id');
         $this->db->from('tb_financeiro_parceiro');

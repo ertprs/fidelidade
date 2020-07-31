@@ -13,6 +13,25 @@
                         <input type="text" name="txtNome" class="texto05" value="<?= @$lista[0]->nome; ?>" />
                     </dd>
 
+                    <?if($permissao[0]->conta_pagamento_associado == 't'){?>
+                    <dt>
+                        <label>Conta</label>
+                    </dt>
+                    <dd>
+                        <select name="conta" id="conta" required>
+                            <option value="">Selecione</option>
+                                <?foreach($conta as $value){?>
+                                    <option value="<?=$value->forma_entradas_saida_id?>"
+                                    <? if ($value->forma_entradas_saida_id == @$lista[0]->conta_pagamento):echo 'selected';
+                                        endif;
+                                    ?>
+                                    > <?=$value->descricao?></option>
+                                <?}?>
+                        </select>
+                    </dd>
+
+                    <?}?>
+
                    
 
                 </dl>    

@@ -2080,7 +2080,14 @@ class Guia extends BaseController {
         } else {
             $data['mensagem'] = 'Sucesso ao gravar consulta avulsa.';
         }
-        $data['paciente_id'] = $paciente_id;
+        $consulta = $this->guia->pegarpacienteconsultaavulsa($consulta_avulsa_id);
+        if($consulta[0]->pessoa_id == ''){
+            $data['paciente_id'] = $paciente_id;
+        }else{
+            $data['paciente_id'] = $consulta[0]->pessoa_id;
+            $paciente_id = $consulta[0]->pessoa_id;
+        }
+        // $data['paciente_id'] = $paciente_id;
         $data['ambulatorio_guia_id'] = $ambulatorio_guia_id;
         redirect(base_url() . "ambulatorio/guia/impressaovoucherconsultaextra/$paciente_id/$contrato_id/$consulta_avulsa_id");
     }
@@ -4635,6 +4642,8 @@ class Guia extends BaseController {
         $data['contas'] = $this->guia->listarcontas();
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos(); 
+        $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
+        // print_r($data['permissao']);
         $this->load->View('ambulatorio/alterarpagamento-form', $data);
     }
 
@@ -4756,11 +4765,17 @@ class Guia extends BaseController {
 //        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
         // chamando uma função existente confirmando o pagamento;
         //botei essa $paciente_id duas vezes para que quando for dependente pegar o credor devedor do dependente
-        if ($this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $paciente_id)) {
+
+        $codigo = $this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $paciente_id);
+
+        if ($codigo == 1) {
             $mensagem = 'Sucesso ao confirmar pagamento';
-        } else {
+        } elseif($codigo == 2) {
+            $mensagem = 'Pagamento não associado a uma Conta. Operação cancelada.';
+        }else{
             $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
         }
+        
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
@@ -7867,12 +7882,17 @@ function geraCodigoBanco($numero) {
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
-                //    echo $servico.' - '.$mensagem;
-                //    echo '<br>';
+                    echo $servico.' - '.$mensagem;
+                    echo '<br>';
 
                    if($paciente_contrato_parcelas_id != ""){
-                     $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
-                   }         
+                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
+
+                     if($mensagem == 'Liquidação'){
+                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
+                     }
+                   }
+
                }
           }       
         //   die;        
@@ -8327,16 +8347,17 @@ function geraCodigoBanco($numero) {
   public function addEvent()
   {
 
-      $data = array();
-
       if ($_POST) {
 
-        $_POST['descricao'] = 'Paciente: '.$_POST['summary'].'<br>ID: '.$_POST['summary_id'].'<br>Descrição: '.$_POST['description'];
+        $_POST['descricao'] = 'Parceiro: '.$_POST['parceiro_id'].' <br>Paciente: '.$_POST['summary'].'<br>ID: '.$_POST['summary_id'].'<br>Descrição: '.$_POST['description'];
 
         $_POST['data'] = date("Y-m-d", strtotime(str_replace('/', '-', $_POST['startDate'])));
+        // echo '<pre>';
+        // print_r($_POST);
+        // die;
 
           $event = array(
-              'summary'     => $_POST['summary'],
+              'summary'     => $_POST['summary'].' -- ( Parceiro: '.$_POST['parceiro_id'].')',
               'start'       => $_POST['data'].'T'.$_POST['startTime'].':00-03:00',
               'end'         => $_POST['data'].'T'.$_POST['endTime'].':00-03:00',
               'description' => $_POST['descricao'],
@@ -8351,8 +8372,9 @@ function geraCodigoBanco($numero) {
 
           }
 
-
       }
+
+      $data['listarparceiro'] = $this->paciente->listarparceirosagenda();
        $this->loadview('ambulatorio/addevent', $data);
 
   }

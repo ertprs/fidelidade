@@ -5612,7 +5612,7 @@ ORDER BY p.nome";
             return true;
     }
 
-    function confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $depende_id = NULL) {
+    function confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $depende_id = NULL, $manual = NULL) {
  
         if ($this->session->userdata('cadastro') == 2 && $depende_id != "") {
             $paciente_id = $depende_id;
@@ -5621,7 +5621,13 @@ ORDER BY p.nome";
         $info_paciente = $this->listarinforpaciente($paciente_id);
         $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id);
         $valor = $parcela[0]->valor;
-        
+
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $empresa_id);
+        $empresa_conta = $this->db->get()->result();
+
+
         if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
            $valor = str_replace(",", ".", str_replace(".", "", $_POST['valor']));
         }
@@ -5644,6 +5650,123 @@ ORDER BY p.nome";
         $plano = $parcela[0]->plano;
         $data_parcela = $parcela[0]->data;
 
+        if($empresa_conta[0]->conta_pagamento_associado == 't'){
+            $this->db->select('conta_pagamento');
+            $this->db->from('tb_forma_rendimento');
+            $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+            $conta_pagamento = $this->db->get()->result();
+
+            if($conta_pagamento[0]->conta_pagamento == ''){
+                return 2;
+            }else{
+
+                $this->db->select('financeiro_maior_zero');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $return = $this->db->get()->result();
+        if ($return[0]->financeiro_maior_zero == 't' && $valor <= 0) { //Caso a flag esteja ativada e valor seja menor ou igual a zero, ele não vai adiconar no financeiro, ira somente costar que está pago.
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            if($manual == NULL){
+                $this->db->set('manual', 't');
+            }else{
+                $this->db->set('manual', 'f');
+            }
+            $this->db->set('ativo', 'f');
+            if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
+               $this->db->set('valor', $valor);
+            }
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $this->db->update('tb_paciente_contrato_parcelas');
+        } else {
+            $this->db->select("");
+            $this->db->from("tb_entradas");
+            $this->db->where("paciente_contrato_parcelas_id",$paciente_contrato_parcelas_id);
+            $this->db->where('ativo', 't');
+            $contEntrada  = $this->db->get()->result();
+            if(count($contEntrada) > 0){
+                return true;
+            }
+            //gravando na entrada 
+            $horario = date("Y-m-d H:i:s");
+            $data = date("Y-m-d");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('valor', $valor);
+//        $inicio = $_POST['inicio'];
+
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+            $this->db->set('tipo', $plano);
+            if($parcela[0]->taxa_adesao == 't'){
+                $this->db->set('classe', 'ADESÃO');
+            }else{
+                $this->db->set('classe', 'PARCELA'); 
+            }
+            // $this->db->set('classe', 'PARCELA');
+            $this->db->set('nome', $credor);
+            $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+//        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            
+            if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
+              $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
+            }
+//        $this->db->set('observacao', $_POST['Observacao']);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$empresa_id);
+            $this->db->insert('tb_entradas');
+            $entradas_id = $this->db->insert_id();
+
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+            else
+                $this->db->set('valor', $valor);
+            $this->db->set('entrada_id', $entradas_id);
+
+
+            $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+
+            $this->db->set('nome', $credor);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$empresa_id);
+            $this->db->insert('tb_saldo');
+ 
+            /////////////////////////////////////////////////
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            if($manual == NULL){
+                $this->db->set('manual', 't');
+            }else{
+                $this->db->set('manual', 'f');
+            }
+            $this->db->set('ativo', 'f');
+            $this->db->set('data_atualizacao', $horario);
+            if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
+               $this->db->set('valor', $valor);
+            }
+            
+            $this->db->set('data_pagamento',date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $this->db->update('tb_paciente_contrato_parcelas');
+        }
+        
+ 
+
+        $erro = $this->db->_error_message();
+        if (trim($erro) != "") // erro de banco
+            return -1;
+        else
+            return 1;
+                
+            }
+        }
+
         $this->db->select('forma_entradas_saida_id as conta_id,
                             descricao');
         $this->db->from('tb_forma_entradas_saida');
@@ -5664,7 +5787,11 @@ ORDER BY p.nome";
         if ($return[0]->financeiro_maior_zero == 't' && $valor <= 0) { //Caso a flag esteja ativada e valor seja menor ou igual a zero, ele não vai adiconar no financeiro, ira somente costar que está pago.
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
-            $this->db->set('manual', 't');
+            if($manual == NULL){
+                $this->db->set('manual', 't');
+            }else{
+                $this->db->set('manual', 'f');
+            }
             $this->db->set('ativo', 'f');
             if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
                $this->db->set('valor', $valor);
@@ -5739,7 +5866,11 @@ ORDER BY p.nome";
             /////////////////////////////////////////////////
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
-            $this->db->set('manual', 't');
+            if($manual == NULL){
+                $this->db->set('manual', 't');
+            }else{
+                $this->db->set('manual', 'f');
+            }
             $this->db->set('ativo', 'f');
             $this->db->set('data_atualizacao', $horario);
             if(isset($_POST['valor']) && $_POST['valor'] != ""){ 
@@ -5756,9 +5887,9 @@ ORDER BY p.nome";
 
         $erro = $this->db->_error_message();
         if (trim($erro) != "") // erro de banco
-            return false;
+            return -1;
         else
-            return true;
+            return 1;
     }
 
     function confirmarpagamentocarteira($contrato_id, $paciente_id, $titular_id = NULL) {
@@ -6888,6 +7019,14 @@ AND data <= '$data_fim'";
         } catch (Exception $exc) {
             return -1;
         }
+    }
+
+    function pegarpacienteconsultaavulsa($consulta_id){
+        $this->db->select('pessoa_id, paciente_id');
+        $this->db->from('tb_consultas_avulsas');
+        $this->db->where('consultas_avulsas_id', $consulta_id);
+
+        return  $this->db->get()->result();
     }
 
     function gravarconsultacoop($paciente_id) {
@@ -13047,6 +13186,39 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->set('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
         $this->db->insert('tb_paciente_contrato_parcelas_sicoob');
         
+    }
+
+    function confirmarparcelasicoob($paciente_contrato_parcelas_id){
+        $horario = date('Y-m-d H:i:s');
+        $operador  = $this->session->userdata('operador_id');
+
+        $this->db->select('pc.paciente_id,
+                          pc.paciente_contrato_id,
+                          pcc.paciente_contrato_parcelas_id,
+                          pcc.data, pcc.valor');
+        $this->db->from('tb_paciente_contrato_parcelas pcc');
+        $this->db->join('tb_paciente_contrato pc', 'pcc.paciente_contrato_id = pc.paciente_contrato_id');
+        $this->db->where('pcc.paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+        $return = $this->db->get()->result(); 
+
+        // echo '<pre>';
+        // print_r($return);
+        // echo '<br>';
+
+        $data =  date("d/m/Y", strtotime(str_replace("-", "/", $return[0]->data)));
+         $this->auditoriacadastro($return[0]->paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO VIA IMPORTAÇÃO SICOOB'.$return[0]->paciente_contrato_id.' DA PARCELA '.$data);
+        
+        $_POST['valor'] = str_replace(".", ",", $return[0]->valor);
+        $_POST['data'] =  date('Y-m-d');
+        $_POST['conta'] = 20;
+        $_POST['forma_rendimento_id'] = 7; 
+
+        //  print_r($_POST);
+        //  echo '<br>';
+        
+         $this->confirmarpagamento($return[0]->paciente_contrato_parcelas_id, $return[0]->paciente_id, $return[0]->paciente_id, 'NAO');
+
+
     }
     
     function listarsituacaoparcelasicoob($paciente_contrato_parcelas_id){

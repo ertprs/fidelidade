@@ -47,7 +47,8 @@ class formapagamento_model extends Model {
 
     function listarformarendimento($args = array()) {
         $this->db->select('forma_rendimento_id,
-                            nome, 
+                            nome,
+                            conta_pagamento
                             ');
         $this->db->from('tb_forma_rendimento');
         $this->db->where('ativo', 'true');
@@ -65,9 +66,18 @@ class formapagamento_model extends Model {
         return $return->result();
     }
 
+    function listarpermissoesempresa(){
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function carregarformarendimento($formarendimento_id) {
         $this->db->select('forma_rendimento_id,
-                            nome, 
+                            nome,
+                            conta_pagamento
                             ');
         $this->db->from('tb_forma_rendimento');
         $this->db->where('forma_rendimento_id', $formarendimento_id);
@@ -522,6 +532,7 @@ class formapagamento_model extends Model {
             /* inicia o mapeamento no banco */
             $forma_rendimento_id = $_POST['txtcadastrosformarendimentoid'];
             $this->db->set('nome', $_POST['txtNome']);
+            $this->db->set('conta_pagamento', @$_POST['conta']);
 
             if ($_POST['txtcadastrosformarendimentoid'] == "") {// insert
                 $this->db->set('data_cadastro', $horario);

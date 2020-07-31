@@ -454,6 +454,10 @@
                             <input type="checkbox" name="agenda_google"   <? if (@$obj->_agenda_google == 't') echo "checked"; ?>> 
                             <label>Agenda Google</label>  
                         </td>
+                        <td>
+                            <input type="checkbox" name="conta_pagamento_associado"   <? if (@$obj->_conta_pagamento_associado == 't') echo "checked"; ?>> 
+                            <label>Forma de Pagamento Associado a Conta</label>  
+                        </td>
                     </tr>
                 </table> 
                 <br>

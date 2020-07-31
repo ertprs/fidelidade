@@ -471,6 +471,11 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('agenda_google', 'f');
             }
+            if (isset($_POST['conta_pagamento_associado'])) {
+                $this->db->set('conta_pagamento_associado', 't');
+            } else {
+                $this->db->set('conta_pagamento_associado', 'f');
+            }
 
             if($_POST['agenciaSicoob'] != ""){
                  $this->db->set('agenciasicoob',$_POST['agenciaSicoob']);
@@ -579,6 +584,7 @@ class empresa_model extends Model {
                                f.relacao_carencia,
                                f.contratos_inativos,
                                f.agenda_google,
+                               f.conta_pagamento_associado,
                                f.agenciasicoob,
                                f.contacorrentesicoob,
                                f.codigobeneficiariosicoob,
@@ -639,6 +645,7 @@ class empresa_model extends Model {
             $this->_relacao_carencia = $return[0]->relacao_carencia; 
             $this->_contratos_inativos = $return[0]->contratos_inativos; 
             $this->_agenda_google = $return[0]->agenda_google;
+            $this->_conta_pagamento_associado = $return[0]->conta_pagamento_associado;
             $this->_api_google = $return[0]->api_google;
             $this->_agenciasicoob = $return[0]->agenciasicoob; 
             $this->_contacorrentesicoob = $return[0]->contacorrentesicoob; 

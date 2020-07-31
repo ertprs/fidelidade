@@ -32,6 +32,22 @@ if(isset($message)){
             </tr>
 
             <tr>
+                <td> <label>Parceiros: </label>
+     <select name="parceiro_id" id="parceiro_id" class="size2">
+         <option value='' >Selecione</option>
+            <?php foreach ($listarparceiro as $item) {?>
+               <option value='<?=$item->fantasia?>'>
+                            <?= $item->fantasia; ?>
+                </option>
+            <? }?>
+                </td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+            </tr>
+
+            <tr>
                 <td><label>Data Da Agenda:</label>
 
                 <?= form_input( array( 'name' => 'startDate', 'type' => 'text' , 'class' => 'texto1' , 'id' => 'startDate', 'alt' => 'date', 'required' => 'true' ) );?>
