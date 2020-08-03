@@ -7108,10 +7108,6 @@ table tr:hover  #achadoERRO{
         $body_RT[] = $body_con;
         $body_P_con .= $body_con . "\r\n"; 
 
-print_r($body_P_con);
-
-die();
-
 
 
 //REGISTRO TRAILLER DO ARQUIVO
@@ -7130,6 +7126,10 @@ die();
 
         $string_geral = '';
         $string_geral = $header_A . "\r\n" . $body_P_con . $footer_R;
+
+
+        // print_r($string_geral);
+        // die;
         
         
        if (!is_dir("./upload/CNAB")) {
