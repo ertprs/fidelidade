@@ -458,6 +458,10 @@
                             <input type="checkbox" name="conta_pagamento_associado"   <? if (@$obj->_conta_pagamento_associado == 't') echo "checked"; ?>> 
                             <label>Forma de Pagamento Associado a Conta</label>  
                         </td>
+                        <td>
+                            <input type="checkbox" name="titular_carterinha"   <? if (@$obj->_titular_carterinha == 't') echo "checked"; ?>> 
+                            <label>Nome do Titular ao Imprimir Carteirinha</label>  
+                        </td>
                     </tr>
                 </table> 
                 <br>

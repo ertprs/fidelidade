@@ -5904,11 +5904,22 @@ ORDER BY p.nome";
         }
 
         $situacao = @$parcela[0]->situacao;
-        if ($contrato_id == $titular_id) {
+        if($paciente_id == $titular_id){
             @$valor = $parcela[0]->valor_carteira_titular;
-        } else {
+        }else{
             @$valor = $parcela[0]->valor;
         }
+
+        $situacao = @$parcela[0]->situacao;
+        // if ($contrato_id == $titular_id) {
+        //     @$valor = $parcela[0]->valor_carteira_titular;
+        // } else {
+        //     @$valor = $parcela[0]->valor;
+        // }
+
+        
+        // print_r($valor);
+        // die;
 
         $credor = $this->criarcredordevedorpaciente($contrato_id);
         $plano = @$parcela[0]->plano;
@@ -5918,8 +5929,12 @@ ORDER BY p.nome";
         $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
         $return = $this->db->get()->result();
         if ($return[0]->financeiro_maior_zero == 't' && $valor <= 0) { //Caso a flag financeiro_maior_zero esteja ativa e o valor seja manor que zero, ele não vai inserir no financeiro.(na tabela entrada,saldo)
-            return;
+            return 1;
         } else {
+            if($plano == '' || $valor == ''){
+                return -1;
+            }else{
+
             $this->db->select('forma_entradas_saida_id as conta_id,
                             descricao');
             $this->db->from('tb_forma_entradas_saida');
@@ -5972,6 +5987,9 @@ ORDER BY p.nome";
             $this->db->set('data', $data);
             $this->db->set('operador_cadastro', $operador_id);
             $this->db->insert('tb_saldo');
+
+            return 1;
+            }
         }
     }
 

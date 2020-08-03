@@ -853,7 +853,6 @@ class Guia extends BaseController {
     function impressaocarteira($paciente_id, $contrato_id, $paciente_contrato_dependente_id = NULL, $paciente_titular = NULL) {
         $empresa_id = $this->session->userdata('empresa_id');
 
-        $this->guia->auditoriacadastro($paciente_id, 'IMPRIMIU A CARTEIRA');
 
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
@@ -867,22 +866,32 @@ class Guia extends BaseController {
             $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
         }
         $data['contrato'] = $this->guia->listarinformacoesContrato($contrato_id);
-        $this->guia->addimpressao($contrato_id, $paciente_id, $paciente_contrato_dependente_id);
         // var_dump($data['contrato']); die;
         $data['titular_id'] = $data['contrato'][0]->paciente_id;
-        $paciente_id = @$data['paciente'][0]->paciente_id;                          
-//        echo $paciente_titular;
-//        die;
-        if (@$data['paciente'][0]->situacao == 'Titular') {
-            $this->guia->confirmarpagamentocarteira($paciente_id, $contrato_id, $paciente_id);
-        } else {
-            $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
-            $paciente_dependete_id = @$retorno[0]->paciente_id;
-            $titular_id = @$retorno[0]->titular_id;
-            $this->guia->confirmarpagamentocarteira($paciente_dependete_id, $contrato_id, $paciente_titular);
-        }
+        $paciente_id = @$data['paciente'][0]->paciente_id;  
+        $titular_id = $data['titular_id'];
         
-        $this->load->View('ambulatorio/impressaoficharonaldo', $data);
+        if($data['permissao'][0]->titular_carterinha == 't'){
+            $codigo = $this->guia->confirmarpagamentocarteira($titular_id, $paciente_id, $titular_id);
+        }else{
+            if (@$data['paciente'][0]->situacao == 'Titular') {
+                $codigo = $this->guia->confirmarpagamentocarteira($paciente_id, $paciente_id, $titular_id);
+            } else {
+                $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
+                $paciente_dependete_id = @$retorno[0]->paciente_id;
+                // $titular_id = @$retorno[0]->titular_id;
+                $codigo = $this->guia->confirmarpagamentocarteira($paciente_dependete_id, $paciente_id, $titular_id);
+            }
+        }
+        if($codigo == 1){
+            $this->guia->addimpressao($contrato_id, $paciente_id, $paciente_contrato_dependente_id);
+            $this->guia->auditoriacadastro($paciente_id, 'IMPRIMIU A CARTEIRA');
+            $this->load->View('ambulatorio/impressaoficharonaldo', $data);
+        }else{
+            echo 'Problema ao Gerar Carteirinha ou Pagamento';
+            echo '<br>';
+            echo 'Tente gerar novamente!!!';
+        }
 ///////////////////////////////////////////////////////////////////////////////////////////////        
         // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
     }
@@ -7882,8 +7891,8 @@ function geraCodigoBanco($numero) {
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
-                    echo $servico.' - '.$mensagem;
-                    echo '<br>';
+                    // echo $servico.' - '.$mensagem;
+                    // echo '<br>';
 
                    if($paciente_contrato_parcelas_id != ""){
                       $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);

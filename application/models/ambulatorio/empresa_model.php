@@ -476,6 +476,11 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('conta_pagamento_associado', 'f');
             }
+            if (isset($_POST['titular_carterinha'])) {
+                $this->db->set('titular_carterinha', 't');
+            } else {
+                $this->db->set('titular_carterinha', 'f');
+            }
 
             if($_POST['agenciaSicoob'] != ""){
                  $this->db->set('agenciasicoob',$_POST['agenciaSicoob']);
@@ -590,7 +595,8 @@ class empresa_model extends Model {
                                f.codigobeneficiariosicoob,
                                f.campos_cadastro,
                                f.campos_cadastro_dependente,
-                               f.api_google');
+                               f.api_google,
+                               f.titular_carterinha');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -652,6 +658,7 @@ class empresa_model extends Model {
             $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob;
             $this->_campos_cadastro = $return[0]->campos_cadastro; 
             $this->_campos_cadastro_dependente = $return[0]->campos_cadastro_dependente; 
+            $this->_titular_carterinha = $return[0]->titular_carterinha; 
         } else {
             $this->_empresa_id = null;
         }

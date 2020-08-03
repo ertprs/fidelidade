@@ -1050,3 +1050,6 @@ ALTER TABLE ponto.tb_empresa ADD COLUMN conta_pagamento_associado boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN conta_pagamento_associado SET DEFAULT false;
 
 ALTER TABLE ponto.tb_forma_rendimento ADD COLUMN conta_pagamento integer;
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN titular_carterinha boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN titular_carterinha SET DEFAULT false;
