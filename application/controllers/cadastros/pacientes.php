@@ -628,7 +628,8 @@ class pacientes extends BaseController {
                         array(
                             'body' => $json_paciente,
                             'parceriamed_id' => $parceiro_id,
-                            'dependente' => 'true'
+                            'dependente' => 'true',
+                            'paciente_id'=> $paciente_id
                         )
                 );
 
