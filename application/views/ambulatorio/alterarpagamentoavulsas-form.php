@@ -59,6 +59,7 @@ $operador_id = $this->session->userdata('operador_id');
                                 <? } ?>  
                             </select>
                         </dd>
+                        <? if($permissao[0]->conta_pagamento_associado != 't'){?>
                         <dt>
                             <label>Conta</label>
                         </dt> 
@@ -74,6 +75,7 @@ $operador_id = $this->session->userdata('operador_id');
                                 ?>
                             </select>
                         </dd> 
+                            <? } ?>
                     </dl> 
                     <hr/>
                     <button type="submit" name="btnEnviar" >Enviar</button>

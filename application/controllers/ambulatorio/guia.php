@@ -887,6 +887,8 @@ class Guia extends BaseController {
             $this->guia->addimpressao($contrato_id, $paciente_id, $paciente_contrato_dependente_id);
             $this->guia->auditoriacadastro($paciente_id, 'IMPRIMIU A CARTEIRA');
             $this->load->View('ambulatorio/impressaoficharonaldo', $data);
+        }else if($codigo == 2){
+            echo 'Forma de Pagamento Não configurada Corretamente a uma Conta';
         }else{
             echo 'Problema ao Gerar Carteirinha ou Pagamento';
             echo '<br>';
@@ -4796,18 +4798,23 @@ class Guia extends BaseController {
         $data['pagamento'] = $this->guia->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
         $data['contas'] = $this->guia->listarcontas();
         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+        $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
         $this->load->View('ambulatorio/alterarpagamentoavulsas-form', $data);
     }
 
     function gravaralterarpagamentoavulsas($consultas_avulsas_id, $paciente_id, $contrato_id) {
         $this->guia->alterardatapagamentoavulsa($consultas_avulsas_id);
-        if ($this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id)) {
+        $codigo = $this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id);
+        if ($codigo == 1) {
             $mensagem = 'Sucesso ao confirmar pagamento';
+
+            $this->session->set_flashdata('message', $mensagem);
+            redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+            
         } else {
-            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+            echo 'Erro ao confirmar pagamento. Operação cancelada.';
         }
-        $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
     }
 
     function gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id, $contrato_id) {
@@ -4930,8 +4937,9 @@ class Guia extends BaseController {
             $codigo_retornno =  substr($linha, 67, 2);           
             if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
                 //pegando uma coluna especifica com o substr
-                $paciente_id = substr($linha, 1, 25);
-                echo $paciente_id;                            
+                //$paciente_id = substr($linha, 1, 25);
+                $paciente_id = substr($linha, 137, 11);
+                //echo $paciente_id;                            
                 //fazendo a consulta de acordo com o numero do paciente do arquivo 
                 $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);             
                 $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
@@ -8013,6 +8021,7 @@ function geraCodigoBanco($numero) {
         $data['paciente_contrato_dependente_id']    =    $paciente_contrato_dependente_id;
         $data['paciente_titular']    =    $paciente_titular; 
         $data['contas'] = $this->guia->listarcontas();
+        $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
         $this->load->View('ambulatorio/formapagamentoimpressaocarteira',$data);   
     } 
     

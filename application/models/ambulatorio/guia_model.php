@@ -5921,6 +5921,22 @@ ORDER BY p.nome";
         // print_r($valor);
         // die;
 
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $empresa_conta = $this->db->get()->result();
+
+        if($empresa_conta[0]->conta_pagamento_associado == 't'){
+            $this->db->select('conta_pagamento');
+            $this->db->from('tb_forma_rendimento');
+            $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+            $conta_pagamento = $this->db->get()->result();
+
+            if($conta_pagamento[0]->conta_pagamento == ''){
+                return 2;
+            }
+        }
+
         $credor = $this->criarcredordevedorpaciente($contrato_id);
         $plano = @$parcela[0]->plano;
 
@@ -5963,7 +5979,12 @@ ORDER BY p.nome";
             $this->db->set('tipo', $plano);
             $this->db->set('classe', 'CARTEIRA');
             $this->db->set('nome', $credor);
-            $this->db->set('conta', $conta_id);
+
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }else{
+                $this->db->set('conta', $conta_id);
+            }
             if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
                 $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
             }
@@ -5981,7 +6002,13 @@ ORDER BY p.nome";
             else
                 $this->db->set('valor', $valor);
             $this->db->set('entrada_id', $entradas_id);
-            $this->db->set('conta', $conta_id);
+
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }else{
+                $this->db->set('conta', $conta_id);
+            }
+
             $this->db->set('nome', $credor);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('data', $data);
@@ -6282,6 +6309,22 @@ ORDER BY p.nome";
 
     function confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id) {
 
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $empresa_conta = $this->db->get()->result();
+
+        if($empresa_conta[0]->conta_pagamento_associado == 't'){
+            $this->db->select('conta_pagamento');
+            $this->db->from('tb_forma_rendimento');
+            $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+            $conta_pagamento = $this->db->get()->result();
+
+            if($conta_pagamento[0]->conta_pagamento == ''){
+                return -2;
+            }
+        }
+
         $credor_obj = $this->listarparcelaconfirmarpagamentoconsultaavulsa($paciente_id);
 
         $parcela = $this->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
@@ -6354,7 +6397,7 @@ ORDER BY p.nome";
             $this->db->where('consultas_avulsas_id',$consultas_avulsas_id);         
             $contEntrada = $this->db->get()->result();
             if(count($contEntrada) > 0){
-                return true;
+                return 1;
             }
             
            
@@ -6371,11 +6414,14 @@ ORDER BY p.nome";
             
             $this->db->set('nome', $credor);
 
-            if (@$_POST['conta'] != "") {
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }elseif(@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
             } else {
                 $this->db->set('conta', $conta_id);
             }
+
             $this->db->set('consultas_avulsas_id',$consultas_avulsas_id);
 //          $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
@@ -6391,7 +6437,9 @@ ORDER BY p.nome";
             // else
             $this->db->set('valor', $valor);
             $this->db->set('entrada_id', $entradas_id);
-            if (@$_POST['conta'] != "") {
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }elseif(@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
             } else {
                 $this->db->set('conta', $conta_id);
@@ -6421,7 +6469,7 @@ ORDER BY p.nome";
         // if (trim($erro) != "") // erro de banco
         //     return false;
         // else
-        return $plano;
+        return 1;
     }
 
     function gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id) {
@@ -10926,7 +10974,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->join("tb_paciente_contrato_parcelas cp", "cp.paciente_contrato_id = pc.paciente_contrato_id", 'letf');
             $this->db->where("pc.ativo", 't');
             $this->db->where("cp.ativo", 't');
-            $this->db->where("p.paciente_id", $paciente_id);
+            $this->db->where("p.cpf", $paciente_id);
             return $this->db->get()->result();
         } catch (Exception $exc) {
             return -1;
@@ -10971,6 +11019,13 @@ ORDER BY ae.agenda_exames_id)";
     }
 
     function confirmaparcelaimportada($paciente_id = NULL) {
+
+        $this->db->select('paciente_id');
+        $this->db->from('tb_paciente');
+        $this->db->where('cpf', $paciente_id);
+        $pacie = $this->db->get()->result();
+
+        $paciente_id = $pacie[0]->paciente_id;
 
         $parcelas = $this->listarparcelaconfirmarpagamentoimportada($paciente_id);
         
