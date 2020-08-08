@@ -42,7 +42,7 @@
                     <th class="tabela_header" width="100px;">Bairro</th>
                     <th class="tabela_header" width="100px;">Complemento</th>
                     <th class="tabela_header" width="100px;">Fone</th>
-                    <th class="tabela_header">Parcelas</th>
+                    <th class="tabela_header">Parcelas em atraso</th>
                     <th colspan='2' class="tabela_header">Ultima Parcela Paga</th>
                     <th class="tabela_header" width="150px;">Obs</th>
                     <!-- <th class="tabela_header" width="100px;">Vendedor</th>
@@ -66,6 +66,7 @@
                         // echo '<pre>';
                         // print_r($lista);
                         // die;
+
                         $estilo_linha = "tabela_content01";
                         foreach ($lista as $item) {
                             ($estilo_linha == "tabela_content01") ? $estilo_linha = "tabela_content02" : $estilo_linha = "tabela_content01";
@@ -76,9 +77,15 @@
                             }
 
                             $parcela = $this->paciente->ultimaparcelapaga($item->paciente_contrato_id);
+                            $parcelas = $this->paciente->parcelasatrasadas($item->paciente_contrato_id);
+
+                            $cont_parcelas = 0;
+                            foreach ($parcelas as $value) :
+                                $cont_parcelas ++;
+                            endforeach;
                             
                             //  echo '<pre>';
-                            //  print_r($parcela);
+                            //  print_r($parcelas);
                             //  die;
                             
                             ?>
@@ -90,14 +97,13 @@
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo $item->bairro; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo $item->complemento; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><?php echo $telefone; ?></td>
-
+                                <td class="<?php echo $estilo_linha; ?>"><a target="_blank" href="<?= base_url() ?>ambulatorio/guia/listarpagamentos/<?=$item->paciente_id?>/<?=$item->paciente_contrato_id?>/"><b><?php echo @$cont_parcelas; ?></b></a></td>
                                 <? if(count($parcela) > 0){?>
                                     <? if($parcela[0]->parcela == 0){
                                         $parcelas = 'ADESÃO';
                                      }else{
                                          $parcelas = $parcela[0]->parcela;
                                      } ?>
-                                <td class="<?php echo $estilo_linha; ?>"><?php echo @$parcelas; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>"><?php echo @$parcela[0]->valor; ?></td>
                                 <td class="<?php echo $estilo_linha; ?>" width="100px;"><b><?php echo substr(@$parcela[0]->data, 8, 2) . '/' . substr(@$parcela[0]->data, 5, 2) . '/' . substr(@$parcela[0]->data, 0, 4); ?></b></td>
                                 <td class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $item->paciente_id ?>/<?= $item->paciente_contrato_id ?>/<?= $parcela[0]->paciente_contrato_parcelas_id ?>" target="_blank"> =><?php echo @$parcela[0]->observacao; ?></td>

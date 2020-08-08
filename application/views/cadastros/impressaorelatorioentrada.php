@@ -46,6 +46,7 @@
         <table border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
             <thead>
                 <tr>
+                    <!-- <th width="100px;" class="tabela_header">ID</th> -->
                     <th width="100px;" class="tabela_header">Numero do Cliente</th>
                     <th width="100px;" class="tabela_header">Conta</th>
                     <th class="tabela_header">Nome</th>
@@ -79,6 +80,7 @@
                     $total += $item->valor;
                     ?>
                     <tr>
+                    <!-- <td ><?= @$item->entradas_id; ?></td> -->
                         
                         <td ><? if($item->empresa_cadastro_id != ""){
                            echo @$item->empresa_cadastro_id;

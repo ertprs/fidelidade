@@ -110,6 +110,51 @@ class exame_model extends Model {
         return $return->result();
     }
 
+    function listarautocompletepacientetitularid($parametro = null) {
+        $perfil_id = $this->session->userdata('perfil_id');
+        $operador_id = $this->session->userdata('operador_id');
+        $this->db->select('p.paciente_id,
+                            p.nome,
+                            p.telefone,
+                            p.nascimento,
+                            p.cpf,
+                            p.logradouro,
+                            p.numero,
+                            p.bairro,
+                            m.nome as municipio,
+                            m.municipio_id,
+                            p.complemento,
+                            p.cep,
+                            p.celular');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio m','m.municipio_id = p.municipio_id','left');
+        $this->db->where('p.situacao', 'Titular');
+        $this->db->where('p.ativo', 'true');
+        if($perfil_id == 6){
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
+            $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+        }
+        if($perfil_id == 5){
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
+            // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+        }
+        if ($parametro != null) {
+            $this->db->where('p.paciente_id', $parametro);
+        }
+        if($perfil_id == 6){
+            $this->db->where('go.ativo', 'true');
+            $this->db->where('ro.ativo', 'true');
+            $this->db->where('ro.representante_id', $operador_id);
+        }
+        if($perfil_id == 5){
+            $this->db->where('go.ativo', 'true');
+            // $this->db->whe]re('ro.ativo', 'true');
+            $this->db->where('go.gerente_id', $operador_id);
+        }
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarautocompletepacientedependente($parametro = null) {
         $perfil_id = $this->session->userdata('perfil_id');
         $operador_id = $this->session->userdata('operador_id');

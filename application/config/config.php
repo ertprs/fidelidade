@@ -18,6 +18,8 @@ if (!defined('BASEPATH'))
 ////$config['base_url']	= "http://192.168.0.216/clinica/";
 //$config['base_url'] = "http://192.168.25.35/fidelidade/";
 $config['base_url']	= "http://localhost/fidelidade/";
+
+$config['base_url_novo']	= "http://localhost/fidelidade/ambulatorio/guia/oauth";
 //$config['base_url']	= "http://192.168.0.64/clinica/";
 //$config['base_url']	= "http://localhost/clinicas/";
 

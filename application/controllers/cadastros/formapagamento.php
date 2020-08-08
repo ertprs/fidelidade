@@ -67,8 +67,12 @@ class Formapagamento extends BaseController {
 
     function carregarformarendimento($formarendimento_id) {
         $data['conta'] = $this->forma->listarforma();
+        // echo '<pre>';
+        // print_r($data['conta']);
+        // die;
         $data['lista'] = $this->formapagamento->carregarformarendimento($formarendimento_id);
         $data['credor_devedor'] = $this->formapagamento->listarcredordevedor();
+        $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
         //$this->carregarView($data, 'giah/servidor-form');
         $this->loadView('cadastros/formarendimento-form', $data);
     }

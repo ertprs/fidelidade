@@ -181,9 +181,25 @@ class paciente_model extends BaseModel {
         $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
         $this->db->from('tb_paciente_contrato_parcelas');
         $this->db->where('ativo', 'f');
+        $this->db->where('excluido', 'f');
         $this->db->where('paciente_contrato_id', $contrato_id);
-        $this->db->orderby('paciente_contrato_parcelas_id', 'desc');
+        $this->db->orderby('data_atualizacao', 'desc');
         $this->db->limit('1');
+        $return = $this->db->get()->result();
+        return $return;
+    }
+
+    function parcelasatrasadas($contrato_id){
+        $data = date('Y-m-d');
+
+        $this->db->select('paciente_contrato_parcelas_id, valor, parcela, data, observacao');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('ativo', 't');
+        $this->db->where('excluido', 'f');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->where('data <=', $data);
+        // $this->db->orderby('data_atualizacao', 'desc');
+        // $this->db->limit('1');
         $return = $this->db->get()->result();
         return $return;
     }
@@ -627,6 +643,15 @@ class paciente_model extends BaseModel {
         $this->db->select('fantasia, financeiro_parceiro_id');
         $this->db->from('tb_financeiro_parceiro');
         $this->db->where("ativo", 't');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarparceirosagenda() {
+        $this->db->select('fantasia, financeiro_parceiro_id');
+        $this->db->from('tb_financeiro_parceiro');
+        $this->db->where("ativo", 't');
+        $this->db->where("fantasia != ''");
         $return = $this->db->get();
         return $return->result();
     }

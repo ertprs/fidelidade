@@ -9,8 +9,10 @@
 $data_pagamento = "";
 if($pagamento[0]->data_pagamento != ""){
   $data_pagamento =   $pagamento[0]->data_pagamento;
-} 
-    
+}else{
+    $data_pagamento = $pagamento[0]->data;
+}
+
     $data_referencia = $pagamento[0]->data;
     
 ?>
@@ -21,7 +23,11 @@ if($pagamento[0]->data_pagamento != ""){
 <br clear="all">
 </p><p>
 <?
+// $data_hoje = date('Y-m-d');
 $MES = date("m",strtotime($data_pagamento));
+// print_r($data_referencia);
+// print_r($MES);
+// die;
 
 switch ($MES) {
     case "01": $mes = 'Janeiro';

@@ -201,6 +201,11 @@ class Autocomplete extends Controller {
     function mensalidadesAPI() {
         header('Access-Control-Allow-Origin: *');
 
+        $empresapermissao = $this->empresa_m->listarpermissoesparcelas();
+        // echo '<pre>';
+        // print_r($empresapermissao);
+        // die;
+
         $paciente_antigo_id = $_GET['paciente_antigo_id'];
         $cpf = $_GET['cpf'];
         if ($paciente_antigo_id > 0) {
@@ -224,7 +229,19 @@ class Autocomplete extends Controller {
             } else {
                 $paciente_titular_id = $paciente_id;
             }
-            $pagamento = $this->guia->listarparcelaspacienteAPI($paciente_titular_id);
+
+            if ($empresapermissao[0]->client_secret != "" && $empresapermissao[0]->client_id != "") {
+                // GERENCIAR NET
+            
+            }elseif($empresapermissao[0]->iugu_token != "" ){
+                // IUGU
+                $pagamento = $this->guia->listarparcelaspacienteAPI($paciente_titular_id);
+                
+            }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                // SICOOB
+                $pagamento = $this->guia->listarparcelaspacienteSICOOBAPI($paciente_titular_id);
+            }
+            
         }else{
             $pagamento = array(-1, 'Cliente não encontrado');
         }
@@ -2975,6 +2992,21 @@ class Autocomplete extends Controller {
             $result = $this->exame->listarautocompletepacientetitular($_GET['term']);
         } else {
             $result = $this->exame->listarautocompletepacientetitular();
+        }
+        foreach ($result as $item) {
+            $retorno['value'] = $item->nome;
+            $retorno['id'] = $item->paciente_id;
+        
+            $var[] = $retorno;
+        }
+        echo json_encode($var);
+    }
+
+    function pacientetitularrelatorioid() {
+        if (isset($_GET['term'])) {
+            $result = $this->exame->listarautocompletepacientetitularid($_GET['term']);
+        } else {
+            $result = $this->exame->listarautocompletepacientetitularid();
         }
         foreach ($result as $item) {
             $retorno['value'] = $item->nome;

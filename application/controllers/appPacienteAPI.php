@@ -643,7 +643,9 @@ class AppPacienteAPI extends Controller {
         // verificarcarenciaweb
         // verificarcarenciaweb
         $paciente_inf = $this->guia->listarpacientepacienteidantigo($paciente_id);
-        // var_dump($paciente_inf); die;
+        // echo '<pre>';
+        //  print_r($paciente_inf); 
+        //  die;
         $paciente_antigo_id = $paciente_id;
         $cpf = $paciente_inf[0]->cpf;
         $obj = new stdClass();
@@ -654,6 +656,10 @@ class AppPacienteAPI extends Controller {
         // var_dump($resposta);
         // die;
         // echo json_encode($resposta);
+
+        // echo '<pre>';
+        // echo json_encode($resposta);
+        //  die;
         
         if($resposta != NULL){
             $obj->status = 200;
@@ -689,7 +695,10 @@ class AppPacienteAPI extends Controller {
         $resposta = $return;
         // var_dump("{$base_url}autocomplete/impressaoCarteiraWeb?paciente_id=$paciente_antigo_id&cpf=$cpf");
         // die;
-        // echo json_encode($resposta);
+
+        // echo $return;
+        // echo '<br>';
+        // echo $resposta;
         
         if($resposta != NULL){
             $obj->status = 200;
@@ -698,6 +707,13 @@ class AppPacienteAPI extends Controller {
             $obj->status = 404;
             $obj->data = [];
         }
+
+        echo '<pre>';
+        $teste = json_encode($obj);
+        $final = json_decode($teste);
+
+        print_r($final);
+        // die;
 
         echo json_encode($obj); 
     }

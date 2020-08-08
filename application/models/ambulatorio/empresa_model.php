@@ -301,6 +301,7 @@ class empresa_model extends Model {
             $this->db->set('razao_social', $_POST['txtrazaosocial']);
             $this->db->set('cep', $_POST['CEP']);
             $this->db->set('banco', $_POST['banco']);
+            $this->db->set('api_google', $_POST['api_google']);
             $this->db->set('cadastro', $_POST['cadastro']);
             $this->db->set('cnes', $_POST['txtCNES']);
             $this->db->set('codigo_convenio_banco', $_POST['codigo_convenio_banco']);
@@ -465,6 +466,21 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('contratos_inativos', 'f');
             }
+            if (isset($_POST['agenda_google'])) {
+                $this->db->set('agenda_google', 't');
+            } else {
+                $this->db->set('agenda_google', 'f');
+            }
+            if (isset($_POST['conta_pagamento_associado'])) {
+                $this->db->set('conta_pagamento_associado', 't');
+            } else {
+                $this->db->set('conta_pagamento_associado', 'f');
+            }
+            if (isset($_POST['titular_carterinha'])) {
+                $this->db->set('titular_carterinha', 't');
+            } else {
+                $this->db->set('titular_carterinha', 'f');
+            }
 
             if($_POST['agenciaSicoob'] != ""){
                  $this->db->set('agenciasicoob',$_POST['agenciaSicoob']);
@@ -572,11 +588,15 @@ class empresa_model extends Model {
                                f.carteira_padao_6,
                                f.relacao_carencia,
                                f.contratos_inativos,
+                               f.agenda_google,
+                               f.conta_pagamento_associado,
                                f.agenciasicoob,
                                f.contacorrentesicoob,
                                f.codigobeneficiariosicoob,
                                f.campos_cadastro,
-                               f.campos_cadastro_dependente');
+                               f.campos_cadastro_dependente,
+                               f.api_google,
+                               f.titular_carterinha');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -630,11 +650,15 @@ class empresa_model extends Model {
             $this->_forma_dependente = $return[0]->forma_dependente;
             $this->_relacao_carencia = $return[0]->relacao_carencia; 
             $this->_contratos_inativos = $return[0]->contratos_inativos; 
+            $this->_agenda_google = $return[0]->agenda_google;
+            $this->_conta_pagamento_associado = $return[0]->conta_pagamento_associado;
+            $this->_api_google = $return[0]->api_google;
             $this->_agenciasicoob = $return[0]->agenciasicoob; 
             $this->_contacorrentesicoob = $return[0]->contacorrentesicoob; 
             $this->_codigobeneficiariosicoob = $return[0]->codigobeneficiariosicoob;
             $this->_campos_cadastro = $return[0]->campos_cadastro; 
             $this->_campos_cadastro_dependente = $return[0]->campos_cadastro_dependente; 
+            $this->_titular_carterinha = $return[0]->titular_carterinha; 
         } else {
             $this->_empresa_id = null;
         }
@@ -644,6 +668,13 @@ class empresa_model extends Model {
         $this->db->select('');
         $this->db->from('tb_empresa');
         $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        return $this->db->get()->result();
+    }
+
+    function listarpermissoesparcelas() {
+        $this->db->select('');
+        $this->db->from('tb_empresa');
+        // $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
         return $this->db->get()->result();
     }
 
