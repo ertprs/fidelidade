@@ -4068,7 +4068,8 @@ class paciente_model extends BaseModel {
                             cp.paciente_contrato_parcelas_id,
                             paciente_contrato_parcelas_iugu_id, 
                             cp.empresa_iugu,
-                            fr.nome as forma_pagamento
+                            fr.nome as forma_pagamento,
+                            pc.empresa_cadastro_id
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');

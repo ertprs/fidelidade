@@ -5419,6 +5419,7 @@ table tr:hover  #achadoERRO{
         // echo '<pre>';
         // print_r($data['listarpagamentoscontrato']);
         // die;
+        $data['paciente_id'] = $data['listarpagamentoscontrato'][0]->empresa_cadastro_id;
         $data['empresa_cadastro_id'] = $empresa_cadastro_id;
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $paciente_contrato_id;
@@ -6844,6 +6845,46 @@ table tr:hover  #achadoERRO{
 
   }
 
+
+  function gerarboletosicoobempresa($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
+        $this->load->plugin('mpdf');
+        $empresa_id = $this->session->userdata('empresa_id');
+        $lista = $this->guia->listarparcelaconfirmarpagamentoempresa($paciente_contrato_parcelas_id); 
+        // echo '<pre>';
+        // print_r ($lista);
+        // die;
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+        $valor  =   str_replace(".", ",",$lista[0]->valor);
+    // DADOS DO BOLETO PARA O SEU CLIENTE
+    $taxa_boleto = 0;
+    $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+    $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+    $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+    $data['vencimento'] = $lista[0]->data;
+    $data['paciente'] = $lista[0]->empresa_forma;
+    $data['municipio'] = $lista[0]->municipio_empresa;
+    $data['estado'] = $lista[0]->estado_empresa;
+    $data['cep'] = $lista[0]->cep_empresa;
+    $data['logradouro'] = $lista[0]->logradouro_empresa;
+    
+    //Dados da empresa
+    $data['cnpj'] = $empresa[0]->cnpj;
+    $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+    $data['estadoEmpresa'] = $empresa[0]->estado;
+    $data['municipioEmpresa'] = $empresa[0]->municipio;
+    $data['cedente'] = $empresa[0]->nome;
+    
+    //     echo "<pre>";
+    //   print_r($lista);
+    //   die;
+    $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+    $data['agencia'] = $empresa[0]->agenciasicoob;  
+    $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+    // NÃO ALTERAR!    
+    $this->load->View('ambulatorio/boletosicoob',$data); 
+
+    }
+
   function gerarboletosicoobAPP($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
     $this->load->plugin('mpdf');
     // $empresa_id = $this->session->userdata('empresa_id');
@@ -6984,8 +7025,12 @@ table tr:hover  #achadoERRO{
         foreach($relatorio as $item){
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
-        
+        // $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        $lista = $this->guia->listarparcelaconfirmarpagamentoempresa($item->paciente_contrato_parcelas_id); 
+        // echo "<pre>";
+        // print_r($lista);
+        // die(); 
+
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
         $municipio = $lista[0]->municipio;

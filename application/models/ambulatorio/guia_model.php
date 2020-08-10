@@ -978,6 +978,7 @@ if($_POST['tipopaciente'] == 'dependente'){
         $return = $this->db->get();
         return $return->result();
     }
+    
 
     function listarparcelaconfirmarpagamentogatilhoiugu($invoice_id) {
 
@@ -8035,7 +8036,7 @@ AND data <= '$data_fim'";
                     $valor_adicional = ($total - $total_limite) * $valor;
                     $sql2 = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor_adicional'
-                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = TRUE";
                     $this->db->query($sql2);
                 }
             }
@@ -12015,6 +12016,11 @@ ORDER BY ae.agenda_exames_id)";
                             e.nome as empresa,
                             pc.empresa_cadastro_id,
                             ec.financeiro_credor_devedor_id as credor_id,
+                            ec.nome as empresa_forma,
+                            ec.cep as cep_empresa,
+                            ec.logradouro as logradouro_empresa,
+                            me.nome as municipio_empresa,
+                            me.estado as estado_empresa,
                             pcp.taxa_adesao
                             ');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
@@ -12025,6 +12031,7 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
         $this->db->join('tb_empresa e', 'e.empresa_id = p.empresa_id', 'left');
         $this->db->join('tb_empresa_cadastro ec','ec.empresa_cadastro_id = pc.empresa_cadastro_id','left');
+        $this->db->join('tb_municipio me', 'me.municipio_id = ec.municipio_id', 'left');
         $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
         $this->db->where('pcp.ativo', 't');
         $this->db->orderby('pcp.parcela');
@@ -13037,7 +13044,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     
     function gerarcnab(){
      $this->db->select('p.nome as titular,
-     valor, pc.ativo as contrato,
+                            valor, pc.ativo as contrato,
                             cp.data, 
                             cp.ativo, 
                             cp.manual,
