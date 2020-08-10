@@ -4939,9 +4939,13 @@ class Guia extends BaseController {
                 //pegando uma coluna especifica com o substr
                 //$paciente_id = substr($linha, 1, 25);
                 $paciente_id = substr($linha, 137, 11);
-                //echo $paciente_id;                            
+                // echo $paciente_id;     
+                // die;                       
                 //fazendo a consulta de acordo com o numero do paciente do arquivo 
-                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);             
+                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);
+                // echo '<pre>';
+                // print_r($data['lista_paciente']);
+                // die;           
                 $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
 
             }
@@ -4952,7 +4956,9 @@ class Guia extends BaseController {
         
     }
         
-         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+        //  redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+         redirect(base_url() . "ambulatorio/guia/importararquivoretorno");
     }
 
     function downloadTXToptanteimportado($nome_arquivo = NULL) {

@@ -11025,10 +11025,18 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->where('cpf', $paciente_id);
         $pacie = $this->db->get()->result();
 
-        $paciente_id = $pacie[0]->paciente_id;
+        if(count($pacie) > 0){
+            $paciente_id = $pacie[0]->paciente_id;
+        }else{
+            $paciente_id = 0;
+        }
+
 
         $parcelas = $this->listarparcelaconfirmarpagamentoimportada($paciente_id);
         
+        // echo '<pre>';
+        // print_r($parcelas);
+        // die;
         foreach ($parcelas as $pacel) {
             @$valor = $pacel->valor;
             @$paciente_id = $pacel->paciente_id;
