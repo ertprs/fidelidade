@@ -2139,8 +2139,8 @@ class paciente_model extends BaseModel {
             $this->db->insert('tb_paciente_contrato_dependente');
 
             $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
-                SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                SET valor = valor + '$valor '
+                WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = true AND taxa_adesao = false" ;
             $this->db->query($sql);
 
 //            $this->db->set('ativo', 'f');
@@ -2208,7 +2208,7 @@ class paciente_model extends BaseModel {
                
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = true AND taxa_adesao = false" ;
                 $this->db->query($sql);
             }
 //            $this->db->set('ativo', 'f');
