@@ -391,6 +391,15 @@ class pacientes extends BaseController {
                 $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
             }
         }
+
+        $this->db->select('precadastro_id');
+        $this->db->from('tb_precadastro');
+        $this->db->where('nome',$_POST['nome']);
+        $this->db->where('ativo', 't');
+        $return2 = $this->db->get()->result();
+        if(count($return2) > 0){
+            $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
+        }
         
         $paciente_id = $this->paciente->gravar();
         if ($paciente_id) {
@@ -581,6 +590,29 @@ class pacientes extends BaseController {
     }
 
     function gravardependente() {  
+        
+        if($_POST['cpf'] != ''){
+            $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf']));
+            $this->db->select('precadastro_id');
+            $this->db->from('tb_precadastro');
+            $this->db->where('cpf', $cpf);
+            $this->db->where('ativo', 't');
+            $return = $this->db->get()->result();
+
+            if(count($return) > 0){
+                $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
+            }
+        }
+
+        $this->db->select('precadastro_id');
+        $this->db->from('tb_precadastro');
+        $this->db->where('nome',$_POST['nome']);
+        $this->db->where('ativo', 't');
+        $return2 = $this->db->get()->result();
+        if(count($return2) > 0){
+            $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
+        }
+
         if(!isset($_POST['cpf_responsavel'])){
 
             $verificarcpf = $this->paciente->verificarcpfpaciente($_POST['cpf']);
@@ -1537,6 +1569,15 @@ class pacientes extends BaseController {
             if(count($return) > 0){
                 $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
             }
+        }
+
+        $this->db->select('precadastro_id');
+        $this->db->from('tb_precadastro');
+        $this->db->where('nome',$_POST['nome']);
+        $this->db->where('ativo', 't');
+        $return2 = $this->db->get()->result();
+        if(count($return2) > 0){
+            $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
         }
 
         $paciente_id = $this->paciente->gravardocumentos();
