@@ -7868,6 +7868,9 @@ function geraCodigoBanco($numero) {
             $destino = "./upload/retornoimportadoscnab/$chave_pasta";
             chmod($destino, 0777);
         }
+
+        // unlink("./upload/retornoimportadoscnab/$nome_arquivo.zip");
+        array_map('unlink', glob("./upload/retornoimportadoscnab/$chave_pasta/*"));
                             
         $configuracao = array(
             'upload_path' => './upload/retornoimportadoscnab/' . $chave_pasta . '',
