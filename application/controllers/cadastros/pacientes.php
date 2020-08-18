@@ -379,6 +379,19 @@ class pacientes extends BaseController {
 
 
 
+        if($_POST['cpf'] != ''){
+            $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf']));
+            $this->db->select('precadastro_id');
+            $this->db->from('tb_precadastro');
+            $this->db->where('cpf', $cpf);
+            $this->db->where('ativo', 't');
+            $return = $this->db->get()->result();
+
+            if(count($return) > 0){
+                $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
+            }
+        }
+        
         $paciente_id = $this->paciente->gravar();
         if ($paciente_id) {
             $data['mensagem'] = 'Paciente gravado com sucesso';

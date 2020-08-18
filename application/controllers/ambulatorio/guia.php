@@ -7025,8 +7025,8 @@ table tr:hover  #achadoERRO{
         foreach($relatorio as $item){
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-        // $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
-        $lista = $this->guia->listarparcelaconfirmarpagamentoempresa($item->paciente_contrato_parcelas_id); 
+         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        //$lista = $this->guia->listarparcelaconfirmarpagamentoempresa($item->paciente_contrato_parcelas_id); 
         // echo "<pre>";
         // print_r($lista);
         // die(); 
