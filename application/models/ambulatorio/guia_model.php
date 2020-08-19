@@ -12858,6 +12858,7 @@ ORDER BY ae.agenda_exames_id)";
 
     function relatoriovoucher(){
         $this->db->select('p.nome as paciente,
+                            pe.nome as pessoa,
                             vc.data, vc.horario,
                             vc.data_cadastro,
                             vc.operador_cadastro, 
@@ -12868,6 +12869,7 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_consultas_avulsas ca','vc.consulta_avulsa_id = ca.consultas_avulsas_id','left');
         $this->db->join('tb_paciente p','p.paciente_id = ca.paciente_id','left');
+        $this->db->join('tb_paciente pe','pe.paciente_id = ca.pessoa_id','left');
         $this->db->join('tb_financeiro_parceiro pa','pa.financeiro_parceiro_id = vc.parceiro_id','left');
         $this->db->join('tb_operador o','o.operador_id = vc.operador_cadastro','left');
         $this->db->where('vc.ativo','t');

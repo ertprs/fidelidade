@@ -30,7 +30,11 @@
                 if($item->gratuito == 't'){ 
                 ?>
                 <tr class="corverde">
-                <td><?= $item->paciente; ?></td>
+                <? if($item->pessoa != ''){?>
+                <td><?= $item->pessoa; ?></td>
+                <?}else{?>
+                    <td><?= $item->paciente; ?></td>
+                <?}?>
                 <td><?= $item->fantasia; ?></td>
                 <td>GRATUITO</td>
                 <td><?= $data .' - '.$item->horario; ?></td>
@@ -41,7 +45,11 @@
                      $valor_total += $item->valor;
                 ?>
             <tr>
+            <? if($item->pessoa != ''){?>
+                <td><?= $item->pessoa; ?></td>
+            <?}else{?>
                 <td><?= $item->paciente; ?></td>
+            <?}?>
                 <td><?= $item->fantasia; ?></td>
                 <td>R$ <?= number_format($item->valor, 2, ',', '.'); ?></td>
                 <td><?= $data .' - '.$item->horario; ?></td>
