@@ -409,7 +409,7 @@ class pacientes extends BaseController {
         }
         
         $parceiros = $this->paciente->listarparceirosurl();
-        if($_POST['financeiro_parceiro_id'] != ""){
+        if(@$_POST['financeiro_parceiro_id'] != ""){
              $parceiro_post = $_POST['financeiro_parceiro_id'];
           }else{
              $parceiropadrao =  $this->parceiro->parceiropadrao(); 

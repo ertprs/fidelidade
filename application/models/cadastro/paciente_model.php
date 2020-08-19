@@ -1198,7 +1198,7 @@ class paciente_model extends BaseModel {
                 $this->db->where('paciente_id', $paciente_id);
                 $this->db->update('tb_paciente');
 //                var_dump($_POST); die;
-                if ($_POST['pessoajuridica'] == 'SIM') {
+                if (@$_POST['pessoajuridica'] == 'SIM') {
                     $this->db->set('pessoa_juridica', 't');
                 }
 
@@ -4878,7 +4878,7 @@ class paciente_model extends BaseModel {
                 }
             }
         }
-        if ($_POST['pessoajuridica'] == 'SIM') {
+        if (@$_POST['pessoajuridica'] == 'SIM') {
             $this->db->set('pessoa_juridica', 't');
         }
         $this->db->set('paciente_id', $paciente_id);

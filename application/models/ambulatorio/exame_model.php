@@ -83,29 +83,29 @@ class exame_model extends Model {
                             p.celular');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_municipio m','m.municipio_id = p.municipio_id','left');
-        // $this->db->where('p.situacao', 'Titular');
+        $this->db->where('p.situacao', 'Titular');
         $this->db->where('p.ativo', 'true');
-        // if($perfil_id == 6){
-        //     $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
-        //     $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
-        // }
-        // if($perfil_id == 5){
-        //     $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
-        //     // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
-        // }
-        // if ($parametro != null) {
-        //     $this->db->where('p.nome ilike', "%" . $parametro . "%");
-        // }
-        // if($perfil_id == 6){
-        //     $this->db->where('go.ativo', 'true');
-        //     $this->db->where('ro.ativo', 'true');
-        //     $this->db->where('ro.representante_id', $operador_id);
-        // }
-        // if($perfil_id == 5){
-        //     $this->db->where('go.ativo', 'true');
-        //     // $this->db->whe]re('ro.ativo', 'true');
-        //     $this->db->where('go.gerente_id', $operador_id);
-        // }
+        if($perfil_id == 6){
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
+            $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+        }
+        if($perfil_id == 5){
+            $this->db->join('tb_ambulatorio_gerente_operador go', 'go.operador_id = p.vendedor', 'left');
+            // $this->db->join('tb_ambulatorio_representante_operador ro', 'ro.gerente_id = go.gerente_id', 'left');
+        }
+        if ($parametro != null) {
+            $this->db->where('p.nome ilike', "%" . $parametro . "%");
+        }
+        if($perfil_id == 6){
+            $this->db->where('go.ativo', 'true');
+            $this->db->where('ro.ativo', 'true');
+            $this->db->where('ro.representante_id', $operador_id);
+        }
+        if($perfil_id == 5){
+            $this->db->where('go.ativo', 'true');
+            // $this->db->whe]re('ro.ativo', 'true');
+            $this->db->where('go.gerente_id', $operador_id);
+        }
         $return = $this->db->get();
         return $return->result();
     }
