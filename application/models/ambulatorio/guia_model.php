@@ -10975,7 +10975,7 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->join("tb_paciente_contrato_parcelas cp", "cp.paciente_contrato_id = pc.paciente_contrato_id", 'letf');
             $this->db->where("pc.ativo", 't');
             $this->db->where("cp.ativo", 't');
-            $this->db->where("p.cpf", $paciente_id);
+            $this->db->where("p.paciente_id", $paciente_id);
             return $this->db->get()->result();
         } catch (Exception $exc) {
             return -1;
@@ -11021,23 +11021,9 @@ ORDER BY ae.agenda_exames_id)";
 
     function confirmaparcelaimportada($paciente_id = NULL) {
 
-        $this->db->select('paciente_id');
-        $this->db->from('tb_paciente');
-        $this->db->where('cpf', $paciente_id);
-        $pacie = $this->db->get()->result();
-
-        if(count($pacie) > 0){
-            $paciente_id = $pacie[0]->paciente_id;
-        }else{
-            $paciente_id = 0;
-        }
-
-
         $parcelas = $this->listarparcelaconfirmarpagamentoimportada($paciente_id);
         
-        // echo '<pre>';
-        // print_r($parcelas);
-        // die;
+        
         foreach ($parcelas as $pacel) {
             @$valor = $pacel->valor;
             @$paciente_id = $pacel->paciente_id;

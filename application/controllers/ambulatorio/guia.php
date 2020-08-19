@@ -4937,15 +4937,11 @@ class Guia extends BaseController {
             $codigo_retornno =  substr($linha, 67, 2);           
             if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
                 //pegando uma coluna especifica com o substr
-                //$paciente_id = substr($linha, 1, 25);
-                $paciente_id = substr($linha, 137, 11);
-                // echo $paciente_id;     
-                // die;                       
+                    $paciente_id = substr($linha, 1, 25);
+
+                    
                 //fazendo a consulta de acordo com o numero do paciente do arquivo 
-                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);
-                // echo '<pre>';
-                // print_r($data['lista_paciente']);
-                // die;           
+                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);          
                 $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
 
             }
