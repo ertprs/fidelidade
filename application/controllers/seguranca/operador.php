@@ -81,6 +81,11 @@ class Operador extends BaseController {
         $this->loadView('seguranca/operador-lista', $data);
     }
 
+    function pesquisarvendedores($limite = 50) {
+        $data["limite_paginacao"] = $limite;
+        $this->loadView('seguranca/operadorvendedores-lista', $data);
+    }
+
     function pesquisargerentevendas($limite = 50) {
         $data["limite_paginacao"] = $limite;
         $this->loadView('seguranca/gerentevendas-lista', $data);

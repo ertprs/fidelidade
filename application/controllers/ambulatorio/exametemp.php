@@ -405,8 +405,7 @@ class Exametemp extends BaseController {
 
         $this->excluirparceria($paciente_id);
 
-        foreach ($pagamento as $item) {
-
+        foreach ($pagamento as $item) { 
 
             Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
             $invoice_id = $item->invoice_id;
@@ -984,7 +983,7 @@ class Exametemp extends BaseController {
 
     function excluirparceria($paciente_id){
          $retorno_paciente = $this->paciente->listardados($paciente_id);
-         $cpf = $retorno_paciente[0]->cpf;
+//         $cpf = $retorno_paciente[0]->cpf;
          $parceiro_id = $retorno_paciente[0]->parceiro_id;        
          $parceiros = $this->paciente->listarparceirosporid($parceiro_id);
          $endereco = $parceiros[0]->endereco_ip;
@@ -992,9 +991,9 @@ class Exametemp extends BaseController {
          $url = "http://" . $endereco . "/autocomplete/excluirparceriafidelidade";
          
          $postdata = http_build_query(
-                    array(
-                        'cpf' => $cpf,
-                        'parceriamed_id' => $parceiro_id
+                    array( 
+                        'parceriamed_id' => $parceiro_id,
+                        'paciente_id' => $paciente_id
                     )
             );
             $opts = array('http' =>
@@ -1008,7 +1007,8 @@ class Exametemp extends BaseController {
            
               $result = file_get_contents($url, false, $context);
      }
-   //      print_r($result); 
+//         print_r($result); 
+//         die();
     }
     
     

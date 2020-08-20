@@ -436,6 +436,7 @@ $data['permissao'] = $this->db->get()->result();
                             <ul>
                                 <li><span class="folder">Recep&ccedil;&atilde;o</span>
                                         <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/novo">Cadastrar Vendedores</a></span></ul>
+                                        <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisarvendedores">Lista de Vendedores</a></span></ul>
                                 </li>
                             </ul>
                         </li>

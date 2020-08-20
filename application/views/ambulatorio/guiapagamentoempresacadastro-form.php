@@ -287,119 +287,153 @@
 
                                     <? }
                                     ?>
-                                    <? if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') { ?>
-
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-
-                                                <td colspan="3"  class="<?php echo $estilo_linha; ?>">                                                       
-                                                </td>
-
-                                                <?
-                                            else:
-                                                ?>
-                                                <td  class="<?php echo $estilo_linha; ?>" > 
-
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
-                                            ?>
-
-                                                                        <!--                                            <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 100px;" class="bt_link">
-                                                                                                                            <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/ <?= @$contrato_id ?>/<?= @$item->paciente_contrato_parcelas_id ?>">Gerar Pag. Iugu
-                                                                                                                            </a></div>
-                                                                                                                    </td>-->
-                                        <? endif; ?>
-
-
-
-                                        <? if ($item->pago_cartao != 't') { ?>
-                                            <td  class="<?php echo $estilo_linha; ?>" >
-
-                                            </td>   
-                                        <? } else { ?>
-                            <!--                                            <td  class="<?php echo $estilo_linha; ?>" style="color: #ebcf11" >Aguardando Confirmação
-                                            </td>  -->
-                                        <? } ?>
-
-                                    <? } elseif ($item->data_cartao_iugu != '') { ?>
-                                        <? if ($item->status != '') { ?>
-                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #888001;font-weight: bold" > <?
-                                                    if ($item->status == 'pending') {
-                                                        echo 'Pendente';
-                                                    } else {
-                                                        echo $item->status . ". Código LR: " . $item->codigo_lr;
-                                                    }
-                                                    ?></span><a target="_blank" href="https://support.iugu.com/hc/pt-br/articles/206858953-Como-identificar-o-erro-da-tentativa-de-pagamento-com-cart%C3%A3o-de-cr%C3%A9dito-falha-">->></a> </td>
-                                        <? } else { ?>
-                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #01882e;font-weight: bold" > Pagamento por Cartão Agendado</span> </td>      
-                                        <? } ?>
-
-
-                                        <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 120px;" class="bt_link" >
-                                                <a id="" href="<?= base_url() ?>ambulatorio/guia/cancelaragendamentocartao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Cancelar Agen.
-                                                </a></div> 
-
-                                        </td> 
-                                    <? } else { ?>
-
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-
-                                                <?
-                                            else:
-                                                ?>
-                                                <td  class="<?php echo $estilo_linha; ?>" > 
-
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
-                                            ?>
-
-                                            <td colspan="1" class="<?php echo $estilo_linha; ?>">
-                                                <div style="width: 100px;" class="bt_link">
-                                                    <a target="_blank" href="<?= $item->url ?>">Pag. Iugu
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        <?
-                                        endif;
+                                                                        <?
+                                    if($perfil_id != 10){
+                             if ($empresapermissao[0]->client_secret != "" && $empresapermissao[0]->client_id != "") {
                                         ?>
-
-                                        <?
-                                        if ($excluir_somente_empresa == True):
-                                            if ($this->session->userdata('empresa_id') == $item->empresa_id):
-                                                ?>
-
-                                                <?
-                                            else:
-                                                ?>
-                                                <td  class="<?php echo $estilo_linha; ?>" > 
-
-                                                </td>
-                                            <?
-                                            endif;
-                                        else:
+                                        <?php
+                                        if (@$item->link_gerencianet != "") {
                                             ?>
-
-                                            <td colspan="1" class="<?php echo $estilo_linha; ?>">
-                                                <div style="width: 100px;" class="bt_link">
-                                                    <a  href="<?= base_url() ?>ambulatorio/guia/reenviaremail/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Re-enviar Email
-                                                    </a>
-                                                </div>
+                                            <td   class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
+                                                    <a id="pagamentogerencianet" href="<?= @$item->link_gerencianet ?>"  target="_blank" >Pag. Gerencianet
+                                                    </a></div>  
                                             </td>
 
-                                        <? endif; ?>
+                                            <td   class="<?php echo $estilo_linha; ?>" >
+                                                <div style="width: 50px;" class="bt_link">
+                                                    <?php if (@$item->carne == "t") {
+                                                        ?>
+                                                        <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/reenviaremailgerencianetcarne/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->carnet_id ?>"  >Re-enviar Email
+                                                        </a>
+                                                        <?
+                                                    } else {
+                                                        ?>
+                                                        <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/reenviaremailgerencianet/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->charge_id ?>"  >Re-enviar Email
+                                                        </a>
+                                                        <?php
+                                                    }
+                                                    ?>  
+                                                </div>  
+                                            </td>
+                                            <?
+                                        } else {
+                                            ?>
+                                            <td   class="<?php echo $estilo_linha; ?>" colspan="1"><div style="width: 50px;" class="bt_link">
+
+                                                    <?php
+                                                    if ($this->session->userdata('cadastro') == 2 && $item->paciente_dependente_id != "") {
+                                                        ?>
+                                                        <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentogerencianet/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->paciente_dependente_id; ?>" >Gerar Pag. Gerencianet
+                                                        </a>
+                                                    <?php } else { ?>
+                                                        <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentogerencianet/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" >Gerar Pag. Gerencianet
+                                                        </a>
+
+                                                    <?php } ?>
+                                                    
+                                                </div>  
+                                            </td> 
+                                            <?php
+                                        }
+                                        ?>
+                                                                 
+                                        <td  class="<?php echo $estilo_linha; ?>" >
+                                            
+                                        </td>
+                                                 
+                                        <?
+                                    } elseif($empresapermissao[0]->iugu_token != "" ){
 
 
-                                    <? }
+                                        if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') {
+                                            ?>
+
+                                                <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 100px;" class="bt_link">
+                                                        <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pag. Iugu
+                                                        </a></div>
+                                                </td> 
+
+
+                                            <? if ($item->pago_cartao != 't') { ?>
+                                                <td  class="<?php echo $estilo_linha; ?>" >
+
+                                                </td>   
+                                            <? } else { ?>
+                                                <td  class="<?php echo $estilo_linha; ?>" style="color: #ebcf11" >Aguardando Confirmação
+                                                </td>  
+                                            <? } ?>
+
+                                        <? } elseif ($item->data_cartao_iugu != '') { ?>
+                                            <? if ($item->status != '') { ?>
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #888001;font-weight: bold" > <?
+                                                        if ($item->status == 'pending') {
+                                                            echo 'Pendente';
+                                                        } else {
+                                                            echo $item->status . ". Código LR: " . $item->codigo_lr;
+                                                        }
+                                                        ?></span><a target="_blank" href="https://support.iugu.com/hc/pt-br/articles/206858953-Como-identificar-o-erro-da-tentativa-de-pagamento-com-cart%C3%A3o-de-cr%C3%A9dito-falha-">->></a> </td>
+                                            <? } else { ?>
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #01882e;font-weight: bold" > Pagamento por Cartão Agendado</span> </td>      
+                                            <? } ?>
+
+
+                                            <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 120px;" class="bt_link">
+                                                    <a id="" href="<?= base_url() ?>ambulatorio/guia/cancelaragendamentocartao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Cancelar Agen.
+                                                    </a></div> 
+
+                                            </td> 
+                                        <? } else { ?>
+
+
+
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>">
+                                                    <div style="width: 100px;" class="bt_link">
+                                                        <a target="_blank" href="<?= $item->url ?>">Pag. Iugu
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                          
+
+                                           
+
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>">
+                                                    <div style="width: 100px;" class="bt_link">
+                                                        <a  href="<?= base_url() ?>ambulatorio/guia/reenviaremail/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Re-enviar Email
+                                                        </a>
+                                                    </div>
+                                                </td>
+
+
+                                            <?
+                                        }
+                                    }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
+                                        // echo '<pre>';
+                                        // print_r($empresapermissao[0]->agenciasicoob);
+                                        // echo '<br>';
+                                        // print_r($empresapermissao[0]->contacorrentesicoob);
+                                        // echo '<br>';
+                                        // print_r($empresapermissao[0]->codigobeneficiariosicoob);
+                                        // die;
+                                     ?>
+                                        <td  class="<?php echo $estilo_linha; ?>">
+                                            
+                                           <?php if($item->taxa_adesao != 't'){?>
+                                            <div style="width: 50px;" class="bt_link">
+                                                <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoobempresa/<?= @$paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank" >Boleto Sicoob
+                                                </a>
+                                            </div>
+                                            <?php }?>
+                                        </td>
+                                   <?
+                                    }
                                     ?>
+                                 <?php }else{
+                                   ?>
+                                        <td  class="<?php echo $estilo_linha; ?>" colspan="3">
+                                        </td>
+                                        <?
+                                   }
+                                 ?>
                                     <? if ($perfil_id == 1) { ?>
 
                                         <?

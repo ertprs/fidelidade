@@ -1198,7 +1198,7 @@ class paciente_model extends BaseModel {
                 $this->db->where('paciente_id', $paciente_id);
                 $this->db->update('tb_paciente');
 //                var_dump($_POST); die;
-                if ($_POST['pessoajuridica'] == 'SIM') {
+                if (@$_POST['pessoajuridica'] == 'SIM') {
                     $this->db->set('pessoa_juridica', 't');
                 }
 
@@ -2139,8 +2139,8 @@ class paciente_model extends BaseModel {
             $this->db->insert('tb_paciente_contrato_dependente');
 
             $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
-                SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                SET valor = valor + '$valor '
+                WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = true AND taxa_adesao = false" ;
             $this->db->query($sql);
 
 //            $this->db->set('ativo', 'f');
@@ -2208,7 +2208,7 @@ class paciente_model extends BaseModel {
                
                 $sql = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor'
-                 WHERE paciente_contrato_id = $paciente_contrato_id";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = true AND taxa_adesao = false" ;
                 $this->db->query($sql);
             }
 //            $this->db->set('ativo', 'f');
@@ -4068,7 +4068,8 @@ class paciente_model extends BaseModel {
                             cp.paciente_contrato_parcelas_id,
                             paciente_contrato_parcelas_iugu_id, 
                             cp.empresa_iugu,
-                            fr.nome as forma_pagamento
+                            fr.nome as forma_pagamento,
+                            pc.empresa_cadastro_id
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
@@ -4877,7 +4878,7 @@ class paciente_model extends BaseModel {
                 }
             }
         }
-        if ($_POST['pessoajuridica'] == 'SIM') {
+        if (@$_POST['pessoajuridica'] == 'SIM') {
             $this->db->set('pessoa_juridica', 't');
         }
         $this->db->set('paciente_id', $paciente_id);

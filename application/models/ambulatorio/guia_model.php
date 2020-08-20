@@ -978,6 +978,7 @@ if($_POST['tipopaciente'] == 'dependente'){
         $return = $this->db->get();
         return $return->result();
     }
+    
 
     function listarparcelaconfirmarpagamentogatilhoiugu($invoice_id) {
 
@@ -5921,6 +5922,22 @@ ORDER BY p.nome";
         // print_r($valor);
         // die;
 
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $empresa_conta = $this->db->get()->result();
+
+        if($empresa_conta[0]->conta_pagamento_associado == 't'){
+            $this->db->select('conta_pagamento');
+            $this->db->from('tb_forma_rendimento');
+            $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+            $conta_pagamento = $this->db->get()->result();
+
+            if($conta_pagamento[0]->conta_pagamento == ''){
+                return 2;
+            }
+        }
+
         $credor = $this->criarcredordevedorpaciente($contrato_id);
         $plano = @$parcela[0]->plano;
 
@@ -5963,7 +5980,12 @@ ORDER BY p.nome";
             $this->db->set('tipo', $plano);
             $this->db->set('classe', 'CARTEIRA');
             $this->db->set('nome', $credor);
-            $this->db->set('conta', $conta_id);
+
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }else{
+                $this->db->set('conta', $conta_id);
+            }
             if(isset($_POST['forma_rendimento_id']) && $_POST['forma_rendimento_id']){
                 $this->db->set('forma_rendimento_id',$_POST['forma_rendimento_id']);
             }
@@ -5981,7 +6003,13 @@ ORDER BY p.nome";
             else
                 $this->db->set('valor', $valor);
             $this->db->set('entrada_id', $entradas_id);
-            $this->db->set('conta', $conta_id);
+
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }else{
+                $this->db->set('conta', $conta_id);
+            }
+
             $this->db->set('nome', $credor);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('data', $data);
@@ -6282,6 +6310,22 @@ ORDER BY p.nome";
 
     function confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id) {
 
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $empresa_conta = $this->db->get()->result();
+
+        if($empresa_conta[0]->conta_pagamento_associado == 't'){
+            $this->db->select('conta_pagamento');
+            $this->db->from('tb_forma_rendimento');
+            $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+            $conta_pagamento = $this->db->get()->result();
+
+            if($conta_pagamento[0]->conta_pagamento == ''){
+                return -2;
+            }
+        }
+
         $credor_obj = $this->listarparcelaconfirmarpagamentoconsultaavulsa($paciente_id);
 
         $parcela = $this->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
@@ -6354,7 +6398,7 @@ ORDER BY p.nome";
             $this->db->where('consultas_avulsas_id',$consultas_avulsas_id);         
             $contEntrada = $this->db->get()->result();
             if(count($contEntrada) > 0){
-                return true;
+                return 1;
             }
             
            
@@ -6371,11 +6415,14 @@ ORDER BY p.nome";
             
             $this->db->set('nome', $credor);
 
-            if (@$_POST['conta'] != "") {
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }elseif(@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
             } else {
                 $this->db->set('conta', $conta_id);
             }
+
             $this->db->set('consultas_avulsas_id',$consultas_avulsas_id);
 //          $this->db->set('observacao', $_POST['Observacao']);
             $this->db->set('data_cadastro', $horario);
@@ -6391,7 +6438,9 @@ ORDER BY p.nome";
             // else
             $this->db->set('valor', $valor);
             $this->db->set('entrada_id', $entradas_id);
-            if (@$_POST['conta'] != "") {
+            if($empresa_conta[0]->conta_pagamento_associado == 't'){
+                $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }elseif(@$_POST['conta'] != "") {
                 $this->db->set('conta', @$_POST['conta']);
             } else {
                 $this->db->set('conta', $conta_id);
@@ -6421,7 +6470,7 @@ ORDER BY p.nome";
         // if (trim($erro) != "") // erro de banco
         //     return false;
         // else
-        return $plano;
+        return 1;
     }
 
     function gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id) {
@@ -7987,7 +8036,7 @@ AND data <= '$data_fim'";
                     $valor_adicional = ($total - $total_limite) * $valor;
                     $sql2 = "UPDATE ponto.tb_paciente_contrato_parcelas
                 SET valor = valor + '$valor_adicional'
-                 WHERE paciente_contrato_id = $paciente_contrato_id ";
+                 WHERE paciente_contrato_id = $paciente_contrato_id AND ativo = TRUE";
                     $this->db->query($sql2);
                 }
             }
@@ -10974,6 +11023,7 @@ ORDER BY ae.agenda_exames_id)";
 
         $parcelas = $this->listarparcelaconfirmarpagamentoimportada($paciente_id);
         
+        
         foreach ($parcelas as $pacel) {
             @$valor = $pacel->valor;
             @$paciente_id = $pacel->paciente_id;
@@ -11952,6 +12002,11 @@ ORDER BY ae.agenda_exames_id)";
                             e.nome as empresa,
                             pc.empresa_cadastro_id,
                             ec.financeiro_credor_devedor_id as credor_id,
+                            ec.nome as empresa_forma,
+                            ec.cep as cep_empresa,
+                            ec.logradouro as logradouro_empresa,
+                            me.nome as municipio_empresa,
+                            me.estado as estado_empresa,
                             pcp.taxa_adesao
                             ');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
@@ -11962,6 +12017,7 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
         $this->db->join('tb_empresa e', 'e.empresa_id = p.empresa_id', 'left');
         $this->db->join('tb_empresa_cadastro ec','ec.empresa_cadastro_id = pc.empresa_cadastro_id','left');
+        $this->db->join('tb_municipio me', 'me.municipio_id = ec.municipio_id', 'left');
         $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
         $this->db->where('pcp.ativo', 't');
         $this->db->orderby('pcp.parcela');
@@ -12788,6 +12844,7 @@ ORDER BY ae.agenda_exames_id)";
 
     function relatoriovoucher(){
         $this->db->select('p.nome as paciente,
+                            pe.nome as pessoa,
                             vc.data, vc.horario,
                             vc.data_cadastro,
                             vc.operador_cadastro, 
@@ -12798,6 +12855,7 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_consultas_avulsas ca','vc.consulta_avulsa_id = ca.consultas_avulsas_id','left');
         $this->db->join('tb_paciente p','p.paciente_id = ca.paciente_id','left');
+        $this->db->join('tb_paciente pe','pe.paciente_id = ca.pessoa_id','left');
         $this->db->join('tb_financeiro_parceiro pa','pa.financeiro_parceiro_id = vc.parceiro_id','left');
         $this->db->join('tb_operador o','o.operador_id = vc.operador_cadastro','left');
         $this->db->where('vc.ativo','t');
@@ -12974,7 +13032,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     
     function gerarcnab(){
      $this->db->select('p.nome as titular,
-     valor, pc.ativo as contrato,
+                            valor, pc.ativo as contrato,
                             cp.data, 
                             cp.ativo, 
                             cp.manual,

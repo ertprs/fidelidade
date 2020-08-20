@@ -887,6 +887,8 @@ class Guia extends BaseController {
             $this->guia->addimpressao($contrato_id, $paciente_id, $paciente_contrato_dependente_id);
             $this->guia->auditoriacadastro($paciente_id, 'IMPRIMIU A CARTEIRA');
             $this->load->View('ambulatorio/impressaoficharonaldo', $data);
+        }else if($codigo == 2){
+            echo 'Forma de Pagamento Não configurada Corretamente a uma Conta';
         }else{
             echo 'Problema ao Gerar Carteirinha ou Pagamento';
             echo '<br>';
@@ -4796,18 +4798,23 @@ class Guia extends BaseController {
         $data['pagamento'] = $this->guia->listarpagamentoscontratoconsultaavulsa($consultas_avulsas_id);
         $data['contas'] = $this->guia->listarcontas();
         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+        $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
         $this->load->View('ambulatorio/alterarpagamentoavulsas-form', $data);
     }
 
     function gravaralterarpagamentoavulsas($consultas_avulsas_id, $paciente_id, $contrato_id) {
         $this->guia->alterardatapagamentoavulsa($consultas_avulsas_id);
-        if ($this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id)) {
+        $codigo = $this->guia->confirmarpagamentoconsultaavulsa($consultas_avulsas_id, $paciente_id);
+        if ($codigo == 1) {
             $mensagem = 'Sucesso ao confirmar pagamento';
+
+            $this->session->set_flashdata('message', $mensagem);
+            redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+            
         } else {
-            $mensagem = 'Erro ao confirmar pagamento. Opera&ccedil;&atilde;o cancelada.';
+            echo 'Erro ao confirmar pagamento. Operação cancelada.';
         }
-        $this->session->set_flashdata('message', $mensagem);
-        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
     }
 
     function gravarstatusconsultaextra($consultas_avulsas_id, $paciente_id, $contrato_id) {
@@ -4930,10 +4937,11 @@ class Guia extends BaseController {
             $codigo_retornno =  substr($linha, 67, 2);           
             if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
                 //pegando uma coluna especifica com o substr
-                $paciente_id = substr($linha, 1, 25);
-                echo $paciente_id;                            
+                    $paciente_id = substr($linha, 1, 25);
+
+                    
                 //fazendo a consulta de acordo com o numero do paciente do arquivo 
-                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);             
+                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);          
                 $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
 
             }
@@ -4944,7 +4952,9 @@ class Guia extends BaseController {
         
     }
         
-         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+        //  redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+         redirect(base_url() . "ambulatorio/guia/importararquivoretorno");
     }
 
     function downloadTXToptanteimportado($nome_arquivo = NULL) {
@@ -5405,6 +5415,7 @@ table tr:hover  #achadoERRO{
         // echo '<pre>';
         // print_r($data['listarpagamentoscontrato']);
         // die;
+        $data['paciente_id'] = $data['listarpagamentoscontrato'][0]->empresa_cadastro_id;
         $data['empresa_cadastro_id'] = $empresa_cadastro_id;
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $paciente_contrato_id;
@@ -6830,6 +6841,46 @@ table tr:hover  #achadoERRO{
 
   }
 
+
+  function gerarboletosicoobempresa($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
+        $this->load->plugin('mpdf');
+        $empresa_id = $this->session->userdata('empresa_id');
+        $lista = $this->guia->listarparcelaconfirmarpagamentoempresa($paciente_contrato_parcelas_id); 
+        // echo '<pre>';
+        // print_r ($lista);
+        // die;
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+        $valor  =   str_replace(".", ",",$lista[0]->valor);
+    // DADOS DO BOLETO PARA O SEU CLIENTE
+    $taxa_boleto = 0;
+    $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+    $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+    $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+    $data['vencimento'] = $lista[0]->data;
+    $data['paciente'] = $lista[0]->empresa_forma;
+    $data['municipio'] = $lista[0]->municipio_empresa;
+    $data['estado'] = $lista[0]->estado_empresa;
+    $data['cep'] = $lista[0]->cep_empresa;
+    $data['logradouro'] = $lista[0]->logradouro_empresa;
+    
+    //Dados da empresa
+    $data['cnpj'] = $empresa[0]->cnpj;
+    $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+    $data['estadoEmpresa'] = $empresa[0]->estado;
+    $data['municipioEmpresa'] = $empresa[0]->municipio;
+    $data['cedente'] = $empresa[0]->nome;
+    
+    //     echo "<pre>";
+    //   print_r($lista);
+    //   die;
+    $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+    $data['agencia'] = $empresa[0]->agenciasicoob;  
+    $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+    // NÃO ALTERAR!    
+    $this->load->View('ambulatorio/boletosicoob',$data); 
+
+    }
+
   function gerarboletosicoobAPP($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
     $this->load->plugin('mpdf');
     // $empresa_id = $this->session->userdata('empresa_id');
@@ -6970,8 +7021,12 @@ table tr:hover  #achadoERRO{
         foreach($relatorio as $item){
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
-        
+         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        //$lista = $this->guia->listarparcelaconfirmarpagamentoempresa($item->paciente_contrato_parcelas_id); 
+        // echo "<pre>";
+        // print_r($lista);
+        // die(); 
+
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
         $municipio = $lista[0]->municipio;
@@ -7809,6 +7864,9 @@ function geraCodigoBanco($numero) {
             $destino = "./upload/retornoimportadoscnab/$chave_pasta";
             chmod($destino, 0777);
         }
+
+        // unlink("./upload/retornoimportadoscnab/$nome_arquivo.zip");
+        array_map('unlink', glob("./upload/retornoimportadoscnab/$chave_pasta/*"));
                             
         $configuracao = array(
             'upload_path' => './upload/retornoimportadoscnab/' . $chave_pasta . '',
@@ -8013,6 +8071,7 @@ function geraCodigoBanco($numero) {
         $data['paciente_contrato_dependente_id']    =    $paciente_contrato_dependente_id;
         $data['paciente_titular']    =    $paciente_titular; 
         $data['contas'] = $this->guia->listarcontas();
+        $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
         $this->load->View('ambulatorio/formapagamentoimpressaocarteira',$data);   
     } 
     

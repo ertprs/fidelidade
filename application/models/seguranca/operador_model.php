@@ -71,6 +71,24 @@ class Operador_model extends BaseModel {
         return $this->db;
     }
 
+
+    function listar_vendedores($args = array()) {
+        $this->db->from('tb_operador')
+                ->join('tb_perfil', 'tb_perfil.perfil_id = tb_operador.perfil_id', 'left')
+                ->select('"tb_operador".*, tb_perfil.nome as nomeperfil');
+                $this->db->where('tb_operador.ativo', "t");
+                $this->db->where('tb_operador.perfil_id IN (7,4,8,9)');
+
+        if ($args) {
+            if (isset($args['nome']) && strlen($args['nome']) > 0) {
+                $this->db->where('tb_operador.nome ilike', "%" . $args['nome'] . "%");
+                $this->db->orwhere('tb_operador.usuario ilike', "%" . $args['nome'] . "%");
+                $this->db->where('tb_operador.perfil_id IN (7,4,8,9)');
+            }
+        }
+        return $this->db;
+    }
+
     function listargerentevendas($args = array()) {
         $this->db->from('tb_operador')
                 ->join('tb_perfil', 'tb_perfil.perfil_id = tb_operador.perfil_id', 'left')

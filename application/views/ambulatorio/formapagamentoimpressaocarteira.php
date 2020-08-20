@@ -29,7 +29,7 @@
                     </select>
                 </td>
             </tr>
-            
+            <? if($permissao[0]->conta_pagamento_associado != 't'){?>
             <tr>
                 <td>Conta</td>
                  <td>
@@ -45,6 +45,7 @@
                      </select>
                 </td>
             </tr> 
+                        <? } ?>
             
             <tr>
                 <td><input type="submit" value="Enviar"></td>

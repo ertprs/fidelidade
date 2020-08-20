@@ -552,7 +552,7 @@ class Caixa extends BaseController {
          
         // echo "<pre>";
         // print_r($data['relatorioentrada']);
-        //die;
+        // die;
          
         if ($_POST['email'] == "NAO") {
             $this->load->View('cadastros/impressaorelatorioentrada', $data);
