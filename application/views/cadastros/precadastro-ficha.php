@@ -16,7 +16,7 @@
             </div>
             <div>
                 <label>Cpf</label>
-            <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$lista[0]->cpf; ?>" onblur="verificarCPF()" />
+            <input type="text" name="cpf" id ="cpfcnpj" class="texto03" value="<?= @$lista[0]->cpf; ?>" onblur="verificarCPF()" required/>
             </div>
             
               <div>

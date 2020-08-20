@@ -376,9 +376,7 @@ class pacientes extends BaseController {
     }
 
     function gravar() { 
-
-
-
+ 
         $paciente_id = $this->paciente->gravar();
         if ($paciente_id) {
             $data['mensagem'] = 'Paciente gravado com sucesso';
@@ -428,7 +426,7 @@ class pacientes extends BaseController {
             $context = stream_context_create($opts);
 
             $result = file_get_contents($url, false, $context);
-            // var_dump($result); die;
+            var_dump($result); die;
         }
 
         $this->guia->auditoriacadastro($paciente_id, 'ALTEROU O CADASTRO');
@@ -615,8 +613,7 @@ class pacientes extends BaseController {
                 
                 if($parceiro_post == $value->financeiro_parceiro_id){
                   $parceiro_id = $value->convenio_id;
-                }
-
+                } 
                 // echo '<pre>';
                 // var_dump($retorno_paciente); die;
                 $json_paciente = json_encode($retorno_paciente);
@@ -1376,6 +1373,7 @@ class pacientes extends BaseController {
 //        $config['upload_path'] = "/home/sisprod/projetos/clinica/upload/paciente/" . $paciente_id . "/";
         $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|doc|docx|xls|xlsx|ppt';
         $config['max_size'] = '0';
+        $config['file_name'] = 'logo.jpg';
         $config['overwrite'] = FALSE;
         $config['encrypt_name'] = FALSE;
         $this->load->library('upload', $config);
@@ -1515,6 +1513,18 @@ class pacientes extends BaseController {
             }
 
         }
+        if($_POST['cpf'] != ''){
+            $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf']));
+            $this->db->select('precadastro_id');
+            $this->db->from('tb_precadastro');
+            $this->db->where('cpf', $cpf);
+            $this->db->where('ativo', 't');
+            $return = $this->db->get()->result();
+
+            if(count($return) > 0){
+                $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
+            }
+        }
 
         $paciente_id = $this->paciente->gravardocumentos();
         $situacao = $_POST['situacao'];
@@ -1563,7 +1573,7 @@ class pacientes extends BaseController {
             if($value->endereco_ip != ""){
               $result = file_get_contents($url, false, $context);
             }
-        //  var_dump($result); die;
+//        var_dump($result); die;
         }
         
         if ($r != "-1") { 

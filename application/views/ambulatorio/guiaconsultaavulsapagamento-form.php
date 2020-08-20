@@ -87,6 +87,9 @@
                         Iugu::setApiKey($key);
                         $contador = 0; 
                         foreach ($listarpagamentoscontrato as $item) {
+                            // echo '<pre>';
+                            // print_r($listarpagamentoscontrato);
+                            // die;
                             $contador ++;
 //                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {
 //                                $invoice_id = $item->invoice_id;

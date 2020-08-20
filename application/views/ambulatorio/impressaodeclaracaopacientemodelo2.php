@@ -79,13 +79,13 @@
                         }
             ?>, 
             doravante denominada  <b>CONTRATADA </b>, neste ato representada, pelo seu Diretor Presidente e, 
-            de outro lado doravante denominado  <b>CLIENTE/ASSOCIADO </b>: <br><br>       
+            de outro lado doravante denominado <!-- <b>CLIENTE/ASSOCIADO </b>: --> <br><br>       
             </td>
             </tr>
 
             <tr>
             <td>
-            Eu,<b><u> <?= $paciente[0]->nome?> </b></u>, Brasileiro(a), estado civil 
+            <b>CLIENTE/ASSOCIADO </b><!-- Eu, --><b><u> <?= $paciente[0]->nome?> </b></u>,<!-- Brasileiro(a),--> <b>estado civil</b>
             <u>
             <?
                                 if (@$paciente[0]->estado_civil_id == 0) {
@@ -105,9 +105,9 @@
                                 }
             ?>
             </u>, 
-            Profissão <?=($paciente[0]->descricao != "" ? "<u>".$paciente[0]->descricao."</u>" : "_______________________" );?>
-            portador do RG nº <?=($paciente[0]->rg != "" ? "<u>".$paciente[0]->rg."</u>" : "______________________" );?>, 
-            e do CPF nº <?
+            <b>Profissão</b> <?=($paciente[0]->descricao != "" ? "<u>".$paciente[0]->descricao."</u>" : "_______________________" );?>
+            <b>portador do RG nº</b> <?=($paciente[0]->rg != "" ? "<u>".$paciente[0]->rg."</u>" : "______________________" );?>, 
+            <b>e do CPF nº </b><?
             $nbr_cpf = @$paciente[0]->cpf;
 
             @$parte_um = substr($nbr_cpf, 0, 3);
@@ -123,17 +123,17 @@
                 echo "_______________";
             }
             ?>,
-            Estado do <?=($paciente[0]->estado != "" ? "<u>".$paciente[0]->estado."</u>" : "________________" );?>
-            nascido em 
+            <b>Estado do </b><?=($paciente[0]->estado != "" ? "<u>".$paciente[0]->estado."</u>" : "________________" );?>
+            <b>nascido em </b>
                 <? if (@$paciente[0]->nascimento != "") {
                         echo "<u>" . date('d/m/Y', strtotime(@$paciente[0]->nascimento)) . "</u>";
                     } else {
                         echo "__/___/_____";
                     }?>,
-            residente nesta cidade, na <?=($paciente[0]->logradouro != "" ? "<u>".$paciente[0]->logro .' '. $paciente[0]->logradouro.' '.$paciente[0]->numero."</u>" : "________________" );?>,
-            bairro <?=($paciente[0]->bairro != "" ? "<u>".$paciente[0]->bairro."</u>" : "________________" );?>, 
-            cep <?=($paciente[0]->cep != "" ? "<u>".$paciente[0]->cep."</u>" : "________________" );?>, 
-            Telefone <?if (@$paciente[0]->celular == "") {
+            <b>residente nesta cidade, na </b><?=($paciente[0]->logradouro != "" ? "<u>".$paciente[0]->logro .' '. $paciente[0]->logradouro.' '.$paciente[0]->numero."</u>" : "________________" );?>,
+            <b> bairro </b><?=($paciente[0]->bairro != "" ? "<u>".$paciente[0]->bairro."</u>" : "________________" );?>, 
+            <b>cep </b><?=($paciente[0]->cep != "" ? "<u>".$paciente[0]->cep."</u>" : "________________" );?>, 
+            <b>Telefone </b><?if (@$paciente[0]->celular == "") {
                         @$telefone = $paciente[0]->telefone;
                     } else {
                         @$telefone = $paciente[0]->celular;
@@ -158,7 +158,7 @@
             <tr>
             <td>
             <br>
-            <u>Dependentes</u>
+            <b><u>Dependentes</u></b>
             <br>
                     <?
                     $contador = 0;
@@ -214,13 +214,12 @@
 
             <tr>
             <td align='justify'>
-            <b>§3º</b> Terá acesso aos parceiros conveniados, o ASSOCIADO e sua família
-            (compreendida em cônjuge e filhos até os 21 anos) no limite de 4 membros do 
-            grupo familiar, desde que devidamente inscritos no ato de contratação. Se o 
-            cliente requerer a adição de mais um membro do seu grupo familiar (filhos
-            maiores de 21 anos e demais membros da família, excepcionalmente sogro e
-            sogra), será cobrado per capita o valor de R$ 2,50 (dois reais e cinquenta
-            centavos) adicionados a parcela mensal. 
+            <b>§3º</b> Terá acesso aos parceiros conveniados, o <b>ASSOCIADO e sua família</b>, (compreendida em
+            cônjuge e filhos até os 21 anos), este, além do titular, no limite de <b>5 membros do grupo
+            familiar</b>, desde que devidamente inscritos no ato de contratação. Se o cliente requerer a adição
+            de mais um membro do seu grupo familiar (filhos maiores de 21 anos e demais membros da
+            família, excepcionalmente sogro e sogra), será cobrado per capita o valor de R$ 2,50 (dois reais
+            e cinquenta centavos) adicionados a parcela mensal 
             </td>
             </tr>
         </table>
@@ -248,18 +247,18 @@
             
             <tr>
             <td align='justify'>
-            <b>Art. 2º</b> O CLIENTE associado obriga-se a pagar, por si e pela sua família inscrita, 
-            o valor de R$ 65,00 mensalmente, mediante autorização de débitos, em anexo ao 
-            presente contrato, conforme sua exclusiva escolha (cartão de débito, cartão de 
-            crédito, ou pagamento direto junto à empresa). 
+            <b>Art. 2º</b> O CLIENTE associado obriga-se a pagar, por si e pela sua família inscrita, inicialmente
+            taxa de adesão no valor de R$ 65,00 (sessenta e cinco reais) e após, o pagamento da adesão,
+            iniciará mensalmente o valor de R$ 65,00 (sessenta e cinco reais), mediante autorização de
+            débitos, em anexo ao presente contrato, conforme sua exclusiva escolha (cartão de débito,
+            cartão de crédito, ou pagamento direto junto à empresa).
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>Parágrafo único:</b> A inadimplência, no valor da adesão, renovação ou mensalidade, 
-            suspende os serviços e vantagens do associado e sua família, após 05 dias do 
-            vencimento. 
+            <b>Parágrafo único:</b> A inadimplência, no valor da adesão, mensalidade ou renovação deste, dará
+            suspensão ao contrato, quando o mesmo atingir sessenta dias da primeira parcela inadimplente. 
             </td>
             </tr>
             
@@ -272,10 +271,8 @@
             
             <tr>
             <td align='justify'>
-            <b>§1º</b> Poderá o cliente associado ao plano SALUTE rescindir somente após o 
-            decimo segundo pagamento do presente contrato, sem quaisquer ônus, desde 
-            que comunique a central SALUTE seu desligamento, conforme dispõe o 
-            artigo 49º do Código de Defesa do Consumidor.  
+            <b>§1º</b> Poderá o cliente associado rescindir o presente contrato sem qualquer ônus dentro do prazo
+            de 07 (sete) dias contados da data da assinatura em qualquer unidade da SALUTE. 
             </td>
             </tr>
             <tr>
@@ -287,16 +284,14 @@
             </tr>
             <tr>
             <td align='justify'>
-            <b>§3º</b> A renovação do presente contrato se dará tacitamente por prazo 
-            adicional de um ano, sendo requerida sua rescisão após o aditivo anual, 
-            só poderá rescindir depois de igual período.  
+            <b>§3º</b> A renovação do presente contrato se dará tacitamente por prazo adicional de um ano. 
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
             <b>§4º</b> O valor da mensalidade será reajustado anualmente, na proporção 
-            da variação do INPC.  
+            da variação do INPC. <br> 
             </td>
             </tr>
             
@@ -319,10 +314,10 @@
             <tr>
             <td align='justify'>
             <b>Art. 4º</b> – O cliente associado declara ciente e de acordo com as 
-            cláusulas do presente contrato. Tudo que usar ou comprar, será 
+            cláusulas do presente contrato. <b>Tudo que usar ou comprar, será 
             pago ao prestador conveniado diretamente, assegurando apenas os 
             preços e descontos que constem nas informações no site e em seus 
-            materiais de divulgação.  
+            materiais de divulgação. </b> 
             </td>
             </tr>
         </table>
@@ -336,7 +331,7 @@
     <tr>
     <td align='justify'>
     <b>Art.5º</b> O presente contrato deverá ser devidamente interpretado 
-    de acordo com as regras previstas no Código Civil Direito brasileiro.  
+    de acordo com as regras previstas no Código do Consumidor.
     </td>
     </tr>
 
@@ -495,15 +490,15 @@
     </tr>
 
     <tr>
-    <td align='justify'><b>Art.2º</b> - A adesão refere a cobertura em Seguro de Acidentes 
-    Pessoais Coletivos da Porto Seguro, sendo os serviços 
+    <td align='justify'><b>Art.2º</b> - A adesão refere a cobertura em <b>Seguro de Acidentes 
+    Pessoais Coletivos da Porto Seguro</b>, sendo os serviços 
     à disposição do cliente associado: </td>
     </tr>
 
     <tr>
-    <td align='justify'><b>§1º</b> - O referido seguro, terá um custo per capita 
-    incluído na mensalidade do cliente SALUTE abrangendo sua pessoa e a 
-    composição familiar registrada, conforme disposto no termo de condições gerais. </td>
+    <td align='justify'><b>§1º</b> - O referido seguro, terá um custo <b>per capita</b> incluído na mensalidade do cliente SALUTE
+abrangendo <b>sua pessoa e a composição familiar registrada que detenha CPF</b> (cadastro de
+pessoa física, regular), conforme disposto no termo de condições gerais.</td>
     </tr>
 
     <tr>
@@ -641,8 +636,8 @@
     </tr>
 
     <tr>
-    <td align='justify'><b>§ 4º</b> - Auxílio funeral, com capital segurado de até 
-    R$ 3.000,00 (três mil reais);  </td>
+    <td align='justify'><b>§ 4º</b> - Auxílio funeral, com capital segurado de até R$ 3.000,00 (três mil reais) em favor do
+grupo familiar cadastrado, para uso de custeio funerário;  </td>
     </tr>
 
     <tr>
@@ -651,9 +646,15 @@
     </tr>
 
     <tr>
-    <td align='justify'><b>Art.3º</b> - O limite de idade estabelecido neste contrato é de 
-    74 (setenta e quatro) anos de vida para o cliente associado ou qualquer 
-    membro da composição familiar aceita pela SALUTE.  </td>
+    <td align='justify'><b>§ 6º</b> - A presente modalidade de seguro não consta apólice, sendo sua cobertura a exata
+    transcrição dos tópicos anteriores.  </td>
+    </tr>
+
+    <tr>
+    <td align='justify'><b>Art.3º</b> - O limite de idade estabelecido para fins de cadastro e cobertura em seguro de acidentes
+pessoais neste contrato é de no mínimo 16 (dezesseis) anos e máximo 73 (setenta e três) anos.
+No seguro funerário a apólice cobrirá o cliente ou dependente em grupo familiar, sem idade
+mínima (desde que tenha CPF cadastrado) até os 73 (setenta e três) anos de vida.  </td>
     </tr>
 
     <tr>
@@ -663,10 +664,10 @@
     </tr>
 
     <tr>
-    <td align='justify'><b>Art.5º</b> - A inclusão do cliente associado 
-    SALUTE no rol de segurados se dará imediatamente ao repasse da 
-    intermediadora à empresa seguradora conveniada, sendo esta data 
-    base de sua admissão e direito a uso do serviço do grupo de segurados SALUTE. </td>
+    <td align='justify'><b>Art.5º</b> - A inclusão do cliente associado SALUTE no rol de segurados se dará com o repasse da
+intermediadora à empresa seguradora conveniada em até 24 (vinte e quatro horas) da
+assinatura, sendo esta data base de sua admissão e direito a uso do serviço do grupo de
+segurados SALUTE </td>
     </tr>
     <tr>
     <td align='justify'><b>Art.6º</b> - O CLIENTE SALUTE para acionar o SEGURO de acidentes pessoais, deve entrar em
