@@ -12851,7 +12851,8 @@ ORDER BY ae.agenda_exames_id)";
                             ca.valor,
                             pa.fantasia,
                             o.nome as operador,
-                            vc.gratuito');
+                            vc.gratuito,
+                            vc.voucher_consulta_id');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_consultas_avulsas ca','vc.consulta_avulsa_id = ca.consultas_avulsas_id','left');
         $this->db->join('tb_paciente p','p.paciente_id = ca.paciente_id','left');
