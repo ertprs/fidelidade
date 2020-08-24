@@ -376,8 +376,10 @@ class pacientes extends BaseController {
     }
 
     function gravar() { 
+        $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
 
-
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
+        
 
         if($_POST['cpf'] != ''){
             $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf']));
@@ -420,6 +422,9 @@ class pacientes extends BaseController {
              }
           }
 //         var_dump($paciente_id); die;
+          
+          
+      if($nao_integrar_parceria != "t"){ 
         foreach ($parceiros as $key => $value) {
             $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
@@ -448,10 +453,14 @@ class pacientes extends BaseController {
             ));
 
             $context = stream_context_create($opts);
-
-            $result = file_get_contents($url, false, $context);
-            var_dump($result); die;
+             if($value->endereco_ip != ""){
+              $result = file_get_contents($url, false, $context);
+            }
+            
         }
+      }
+        
+        
 
         $this->guia->auditoriacadastro($paciente_id, 'ALTEROU O CADASTRO');
 
@@ -460,6 +469,10 @@ class pacientes extends BaseController {
     }
 
     function gravardocumentos() {
+ $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
+
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
+        
 
         $paciente_id = $this->paciente->gravardocumentos();
         $situacao = $_POST['situacao'];
@@ -479,7 +492,7 @@ class pacientes extends BaseController {
              }
           }
          
-          
+       if($nao_integrar_parceria != "t"){ 
         foreach ($parceiros as $key => $value) {
             $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
@@ -513,6 +526,7 @@ class pacientes extends BaseController {
         
         //  var_dump($result); die;
         }
+      }
        // die();
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
@@ -524,7 +538,10 @@ class pacientes extends BaseController {
     }
 
     function gravardocumentosalternativo() {
+        $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
 
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
+        
         $paciente_id = $this->paciente->gravardocumentosalternativo();
         $situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
@@ -542,7 +559,7 @@ class pacientes extends BaseController {
                $parceiro_post = 0;  
              }
           }
-
+if($nao_integrar_parceria != "t"){ 
 //         var_dump($paciente_id); die;
         foreach ($parceiros as $key => $value) {
             $parceiro_id = 0;
@@ -576,6 +593,7 @@ class pacientes extends BaseController {
             $result = file_get_contents($url, false, $context);
             // var_dump($result); die;
         }
+}
 
 
         if ($situacao == 'Titular') {
@@ -590,6 +608,9 @@ class pacientes extends BaseController {
     }
 
     function gravardependente() {  
+         $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
+
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
         
         if($_POST['cpf'] != ''){
             $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf']));
@@ -647,7 +668,9 @@ class pacientes extends BaseController {
                $parceiro_post = 0;  
              }
           }   
-        if ($_POST['financeiro_parceiro_id'] > 0) {  
+          
+        
+        if ($_POST['financeiro_parceiro_id'] > 0 && $nao_integrar_parceria != "t") {  
             $parceiros = $this->paciente->listarparceirosurl($parceiro_id);
             // var_dump($parceiros); die; 
             foreach ($parceiros as $key => $value) {
@@ -691,6 +714,8 @@ class pacientes extends BaseController {
                 // var_dump($result); die;
             }
         }
+        
+        
 
 
 //        var_dump($paciente_id); die;
@@ -709,13 +734,18 @@ class pacientes extends BaseController {
     }
 
     function gravar2() {
+         $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
+
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
+        
+  
         $situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
         $paciente_id = $this->paciente->gravar2();
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
         // var_dump($parceiros); die;
-
+if($nao_integrar_parceria != "t"){ 
         foreach ($parceiros as $key => $value) {
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
@@ -742,7 +772,7 @@ class pacientes extends BaseController {
             $result = file_get_contents($url, false, $context);
             // var_dump($result); die;
         }
-
+}
 
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
@@ -1331,6 +1361,11 @@ class pacientes extends BaseController {
     }
 
     function gravartodospacientesexterno() {
+        
+       $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
+
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
+           
         @$situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
 //        $paciente_id = $this->paciente->gravar2();
@@ -1342,7 +1377,7 @@ class pacientes extends BaseController {
 //         print_r($pacientes);
 //          echo count($pacientes);
 //         die;
-
+ if($nao_integrar_parceria != "t"){ 
         foreach ($parceiros as $key => $value) {   
             foreach ($pacientes as $item) {
                 $parceiro_id = 0;
@@ -1376,6 +1411,7 @@ class pacientes extends BaseController {
                  }
             }
         }
+ }
 
   redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
 //        if ($situacao == 'Titular') {
@@ -1546,8 +1582,19 @@ class pacientes extends BaseController {
         $this->session->set_flashdata('message', $mensagem);
         redirect(base_url()."cadastros/pacientes/listarprecadastros");        
     }
-    
+   function testarUrl($link){
+            if(fopen(link)){
+                return "Online";
+            } else {
+                return "Offline";
+            }
+    }
     function gravardocumentoscompleto() {
+        
+        $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
+
+        $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
+         
         if(!isset($_POST['cpf_responsavel'])){
 
             $verificarcpf = $this->paciente->verificarcpfpaciente($_POST['cpf']);
@@ -1599,20 +1646,20 @@ class pacientes extends BaseController {
              $parceiro_post = 0;  
            }
         } 
-          
+        
+        
+   if($nao_integrar_parceria != "t"){
         foreach ($parceiros as $key => $value) {
             $parceiro_id = 0;
             $retorno_paciente = $this->paciente->listardados($paciente_id);
             $json_paciente = json_encode($retorno_paciente);
             // $fields = array('' => $_POST['body']); 
             $url = "http://" . $value->endereco_ip . "/autocomplete/gravarpacientefidelidade";
-         
+             
             if($parceiro_post == $value->financeiro_parceiro_id){
                 $parceiro_id = $value->convenio_id;
             }
-            
-            
-        
+              
             $postdata = http_build_query(
                     array(
                         'body' => $json_paciente,
@@ -1627,11 +1674,12 @@ class pacientes extends BaseController {
             ));
             $context = stream_context_create($opts);
             if($value->endereco_ip != ""){
-              $result = file_get_contents($url, false, $context);
-            }
-//        var_dump($result); die;
+                
+                $result = file_get_contents($url, false, $context);
+                
+            } 
         }
-        
+   }
         if ($r != "-1") { 
             $this->guia->auditoriacadastro($paciente_id, 'CADASTROU O TITULAR'); 
             $data['mensagem'] = 'Paciente gravado com sucesso';
@@ -1640,15 +1688,14 @@ class pacientes extends BaseController {
             $this->session->set_userdata(array("mensagem_erro"=>"Erro. Paciente com falta de informação"));
         }
         
-      
-        
+       
         $this->session->set_flashdata('message', $data['mensagem']);
         
-           if ($r != "-1") {
-                 redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
-           }else{  
-                 redirect(base_url() . "cadastros/pacientes/novo");
-           }
+        if ($r != "-1") {
+              redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
+        }else{  
+              redirect(base_url() . "cadastros/pacientes/novo");
+        }
               
     }
     

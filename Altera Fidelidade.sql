@@ -1053,3 +1053,8 @@ ALTER TABLE ponto.tb_forma_rendimento ADD COLUMN conta_pagamento integer;
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN titular_carterinha boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN titular_carterinha SET DEFAULT false;
+
+
+--24/08/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN nao_integrar_parceria boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN nao_integrar_parceria SET DEFAULT false;

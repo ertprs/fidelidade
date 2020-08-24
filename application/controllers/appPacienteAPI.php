@@ -1071,14 +1071,14 @@ class AppPacienteAPI extends Controller {
             foreach ($resposta as $key => $value) {
                 $array[$key]['plano'] = $value->nome;
                 $array[$key]['forma_pagamento_id'] = $value->forma_pagamento_id;
-                $array[$key]['valor1'] = $value->valor1;
-                $array[$key]['valor5'] = $value->valor5;
-                $array[$key]['valor6'] = $value->valor6;
-                $array[$key]['valor10'] = $value->valor10;
-                $array[$key]['valor11'] = $value->valor11;
-                $array[$key]['valor12'] = $value->valor12;
-                $array[$key]['valor23'] = $value->valor23;
-                $array[$key]['valor24'] = $value->valor24;
+                $array[$key]['parcelas']['1'] = $value->valor1;
+                $array[$key]['parcelas']['5'] = $value->valor5;
+                $array[$key]['parcelas']['6'] = $value->valor6;
+                $array[$key]['parcelas']['10'] = $value->valor10;
+                $array[$key]['parcelas']['11'] = $value->valor11;
+                $array[$key]['parcelas']['12'] = $value->valor12;
+                $array[$key]['parcelas']['23'] = $value->valor23;
+                $array[$key]['parcelas']['24'] = $value->valor24;
                 $array[$key]['taxa_adesao'] = $value->taxa_adesao;
                 $array[$key]['valor_adesao'] = $value->valor_adesao;
             }
@@ -1091,6 +1091,8 @@ class AppPacienteAPI extends Controller {
             $obj->status = 404;
         } 
         
+//        echo "<pre>";
+//        print_r($array);
         echo json_encode($obj); 
     } 
      

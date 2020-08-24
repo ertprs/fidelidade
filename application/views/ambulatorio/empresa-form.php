@@ -462,6 +462,10 @@
                             <input type="checkbox" name="titular_carterinha"   <? if (@$obj->_titular_carterinha == 't') echo "checked"; ?>> 
                             <label>Nome do Titular ao Imprimir Carteirinha</label>  
                         </td>
+                        <td>
+                            <input type="checkbox" name="nao_integrar_parceria"   <? if (@$obj->_nao_integrar_parceria == 't') echo "checked"; ?>> 
+                            <label>Não integrar com a parceria</label>  
+                        </td>
                     </tr>
                 </table> 
                 <br>

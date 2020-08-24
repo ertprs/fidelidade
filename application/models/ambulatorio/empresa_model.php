@@ -401,7 +401,12 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('botoes_app', '');
             }
-
+             
+            if (isset($_POST['nao_integrar_parceria'])) {
+                $this->db->set('nao_integrar_parceria', 't');
+            } else {
+                $this->db->set('nao_integrar_parceria', 'f');
+            }
 
             $this->db->set('iugu_token', $_POST['iugu_token']);
             $this->db->set('usuario_epharma', $_POST['usuario_epharma']);
@@ -596,7 +601,8 @@ class empresa_model extends Model {
                                f.campos_cadastro,
                                f.campos_cadastro_dependente,
                                f.api_google,
-                               f.titular_carterinha');
+                               f.titular_carterinha,
+                               f.nao_integrar_parceria');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -659,6 +665,7 @@ class empresa_model extends Model {
             $this->_campos_cadastro = $return[0]->campos_cadastro; 
             $this->_campos_cadastro_dependente = $return[0]->campos_cadastro_dependente; 
             $this->_titular_carterinha = $return[0]->titular_carterinha; 
+            $this->_nao_integrar_parceria = $return[0]->nao_integrar_parceria; 
         } else {
             $this->_empresa_id = null;
         }
