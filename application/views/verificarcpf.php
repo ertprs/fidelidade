@@ -277,7 +277,15 @@
                                             }
                                             foreach ($listadependentes as $value) {
                                                 if ($value->nome != $item->nome) {
-                                                    echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                     if(@$permissao[0]->modificar_verificar != 't'){
+                                                     
+                                                       echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                     
+                                                     }else{?>
+                                                       Dependente:<b title='<?= $value->nome; ?>' onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listarvoucher/<?= $value->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');"><?= @$value->nome ?> (Voucher)</b> 
+                                                       <?
+                                                    } 
+                                                    
                                                     if (@$permissao[0]->modificar_verificar == 't') {
                                                         $dadosverificacao = $this->guia->verficarsituacao($value->paciente_id);
                                                     }
@@ -310,7 +318,15 @@
                                             }
                                             foreach ($listadependentes as $value) {
                                                 if ($value->nome != $item->nome) {
-                                                    echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                     
+                                                    if(@$permissao[0]->modificar_verificar == 't'){
+                                                        ?>
+                                                       Dependente:<b title='<?= $value->nome; ?>' onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listarvoucher/<?= $value->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');"><?= @$value->nome ?> (Voucher)</b> 
+                                                    <?}else{
+                                                         echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                    }
+                                                    
+                                                    
                                                     if (@$permissao[0]->modificar_verificar == 't') {
                                                         $dadosverificacao = $this->guia->verficarsituacao($value->paciente_id);
                                                     }
@@ -448,7 +464,14 @@
                                                     foreach ($listadependentes as $value) {
                                                         if ($value->nome != $item->nome) {
 
-                                                            echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                              if(@$permissao[0]->modificar_verificar == 't'){
+                                                             ?>
+                                                                 Dependente:<b title='<?= $value->nome; ?>' onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listarvoucher/<?= $value->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');"><?= @$value->nome ?> (Voucher)</b> 
+                                                            <?}else{
+                                                                 echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                            }
+                                                            
+                                                            
                                                             if (@$permissao[0]->modificar_verificar == 't') {
                                                                 $dadosverificacao = $this->guia->verficarsituacao($value->paciente_id);
                                                             }
@@ -482,7 +505,14 @@
                                             }
                                                     foreach ($listadependentes as $value) {
                                                         if ($value->nome != $item->nome) {
-                                                            echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                            
+                                                             if(@$permissao[0]->modificar_verificar == 't'){
+                                                                 ?>
+                                                                Dependente:<b title='<?= $value->nome; ?>' onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listarvoucher/<?= $value->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');"><?= @$value->nome ?> (Voucher)</b> 
+                                                             <?}else{
+                                                                  echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                             }
+                                                            
                                                             echo "</b><br>";
                                                         }
                                                     }
@@ -504,7 +534,15 @@
                                             }
                                                 foreach ($listadependentes as $value) {
                                                     if ($value->nome != $item->nome) {
-                                                        echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                        
+                                                        if(@$permissao[0]->modificar_verificar == 't'){
+                                                            ?>
+                                                           Dependente:<b title='<?= $value->nome; ?>' onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/listarvoucher/<?= $value->paciente_id; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');"><?= @$value->nome ?> (Voucher)</b> 
+                                                        <?}else{
+                                                             echo "Dependente:<b title='$value->nome'>" . $value->nome;
+                                                        }
+                                                         
+                                                        
                                                         echo "</b><br>";
                                                     }
                                                 }

@@ -6737,6 +6737,7 @@ table tr:hover  #achadoERRO{
     
     function listarvoucher($paciente_id){
      $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);
+     
      $this->load->View('ambulatorio/listarvoucher',$data);
     }
     

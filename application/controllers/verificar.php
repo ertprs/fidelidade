@@ -35,7 +35,6 @@ class Verificar extends Controller {
     }
 
     function verificarcpf($data = null, $paciente_nome_titular = null, $listadependentes = NULL) {
-
         $this->carregarView($data, $paciente_nome_titular, $listadependentes);
     }
 

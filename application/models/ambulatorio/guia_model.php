@@ -77,21 +77,24 @@ class guia_model extends Model {
                 $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
                 $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
                 $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
-
+                $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+                $this->db->join('tb_paciente p2','p2.paciente_id = pcd.paciente_id','left');
+                
+                 
                 if ($cpf != "") {
-                    $this->db->where("cpf", $cpf);
+                    $this->db->where("(p.cpf = '$cpf' or p2.cpf = '$cpf')");
                 } elseif ($nome != "") {
-                    $this->db->where('p.nome ilike', "%" . $nome . "%");
+                    $this->db->where("(p.nome ilike '%$nome%' or p2.nome ilike '%$nome%')");
                 } else {
-                    $this->db->where("p.paciente_id", $paciente_id);
+                    $this->db->where("(p.paciente_id = $paciente_id or p2.paciente_id = $paciente_id)");
                 }
 
                 $this->db->where("p.ativo", 't');
                 $this->db->where("pc.ativo", 't');
+                $this->db->groupby('p.paciente_id,pc.paciente_contrato_id,tp.tipo_logradouro_id,co.nome,co.convenio_id,c.estado,c.nome,c.municipio_id');
                 $return = $this->db->get()->result();
-
-
-
+                
+ 
                 return $return;
             }
         } catch (Exception $exc) {
