@@ -20,7 +20,8 @@
                     <input type ="hidden" name="email" value ="<?= @$lista[0]->email; ?>" id ="email">             
                     <input type ="hidden" name="senha_app"  value ="<?= @$lista[0]->senha_app; ?>" id ="senha_app">             
                     <input type ="hidden" name="whatsapp"  value ="<?= @$lista[0]->whatsapp; ?>" id ="whatsapp">             
-                    <input type ="hidden" name="nascimento"  value ="<?= @$lista[0]->nascimento; ?>" id ="nascimento">             
+                    <input type ="hidden" name="nascimento"  value ="<?= @$lista[0]->nascimento; ?>" id ="nascimento">   
+                    <input type ="hidden" name="precadastro_id"  value ="<?= @$precadastro_id; ?>" id ="precadastro_id">
                 <?
                 }else{
                 ?>
