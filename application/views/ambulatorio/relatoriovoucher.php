@@ -24,22 +24,21 @@
                         <label> Parceiro</label>
                      </dt>
                     <dd>
-                    <select name="parceiro_id" id="parceiro_id" class="size2" required>
-                                        <option value='0' >TODOS</option>
-                                        <?php foreach ($listarparceiro as $item) {?>
-                                            <option   value =<?php echo $item->financeiro_parceiro_id; ?>>
-                                                <?php echo $item->fantasia; ?>
-                                            </option>
-                                        <? }?> 
-                                                
-                                            
-                                    </select>                   
+                     <select name="parceiro_id" id="parceiro_id" class="size2" required>
+                            <option value='0' >TODOS</option>
+                             <?php foreach ($listarparceiro as $item) {?>
+                                 <option   value =<?php echo $item->financeiro_parceiro_id; ?>>
+                                     <?php echo $item->fantasia; ?>
+                                 </option>
+                             <? }?>   
+                     </select>                   
                     </dd>
                     <dt>
                         <label> Confirmado?</label>
                      </dt>
                     <dd>
                     <select name="confirmacao" id="confirmacao" class="size2">
+                        <option value="0">TODOS</option>
                         <option value="NAO">NÃO</option>
                         <option value="SIM">SIM</option>
                     </select>                   

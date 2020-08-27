@@ -12855,7 +12855,8 @@ ORDER BY ae.agenda_exames_id)";
                             pa.fantasia,
                             o.nome as operador,
                             vc.gratuito,
-                            vc.voucher_consulta_id');
+                            vc.voucher_consulta_id,
+                            vc.confirmado');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_consultas_avulsas ca','vc.consulta_avulsa_id = ca.consultas_avulsas_id','left');
         $this->db->join('tb_paciente p','p.paciente_id = ca.paciente_id','left');
@@ -12872,6 +12873,8 @@ ORDER BY ae.agenda_exames_id)";
 
         if($_POST['confirmacao'] == 'SIM'){
             $this->db->where('vc.confirmado','t');
+        }elseif($_POST['confirmacao'] == 'NAO'){
+            $this->db->where('vc.confirmado','f');
         }
 
         if($_POST['gratuito'] == 'SIM'){
