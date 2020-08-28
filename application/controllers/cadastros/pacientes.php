@@ -1612,13 +1612,12 @@ if($nao_integrar_parceria != "t"){
              $this->paciente->confirmarprecadastro($_POST['precadastro_id']); 
         }else{ 
           if($_POST['cpf'] != ''){
-              $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf']));
+              $cpf = str_replace("-", "", str_replace(".", "", $_POST['cpf'])); 
               $this->db->select('precadastro_id');
               $this->db->from('tb_precadastro');
               $this->db->where('cpf', $cpf);
               $this->db->where('ativo', 't');
-              $return = $this->db->get()->result();
-
+              $return = $this->db->get()->result(); 
               if(count($return) > 0){
                   $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
               }
@@ -1631,6 +1630,8 @@ if($nao_integrar_parceria != "t"){
           if(count($return2) > 0){
               $this->paciente->confirmarprecadastro($return[0]->precadastro_id);
           } 
+          
+          
         } 
        
 
