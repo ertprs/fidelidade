@@ -1058,3 +1058,60 @@ ALTER TABLE ponto.tb_empresa ALTER COLUMN titular_carterinha SET DEFAULT false;
 --24/08/2020
 ALTER TABLE ponto.tb_empresa ADD COLUMN nao_integrar_parceria boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN nao_integrar_parceria SET DEFAULT false;
+
+--03/09/2020
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN email_mensagem_confirmacao text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN email_mensagem_agradecimento text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN email_mensagem_falta text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN email_mensagem_aniversario text;
+
+
+CREATE TABLE ponto.tb_email
+(
+  email_id serial NOT NULL,
+  data date,
+  tipo character varying(200),
+  mensagem text,
+  empresa_id integer,
+  email text,
+  paciente_id integer,
+  CONSTRAINT tb_email_pkey PRIMARY KEY (email_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_email
+  OWNER TO postgres;
+
+
+
+CREATE TABLE ponto.tb_empresa_email_registro
+(
+  empresa_email_registro_id serial NOT NULL,
+  data_verificacao date,
+  periodo character varying(20),
+  empresa_id integer,
+  CONSTRAINT tb_empresa_email_registro_pkey PRIMARY KEY (empresa_email_registro_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_empresa_email_registro
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_email ADD COLUMN registrado boolean;
+ALTER TABLE ponto.tb_email ALTER COLUMN registrado SET DEFAULT false;
+
+ALTER TABLE ponto.tb_empresa_email_registro ADD COLUMN qtde integer;
+ALTER TABLE ponto.tb_email ADD COLUMN enviado boolean;
+ALTER TABLE ponto.tb_email ALTER COLUMN enviado SET DEFAULT false;
+ALTER TABLE ponto.tb_email ADD COLUMN ativo boolean;
+ALTER TABLE ponto.tb_email ALTER COLUMN ativo SET DEFAULT true;
+
+--04/09/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN assinar_contrato boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN assinar_contrato SET DEFAULT false;
+
+ALTER TABLE ponto.tb_paciente ADD COLUMN assinou_contrato boolean;
+ALTER TABLE ponto.tb_paciente ALTER COLUMN assinou_contrato SET DEFAULT false;

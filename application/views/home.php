@@ -14,6 +14,15 @@
     
     $(document).ready(function () {
         
+         
+         
+       
+        $.getJSON('<?= base_url() ?>login/verificasms', {ajax: true}, function (j) {
+          console.log(j);
+        });
+        
+                
+                
         $.getJSON('<?= base_url() ?>autocomplete/pagamentoautomaticoiugu', {plano: 'teste', ajax: true}, function (j) {
 //           alert(j);
 //                    

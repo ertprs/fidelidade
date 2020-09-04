@@ -5,8 +5,7 @@
             <div>
                 <label>Nome *</label>                      
                 
-                <?php 
-            
+           <?php  
                 
             if (@$empresa[0]->campos_cadastro != '') {
                 $campos_obrigatorios = json_decode(@$empresa[0]->campos_cadastro);
@@ -428,6 +427,17 @@
                     <label>Pular Meses</label>
 
                     <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
+                </div> 
+                <div > 
+                    <label>Cliente já Assinou o Contrato? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label>
+                    <table >
+                        <tr>
+                            <td style="width:5px; ">Sim</td>
+                            <td style="width:1px; "><input type="radio" name="assinou_contrato" id="assinou_contrato"  value="sim" class="texto01" required="true"/></td>
+                            <td style="width:5px; ">Não</td>
+                            <td style="width:5px; "><input type="radio" name="assinou_contrato" id="assinou_contrato"  value="nao"  class="texto01" checked="true"   required="true"/></td>
+                        </tr>
+                    </table> 
                 </div>
                   
             </fieldset>

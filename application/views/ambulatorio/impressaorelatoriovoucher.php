@@ -45,6 +45,7 @@
                      $valor_total += $item->valor;
                 ?>
             <tr>
+                 <td><?= $item->voucher_consulta_id; ?></td>
             <? if($item->pessoa != ''){?>
                 <td><?= $item->pessoa; ?></td>
             <?}else{?>

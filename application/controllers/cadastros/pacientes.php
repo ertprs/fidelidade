@@ -18,6 +18,7 @@ class pacientes extends BaseController {
         $this->load->model('ambulatorio/indicacao_model', 'indicacao');
         $this->load->model('ambulatorio/empresa_model', 'empresa');
         $this->load->model('cadastro/parceiro_model', 'parceiro');
+        $this->load->model('login_model', 'login');
         $this->load->library('utilitario');
         $this->load->library('email');
         $this->load->library('mensagem');
@@ -547,6 +548,58 @@ class pacientes extends BaseController {
         @$empresa_id = @$_POST['empresa_cadastro_id'];
         
         $paciente_id = $this->paciente->gravar2($paciente_id);
+        
+        
+if(isset($_POST['cns']) && $_POST['cns'] != "" && $paciente_id > 0 && $_POST['paciente_id'] == ""){
+                $empresaPermissoes = $this->login->listarEmpresa();
+                $mensagem = $empresaPermissoes[0]->email_mensagem_agradecimento;
+                $mensagem2 = $empresaPermissoes[0]->email_mensagem_aniversario;
+                $nome = $empresaPermissoes[0]->nome;
+              
+                 
+             $this->load->library('email');
+             if($mensagem != ""){
+                $config['protocol'] = 'smtp';
+                $config['smtp_host'] = 'ssl://smtp.gmail.com';
+                $config['smtp_port'] = '465';
+                $config['smtp_user'] = 'equipe2016gcjh@gmail.com';
+                $config['smtp_pass'] = 'aramis*123@';
+                $config['validate'] = TRUE;
+                $config['mailtype'] = 'html';
+                $config['charset'] = 'utf-8';
+                $config['newline'] = "\r\n"; 
+                $this->email->initialize($config); 
+                $this->email->from('equipe2016gcjh@gmail.com',$nome);  
+                $this->email->to($_POST['cns']); 
+                $this->email->subject('Seu Cadastro');
+                $this->email->message($mensagem);
+                $this->email->send(); 
+              }
+                
+ 
+              if($mensagem2 != ""){
+               if(date('d/m',strtotime(str_replace("/", "-", $_POST['nascimento']))) == date('d/m')){ 
+                    $config['protocol'] = 'smtp';
+                    $config['smtp_host'] = 'ssl://smtp.gmail.com';
+                    $config['smtp_port'] = '465';
+                    $config['smtp_user'] = 'equipe2016gcjh@gmail.com';
+                    $config['smtp_pass'] = 'aramis*123@';
+                    $config['validate'] = TRUE;
+                    $config['mailtype'] = 'html';
+                    $config['charset'] = 'utf-8';
+                    $config['newline'] = "\r\n"; 
+                    $this->email->initialize($config); 
+                    $this->email->from('equipe2016gcjh@gmail.com',$nome);  
+                    $this->email->to($_POST['cns']); 
+                    $this->email->subject('Seu Aniversário');
+                    $this->email->message($mensagem2);
+                    $this->email->send(); 
+               }
+              } 
+                 
+        }
+        
+        
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
         if($_POST['parceiro_id'] != ""){
@@ -1634,11 +1687,62 @@ if($nao_integrar_parceria != "t"){
           
         } 
        
-
+     
+      
         $paciente_id = $this->paciente->gravardocumentos();
         $situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
         $paciente_id = $this->paciente->gravar2($paciente_id); 
+        
+         if(isset($_POST['cns']) && $_POST['cns'] != "" && $paciente_id > 0 && $_POST['paciente_id'] == ""){
+                $empresaPermissoes = $this->login->listarEmpresa();
+                $mensagem = $empresaPermissoes[0]->email_mensagem_agradecimento;
+                $mensagem2 = $empresaPermissoes[0]->email_mensagem_aniversario;
+                $nome = $empresaPermissoes[0]->nome;
+              
+                $this->load->library('email');
+             if($mensagem != ""){
+                $config['protocol'] = 'smtp';
+                $config['smtp_host'] = 'ssl://smtp.gmail.com';
+                $config['smtp_port'] = '465';
+                $config['smtp_user'] = 'equipe2016gcjh@gmail.com';
+                $config['smtp_pass'] = 'aramis*123@';
+                $config['validate'] = TRUE;
+                $config['mailtype'] = 'html';
+                $config['charset'] = 'utf-8';
+                $config['newline'] = "\r\n"; 
+                $this->email->initialize($config); 
+                $this->email->from('equipe2016gcjh@gmail.com',$nome);  
+                $this->email->to($_POST['cns']); 
+                $this->email->subject('Seu Cadastro');
+                $this->email->message($mensagem);
+                $this->email->send(); 
+              }
+ 
+              if($mensagem2 != ""){
+               if(date('d/m',strtotime(str_replace("/", "-", $_POST['nascimento']))) == date('d/m')){ 
+                    $config['protocol'] = 'smtp';
+                    $config['smtp_host'] = 'ssl://smtp.gmail.com';
+                    $config['smtp_port'] = '465';
+                    $config['smtp_user'] = 'equipe2016gcjh@gmail.com';
+                    $config['smtp_pass'] = 'aramis*123@';
+                    $config['validate'] = TRUE;
+                    $config['mailtype'] = 'html';
+                    $config['charset'] = 'utf-8';
+                    $config['newline'] = "\r\n"; 
+                    $this->email->initialize($config); 
+                    $this->email->from('equipe2016gcjh@gmail.com',$nome);  
+                    $this->email->to($_POST['cns']); 
+                    $this->email->subject('Seu Aniversário');
+                    $this->email->message($mensagem2);
+                    $this->email->send(); 
+               }
+              } 
+                 
+        }
+        
+//        die();
+       
         $r =  $this->paciente->gravar5($paciente_id);
         
         $parceiros = $this->paciente->listarparceirosurl();
@@ -1693,8 +1797,7 @@ if($nao_integrar_parceria != "t"){
             $data['mensagem'] = 'Erro. Paciente com falta de informação';
             $this->session->set_userdata(array("mensagem_erro"=>"Erro. Paciente com falta de informação"));
         }
-        
-       
+         
         $this->session->set_flashdata('message', $data['mensagem']);
         
         if ($r != "-1") {

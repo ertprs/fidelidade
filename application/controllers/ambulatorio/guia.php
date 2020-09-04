@@ -6605,6 +6605,11 @@ table tr:hover  #achadoERRO{
         $this->load->plugin('mpdf'); 
         $this->load->helper('directory');
         $empresa_id = $this->session->userdata('empresa_id');
+                    
+if($empresa_id == ""){
+    $empresas = $this->guia->listarempresassicov();
+    $empresa_id = $empresas[0]->empresa_id;
+}        
 
         if (!is_dir("./upload/empresalogo")) {
             mkdir("./upload/empresalogo");
@@ -6736,8 +6741,7 @@ table tr:hover  #achadoERRO{
     }
     
     function listarvoucher($paciente_id){
-     $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);
-     
+     $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);  
      $this->load->View('ambulatorio/listarvoucher',$data);
     }
     
@@ -8448,6 +8452,31 @@ function geraCodigoBanco($numero) {
 
   }
     
+  function assinarcontrato($paciente_id){
+    $verifica = $this->guia->assinarcontrato($paciente_id);
+      
+           if ($verifica == '-1') {                   
+              $mensagem =  'Erro, tente novamente.';
+           } else{
+              $mensagem =   'Assinado com sucesso';
+           } 
+                   
+           if($mensagem != ""){
+                    echo "<html>
+                    <meta charset='UTF-8'>
+            <script type='text/javascript'>
+                alert('$mensagem');
+            window.onunload = fechaEstaAtualizaAntiga;
+            function fechaEstaAtualizaAntiga() {
+                window.opener.location.reload();
+                }
+            window.close();
+                </script>
+                </html>";
+           }else{
+               redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+           }
+  }
     
 }
 

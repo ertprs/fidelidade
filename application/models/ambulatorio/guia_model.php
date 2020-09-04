@@ -13314,6 +13314,28 @@ if($return[0]->financeiro_credor_devedor_id == ""){
        
     }
     
+    function assinarcontrato($paciente_id){
+      if($paciente_id > 0){ 
+        $this->db->select('assinou_contrato');
+        $this->db->from('tb_paciente');
+        $this->db->where('paciente_id',$paciente_id);
+        $assinatura = $this->db->get()->result();
+      
+//        print_r($assinatura);
+//        die();
+           if($assinatura[0]->assinou_contrato == "f"){
+              $this->db->set('assinou_contrato','t');
+           }else{
+              $this->db->set('assinou_contrato','f');
+           }
+           $this->db->where('paciente_id',$paciente_id);
+           $this->db->update('tb_paciente');
+           return 0;
+        }
+          return -1;
+        
+    }
+    
     
     
 }

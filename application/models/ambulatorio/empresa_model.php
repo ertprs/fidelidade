@@ -407,6 +407,12 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('nao_integrar_parceria', 'f');
             }
+            
+            if (isset($_POST['assinar_contrato'])) {
+                $this->db->set('assinar_contrato', 't');
+            } else {
+                $this->db->set('assinar_contrato', 'f');
+            }
 
             $this->db->set('iugu_token', $_POST['iugu_token']);
             $this->db->set('usuario_epharma', $_POST['usuario_epharma']);
@@ -602,7 +608,8 @@ class empresa_model extends Model {
                                f.campos_cadastro_dependente,
                                f.api_google,
                                f.titular_carterinha,
-                               f.nao_integrar_parceria');
+                               f.nao_integrar_parceria,
+                               f.assinar_contrato');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -666,6 +673,7 @@ class empresa_model extends Model {
             $this->_campos_cadastro_dependente = $return[0]->campos_cadastro_dependente; 
             $this->_titular_carterinha = $return[0]->titular_carterinha; 
             $this->_nao_integrar_parceria = $return[0]->nao_integrar_parceria; 
+            $this->_assinar_contrato = $return[0]->assinar_contrato; 
         } else {
             $this->_empresa_id = null;
         }
@@ -794,6 +802,40 @@ class empresa_model extends Model {
         }
     }
 
+     function listarinformacaoemail($empresa_id) {
+//        $empresa_id = $this->session->userdata('empresa_id'); 
+        $this->db->select(' email_mensagem_confirmacao,
+                            email_mensagem_agradecimento,
+                            email_mensagem_falta,
+                            email_mensagem_aniversario');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $empresa_id);
+        $this->db->where('ativo', 't');
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+     function gravarconfiguracaoemail() {
+        try {
+//            var_dump($_POST['empresa_id']); die;
+ 
+            $this->db->set('email_mensagem_agradecimento', $_POST['agrade']);
+            $this->db->set('email_mensagem_aniversario', $_POST['aniver']);
+            
+
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+
+            $this->db->where('empresa_id', $_POST['empresa_id']);
+            $this->db->update('tb_empresa');
+            $empresa_id = $_POST['empresa_id'];
+
+            return $empresa_id;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+    
 }
 
 ?>

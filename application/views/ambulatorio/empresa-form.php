@@ -466,6 +466,10 @@
                             <input type="checkbox" name="nao_integrar_parceria"   <? if (@$obj->_nao_integrar_parceria == 't') echo "checked"; ?>> 
                             <label>Não integrar com a parceria</label>  
                         </td>
+                        <td>
+                            <input type="checkbox" name="assinar_contrato"   <? if (@$obj->_assinar_contrato == 't') echo "checked"; ?>> 
+                            <label>Assinar Contrato</label>  
+                        </td>
                     </tr>
                 </table> 
                 <br>
