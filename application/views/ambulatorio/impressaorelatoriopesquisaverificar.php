@@ -2,12 +2,17 @@
     <head>
         <title>Relatório</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <style>
+            td{
+                font-family: arial;
+            }
+            </style>
     </head>
-    <body> 
+    <body   > 
         <h2>  Relátorio de Pesquisa</h2>
         <h3>Data: <?= $txtdata_inicio; ?> até <?= $txtdata_fim; ?></h3>
         <hr>
-        <table border="2">
+        <table  border=1 cellspacing=0 cellpadding=2>
             <thead>
                 <tr>
                     <th>Data Cadastro</th>
