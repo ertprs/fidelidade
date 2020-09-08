@@ -1115,3 +1115,26 @@ ALTER TABLE ponto.tb_empresa ALTER COLUMN assinar_contrato SET DEFAULT false;
 
 ALTER TABLE ponto.tb_paciente ADD COLUMN assinou_contrato boolean;
 ALTER TABLE ponto.tb_paciente ALTER COLUMN assinou_contrato SET DEFAULT false;
+
+--08/09/2020
+
+CREATE TABLE ponto.tb_historico_verificar
+(
+  historico_verificar_id serial NOT NULL,
+  operador_cadastro integer,
+  data_cadastro timestamp without time zone,
+  operador_atualizacao integer,
+  data_atualizacao timestamp without time zone,
+  json text,
+  CONSTRAINT tb_historico_verificar_pkey PRIMARY KEY (historico_verificar_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_historico_verificar
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_historico_verificar ADD COLUMN financeiro_parceiro_id integer;
+
+ALTER TABLE ponto.tb_historico_verificar ADD COLUMN ativo boolean;
+ALTER TABLE ponto.tb_historico_verificar ALTER COLUMN ativo SET DEFAULT true;

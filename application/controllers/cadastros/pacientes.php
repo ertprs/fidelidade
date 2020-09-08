@@ -63,7 +63,7 @@ class pacientes extends BaseController {
     }
 
     function novoalternativo() {
-
+        $data['empresa'] = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
         $data['idade'] = 0;
         $data['listaLogradouro'] = $this->paciente->listaTipoLogradouro();
         $data['listaconvenio'] = $this->paciente->listaconvenio();

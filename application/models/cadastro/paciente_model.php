@@ -1478,6 +1478,12 @@ class paciente_model extends BaseModel {
             } else {
                 $this->db->set('reativar', 'f');
             }
+            
+            if (isset($_POST['assinou_contrato']) && $_POST['assinou_contrato'] == "sim") {
+                $this->db->set('assinou_contrato', 't');
+            } else {
+                $this->db->set('assinou_contrato', 'f');
+            }
 
             $horario = date("Y-m-d H:i:s");
             $data = date("Y-m-d");

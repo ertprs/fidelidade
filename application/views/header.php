@@ -349,6 +349,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/solicitacaoagendamento">Solicitação de Agendamento</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriotitularsemcontrato">Relatorio Titular Sem Contrato</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioobscontrato">Relatorio Observação Contrato</a></span></li>
+                                        <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriopesquisaverificar">Relatorio Pesquisa Verificar</a></span></li>
                                     <? } ?>
                                 </ul>
                             </li>

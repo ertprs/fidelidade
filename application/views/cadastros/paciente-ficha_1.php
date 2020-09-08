@@ -428,6 +428,7 @@
 
                     <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
                 </div> 
+             <?php   if($empresa[0]->assinar_contrato == "t"){  ?>
                 <div > 
                     <label>Cliente já Assinou o Contrato? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label>
                     <table >
@@ -439,6 +440,8 @@
                         </tr>
                     </table> 
                 </div>
+            <?php }?>
+                
                   
             </fieldset>
 

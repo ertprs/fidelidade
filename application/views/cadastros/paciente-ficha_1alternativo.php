@@ -312,6 +312,19 @@
                 <div class="bt_linkm">
                     <a onclick="javascript:window.open('<?= base_url() . "cadastros/pacientes/anexarimagem/" . @$obj->_paciente_id ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Arquivos
                     </a></div>
+              <?php   if($empresa[0]->assinar_contrato == "t"){  ?>
+                <div > 
+                    <label>Cliente já Assinou o Contrato? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label>
+                    <table >
+                        <tr>
+                            <td style="width:5px; ">Sim</td>
+                            <td style="width:1px; "><input type="radio" name="assinou_contrato" id="assinou_contrato"  value="sim" class="texto01" required="true"/></td>
+                            <td style="width:5px; ">Não</td>
+                            <td style="width:5px; "><input type="radio" name="assinou_contrato" id="assinou_contrato"  value="nao"  class="texto01" checked="true"   required="true"/></td>
+                        </tr>
+                    </table> 
+                </div>
+            <?php }?>
         </fieldset>
 
 

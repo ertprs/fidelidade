@@ -8477,7 +8477,22 @@ function geraCodigoBanco($numero) {
                redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
            }
   }
+  
+  function relatoriopesquisaverificar(){ 
+      $data['operadores'] = $this->guia->listaroperadores();
+      $this->loadView('ambulatorio/relatoriopesquisaverificar-form', $data);  
+      
+  }
     
+  
+    function gerarelatoriopesquisaverificar() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatoriopesquisaverificar();
+         
+        $this->load->View('ambulatorio/impressaorelatoriopesquisaverificar', $data);
+    }
+  
 }
 
 

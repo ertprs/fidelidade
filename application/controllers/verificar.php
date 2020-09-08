@@ -109,7 +109,8 @@ class Verificar extends Controller {
 
         $permissaoempresa = $this->guia->listarempresapermissoes($this->session->userdata('empresa_id'));
         $data['procedimentos'] = $this->guia->listarprocedimentosverificar();
-//      print_r($data['procedimentos'] );
+        $this->guia->gravarpesquisa();
+//      print_r($_POST);
 //      die; 
         if (@$_POST['cpf'] == "") {
             $cpf = "";
