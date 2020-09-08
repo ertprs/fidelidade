@@ -899,15 +899,15 @@ class Guia extends BaseController {
     }
 
 
-    function impressaovoucherconsultaextra($paciente_id, $contrato_id, $consulta_avulsa_id) {
+    function impressaovoucherconsultaextra($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher_consulta_id = NULL) {
 
         $empresa_id = $this->session->userdata('empresa_id');
         $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
         $data['dependente'] = $this->guia->listardependentes($contrato_id);
-        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id);
-
+        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id,$voucher_consulta_id);
+                            
         $this->load->View('ambulatorio/impressaovoucherconsultaextra', $data);
     }
 
@@ -8476,6 +8476,7 @@ function geraCodigoBanco($numero) {
            }else{
                redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
            }
+           
   }
   
   function relatoriopesquisaverificar(){ 
@@ -8492,6 +8493,33 @@ function geraCodigoBanco($numero) {
          
         $this->load->View('ambulatorio/impressaorelatoriopesquisaverificar', $data);
     }
+    
+  function carregarvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher_consulta_id){ 
+         
+       $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id,$voucher_consulta_id);
+       $data['consulta_avulsa_id'] = $consulta_avulsa_id;
+       $data['paciente_id'] = $paciente_id;
+       $data['contrato_id'] = $contrato_id;
+       $data['voucher_consulta_id'] = $voucher_consulta_id;
+       $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+       $this->load->View('ambulatorio/carregarvoucher',$data);
+      
+  }
+  
+  
+function gravarcarregarvoucher($paciente_id, $contrato_id, $consulta_avulsa_id) {
+   $ambulatorio_guia_id = $this->guia->gravarvoucherconsultaextra($paciente_id, $consulta_avulsa_id); 
+         
+   redirect(base_url()."ambulatorio/guia/voucherconsultaavulsa/".$paciente_id."/".$contrato_id."/".$consulta_avulsa_id."");
+
+}
+  
+function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher_consulta_id){ 
+       $this->guia->excluirvoucher($voucher_consulta_id);
+       redirect(base_url()."ambulatorio/guia/voucherconsultaavulsa/".$paciente_id."/".$contrato_id."/".$consulta_avulsa_id."");
+
+}
+  
   
 }
 

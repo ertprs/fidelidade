@@ -1138,3 +1138,7 @@ ALTER TABLE ponto.tb_historico_verificar ADD COLUMN financeiro_parceiro_id integ
 
 ALTER TABLE ponto.tb_historico_verificar ADD COLUMN ativo boolean;
 ALTER TABLE ponto.tb_historico_verificar ALTER COLUMN ativo SET DEFAULT true;
+
+
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN data_exclusao timestamp without time zone;
+ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN operador_exclusao integer;

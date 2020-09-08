@@ -868,23 +868,29 @@ if($_POST['tipopaciente'] == 'dependente'){
         return $return->result();
     }
 
-    function listarvoucherconsultaavulsa($consulta_avulsa_id) {
+    function listarvoucherconsultaavulsa($consulta_avulsa_id,$voucher_consulta_id=NULL) {
 
         $this->db->select('vc.data,
                             vc.horario,
                             vc.parceiro_id,
-                               fp.logradouro,
+                            fp.logradouro,
                             fp.numero,
                             fp.bairro,
                             m.nome as municipio,
                             fp.razao_social as parceiro,
                             vc.data_cadastro,
                             vc.gratuito,
-                            vc.forma_rendimento_id');
+                            vc.forma_rendimento_id,
+                            fr.nome as forma_pagamento,
+                            vc.voucher_consulta_id');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = vc.parceiro_id', 'left');
         $this->db->join('tb_municipio m', 'm.municipio_id = fp.municipio_id', 'left');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = vc.forma_rendimento_id', 'left');
         $this->db->where("vc.ativo", 't');
+        if($voucher_consulta_id != ""){
+            $this->db->where('voucher_consulta_id',$voucher_consulta_id);
+        }
         $this->db->where("vc.consulta_avulsa_id", $consulta_avulsa_id);
         $this->db->orderby("vc.data_cadastro desc");
         $return = $this->db->get();
@@ -7082,7 +7088,14 @@ AND data <= '$data_fim'";
             }
             $this->db->set('data_cadastro', $cadastro);
             $this->db->set('operador_cadastro', $operador_id);
-            $this->db->insert('tb_voucher_consulta');
+            if(isset($_POST['voucher_consulta_id']) && $_POST['voucher_consulta_id'] != ""){
+              $this->db->set('data_atualizacao', $cadastro);
+              $this->db->set('operador_atualizacao', $operador_id);
+              $this->db->where('voucher_consulta_id', $_POST['voucher_consulta_id']);
+              $this->db->update('tb_voucher_consulta');   
+            }else{ 
+              $this->db->insert('tb_voucher_consulta');
+            }
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
@@ -13389,6 +13402,22 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         return  $this->db->get()->result(); 
        
     }
+    
+    function excluirvoucher($voucher_consulta_id){
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id'); 
+        $this->db->set("ativo",'f');
+        $this->db->set('data_exclusao',$horario);
+        $this->db->set('operador_exclusao',$operador);
+        $this->db->set('data_exclusao',$horario);
+        $this->db->where('voucher_consulta_id',$voucher_consulta_id);
+        $this->db->update('tb_voucher_consulta');
+          
+    }
+    
+    
+    
+    
 }
 
 ?>
