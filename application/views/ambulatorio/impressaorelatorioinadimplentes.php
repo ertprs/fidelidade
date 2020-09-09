@@ -135,7 +135,7 @@
                     echo substr(@$data, 8, 2) . "/" . substr(@$data, 5, 2) . "/" . substr(@$data, 0, 4) . "<br>";
                 }
                             ?></td>
-                                <!-- <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td> -->
+                                <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td> 
                                 <td ><?= "Parcela ".@$parcela[0]->parcela." <br> ".substr(@$parcela[0]->data, 8, 2) . '/' . substr(@$parcela[0]->data, 5, 2) . '/' . substr(@$parcela[0]->data, 0, 4) ?></td>
                                 <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
 
