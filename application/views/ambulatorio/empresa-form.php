@@ -102,7 +102,13 @@
                     </dt>
                     <dd>
                         <input type="text" id="iugu_token" class="texto07" name="iugu_token" value="<?= @$obj->_iugu_token; ?>" />
-                    </dd>
+                    </dd> 
+                    <dt>
+                        <label>IUGU Somente Cartão</label>
+                    </dt>
+                    <dd>
+                        <input type="checkbox" id="iugu_cartao"   name="iugu_cartao" value="<?= @$obj->_iugu_cartao; ?>" <? if (@$obj->_iugu_cartao == 't') echo "checked"; ?> />
+                    </dd> 
                     <dt>
                         <label>Client ID Gerencianet</label>
                     </dt>

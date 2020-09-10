@@ -1142,3 +1142,9 @@ ALTER TABLE ponto.tb_historico_verificar ALTER COLUMN ativo SET DEFAULT true;
 
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN data_exclusao timestamp without time zone;
 ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN operador_exclusao integer;
+
+
+--10/09/2020
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN iugu_cartao boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN iugu_cartao SET DEFAULT false;

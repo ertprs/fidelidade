@@ -1125,7 +1125,9 @@ class paciente_model extends BaseModel {
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
 
-            $this->db->set('cns', $_POST['txtUsuario']);
+            if(isset($_POST['txtUsuario']) && $_POST['txtUsuario'] != ""){
+              $this->db->set('cns', $_POST['txtUsuario']);
+            }
             
             if($_POST['txtSenha'] != ''){
                 $this->db->set('senha_app', md5($_POST['txtSenha']));

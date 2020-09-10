@@ -521,6 +521,13 @@ class empresa_model extends Model {
                 $this->db->set('campos_cadastro_dependente', '');
             }
             
+            
+            if (isset($_POST['iugu_cartao'])) {
+                $this->db->set('iugu_cartao', 't');
+            } else {
+                $this->db->set('iugu_cartao', 'f');
+            }
+            
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
@@ -609,7 +616,8 @@ class empresa_model extends Model {
                                f.api_google,
                                f.titular_carterinha,
                                f.nao_integrar_parceria,
-                               f.assinar_contrato');
+                               f.assinar_contrato,
+                               f.iugu_cartao');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -674,6 +682,7 @@ class empresa_model extends Model {
             $this->_titular_carterinha = $return[0]->titular_carterinha; 
             $this->_nao_integrar_parceria = $return[0]->nao_integrar_parceria; 
             $this->_assinar_contrato = $return[0]->assinar_contrato; 
+            $this->_iugu_cartao = $return[0]->iugu_cartao; 
         } else {
             $this->_empresa_id = null;
         }
