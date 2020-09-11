@@ -5,6 +5,8 @@ class Home extends BaseController {
 	function Home() {
             parent::Controller();
             $this->load->library('mensagem');
+            $this->load->model('cadastro/paciente_model', 'paciente');
+            $this->load->library('utilitario');
  
 	}
 	

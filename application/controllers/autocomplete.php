@@ -3136,10 +3136,16 @@ class Autocomplete extends Controller {
         $data['permissao'] = $this->empresa_m->listarpermissoes();
         if (count($data['pacientes']) > 0) {
             foreach ($data['pacientes'] as $item) {
+
+
                 $data['exames'] = $this->guia->listarexames($item->paciente_id);
                 $contrato_ativo = $this->guia->listarcontratoativo($item->paciente_id); 
                 if (count($contrato_ativo) > 0) {
+
+
+
                     if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
+
                         $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                         $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;
                         $data_cadastro = $contrato_ativo[count($contrato_ativo) - 1]->data_cadastro;
@@ -3154,6 +3160,11 @@ class Autocomplete extends Controller {
                         //Abaixo soma data de cadastro do contrato com os dias colocados no plano.
                         $data_tot_contrato = date('Y-m-d', strtotime("+$qtd_dias days", strtotime($data_cadastro))); 
                         $data_atual = date("Y-m-d"); 
+
+                        // echo '<pre>';
+                        // print_r($data_tot_contrato);
+                        // die;
+
         //                 var_dump($data_tot_contrato);die;
         //                 print_r($data_tot_contrato);
         //                echo "***********";

@@ -125,6 +125,7 @@ class guia_model extends Model {
         if ($parametro != null) {
             $this->db->where('nome ilike', "%" . $parametro . "%");
         }
+        $this->db->where('paciente_id', 24489);
         $this->db->orderby('nome');
         $return = $this->db->get();
         return $return->result();
@@ -10096,12 +10097,165 @@ ORDER BY ae.agenda_exames_id)";
 //            echo '<pre>';
 //            var_dump($return);
 //            die;
+            $this->db->select('iugu_token');
+            $this->db->from('tb_empresa');
+            $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+            $empresa_token = $this->db->get()->result();
+
+            if($empresa_token[0]->iugu_token != ""){
+
+                if($return_parcelas[0]->data_cartao_iugu != ""){
+                    $this->db->select('*');
+                    $this->db->from('tb_paciente_cartao_credito cp');
+                    $this->db->where("paciente_id", $return[0]->paciente_id);
+                    $this->db->where("ativo", 't');
+            //        $this->db->orderby("data");
+                    $cartao = $this->db->get()->result();
+
+                    if(count($cartao) > 0){
+                    $_POST['card_number'] = $cartao[0]->card_number;
+                    $_POST['card_csv'] = $cartao[0]->card_csv;
+                    $_POST['mes'] = $cartao[0]->mes;
+                    $_POST['ano'] = $cartao[0]->ano;
+                    $_POST['first_name'] = $cartao[0]->first_name;
+                    $_POST['last_name'] = $cartao[0]->last_name;
+                    $this->gravarcartaoclienteiuguiugu($return[0]->paciente_id, $paciente_contrato_novo_id);
+                    }
+                }else{
+                    $this->gerartodosiugu($return[0]->paciente_id, $paciente_contrato_novo_id);
+                }
+            }
 
             return 1;
         } catch (Exception $exc) {
             return -1;
         }
     }
+
+    function salvargravadotodosiugu($contrato_id = NULL) {
+        $this->db->set('pago_todos_iugu', 't');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->update('tb_paciente_contrato');
+    }
+
+    function listardadosiugu($paciente_id) {
+        $this->db->select('pc.pago_todos_iugu,p.empresa_id,op.nome as vendedor_nome,tp.tipo_logradouro_id as codigo_logradouro,co.nome as nome_convenio, pc.plano_id, co.convenio_id as convenio,tp.descricao,p.*,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, fr.nome as pagamento,p.cpf,p.data_cadastro, ind.nome as nome_indicacao');
+        $this->db->from('tb_paciente p');
+        $this->db->join('tb_municipio c', 'c.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
+        $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = p.forma_rendimento_id', 'left');
+        $this->db->join('tb_operador op', 'op.operador_id = p.vendedor', 'left');
+        $this->db->join('tb_operador ind', 'ind.operador_id = p.pessoaindicacao', 'left');
+        $this->db->where("p.paciente_id", $paciente_id);
+        $return = $this->db->get();
+        return $return->result();
+    }
+
+    function listarpagamentoscontratoparcelaiugutodos($contrato_id) {
+        $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, fp.nome as plano');
+        $this->db->from('tb_paciente_contrato_parcelas cp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas_iugu cpi', 'cpi.paciente_contrato_parcelas_id = cp.paciente_contrato_parcelas_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->where("pc.paciente_contrato_id", $contrato_id);
+        $this->db->where("cp.ativo", 't');
+        $this->db->where("cp.excluido", 'f');
+        $this->db->where("cp.taxa_adesao", 'f');
+        $this->db->where("invoice_id is null");
+        $this->db->where("cp.data_cartao_iugu is null");
+        $this->db->orderby("cp.data");
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+    function gerartodosiugu($paciente_id, $contrato_id){
+        $gerado_todos_iugu = $this->salvargravadotodosiugu($contrato_id);
+        $cliente = $this->listardadosiugu($paciente_id);
+        $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
+        $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
+        $prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 0, 2);
+        $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
+
+        $empresa = $this->listarempresa();
+        $key = $empresa[0]->iugu_token;
+        Iugu::setApiKey($key); 
+
+        $pagamento = $this->listarpagamentoscontratoparcelaiugutodos($contrato_id);
+
+        $cpfcnpj = str_replace('/', '', $cliente[0]->cpf);
+
+        foreach ($pagamento as $value) {
+            $valor = $value->valor * 100;
+            $data = date('d/m/Y', strtotime($value->data)); 
+            $description = $empresa[0]->nome . " - " . $value->plano;
+
+
+
+            $gerar = Iugu_Invoice::create(Array(
+                        "email" => $cliente[0]->cns,
+                        "due_date" => $data,
+                        "items" => Array(
+                            Array(
+                                "description" => $description,
+                                "quantity" => "1",
+                                "price_cents" => $valor
+                            )
+                        ),
+                        "payer" => Array(
+                            "cpf_cnpj" => $cpfcnpj,
+                            "name" => $cliente[0]->nome,
+                            "phone_prefix" => $prefixo,
+                            "phone" => $celular_s_prefixo,
+                            "email" => $cliente[0]->cns,
+                            "address" => Array(
+                                "street" => $cliente[0]->logradouro,
+                                "number" => $cliente[0]->numero,
+                                "city" => $cliente[0]->cidade_desc,
+                                "state" => $codigoUF,
+                                "district" => $cliente[0]->bairro,
+                                "country" => "Brasil",
+                                "zip_code" => $cliente[0]->cep,
+                                "complement" => $cliente[0]->complemento
+                            )
+                        )
+            ));
+
+            if (count($gerar["errors"]) > 0) {
+                $mensagem = 'Erro ao gerar pagamento: \n';
+                foreach ($gerar["errors"] as $key => $item) {
+
+                    $mensagem = $mensagem . "$key $item[0]" . '\n';
+                }
+
+                break;
+
+            } else {
+
+                $gravar = $this->gravarintegracaoiugu($gerar["secure_url"], $gerar["id"], $value->paciente_contrato_parcelas_id);
+                $mensagem = 'Cobrança gerada com sucesso';
+            }
+        }
+    }
+
+    function gravarcartaoclienteiuguiugu($paciente_id, $contrato_id) {
+
+                if (isset($_POST['deletarBoleto'])) {
+                    // Deleta os boletos futuros para na função seguinte as parcelas serem associadas ao cartão
+        
+                    $pagamentos_cancelar = $this->listarcancelarparcelaiugu($paciente_id, $contrato_id);
+                    $empresa = $this->listarempresa();
+                    $key = $empresa[0]->iugu_token;
+                    Iugu::setApiKey($key);
+                    foreach ($pagamentos_cancelar as $item) {
+                        $invoice = Iugu_Invoice::fetch($item->invoice_id);
+                        $invoice->cancel();
+                    }
+                }
+        
+                $ambulatorio_guia_id = $this->gravarcartaoclienteiugu($paciente_id, $contrato_id);
+            }
 
     function gravarconsulta($ambulatorio_guia_id) {
         try {
