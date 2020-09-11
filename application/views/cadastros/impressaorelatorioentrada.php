@@ -40,6 +40,8 @@
     <hr>
     <?
     
+//    echo "<pre>";
+//    print_r($relatorioentrada);
     
     if ($relatorioentrada > 0) {
         ?>

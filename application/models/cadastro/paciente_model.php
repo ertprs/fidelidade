@@ -1125,7 +1125,9 @@ class paciente_model extends BaseModel {
             $this->db->set('rg', $_POST['rg']);
             $this->db->set('uf_rg', $_POST['uf_rg']);
 
-            $this->db->set('cns', $_POST['txtUsuario']);
+            if(isset($_POST['txtUsuario']) && $_POST['txtUsuario'] != ""){
+              $this->db->set('cns', $_POST['txtUsuario']);
+            }
             
             if($_POST['txtSenha'] != ''){
                 $this->db->set('senha_app', md5($_POST['txtSenha']));
@@ -1250,10 +1252,10 @@ class paciente_model extends BaseModel {
             if ($_POST['cns'] != '') {
                 $this->db->set('cns', $_POST['cns']);
             }
-            if ($_POST['senha_app'] != '') {
+            if (isset($_POST['senha_app']) && $_POST['senha_app'] != '') {
                 $this->db->set('senha_app', $_POST['senha_app']);
             }
-            if ($_POST['whatsapp'] != '') {
+            if (isset($_POST['whatsapp']) && $_POST['whatsapp'] != '') {
                 $this->db->set('whatsapp', $_POST['whatsapp']);
             }
 
@@ -1318,6 +1320,15 @@ class paciente_model extends BaseModel {
             } else {
                 $this->db->set('reativar', 'f');
             }
+
+            if (isset($_POST['assinou_contrato']) && $_POST['assinou_contrato'] == "sim") {
+                $this->db->set('assinou_contrato', 't');
+            } else {
+                $this->db->set('assinou_contrato', 'f');
+            }
+            
+//            print_r($_POST['assinou_contrato']);
+//            die();
 
 //            if ($_POST['txtcboID'] != '') {
 //                $this->db->set('profissao', $_POST['txtcboID']);
@@ -1468,6 +1479,12 @@ class paciente_model extends BaseModel {
                 $this->db->set('reativar', 't');
             } else {
                 $this->db->set('reativar', 'f');
+            }
+            
+            if (isset($_POST['assinou_contrato']) && $_POST['assinou_contrato'] == "sim") {
+                $this->db->set('assinou_contrato', 't');
+            } else {
+                $this->db->set('assinou_contrato', 'f');
             }
 
             $horario = date("Y-m-d H:i:s");
@@ -4288,7 +4305,7 @@ class paciente_model extends BaseModel {
     }
 
     function listardadospaciente($paciente_id) {
-        $this->db->select('cbo.descricao,p.logradouro,p.complemento, p.nascimento,p.cep,p.telefone,p.celular,p.numero,p.bairro,p.nome,p.estado_civil_id,p.rg,p.cpf,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, p.tipo_logradouro, tl.descricao as logro');
+        $this->db->select('cbo.descricao,p.logradouro,p.complemento, p.nascimento,p.cep,p.telefone,p.celular,p.numero,p.bairro,p.nome,p.estado_civil_id,p.rg,p.cpf,c.estado, c.nome as cidade_desc,c.municipio_id as cidade_cod, codigo_ibge, p.tipo_logradouro, tl.descricao as logro,p.assinou_contrato');
         $this->db->from('tb_paciente p');
         $this->db->join('tb_cbo_ocupacao cbo', 'cbo.cbo_ocupacao_id = p.profissao', 'left');
         $this->db->join('tb_tipo_logradouro tl', 'p.tipo_logradouro = tl.tipo_logradouro_id', 'left');
@@ -4607,7 +4624,7 @@ class paciente_model extends BaseModel {
         $this->db->select('vc.voucher_consulta_id,vc.data,vc.horario,vc.confirmado,vc.horario_uso, vc.gratuito');
         $this->db->from('tb_consultas_avulsas cp');
         $this->db->join('tb_voucher_consulta vc','vc.consulta_avulsa_id = cp.consultas_avulsas_id','left');
-        $this->db->where("cp.paciente_id", $paciente_id);
+        $this->db->where("(cp.paciente_id = $paciente_id or cp.pessoa_id = $paciente_id )");
         $this->db->where("cp.excluido", 'f');
         $this->db->where("vc.ativo", 't');
         $this->db->where("cp.tipo", 'EXTRA');        

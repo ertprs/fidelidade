@@ -45,6 +45,7 @@
                      $valor_total += $item->valor;
                 ?>
             <tr>
+                 
             <? if($item->pessoa != ''){?>
                 <td><?= $item->pessoa; ?></td>
             <?}else{?>

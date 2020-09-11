@@ -1059,5 +1059,59 @@ class AppPacienteAPI extends Controller {
         echo json_encode($obj); 
     }
     
+    
+    function buscar_planos(){
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: content-type");
+        
+        $array = array();
+        $resposta = $this->app->listarplanos(0);    
+         
+        if(count($resposta) > 0){ 
+            foreach ($resposta as $key => $value) {
+              $array[$key]['plano'] = $value->nome;
+              $array[$key]['forma_pagamento_id'] = $value->forma_pagamento_id; 
+              if($value->valor1 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor1,'vezes'=>1);
+              }
+              if($value->valor5 > 0){
+                $array[$key]['parcelas'][] =  Array('valor'=>$value->valor5,'vezes'=>5);
+              }
+              if($value->valor6 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor6,'vezes'=>6);
+              }
+              if($value->valor10 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor10,'vezes'=>10);
+              }
+              if($value->valor11 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor11,'vezes'=>11);
+              }
+              if($value->valor12 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor12,'vezes'=>12);
+              }
+              if($value->valor23 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor23,'vezes'=>23);
+              }
+              if($value->valor24 > 0){
+              $array[$key]['parcelas'][] =  Array('valor'=>$value->valor24,'vezes'=>24); 
+              }
+              $array[$key]['taxa_adesao'] = $value->taxa_adesao;
+              $array[$key]['valor_adesao'] = $value->valor_adesao;
+            }
+        }
+        $obj = new stdClass();
+        if(count($resposta) > 0){
+            $obj->status = 200;
+            $obj->data = $array;
+        }else{
+            $obj->status = 404;
+        } 
+//        header('Content-Type: application/json');
+//        echo "<pre>";
+//        print_r($array);
+        echo json_encode($obj); 
+    } 
+     
+    
   
 }

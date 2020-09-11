@@ -77,21 +77,24 @@ class guia_model extends Model {
                 $this->db->join('tb_convenio co', 'co.convenio_id = p.convenio_id', 'left');
                 $this->db->join('tb_tipo_logradouro tp', 'p.tipo_logradouro = tp.tipo_logradouro_id', 'left');
                 $this->db->join('tb_paciente_contrato pc', 'pc.paciente_id = p.paciente_id', 'left');
-
+                $this->db->join('tb_paciente_contrato_dependente pcd', 'pcd.paciente_contrato_id = pc.paciente_contrato_id', 'left');
+                $this->db->join('tb_paciente p2','p2.paciente_id = pcd.paciente_id','left');
+                
+                 
                 if ($cpf != "") {
-                    $this->db->where("cpf", $cpf);
+                    $this->db->where("(p.cpf = '$cpf' or p2.cpf = '$cpf')");
                 } elseif ($nome != "") {
-                    $this->db->where('p.nome ilike', "%" . $nome . "%");
+                    $this->db->where("(p.nome ilike '%$nome%' or p2.nome ilike '%$nome%')");
                 } else {
-                    $this->db->where("p.paciente_id", $paciente_id);
+                    $this->db->where("(p.paciente_id = $paciente_id or p2.paciente_id = $paciente_id)");
                 }
 
                 $this->db->where("p.ativo", 't');
                 $this->db->where("pc.ativo", 't');
+                $this->db->groupby('p.paciente_id,pc.paciente_contrato_id,tp.tipo_logradouro_id,co.nome,co.convenio_id,c.estado,c.nome,c.municipio_id');
                 $return = $this->db->get()->result();
-
-
-
+                
+ 
                 return $return;
             }
         } catch (Exception $exc) {
@@ -865,23 +868,29 @@ if($_POST['tipopaciente'] == 'dependente'){
         return $return->result();
     }
 
-    function listarvoucherconsultaavulsa($consulta_avulsa_id) {
+    function listarvoucherconsultaavulsa($consulta_avulsa_id,$voucher_consulta_id=NULL) {
 
         $this->db->select('vc.data,
                             vc.horario,
                             vc.parceiro_id,
-                               fp.logradouro,
+                            fp.logradouro,
                             fp.numero,
                             fp.bairro,
                             m.nome as municipio,
                             fp.razao_social as parceiro,
                             vc.data_cadastro,
                             vc.gratuito,
-                            vc.forma_rendimento_id');
+                            vc.forma_rendimento_id,
+                            fr.nome as forma_pagamento,
+                            vc.voucher_consulta_id');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = vc.parceiro_id', 'left');
         $this->db->join('tb_municipio m', 'm.municipio_id = fp.municipio_id', 'left');
+        $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = vc.forma_rendimento_id', 'left');
         $this->db->where("vc.ativo", 't');
+        if($voucher_consulta_id != ""){
+            $this->db->where('voucher_consulta_id',$voucher_consulta_id);
+        }
         $this->db->where("vc.consulta_avulsa_id", $consulta_avulsa_id);
         $this->db->orderby("vc.data_cadastro desc");
         $return = $this->db->get();
@@ -7079,7 +7088,14 @@ AND data <= '$data_fim'";
             }
             $this->db->set('data_cadastro', $cadastro);
             $this->db->set('operador_cadastro', $operador_id);
-            $this->db->insert('tb_voucher_consulta');
+            if(isset($_POST['voucher_consulta_id']) && $_POST['voucher_consulta_id'] != ""){
+              $this->db->set('data_atualizacao', $cadastro);
+              $this->db->set('operador_atualizacao', $operador_id);
+              $this->db->where('voucher_consulta_id', $_POST['voucher_consulta_id']);
+              $this->db->update('tb_voucher_consulta');   
+            }else{ 
+              $this->db->insert('tb_voucher_consulta');
+            }
             $erro = $this->db->_error_message();
             if (trim($erro) != "") // erro de banco
                 return -1;
@@ -12851,7 +12867,9 @@ ORDER BY ae.agenda_exames_id)";
                             ca.valor,
                             pa.fantasia,
                             o.nome as operador,
-                            vc.gratuito');
+                            vc.gratuito,
+                            vc.voucher_consulta_id,
+                            vc.confirmado');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_consultas_avulsas ca','vc.consulta_avulsa_id = ca.consultas_avulsas_id','left');
         $this->db->join('tb_paciente p','p.paciente_id = ca.paciente_id','left');
@@ -12868,6 +12886,8 @@ ORDER BY ae.agenda_exames_id)";
 
         if($_POST['confirmacao'] == 'SIM'){
             $this->db->where('vc.confirmado','t');
+        }elseif($_POST['confirmacao'] == 'NAO'){
+            $this->db->where('vc.confirmado','f');
         }
 
         if($_POST['gratuito'] == 'SIM'){
@@ -13306,6 +13326,95 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         return $this->db->get()->result(); 
        
     }
+    
+    function assinarcontrato($paciente_id){
+      if($paciente_id > 0){ 
+        $this->db->select('assinou_contrato');
+        $this->db->from('tb_paciente');
+        $this->db->where('paciente_id',$paciente_id);
+        $assinatura = $this->db->get()->result();
+      
+//        print_r($assinatura);
+//        die();
+           if($assinatura[0]->assinou_contrato == "f"){
+              $this->db->set('assinou_contrato','t');
+           }else{
+              $this->db->set('assinou_contrato','f');
+           }
+           $this->db->where('paciente_id',$paciente_id);
+           $this->db->update('tb_paciente');
+           return 0;
+        }
+          return -1;
+        
+    }
+    
+    
+    
+    
+    function gravarpesquisa(){
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id');
+        $parceiro = $this->session->userdata('financeiro_parceiro_id');
+         
+        if($operador > 0){
+           $this->db->set('operador_cadastro',$operador);     
+        }
+        if($parceiro > 0){
+           $this->db->set('financeiro_parceiro_id',$parceiro);     
+        }
+        $this->db->set('data_cadastro',$horario);
+        $this->db->set('json', json_encode($_POST)); 
+        $this->db->insert('tb_historico_verificar');
+        
+    }
+    
+    
+      function relatoriopesquisaverificar(){
+        $this->db->select('hv.data_cadastro,o.nome as operador,hv.json,fp.fantasia');
+        $this->db->from('tb_historico_verificar hv');
+        $this->db->join('tb_operador o', 'o.operador_id = hv.operador_cadastro', 'left'); 
+        $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = hv.financeiro_parceiro_id', 'left'); 
+        $this->db->where('hv.ativo', 't');
+
+        if($_POST['operador'] != 0){
+            $this->db->where('hv.operador_cadastro', $_POST['operador']);
+        } 
+        if($_POST['txtdata_inicio'] != ""){
+            $this->db->where('hv.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");   
+        }
+        if($_POST['txtdata_fim'] != ""){
+            $this->db->where('hv.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
+        } 
+        
+        $this->db->orderby('hv.data_cadastro'); 
+        $return = $this->db->get();
+        return $return->result();
+    }
+    
+     function listarprocedimento($procedimento_convenio_id) {
+
+        $this->db->select('ag.tipo,pt.nome as procedimento');
+        $this->db->from('tb_procedimento_convenio pc');
+        $this->db->join('tb_procedimento_tuss pt', 'pt.procedimento_tuss_id = pc.procedimento_tuss_id');
+        $this->db->join('tb_ambulatorio_grupo ag', 'ag.nome = pt.grupo');
+        $this->db->where("pc.procedimento_convenio_id", $procedimento_convenio_id);
+        return  $this->db->get()->result(); 
+       
+    }
+    
+    function excluirvoucher($voucher_consulta_id){
+        $horario = date('Y-m-d H:i:s');
+        $operador = $this->session->userdata('operador_id'); 
+        $this->db->set("ativo",'f');
+        $this->db->set('data_exclusao',$horario);
+        $this->db->set('operador_exclusao',$operador);
+        $this->db->set('data_exclusao',$horario);
+        $this->db->where('voucher_consulta_id',$voucher_consulta_id);
+        $this->db->update('tb_voucher_consulta');
+          
+    }
+    
     
     
     

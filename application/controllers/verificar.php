@@ -15,8 +15,7 @@ class Verificar extends Controller {
         $this->load->model('ambulatorio/sala_model', 'sala');
         $this->load->model('ambulatorio/procedimento_model', 'procedimento');
         $this->load->model('cadastro/convenio_model', 'convenio');
-        $this->load->model('cadastro/caixa_model', 'caixa');
-        $this->load->model('cadastro/paciente_model', 'paciente');
+        $this->load->model('cadastro/caixa_model', 'caixa'); 
         $this->load->model('ambulatorio/exametemp_model', 'exametemp');
         $this->load->model('ambulatorio/exame_model', 'exame');
         $this->load->model('cadastro/grupoconvenio_model', 'grupoconvenio');
@@ -34,21 +33,43 @@ class Verificar extends Controller {
         redirect(base_url() . "verificar/verificarcpf");
     }
 
-    function verificarcpf($data = null, $paciente_nome_titular = null, $listadependentes = NULL) {
-
-        $this->carregarView($data, $paciente_nome_titular, $listadependentes);
+    function verificarcpf($data = null, $paciente_nome_titular = null, $listadependentes = NULL,$paciente_id=NULL) {
+        $this->carregarView($data, $paciente_nome_titular, $listadependentes,null,$paciente_id);
     }
 
-    private function carregarView($param = null, $paciente_nome_titular = NULL, $listadependentes = NULL, $view = null) {
+    private function carregarView($param = null, $paciente_nome_titular = NULL, $listadependentes = NULL, $view = null,$paciente_id=NULL) {
         $permissaoempresa = $this->guia->listarempresapermissoes($this->session->userdata('empresa_id'));
         @$listarempresalogada = $this->empresa->listarempresalogada();
         $data['procedimentos'] = $this->guia->listarprocedimentosverificar();
+         
+          $link = "";
+          $link2 = "";
+          $assinar_contrato = false;
+          $empresas = $this->guia->listarempresassicov();
+          foreach($empresas as $item){
+                 if($item->assinar_contrato == 't') {
+                   $assinar_contrato = true;
+                   break;
+                 }
+           }
+            
+        if ($assinar_contrato) {  
+          if($paciente_id != null && $paciente_id > 0){
+             $paciente = $this->paciente->listardadospaciente($paciente_id);
+             $assinou_contrato = $paciente[0]->assinou_contrato;
+
+             $assinado =   ($assinou_contrato == 't') ? 'Assinado' : 'Não Assinado';  
+             $link = "<a href='".base_url()."ambulatorio/guia/impressaodeclaracaopaciente/".$paciente_id."'  target='_blank'> Imprimir</a>" ;
+             $link2 = "<a href='".base_url()."ambulatorio/guia/assinarcontrato/".$paciente_id."'   title='Ao clicar irá mudar a situação da assinatura' target='_blank'>(".$assinado.")</a>"; 
+          }  
+        }
+        
         if (!isset($param)) {
             $data['mensagem'] = '';
         } else {
             if ($param == 'true') {
                 for ($i = 0; $i < 3; $i++) {
-                    $data['mensagem'] = 'Carência liberada<br>Titular:<b title="' . $paciente_nome_titular . '">' . mb_strimwidth($paciente_nome_titular, 0, 37, "...") . "</b><br>";
+                    $data['mensagem'] = 'Carência liberada '.$link2.' '.$link.'<br>Titular:<b title="' . $paciente_nome_titular . '">' . mb_strimwidth($paciente_nome_titular, 0, 37, "...") . "</b><br>";
                 }
                 foreach ($listadependentes as $dependente) {
 
@@ -71,9 +92,9 @@ class Verificar extends Controller {
                     }
                 }
             } elseif ($param == 'false') {
-                $data['mensagem'] = 'Carência não-liberada ';
-            } elseif ($param == 'pending') {
-                $data['mensagem'] = 'Pendência<br>Favor verificar junto a empresa <br>' . @$listarempresalogada[0]->nome;
+                $data['mensagem'] = 'Carência não-liberada '.$link2.' '.$link.' ';
+            } elseif ($param == 'pending') { 
+                $data['mensagem'] = 'Pendência '.$link2.' '.$link.' <br>Favor verificar junto a empresa<br>' . @$listarempresalogada[0]->nome;
             } else {
                 $data['mensagem'] = 'Cliente não Cadastrado<br>Favor verificar junto a empresa <br>' . @$listarempresalogada[0]->nome;
             }
@@ -88,7 +109,8 @@ class Verificar extends Controller {
 
         $permissaoempresa = $this->guia->listarempresapermissoes($this->session->userdata('empresa_id'));
         $data['procedimentos'] = $this->guia->listarprocedimentosverificar();
-//      print_r($data['procedimentos'] );
+        $this->guia->gravarpesquisa();
+//      print_r($_POST);
 //      die; 
         if (@$_POST['cpf'] == "") {
             $cpf = "";
@@ -136,7 +158,7 @@ class Verificar extends Controller {
 
                 if ($dependente) {
                     $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
-//                $paciente_id = $retorno[0]->paciente_id;
+//                   $paciente_id = $retorno[0]->paciente_id;
                     @$paciente_titular_id = $retorno[0]->paciente_id;
 //            $paciente_dependente_id = $paciente_informacoes[0]->paciente_id;
                 } else {
@@ -155,7 +177,7 @@ class Verificar extends Controller {
                 //verificando se tem parcelas não pagas  com o $parcelas_nao_paga, depois verifica a quantidade de parcelas que esse paciente tem, depois verifica se a quantidade de parcelas pagas é igual a quantidade de parcelas que o paciente posssui.
                 if (count($parcelas_nao_paga) == 0 && count($quantidade_parcelas) > 0 && count($quantidade_parcelas_pagas) == count($quantidade_parcelas)) {
                     //caso entre aqui ele está liberado;
-                    $this->verificarcpf('true', $paciente_nome_titular, $listadependentes);
+                    $this->verificarcpf('true', $paciente_nome_titular, $listadependentes,$paciente_id);
                 } else {
 
                     if (count($parcelas) >= count($parcelasPrevistas)) { // Verifica se as parcelas estão em dia
@@ -256,16 +278,14 @@ class Verificar extends Controller {
 
                         if ($carencia_liberada == 't') {
 //                    echo json_encode('true');
-
-
-                            $this->verificarcpf('true', $paciente_nome_titular, $listadependentes);
+                            $this->verificarcpf('true', $paciente_nome_titular, $listadependentes,$paciente_id);
                         } else {
 //                    echo json_encode('false');
-                            $this->verificarcpf('false');
+                            $this->verificarcpf('false', $paciente_nome_titular,null,$paciente_id);
                         }
                     } else {
 //                echo json_encode('pending');
-                        $this->verificarcpf('pending');
+                        $this->verificarcpf('pending', $paciente_nome_titular,null,$paciente_id);
                     }
                 }
             } else {

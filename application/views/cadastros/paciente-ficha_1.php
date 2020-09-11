@@ -5,8 +5,7 @@
             <div>
                 <label>Nome *</label>                      
                 
-                <?php 
-            
+           <?php  
                 
             if (@$empresa[0]->campos_cadastro != '') {
                 $campos_obrigatorios = json_decode(@$empresa[0]->campos_cadastro);
@@ -20,7 +19,8 @@
                     <input type ="hidden" name="email" value ="<?= @$lista[0]->email; ?>" id ="email">             
                     <input type ="hidden" name="senha_app"  value ="<?= @$lista[0]->senha_app; ?>" id ="senha_app">             
                     <input type ="hidden" name="whatsapp"  value ="<?= @$lista[0]->whatsapp; ?>" id ="whatsapp">             
-                    <input type ="hidden" name="nascimento"  value ="<?= @$lista[0]->nascimento; ?>" id ="nascimento">             
+                    <input type ="hidden" name="nascimento"  value ="<?= @$lista[0]->nascimento; ?>" id ="nascimento">   
+                    <input type ="hidden" name="precadastro_id"  value ="<?= @$precadastro_id; ?>" id ="precadastro_id">
                 <?
                 }else{
                 ?>
@@ -427,7 +427,21 @@
                     <label>Pular Meses</label>
 
                     <input type="number" name="pularmes" id="pularmes" min="0" class="texto02" />
+                </div> 
+             <?php   if($empresa[0]->assinar_contrato == "t"){  ?>
+                <div > 
+                    <label>Cliente já Assinou o Contrato? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label>
+                    <table >
+                        <tr>
+                            <td style="width:5px; ">Sim</td>
+                            <td style="width:1px; "><input type="radio" name="assinou_contrato" id="assinou_contrato"  value="sim" class="texto01" required="true"/></td>
+                            <td style="width:5px; ">Não</td>
+                            <td style="width:5px; "><input type="radio" name="assinou_contrato" id="assinou_contrato"  value="nao"  class="texto01" checked="true"   required="true"/></td>
+                        </tr>
+                    </table> 
                 </div>
+            <?php }?>
+                
                   
             </fieldset>
 
@@ -574,6 +588,7 @@
                                 });
 
                  $(function () {
+                  carregarPlano();
                     $('#plano').change(function () {
                         if ($(this).val()) {
                             $('.carregando').show();
@@ -603,6 +618,33 @@
                     });
                  });
                  
+                 
+       function carregarPlano(){
+        
+          if ($('#plano').val()) {
+            $('.carregando').show();
+            $.getJSON('<?= base_url() ?>autocomplete/carregarprecos', {tipo: $('#plano').val(), ajax: true}, function (j) {
+            console.log(j);
+                var options = '';
+                for (var c = 0; c < j.length; c++) {
+                    //CARREGANDO TODOS OS INPUTS COM OS RESPECTIVOS VALORES DOS SEUS CAMPOS VINDO DO AUTOCOMPLETE
+                    options += ' <input required="" id="checkboxvalor1" type="radio" name="checkboxvalor1" value="01-' + j[0].valor1 + '  "/>1 x ' + j[0].valor1 + ' <br>\n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="05-' + j[0].valor5 + ' "/>5 x ' + j[0].valor5 + '<br>\n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="06-' + j[0].valor6 + ' "/>6 x ' + j[0].valor6 + '<br>   \n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="10-' + j[0].valor10 + ' "/>10 x ' + j[0].valor10 + '  <br> \n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="11-' + j[0].valor11 + ' "/>11 x ' + j[0].valor11 + ' <br>     \n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="12-' + j[0].valor12 + ' "  />12 x ' + j[0].valor12 + '<br>  \n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="23-' + j[0].valor23 + ' "  />23 x ' + j[0].valor23 + '<br>   \n\
+                                          <input required id="checkboxvalor1" type="radio" name="checkboxvalor1"  value="24-' + j[0].valor24 + ' "  />24 x ' + j[0].valor24 + '<br>                 ';
+
+                      var adesao = parseFloat(j[0].valor_adesao).toLocaleString('pt-br', {minimumFractionDigits: 2});  
+                      $("#valor_adesao").val(adesao);
+                }
+                $('.valores').html(options).show();
+                $('.carregando').hide();
+            });
+        } 
+      }
              
 $("#valor_adesao").maskMoney({prefix:'', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
 

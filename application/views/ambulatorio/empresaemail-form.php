@@ -3,19 +3,16 @@
     <h3>Configurações Serviço de Email</h3>
     <!--<div style="width: 100%">-->
         <form name="form_exametemp" id="form_exametemp" action="<?= base_url() ?>ambulatorio/empresa/gravarconfiguracaoemail" method="post">
-            <fieldset>
+<!--            <fieldset>
                 <legend>Lembrete de Consulta</legend>
                 <textarea name="lembr" id=""><?= @$mensagem[0]->email_mensagem_confirmacao ?></textarea>
-                <input type="hidden" id="empresa_id" name="empresa_id" value="<?= @$empresa_id ?>"/>
-
-            </fieldset>
             
+            </fieldset> 
             <fieldset>
                 <legend>Mensagem para pacientes que faltaram</legend>
-                <textarea name="falta" id=""><?= @$mensagem[0]->email_mensagem_falta ?></textarea>
-
-            </fieldset>
-            
+                <textarea name="falta" id=""><?= @$mensagem[0]->email_mensagem_falta ?></textarea> 
+            </fieldset>-->
+            <input type="hidden" id="empresa_id" name="empresa_id" value="<?= @$empresa_id ?>"/>
             <fieldset>
                 <legend>Mensagem de Agradecimento</legend>
                 <textarea name="agrade" id=""><?= @$mensagem[0]->email_mensagem_agradecimento ?></textarea>
@@ -23,9 +20,19 @@
                     <hr/>
                     <button type="submit" name="btnEnviar">Enviar</button>
                     <button type="reset" name="btnLimpar">Limpar</button>
-                </div>
-
+                </div> 
             </fieldset>
+            <fieldset>
+                <legend>Mensagem de Aniversariantes</legend>
+                <textarea name="aniver" id=""><?= @$mensagem[0]->email_mensagem_aniversario; ?></textarea>
+                <div style="width: 100%">
+                    <hr/>
+                    <button type="submit" name="btnEnviar">Enviar</button>
+                    <button type="reset" name="btnLimpar">Limpar</button>
+                </div> 
+            </fieldset>
+
+
         </form>
     <!--</div>  Final da DIV content -->
 </div> <!-- Final da DIV content -->

@@ -102,7 +102,13 @@
                     </dt>
                     <dd>
                         <input type="text" id="iugu_token" class="texto07" name="iugu_token" value="<?= @$obj->_iugu_token; ?>" />
-                    </dd>
+                    </dd> 
+                    <dt>
+                        <label>IUGU Somente Cartão</label>
+                    </dt>
+                    <dd>
+                        <input type="checkbox" id="iugu_cartao"   name="iugu_cartao" value="<?= @$obj->_iugu_cartao; ?>" <? if (@$obj->_iugu_cartao == 't') echo "checked"; ?> />
+                    </dd> 
                     <dt>
                         <label>Client ID Gerencianet</label>
                     </dt>
@@ -461,6 +467,14 @@
                         <td>
                             <input type="checkbox" name="titular_carterinha"   <? if (@$obj->_titular_carterinha == 't') echo "checked"; ?>> 
                             <label>Nome do Titular ao Imprimir Carteirinha</label>  
+                        </td>
+                        <td>
+                            <input type="checkbox" name="nao_integrar_parceria"   <? if (@$obj->_nao_integrar_parceria == 't') echo "checked"; ?>> 
+                            <label>Não integrar com a parceria</label>  
+                        </td>
+                        <td>
+                            <input type="checkbox" name="assinar_contrato"   <? if (@$obj->_assinar_contrato == 't') echo "checked"; ?>> 
+                            <label>Assinar Contrato</label>  
                         </td>
                     </tr>
                 </table> 

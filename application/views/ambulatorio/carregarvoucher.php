@@ -1,9 +1,10 @@
-<!--<link rel="stylesheet" href="<?php base_url() ?>css/jquery-ui-1.8.5.custom.css">-->
 <link rel="stylesheet" href="<?= base_url() ?>css/jquery-ui-1.8.5.custom.css">
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <!--<script type="text/javascript" src="<?= base_url() ?>js/scripts.js" ></script>-->
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-1.4.2.min.js" ></script>
-<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.8.5.custom.min.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.8.5.custom.min.js" ></script>  
+<body bgcolor="#C0C0C0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript">
 
     $(function () {
@@ -19,19 +20,9 @@
     });
 
 </script>
-<style>
-    td{
-        width: 70px;
-    }
-</style>
-<meta charset="UTF-8">
-<body bgcolor="#C0C0C0">
-    <div class="content"> <!-- Inicio da DIV content -->
-        <h3 class="singular">Informações Voucher</h3>
-        <div>
-            <form name="form_faturar" id="form_faturar" action="<?= base_url() ?>ambulatorio/guia/gravarvoucherconsultaextra/<?= $consulta_avulsa_id; ?>/<?= $paciente_id; ?>/<?= $contrato_id; ?>" method="post">
-                <fieldset>
-
+<fieldset>
+     <form name="form_faturar" id="form_faturar" action="<?= base_url() ?>ambulatorio/guia/gravarcarregarvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>" method="post">
+         <input type="hidden" id="voucher_consulta_id" name="voucher_consulta_id" value="<?= $voucher_consulta_id; ?>" >
                     <dl class="dl_desconto_lista">
                         <table>
                             <tr>
@@ -90,44 +81,10 @@
                             <td>Gratuito?</td>
                             <td><input type="checkbox" name="gratuito" <? if (@$voucher[0]->gratuito == 't') echo "checked"; ?>></td>
                             </tr>
-                        </table>
-                            
-                        
-                    </dl>    
-
+                        </table> 
+                     </dl>   
                     <hr/>
                     <button type="submit" name="btnEnviar" >Enviar</button>
             </form>
-            </fieldset>
-                <fieldset>
-                    <table border=1 cellspacing=0 cellpadding=2 >
-                        <tr>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Forma de pagamento</th>
-                            <th>Parceiro</th>
-                            <th>Gratuito?</th>
-                            <th colspan="3">Ações</th>
-                        </tr>
-                            <?php  
-                            foreach($voucher as $item){   ?>
-                             <tr>
-                                 <td><?= date('d/m/Y',strtotime($item->data)); ?></td>
-                                 <td><?= date('H:i:s',strtotime($item->horario)); ?></td>
-                                 <td><?=  $item->forma_pagamento; ?></td>
-                                 <td><?=  $item->parceiro; ?></td>
-                                 <td><?= ($item->gratuito == "t") ? "Sim" : "Não";?></td>
-                                 
-                                 <td><a href="<?= base_url(); ?>ambulatorio/guia/carregarvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Editar</a></td>
-                                 <td><a href="<?= base_url(); ?>ambulatorio/guia/impressaovoucherconsultaextra/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Imprimir</a></td>
-                                  <?php if($this->session->userdata('operador_id') == 1){?>
-                                       <td><a href="<?= base_url(); ?>ambulatorio/guia/excluirvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Excluir</a></td>
-                                  <?php }?>
-                             </tr>
-                           <?  } ?>
-                    </table>
-                  
-                </fieldset>
-        </div>
-    </div> <!-- Final da DIV content -->
+      </fieldset>
 </body>
