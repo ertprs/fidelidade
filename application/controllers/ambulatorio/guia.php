@@ -2765,6 +2765,10 @@ class Guia extends BaseController {
      
         $data['contrato_id'] = $contrato_id;
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
+
+        $carnesicoob = $this->guia->listargeradocomocarnersicoob($contrato_id);
+        $data['geradocomocarne'] = $carnesicoob[0]->geradocarnesicoob;
+
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }
 
@@ -6945,9 +6949,11 @@ if($empresa_id == ""){
         $cidade = $empresa[0]->municipio;
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab(); 
+        
         // echo "<pre>";
         // print_r($relatorio);
         // die(); 
+
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
         $A[0] = '';     // Iniciando o indice zero do array;
@@ -7239,7 +7245,7 @@ if($empresa_id == ""){
     
     
     function gerarcarnesicoob($paciente_id,$contrato_id){
-      
+        
       //   $this->load->plugin('mpdf');
          $html ="";
          $empresa_id = $this->session->userdata('empresa_id');
@@ -7255,7 +7261,8 @@ if($empresa_id == ""){
         $data['agencia'] = $empresa[0]->agenciasicoob;       
         $dadosboleto["convenio"] = "0".$empresa[0]->codigobeneficiariosicoob; 
         $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
-        
+
+        $this->guia->geradocomocarne($contrato_id);
         
          //Dados da empresa
         $data['cnpj'] = $empresa[0]->cnpj;
@@ -7388,7 +7395,6 @@ else
        $data["codigo_banco_com_dv"] = $codigo_banco_com_dv;
        $data['paciente_contrato_id'] = $item->paciente_contrato_parcelas_id;   
        $data['code'] =  $this->fbarcode($linha); 
-      
        
   
        
@@ -7405,7 +7411,58 @@ else
     
   
     
-    
+    function gerarcarnesicoob2($paciente_id,$contrato_id){
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
+        $empresa_id = $this->session->userdata('empresa_id');
+        $html = '';
+        $this->guia->geradocomocarne($contrato_id);
+        $this->load->plugin('mpdf');
+        $totalparaimprimir = count($pagamento);
+        $i = 0;
+        foreach($pagamento as $item){
+            $i++;
+            $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
+
+            $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+            $empresa = $this->guia->listarempresaporid($empresa_id);
+            $valor  =   str_replace(".", ",",$lista[0]->valor);
+           // DADOS DO BOLETO PARA O SEU CLIENTE
+           $taxa_boleto = 0;
+           $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+           $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+           $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+           $data['vencimento'] = $lista[0]->data;
+           $data['paciente'] = $lista[0]->paciente;
+           $data['municipio'] = $lista[0]->municipio;
+           $data['estado'] = $lista[0]->estado;
+           $data['cep'] = $lista[0]->cep;
+           $data['logradouro'] = $lista[0]->logradouro;
+           
+           //Dados da empresa
+           $data['cnpj'] = $empresa[0]->cnpj;
+           $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+           $data['estadoEmpresa'] = $empresa[0]->estado;
+           $data['municipioEmpresa'] = $empresa[0]->municipio;
+           $data['cedente'] = $empresa[0]->nome;
+           
+
+           $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+           $data['agencia'] = $empresa[0]->agenciasicoob;  
+           $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+   // NÃO ALTERAR!  
+
+            if($totalparaimprimir == $i){
+                $data['print'] = "true"; 
+            }else{
+                $data['print'] = "false"; 
+            }
+
+            
+            $this->load->View('ambulatorio/boletosicoob2',$data);
+
+        }
+         echo $html;
+    }
     
     
     
@@ -7510,7 +7567,7 @@ else
 		$Dv = 11 - $Resto;
     }
         
-       return $NossoNumero.$Dv;  
+       echo $NossoNumero.$Dv;  
    //  include("./sicoob/funcoes_bancoob.php"); 
    }
     

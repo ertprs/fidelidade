@@ -125,10 +125,22 @@ class guia_model extends Model {
         if ($parametro != null) {
             $this->db->where('nome ilike', "%" . $parametro . "%");
         }
-        $this->db->where('paciente_id', 24489);
         $this->db->orderby('nome');
         $return = $this->db->get();
         return $return->result();
+    }
+
+    function listargeradocomocarnersicoob($contrato_id){
+        $this->db->select('geradocarnesicoob');
+        $this->db->from('tb_paciente_contrato');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        return $this->db->get()->result();
+    }
+
+    function geradocomocarne($contrato_id){
+        $this->db->set('geradocarnesicoob', 't');
+        $this->db->where('paciente_contrato_id', $contrato_id);
+        $this->db->update('tb_paciente_contrato');
     }
 
     function listar($paciente_id) {

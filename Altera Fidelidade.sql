@@ -1148,3 +1148,6 @@ ALTER TABLE ponto.tb_voucher_consulta ADD COLUMN operador_exclusao integer;
 
 ALTER TABLE ponto.tb_empresa ADD COLUMN iugu_cartao boolean;
 ALTER TABLE ponto.tb_empresa ALTER COLUMN iugu_cartao SET DEFAULT false;
+
+-- 11/09/2020
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN geradocarnesicoob boolean DEFAULT FALSE;
