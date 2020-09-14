@@ -6981,7 +6981,7 @@ if($empresa_id == ""){
         $A[22] = $this->utilitario->preencherDireita('',20,' ');
         $A[23] = $this->utilitario->preencherDireita('',20,' ');
         $A[24] = $this->utilitario->preencherDireita('',29,' ');
-
+        
        $header_A = implode($A);
 
         $i = 1;
@@ -7032,11 +7032,8 @@ if($empresa_id == ""){
         foreach($relatorio as $item){
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
-        //$lista = $this->guia->listarparcelaconfirmarpagamentoempresa($item->paciente_contrato_parcelas_id); 
-        // echo "<pre>";
-        // print_r($lista);
-        // die(); 
+        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+
 
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
@@ -7053,10 +7050,10 @@ if($empresa_id == ""){
             
         
         $cont_linha++;
-       
+            
        $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
        $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
-        
+
         $P = array();
         $P[0] = '';
         $P[1] = '756';
@@ -7139,15 +7136,7 @@ if($empresa_id == ""){
         $body_con = implode($Q);
         $body_Q[] = $body_con;
         $body_P_con .= $body_con . "\r\n"; 
-        
-        //$t = 0 ;
-       // foreach($Q as $ie){
-       //   echo "<pre>";
-      //    $t += strlen($ie);   
-    //    }
-    //   echo $t;
-       
-    ///   die();
+
 
 
          //REGISTRO TRAILLER DO LOTE
@@ -7510,7 +7499,7 @@ if(@!function_exists(formata_numdoc))
                 return $num;
                 
                 echo $num;
-                echo '<br>';
+                 echo '<br>';
 			}
     }
 
@@ -7567,7 +7556,8 @@ else
 		$Dv = 11 - $Resto;
     }
         
-       echo $NossoNumero.$Dv;  
+    //    echo $NossoNumero.$Dv;  
+       return $NossoNumero.$Dv;
    //  include("./sicoob/funcoes_bancoob.php"); 
    }
     
@@ -8015,16 +8005,18 @@ function geraCodigoBanco($numero) {
                     // echo '<br>';
 
                    if($paciente_contrato_parcelas_id != ""){
+
                       $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
 
                      if($mensagem == 'Liquidação'){
                          $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
                      }
+
                    }
 
                }
           }       
-        //   die;        
+      
        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
        } 
@@ -8216,10 +8208,12 @@ function geraCodigoBanco($numero) {
      $numero_contrato_parcela = substr($nossonumero, 2, 7);
      $parcelas =   $this->guia->listarparcelanossonumero($numero_contrato_parcela);
      
+
     //  echo '<pre>';
     //  print_r($parcelas);
     //  echo '<br>';
     //  print_r($numero_contrato_parcela);
+
     //  die;
 
      foreach($parcelas as $item){
