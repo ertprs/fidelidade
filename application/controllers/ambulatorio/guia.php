@@ -7032,7 +7032,12 @@ if($empresa_id == ""){
         foreach($relatorio as $item){
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+        
+            if($item->empresa_cadastro_id == ''){
+                $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+            }else{
+                $lista = $this->guia->listarparcelaconfirmarpagamentoempresa2($item->paciente_contrato_parcelas_id); 
+            }
 
 
         $vencimento = $lista[0]->data;

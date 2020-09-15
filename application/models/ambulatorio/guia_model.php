@@ -999,8 +999,48 @@ if($_POST['tipopaciente'] == 'dependente'){
         $this->db->orderby('pcp.parcela');
         $return = $this->db->get();
         return $return->result();
+
     }
     
+    // function listarparcelaconfirmarpagamentoempresa($paciente_contrato_parcelas_id) {
+
+    //     $this->db->select('pc.paciente_contrato_id,
+    //         pcp.paciente_contrato_parcelas_id,
+    //                         pc.ativo,
+    //                         p.logradouro,
+    //                         p.numero,
+    //                         p.bairro,
+    //                         p.paciente_id,
+    //                         p.telefone,
+    //                         pcp.parcela,
+    //                         pcp.data,
+    //                         p.credor_devedor_id as financeiro_credor_devedor_id,
+    //                         m.nome as municipio,
+    //                         fcd.razao_social as credor,
+    //                         pcp.valor,
+    //                         p.nome as paciente,
+    //                         fp.nome as plano,
+    //                         fp.conta_id,
+    //                         pc.data_cadastro,
+    //                         p.empresa_id,
+    //                         pcp.financeiro_credor_devedor_id as financeiro_credor_devedor_id_dependente,
+    //                         pcp.paciente_dependente_id,
+    //                         pcp.taxa_adesao,
+    //                         m.estado,
+    //                         p.cep,
+    //                         p.cpf');
+    //     $this->db->from('tb_paciente_contrato_parcelas pcp');
+    //     $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
+    //     $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = pcp.financeiro_credor_devedor_id', 'left');
+    //     $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+    //     $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+    //     $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+    //     $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
+    //     $this->db->orderby('pcp.parcela');
+    //     $return = $this->db->get();
+    //     return $return->result();
+
+    // }
 
     function listarparcelaconfirmarpagamentogatilhoiugu($invoice_id) {
 
@@ -12160,6 +12200,51 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->update('tb_paciente_contrato');
     }
 
+    function listarparcelaconfirmarpagamentoempresa2($paciente_contrato_parcelas_id) {
+
+        $this->db->select('pc.paciente_contrato_id,
+            pcp.paciente_contrato_parcelas_id,
+                            pc.ativo,
+                            ec.logradouro,
+                            ec.numero,
+                            ec.bairro,
+                            p.paciente_id,
+                            ec.telefone,
+                            pcp.parcela,
+                            pcp.data,
+                            pcp.financeiro_credor_devedor_id,
+                            me.nome as municipio,
+                            me.estado,
+                            fcd.razao_social as credor,
+                            pcp.valor,
+                            ec.nome as paciente,
+                            fp.nome as plano,
+                            fp.conta_id,
+                            pc.data_cadastro,
+                            e.empresa_id,
+                            e.nome as empresa,
+                            pc.empresa_cadastro_id,
+                            ec.financeiro_credor_devedor_id as credor_id,
+                            ec.cep,
+                            ec.cnpj as cpf,
+                            pcp.taxa_adesao
+                            ');
+        $this->db->from('tb_paciente_contrato_parcelas pcp');
+        $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
+        $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = pcp.financeiro_credor_devedor_id', 'left');
+        $this->db->join('tb_paciente p', 'p.paciente_id = pc.paciente_id', 'left');
+        $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id', 'left');
+        $this->db->join('tb_municipio m', 'm.municipio_id = p.municipio_id', 'left');
+        $this->db->join('tb_empresa e', 'e.empresa_id = p.empresa_id', 'left');
+        $this->db->join('tb_empresa_cadastro ec','ec.empresa_cadastro_id = pc.empresa_cadastro_id','left');
+        $this->db->join('tb_municipio me', 'me.municipio_id = ec.municipio_id', 'left');
+        $this->db->where("pcp.paciente_contrato_parcelas_id", $paciente_contrato_parcelas_id);
+        $this->db->where('pcp.ativo', 't');
+        $this->db->orderby('pcp.parcela');
+        $return = $this->db->get();
+        return $return->result();
+    }
+
     function listarparcelaconfirmarpagamentoempresa($paciente_contrato_parcelas_id) {
 
         $this->db->select('pc.paciente_contrato_id,
@@ -13250,7 +13335,8 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                             gpi.carnet_id,
                             gpi.num_carne,
                             cp.paciente_dependente_id,
-                            cp.data_cadastro
+                            cp.data_cadastro,
+                            pc.empresa_cadastro_id
                             ');
         $this->db->from('tb_paciente_contrato_parcelas cp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = cp.paciente_contrato_id', 'left');
