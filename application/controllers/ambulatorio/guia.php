@@ -243,9 +243,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicov();
 
-       echo "<pre>";
-       print_r($relatorio);
-       die;
+    //    echo "<pre>";
+    //    print_r($relatorio);
+    //    die;
 
         $empresa = $this->guia->listarempresassicov();
         // Definições de variaveis com informação do banco e afins.  
@@ -7037,9 +7037,12 @@ if($empresa_id == ""){
                 $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
             }else{
                 $lista = $this->guia->listarparcelaconfirmarpagamentoempresa2($item->paciente_contrato_parcelas_id); 
+                $titular = $lista[0]->paciente;
             }
 
-
+        // echo '<pre>';
+        // print_r($lista);
+        // die;
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
         $municipio = $lista[0]->municipio;
