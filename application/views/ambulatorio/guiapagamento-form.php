@@ -162,7 +162,7 @@
                                         ?>
                                          <th class="tabela_header" colspan="1">
                                               <div class="bt_link" >
-                                                    <a  target="_blank" href="<?= base_url() ?>ambulatorio/guia/gerarcarnesicoob/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Carnês sicoob
+                                                    <a  target="_blank" href="<?= base_url() ?>ambulatorio/guia/gerarcarnesicoob2/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Carnês sicoob
                                                     </a>
                                                 </div>
                                          </th>
@@ -499,10 +499,12 @@
                                       <?php if($item->data_cartao_iugu == ''){?>
                                         <td  class="<?php echo $estilo_linha; ?>"  > 
                                            <?php if($item->taxa_adesao != 't'){?>
+                                                <?// if($geradocomocarne == 't'){?>
                                             <div style="width: 50px;" class="bt_link">
                                                 <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoob/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank" >Boleto Sicoob
                                                 </a>
                                             </div>
+                                                <?// } ?>
                                             <?php }?>
                                         </td>
                                   

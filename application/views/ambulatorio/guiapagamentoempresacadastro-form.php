@@ -107,8 +107,12 @@
                         $key = $empresa[0]->iugu_token;
                         Iugu::setApiKey($key);
                         $contador = 0;
-                          $perfil_id = $this->session->userdata('perfil_id'); 
+                          $perfil_id = $this->session->userdata('perfil_id');
                         foreach ($listarpagamentoscontrato as $item) {
+
+                            $situacaoparcelasicoob = $this->guia->listarsituacaoparcelasicoob($item->paciente_contrato_parcelas_id);
+
+
 
                             $saber_se_foi_pago = $item->data_cartao_iugu;
 
@@ -184,7 +188,10 @@
 
                                     <? if ($item->ativo == 't') { ?>
                                         <td class="<?php echo $estilo_linha; ?>">ABERTA</td>
-
+                                        <?php  if($perfil_id != 10){ ?>
+                                        <td style="width: 130px"  class="<?php echo $estilo_linha; ?>"><a href="<?= base_url() ?>ambulatorio/guia/alterarobservacao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">=> <?= $item->observacao ?></a>  <span style="color: #888001;font-weight: bold" > <?=  (count($situacaoparcelasicoob) > 0) ? $situacaoparcelasicoob[0]->mensagem : ''; ?></span></td>
+                                                   
+                                        <?php }?>
 
                                         <?
                                         if ($excluir_somente_empresa == True):
@@ -342,7 +349,7 @@
                                         </td>
                                                  
                                         <?
-                                    } elseif($empresapermissao[0]->iugu_token != "" ){
+                                    } elseif($empresapermissao[0]->iugu_token != "" && $empresapermissao[0]->iugu_cartao != 't'){
 
 
                                         if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') {

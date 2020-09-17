@@ -243,9 +243,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicov();
 
-       echo "<pre>";
-       print_r($relatorio);
-       die;
+    //    echo "<pre>";
+    //    print_r($relatorio);
+    //    die;
 
         $empresa = $this->guia->listarempresassicov();
         // Definições de variaveis com informação do banco e afins.  
@@ -2765,6 +2765,10 @@ class Guia extends BaseController {
      
         $data['contrato_id'] = $contrato_id;
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
+
+        $carnesicoob = $this->guia->listargeradocomocarnersicoob($contrato_id);
+        $data['geradocomocarne'] = $carnesicoob[0]->geradocarnesicoob;
+
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }
 
@@ -6945,9 +6949,11 @@ if($empresa_id == ""){
         $cidade = $empresa[0]->municipio;
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab(); 
+        
         // echo "<pre>";
         // print_r($relatorio);
         // die(); 
+
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
         $A[0] = '';     // Iniciando o indice zero do array;
@@ -6975,7 +6981,7 @@ if($empresa_id == ""){
         $A[22] = $this->utilitario->preencherDireita('',20,' ');
         $A[23] = $this->utilitario->preencherDireita('',20,' ');
         $A[24] = $this->utilitario->preencherDireita('',29,' ');
-
+        
        $header_A = implode($A);
 
         $i = 1;
@@ -7024,14 +7030,24 @@ if($empresa_id == ""){
         
         $valor_total= 0;
         foreach($relatorio as $item){
+
+            if($item->paciente_contrato_parcelas_iugu_id != ''){
+                continue;
+            }
+
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-         $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
-        //$lista = $this->guia->listarparcelaconfirmarpagamentoempresa($item->paciente_contrato_parcelas_id); 
-        // echo "<pre>";
-        // print_r($lista);
-        // die(); 
+        
+            if($item->empresa_cadastro_id == ''){
+                $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+            }else{
+                $lista = $this->guia->listarparcelaconfirmarpagamentoempresa2($item->paciente_contrato_parcelas_id); 
+                $titular = $lista[0]->paciente;
+            }
 
+        // echo '<pre>';
+        // print_r($lista);
+        // die;
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
         $municipio = $lista[0]->municipio;
@@ -7047,10 +7063,10 @@ if($empresa_id == ""){
             
         
         $cont_linha++;
-       
+            
        $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
        $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
-        
+
         $P = array();
         $P[0] = '';
         $P[1] = '756';
@@ -7133,15 +7149,7 @@ if($empresa_id == ""){
         $body_con = implode($Q);
         $body_Q[] = $body_con;
         $body_P_con .= $body_con . "\r\n"; 
-        
-        //$t = 0 ;
-       // foreach($Q as $ie){
-       //   echo "<pre>";
-      //    $t += strlen($ie);   
-    //    }
-    //   echo $t;
-       
-    ///   die();
+
 
 
          //REGISTRO TRAILLER DO LOTE
@@ -7239,7 +7247,7 @@ if($empresa_id == ""){
     
     
     function gerarcarnesicoob($paciente_id,$contrato_id){
-      
+        
       //   $this->load->plugin('mpdf');
          $html ="";
          $empresa_id = $this->session->userdata('empresa_id');
@@ -7255,7 +7263,8 @@ if($empresa_id == ""){
         $data['agencia'] = $empresa[0]->agenciasicoob;       
         $dadosboleto["convenio"] = "0".$empresa[0]->codigobeneficiariosicoob; 
         $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
-        
+
+        $this->guia->geradocomocarne($contrato_id);
         
          //Dados da empresa
         $data['cnpj'] = $empresa[0]->cnpj;
@@ -7388,7 +7397,6 @@ else
        $data["codigo_banco_com_dv"] = $codigo_banco_com_dv;
        $data['paciente_contrato_id'] = $item->paciente_contrato_parcelas_id;   
        $data['code'] =  $this->fbarcode($linha); 
-      
        
   
        
@@ -7405,7 +7413,58 @@ else
     
   
     
-    
+    function gerarcarnesicoob2($paciente_id,$contrato_id){
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
+        $empresa_id = $this->session->userdata('empresa_id');
+        $html = '';
+        $this->guia->geradocomocarne($contrato_id);
+        $this->load->plugin('mpdf');
+        $totalparaimprimir = count($pagamento);
+        $i = 0;
+        foreach($pagamento as $item){
+            $i++;
+            $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
+
+            $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+            $empresa = $this->guia->listarempresaporid($empresa_id);
+            $valor  =   str_replace(".", ",",$lista[0]->valor);
+           // DADOS DO BOLETO PARA O SEU CLIENTE
+           $taxa_boleto = 0;
+           $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+           $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+           $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+           $data['vencimento'] = $lista[0]->data;
+           $data['paciente'] = $lista[0]->paciente;
+           $data['municipio'] = $lista[0]->municipio;
+           $data['estado'] = $lista[0]->estado;
+           $data['cep'] = $lista[0]->cep;
+           $data['logradouro'] = $lista[0]->logradouro;
+           
+           //Dados da empresa
+           $data['cnpj'] = $empresa[0]->cnpj;
+           $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+           $data['estadoEmpresa'] = $empresa[0]->estado;
+           $data['municipioEmpresa'] = $empresa[0]->municipio;
+           $data['cedente'] = $empresa[0]->nome;
+           
+
+           $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+           $data['agencia'] = $empresa[0]->agenciasicoob;  
+           $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+   // NÃO ALTERAR!  
+
+            if($totalparaimprimir == $i){
+                $data['print'] = "true"; 
+            }else{
+                $data['print'] = "false"; 
+            }
+
+            
+            $this->load->View('ambulatorio/boletosicoob2',$data);
+
+        }
+         echo $html;
+    }
     
     
     
@@ -7453,7 +7512,7 @@ if(@!function_exists(formata_numdoc))
                 return $num;
                 
                 echo $num;
-                echo '<br>';
+                 echo '<br>';
 			}
     }
 
@@ -7510,7 +7569,8 @@ else
 		$Dv = 11 - $Resto;
     }
         
-       return $NossoNumero.$Dv;  
+    //    echo $NossoNumero.$Dv;  
+       return $NossoNumero.$Dv;
    //  include("./sicoob/funcoes_bancoob.php"); 
    }
     
@@ -7954,20 +8014,22 @@ function geraCodigoBanco($numero) {
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
-                    // echo $servico.' - '.$mensagem;
-                    // echo '<br>';
+                     echo $servico.' - '.$mensagem;
+                     echo '<br>';
 
                    if($paciente_contrato_parcelas_id != ""){
-                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
+
+                      //$this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
 
                      if($mensagem == 'Liquidação'){
-                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
+                         //$this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
                      }
-                   }
 
+                   }
+// die;
                }
           }       
-        //   die;        
+          die;
        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
        } 
@@ -8159,10 +8221,12 @@ function geraCodigoBanco($numero) {
      $numero_contrato_parcela = substr($nossonumero, 2, 7);
      $parcelas =   $this->guia->listarparcelanossonumero($numero_contrato_parcela);
      
+
     //  echo '<pre>';
     //  print_r($parcelas);
     //  echo '<br>';
     //  print_r($numero_contrato_parcela);
+
     //  die;
 
      foreach($parcelas as $item){

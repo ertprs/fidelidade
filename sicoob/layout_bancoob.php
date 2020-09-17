@@ -491,7 +491,11 @@ div.barcode {
 
 </head>
 <body>
+<?
+// echo '<pre>';
+// print_r($dadosboleto);
 
+?>
 <div id="container">
 
 	
