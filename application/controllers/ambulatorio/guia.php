@@ -7030,6 +7030,11 @@ if($empresa_id == ""){
         
         $valor_total= 0;
         foreach($relatorio as $item){
+
+            if($item->paciente_contrato_parcelas_iugu_id != ''){
+                continue;
+            }
+
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
         
@@ -8009,22 +8014,22 @@ function geraCodigoBanco($numero) {
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
-                    // echo $servico.' - '.$mensagem;
-                    // echo '<br>';
+                     echo $servico.' - '.$mensagem;
+                     echo '<br>';
 
                    if($paciente_contrato_parcelas_id != ""){
 
-                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
+                      //$this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
 
                      if($mensagem == 'Liquidação'){
-                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
+                         //$this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
                      }
 
                    }
-
+// die;
                }
           }       
-      
+          die;
        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
        } 
