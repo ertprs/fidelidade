@@ -787,13 +787,14 @@ if($nao_integrar_parceria != "t"){
     }
 
     function gravar2() {
-         $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
+        $empresa = $this->empresa->listardadosempresa($this->session->userdata('empresa_id'));
 
         $nao_integrar_parceria = $empresa[0]->nao_integrar_parceria;
-        
-  
+         
         $situacao = $_POST['situacao'];
         @$empresa_id = @$_POST['empresa_cadastro_id'];
+        
+      
         $paciente_id = $this->paciente->gravar2();
         // $parceiro_id = $_POST['financeiro_parceiro_id'];
         $parceiros = $this->paciente->listarparceirosurl();
@@ -827,6 +828,9 @@ if($nao_integrar_parceria != "t"){
         }
 }
 
+        if(isset($_POST['empresa_cadastro_id']) && $_POST['empresa_cadastro_id'] > 0){ //quando for cadastro de um funcionario não precisa fazer o fechamento das parcelas
+            redirect(base_url() . "emergencia/filaacolhimento/novo/$paciente_id");
+        }
         if ($situacao == 'Titular') {
             redirect(base_url() . "cadastros/pacientes/carregarcontrato/$paciente_id/$empresa_id");
         } else {
