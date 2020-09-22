@@ -186,10 +186,10 @@
 
             <tr>
             <td align='justify'>
-            <b>Art. 1º</b> Serão oferecidos aos clientes, através do presente contrato de adesão,
-            convênios com empresas de prestação de serviços e produtos nas áreas de 
-            saúde, educação, lazer, esportes seguros, alimentação, dentre outros, 
-            sob custos reduzidos pelo uso do Cartão SALUTE.  
+            <b>Art. 1º</b> Serão oferecidos ao CLIENTE/ASSOCIADO, através do presente contrato de adesão,
+            convênios com empresas de prestação de serviços e produtos nas áreas de saúde, educação,
+            lazer, esportes, seguros, alimentação, dentre outros, sob custos reduzidos pelo uso do Cartão
+            SALUTE
             </td>
             </tr>
 
@@ -202,24 +202,19 @@
 
             <tr>
             <td align='justify'>
-             <b>§2º</b> O cliente declara ter recebido, no momento da celebração do presente
-             contrato, lista de todas as empresas conveniadas com o Cartão SALUTE.
-             Havendo mudanças ou substituição do prestador de serviços conveniados, a 
-             CONTRATADA informa que a atualização da lista de empresas poderá ser 
-             acessada em seu site eletrônico oficial, bem como através do envio de 
-             comunicação eletrônica (e-mail). 
-              
+             <b>§2º</b> O CLIENTE/ASSOCIADO, no momento da celebração do presente contrato, declara ter
+            recebido lista com o nome das empresas conveniadas com o Cartão SALUTE. Declara ainda estar
+            ciente de que eventuais mudanças na lista de prestadores de serviços conveniados serão
+            informadas no sítio eletrônico oficial da CONTRATADA. 
             </td>
             </tr>
 
             <tr>
             <td align='justify'>
-            <b>§3º</b> Terá acesso aos parceiros conveniados, o <b>ASSOCIADO e sua família</b>, (compreendida em
-            cônjuge e filhos até os 21 anos), este, além do titular, no limite de <b>5 membros do grupo
-            familiar</b>, desde que devidamente inscritos no ato de contratação. Se o cliente requerer a adição
-            de mais um membro do seu grupo familiar (filhos maiores de 21 anos e demais membros da
-            família, excepcionalmente sogro e sogra), será cobrado per capita o valor de R$ 2,50 (dois reais
-            e cinquenta centavos) adicionados a parcela mensal 
+            <b>§3º</b> Terão acesso aos parceiros conveniados, conforme especificação de cada plano (ANEXO I),
+            o CLIENTE/ASSOCIADO e seu grupo familiar, considerado: pais do titular, cônjuge, filhos e netos
+            até os 21 anos, desde que não seja ultrapassado o limite do plano escolhido (ANEXO I), e de
+            que estes sejam devidamente inscritos no ato da assinatura do presente contrato.
             </td>
             </tr>
         </table>
@@ -230,94 +225,91 @@
             
             <tr>
             <td align='justify'>
-            <b>§4º</b> Fica estabelecido como grupo familiar, o cliente, seu cônjuge e filhos. 
-            Excepcionalmente, será aceita a adição ao contrato de sogro e sogra do cliente; 
-            porém em hipótese nenhuma tios, primos, sobrinhos etc. ou qualquer membro familiar 
-            a partir do terceiro grau de parentesco.  
+            <b>§4º</b> Para fins deste contrato, será utilizado na especificidade de cada plano o entendimento de
+            grupo familiar descrito acima. Excepcionalmente, será aceita a inscrição dos sogros do
+            CLIENTE/ASSOCIADO como beneficiários, mas sob nenhuma hipótese será admitida a inscrição
+            de tios, sobrinhos e demais familiares.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§5º</b> Somente o CLIENTE, associado e adimplente com suas obrigações financeiras 
-            junto a esta empresa, terá direito aos serviços de descontos e vantagens 
-            intermediados.  
+            <b>§5º</b> Somente terá direito aos serviços de descontos e vantagens propostos pela CONTRATADA
+            junto as empresas conveniadas o CLIENTE/ASSOCIADO adimplente com suas obrigações
+            financeiras.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>Art. 2º</b> O CLIENTE associado obriga-se a pagar, por si e pela sua família inscrita, inicialmente
-            taxa de adesão no valor de R$ 65,00 (sessenta e cinco reais) e após, o pagamento da adesão,
-            iniciará mensalmente o valor de R$ 65,00 (sessenta e cinco reais), mediante autorização de
-            débitos, em anexo ao presente contrato, conforme sua exclusiva escolha (cartão de débito,
-            cartão de crédito, ou pagamento direto junto à empresa).
+            <b>Art. 2º</b> O CLIENTE/ASSOCIADO optará sobre o PLANO de sua preferência, por este obrigar-se-
+            á, a pagar as obrigações assumidas. Será dada ainda autorização, conforme sua opção de
+            pagamento.
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>Parágrafo único:</b> A inadimplência, no valor da adesão, mensalidade ou renovação deste, dará
-            suspensão ao contrato, quando o mesmo atingir sessenta dias da primeira parcela inadimplente. 
+            <b>Parágrafo único:</b> A inadimplência resultará em suspensão do presente contrato, a partir do
+            sexagésimo dia sem pagamento.
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>Art. 3º</b> – O presente contrato tem validade de 12 (doze) meses, renovando-se 
-            automaticamente.  
+            <b>Art. 3º</b> – O presente contrato terá validade conforme a opção do plano escolhido. Haverá
+            renovação automática, excetuando-se esta, caso o CLIENTE faça manifestação expressa
+            pleiteando o cancelamento do vínculo.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§1º</b> Poderá o cliente associado rescindir o presente contrato sem qualquer ônus dentro do prazo
-            de 07 (sete) dias contados da data da assinatura em qualquer unidade da SALUTE. 
+            <b>§1º</b> Poderá o CLIENTE/ASSOCIADO rescindir o presente contrato sem qualquer ônus dentro do
+            prazo de 07 (sete) dias contados da data da assinatura em qualquer unidade da SALUTE. 
             </td>
             </tr>
             <tr>
             <td align='justify'>
-            <b>§2º</b> No caso de rescisão imotivada antes do período contratual de 12 meses, o contratante
-             arcará com multa rescisória equivalente a 50% (cinquenta por cento) sobre o valor da soma das
-             parcelas vincendas. 
+            <b>§2º</b> No caso de rescisão imotivada antes do período contratado, o CONTRATANTE arcará com
+            multa rescisória equivalente a 50% (cinquenta por cento) sobre o valor da soma das parcelas
+            vincendas. 
             </td>
             </tr>
             <tr>
             <td align='justify'>
-            <b>§3º</b> A renovação do presente contrato se dará tacitamente por prazo adicional de um ano. 
-            </td>
-            </tr>
-            
-            <tr>
-            <td align='justify'>
-            <b>§4º</b> O valor da mensalidade será reajustado anualmente, na proporção 
-            da variação do INPC. <br> 
+            <b>§3º</b> A renovação do presente contrato se dará tacitamente por prazo adicional igualmente ao
+            contratado.
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§5º </b>É de inteira responsabilidade do cliente associado, manter a empresa, 
-            ou contratada SALUTE informado sobre quaisquer alterações no seu cadastro 
-            pessoal e familiar.  
+            <b>§4º</b> O valor da mensalidade será reajustado anualmente, na proporção da variação do INPC. <br> 
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>§6º</b> O Cartão SALUTE não se responsabiliza pelas informações pessoais 
-            prestadas pelos clientes associados na adesão, reservando-se ao 
-            direito de regresso, em caso de fraude.  
+            <b>§5º </b>É de inteira responsabilidade do CLIENTE/ASSOCIADO, manter a empresa, ora
+            CONTRATADA - SALUTE informada sobre quaisquer alterações no seu cadastro pessoal e
+            familiar.  
             </td>
             </tr>
             
             <tr>
             <td align='justify'>
-            <b>Art. 4º</b> – O cliente associado declara ciente e de acordo com as 
-            cláusulas do presente contrato. <b>Tudo que usar ou comprar, será 
-            pago ao prestador conveniado diretamente, assegurando apenas os 
-            preços e descontos que constem nas informações no site e em seus 
-            materiais de divulgação. </b> 
+            <b>§6º</b> O Cartão SALUTE não se responsabiliza pelas informações pessoais fornecidas pelos clientes
+            associados no momento da adesão, reservando-se ao direito de regresso, em caso de fraude. 
+            </td>
+            </tr>
+            
+            <tr>
+            <td align='justify'>
+            <b>Art. 4º</b> – O CLIENTE/ASSOCIADO declara estar ciente e de acordo com as cláusulas do presente
+            contrato. Declara estar ciente ainda de que <b>tudo que usar ou comprar, será pago ao
+            prestador conveniado diretamente, assegurando apenas os preços e descontos que
+            constem nas informações no site e em seus materiais de divulgação. </b>
             </td>
             </tr>
         </table>
@@ -471,22 +463,120 @@
         </tr>
     </table> 
     <!-- CORPO -->
-    <table  style="width:100%;"  class='letramenor'> 
+
+    <table style="width:100%;"  class='letramenor'>
+    
     <tr>
-    <td align='center' style="border:1px solid black;"> <b>ANEXO I</b><br><br></td>
+    <td colspan="2" align='center' style="border:1px solid black;"> <b>ANEXO I – OPÇÃO DE PLANO</b><br></td>
     </tr>
 
     <tr>
-    <td align='left'><b>SEGURADORA CONVENIADA – SEGURO DE VIDA PORTO SEGURO</b>  </td>
+    <td colspan="2" align='justify'><b>Art.1º</b> - O CLIENTE/ASSOCIADO SALUTE optará pelo plano escolhido, marcando um X no espaço
+    da opção desejada:
+
+        <br><br>
+        <center><b>1 - SALUTE INDIVIDUAL:</b> Plano único para o cliente, sem beneficiários por 12 meses.</center>
+        <br>
+    
+        <b>BENEFÍCIOS:</b> I - Acesso a todos os benefícios listados; II - UMA consulta gratuita por ano
+        (CLÍNICA MÉDICA). <b>OPÇÕES DE PAGAMENTO:</b> I – <b>RECORRÊNCIA NO CARTÃO DE
+        CRÉDITO:</b> Taxa de Adesão em R$30,00 e 12 mensalidades de R$30,00; II - <b>CARTÃO DE
+        CRÉDITO</b> - Taxa de Adesão em R$24,90 e o valor R$298,80 (total, parcelado em 12X de R$
+        24,90); III – <b>PLANO PRÉ-PAGO TRIMESTRAL:</b> Adesão em R$30,00 e o plano no valor de
+        R$90,00. Se renovado, após os 3 meses, o cliente não pagará a adesão, ficando R$90,00 por
+        mais três meses.
+
+        <br><br>
+        <center><b>2 – SALUTE CASAL:</b> Plano anual SALUTE para o casal + 1 filho.</center>
+        <br>
+
+        <b>BENEFÍCIOS:</b> I – Acesso a todos os benefícios do cartão SALUTE; II – DUAS consultas
+        GRATUITAS por ano (CLÍNICA MÉDICA). <b>OPÇÕES DE PAGAMENTO:</b> I – <b>RECORRÊNCIA NO
+        CARTÃO DE CRÉDITO:</b> Taxa de Adesão em R$45,00 e 12 parcelas mensais de R$ 45,00; II-
+        <b>CARTÃO DE CRÉDITO</b> - Taxa de Adesão em 39,90 e o parcelamento do total de R$ 478,80 em
+        12X de 39,90; <b>III-PLANO PRÉ PAGO TRIMESTRAL:</b> Adesão em R$45,00 e o plano no valor
+        de R$135,00 válido por três meses, sendo que na renovação o cliente não paga adesão, assim
+        ficará (se renovado) o valor de R$135,00 por mais três meses.
+
+        <br><br>
+        <center><b>3 – SALUTE FAMÍLIA:</b> Plano anual; um titular + 5 dependentes (conjugue e grupo familiar).</center>
+        <br>
+
+        <b>BENEFÍCIOS:</b> I – Acesso a todos os benefícios do cartão SALUTE; II – DUAS consultas
+        GRATUITAS por ano (CLÍNICA MÉDICA). <b>OPÇÕES DE PAGAMENTO:</b> I - <b>RECORRÊNCIA NO
+        CARTÃO DE CRÉDITO:</b> Taxa de Adesão em R$65,00 e 12 parcelas mensais de R$ 65,00; II-
+        <b>CARTÃO DE CRÉDITO:</b> Taxa de Adesão em 59,90 e o parcelamento do total de R$ 718,00 em
+        12X de 59,90; <b>III-PLANO PRÉ PAGO TRIMESTRAL:</b> Adesão em R$ 65,00 o valor total de
+        R$195,00 válido por três meses, sendo que na renovação o cliente não pagará adesão, assim
+        ficará (se renovado) o valor de R$195,00 por mais três meses.
+
+
+        <br><br>
+        <center><b>4 – SALUTE CLEAN:</b> Plano anual básico com casal + 5 filhos (até os 21 anos).</center>
+        <br>
+
+        <b>BENEFÍCIOS: I</b> – Acesso somente a REDE CREDENCIADA de atendimento em saúde; II – NÃO
+        HÁ COBRANÇA de adesão; III – Sem consultas gratuitas. <b>OPÇÕES DE PAGAMENTO: Somente
+        no cartão de crédito. I-PLANO PRÉ PAGO ANUAL 1:</b> Valor de R$ 360,00 em até 6X de
+        R$60,00; <b>II-PLANO PRÉ PAGO ANUAL 2:</b> Valor de R$ 240,00 em até 6X de R$40,00.
+        <b>VALORES DAS CONSULTAS:</b> clínica médica R$50,00 e Pediatria em R$100,00 (preços
+        exclusivos no consultório SALUTE). Os descontos nas consultas de outras naturezas de
+        atendimento serão disponibilizados no site da SALUTE.
+
+    </td>
+    </tr>
+
+    <tr>
+    <td align='center' style="border:1px solid black;"> <b>OPÇÃO DE PLANO:</b> </td>
+    <td align='center' style="border:1px solid black;"> <b>FORMA DE PAGAMENTO:</b> </td>
+    </tr>
+
+    <tr>
+        <td><b>______ PLANO SALUTE INDIVIDUAL</b></td>
+        <td><b>____ RECORRÊNCIA NO CARTÃO DE CRÉDITO</b></td>
+    </tr>
+
+    <tr>
+        <td><b>______ PLANO SALUTE CASAL</b></td>
+        <td><b>____ PRÉ PAGO</b></td>
+    </tr>
+
+    <tr>
+        <td><b>______ PLANO SALUTE FAMÍLIA</b></td>
+        <td><b>____ CARTÃO DE CRÉDITO</b></td>
+    </tr>
+
+    <tr>
+        <td><b>______ PLANO SALUTE CLEAN ANUAL I</b></td>
+        <td><b>____ PAGAMENTO À VISTA</b></td>
+    </tr>
+
+    <tr>
+        <td><b>______ PLANO SALUTE CLEAN ANUAL II * <br>
+        * Somente para clientes oriundos Amma Saúde.</b></td>
+        <td><b>____ CARTÃO DE DÉBITO PGT À VISTA</b></td>
+    </tr>
+
+
+    </table>
+
+
+    <table  style="width:100%;"  class='letramenor'> 
+    <tr>
+    <td align='center' style="border:1px solid black;"> <b>ANEXO II </b><br></td>
+    </tr>
+
+    <tr>
+    <td align='center'><b>SEGURADORA CONVENIADA – SEGURO DE ACIDENTES PESSOAIS</b>  </td>
     </tr> 
     <tr>
-    <td align='justify'><b>Art.1º</b> - Por este termo o cliente associado SALUTE adere ao 
-    seguro de acidentes pessoais, ofertado pela empresa SALUTE, a partir de convênio 
-    firmado com a seguradora PORTO SEGURO CIA. DE SEGUROS GERAIS (05886) Al. Barão de 
-    Piracicaba, 618 - Campos Elíseos - São Paulo - CEP 01216-010 - CNPJ 61.198.164/0001-60, 
-    e intermediado pela THOMAZ CORRETORA DE SEGUROS, pessoa jurídica de direito privado 
-    inscrita regularmente em CNPJ: 00.500.837/0001-01 e sediada à Travessa Quintino Bocaiuva, 
-    1127, 3º andar, Belém – PA, Bairro do Reduto, CEP: 66053-240. </td>
+    <td align='justify'><b>Art.1º</b> - Por este termo o CLIENTE/ASSOCIADO adere ao seguro de acidentes pessoais ofertado
+    pela empresa SALUTE, a partir de convênio firmado com a seguradora PORTO SEGURO CIA. DE
+    SEGUROS GERAIS (05886) Al. Barão de Piracicaba, 618 - Campos Elíseos - São Paulo - CEP
+    01216-010 - CNPJ 61.198.164/0001-60, e intermediado pela THOMAZ CORRETORA DE
+    SEGUROS, pessoa jurídica de direito privado inscrita regularmente em CNPJ: 00.500.837/0001-
+    01 e sediada à Travessa Quintino Bocaiuva, 1127, 3o andar, Belém – PA, Bairro do Reduto, CEP:
+    66053-240. </td>
     </tr>
 
     <tr>
@@ -497,8 +587,8 @@
 
     <tr>
     <td align='justify'><b>§1º</b> - O referido seguro, terá um custo <b>per capita</b> incluído na mensalidade do cliente SALUTE
-abrangendo <b>sua pessoa e a composição familiar registrada que detenha CPF</b> (cadastro de
-pessoa física, regular), conforme disposto no termo de condições gerais.</td>
+    abrangendo <b>sua pessoa e a composição familiar registrada que detenha CPF</b> (cadastro de
+    pessoa física, regular), conforme disposto no termo de condições gerais.</td>
     </tr>
 
     <tr>
@@ -679,10 +769,10 @@ FUNERAL</b>, constando também no rodapé da página.  </td>
     </tr>
 
     <tr>
-        <td align='center' style="border:1px solid black;"><b>ANEXO II </b> </td>
+        <td align='center' style="border:1px solid black;"><b>ANEXO III </b> </td>
     </tr>
     <tr>
-    <td align='left'><b>ASSISTÊNCIA MÉDICA  </b></td>
+    <td align='center'><b>ASSISTÊNCIA MÉDICA  </b></td>
     </tr>
     
 
@@ -741,10 +831,10 @@ FUNERAL</b>, constando também no rodapé da página.  </td>
     </tr>
  
     <tr>
-        <td align='center' style="border:1px solid black;"><b>ANEXO III </b></td> 
+        <td align='center' style="border:1px solid black;"><b>ANEXO IV </b></td> 
     </tr>
     <tr>
-        <td align='left'><b>CRÉDITO </b></td> 
+        <td align='center'><b>CRÉDITO </b></td> 
     </tr>
 
     <tr>
@@ -776,6 +866,14 @@ FUNERAL</b>, constando também no rodapé da página.  </td>
     <td align='justify'><b>Art.3º</b> - A SALUTE é mera intermediadora desta relação, 
     advindo da mesma a prospecção e análise creditória, o empréstimo e demais 
     consequências da relação financeira ficará a cargo da sua conveniada. </td>
+    </tr>
+
+    <tr>
+        <td>
+            <br><br><br><br><br>
+            Fale conosco: Vendas (94) 99297 5157, Agendamentos (94) 99132 1149/3018 4840, Financeiro
+        (94) 991321153.
+        </td>
     </tr>
  
     </table>

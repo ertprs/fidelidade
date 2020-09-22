@@ -6950,9 +6950,9 @@ if($empresa_id == ""){
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab(); 
         
-        // echo "<pre>";
-        // print_r($relatorio);
-        // die(); 
+        //echo "<pre>";
+        //print_r($relatorio);
+        //die(); 
 
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
@@ -7031,7 +7031,7 @@ if($empresa_id == ""){
         $valor_total= 0;
         foreach($relatorio as $item){
 
-            if($item->paciente_contrato_parcelas_iugu_id != ''){
+            if($item->paciente_contrato_parcelas_iugu_id != '' || $item->data_cartao_iugu != ''){
                 continue;
             }
 
