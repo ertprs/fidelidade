@@ -17,6 +17,23 @@
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date"/>
                     </dd>
+                    
+                     <dt>
+                        <label>Gerente</label>
+                    </dt>
+                    <dd> 
+                          <select name="gerentedevendas" id="gerentedevendas" class="size2">
+                            <option value="">Todos</option>
+                            <?php
+                            foreach ($listargerentedevendas as $item) {
+                                ?>
+                                <option   value =<?php echo $item->operador_id; ?>><?php echo $item->nome; ?></option>
+                                <?php
+                            }
+                            ?> 
+                        </select>
+
+                    </dd> 
                     <div id="bairrodiv">
                         <dt>
                             <label>Bairro </label>
