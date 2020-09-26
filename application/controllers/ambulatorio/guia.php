@@ -243,9 +243,9 @@ class Guia extends BaseController {
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
         $relatorio = $this->guia->gerarsicov();
 
-       echo "<pre>";
-       print_r($relatorio);
-       die;
+    //    echo "<pre>";
+    //    print_r($relatorio);
+    //    die;
 
         $empresa = $this->guia->listarempresassicov();
         // Definições de variaveis com informação do banco e afins.  
@@ -965,15 +965,15 @@ class Guia extends BaseController {
     }
 
 
-    function impressaovoucherconsultaextra($paciente_id, $contrato_id, $consulta_avulsa_id) {
+    function impressaovoucherconsultaextra($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher_consulta_id = NULL) {
 
         $empresa_id = $this->session->userdata('empresa_id');
         $data['paciente'] = $this->guia->listarpacientecarteira($paciente_id);
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $data['permissao'] = $this->empresa->listarpermissoes();
         $data['dependente'] = $this->guia->listardependentes($contrato_id);
-        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id);
-
+        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id,$voucher_consulta_id);
+                            
         $this->load->View('ambulatorio/impressaovoucherconsultaextra', $data);
     }
 
@@ -2831,6 +2831,10 @@ class Guia extends BaseController {
      
         $data['contrato_id'] = $contrato_id;
         $data['verificar_credor'] = $this->guia->verificarcredordevedorgeral($paciente_id);
+
+        $carnesicoob = $this->guia->listargeradocomocarnersicoob($contrato_id);
+        $data['geradocomocarne'] = $carnesicoob[0]->geradocarnesicoob;
+
         $this->loadView('ambulatorio/guiapagamento-form', $data);
     }
 
@@ -5003,11 +5007,11 @@ class Guia extends BaseController {
             $codigo_retornno =  substr($linha, 67, 2);           
             if (substr($linha, 0, 1) != "A" && substr($linha, 0, 1) != "Z" && $codigo_retornno == "00") {
                 //pegando uma coluna especifica com o substr
-                //$paciente_id = substr($linha, 1, 25);
-                $paciente_id = substr($linha, 137, 11);
-                //echo $paciente_id;                            
+                    $paciente_id = substr($linha, 1, 25);
+
+                    
                 //fazendo a consulta de acordo com o numero do paciente do arquivo 
-                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);             
+                $data['lista_paciente'] = $this->guia->listarpacienteimportado($paciente_id);          
                 $data['confirmacao_parcelas'] = $this->guia->confirmaparcelaimportada($paciente_id);
 
             }
@@ -5018,7 +5022,9 @@ class Guia extends BaseController {
         
     }
         
-         redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+        //  redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+         redirect(base_url() . "ambulatorio/guia/importararquivoretorno");
     }
 
     function downloadTXToptanteimportado($nome_arquivo = NULL) {
@@ -5479,6 +5485,7 @@ table tr:hover  #achadoERRO{
         // echo '<pre>';
         // print_r($data['listarpagamentoscontrato']);
         // die;
+        $data['paciente_id'] = $data['listarpagamentoscontrato'][0]->empresa_cadastro_id;
         $data['empresa_cadastro_id'] = $empresa_cadastro_id;
         $data['empresapermissao'] = $this->empresa->listarpermissoes();
         $data['contrato_id'] = $paciente_contrato_id;
@@ -6668,6 +6675,11 @@ table tr:hover  #achadoERRO{
         $this->load->plugin('mpdf'); 
         $this->load->helper('directory');
         $empresa_id = $this->session->userdata('empresa_id');
+                    
+if($empresa_id == ""){
+    $empresas = $this->guia->listarempresassicov();
+    $empresa_id = $empresas[0]->empresa_id;
+}        
 
         if (!is_dir("./upload/empresalogo")) {
             mkdir("./upload/empresalogo");
@@ -6799,7 +6811,7 @@ table tr:hover  #achadoERRO{
     }
     
     function listarvoucher($paciente_id){
-     $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);
+     $data['vouchers'] = $this->paciente->listarvoucherconsultaavulsa($paciente_id);  
      $this->load->View('ambulatorio/listarvoucher',$data);
     }
     
@@ -6904,6 +6916,46 @@ table tr:hover  #achadoERRO{
 
   }
 
+
+  function gerarboletosicoobempresa($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
+        $this->load->plugin('mpdf');
+        $empresa_id = $this->session->userdata('empresa_id');
+        $lista = $this->guia->listarparcelaconfirmarpagamentoempresa($paciente_contrato_parcelas_id); 
+        // echo '<pre>';
+        // print_r ($lista);
+        // die;
+        $empresa = $this->guia->listarempresaporid($empresa_id);
+        $valor  =   str_replace(".", ",",$lista[0]->valor);
+    // DADOS DO BOLETO PARA O SEU CLIENTE
+    $taxa_boleto = 0;
+    $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+    $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+    $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+    $data['vencimento'] = $lista[0]->data;
+    $data['paciente'] = $lista[0]->empresa_forma;
+    $data['municipio'] = $lista[0]->municipio_empresa;
+    $data['estado'] = $lista[0]->estado_empresa;
+    $data['cep'] = $lista[0]->cep_empresa;
+    $data['logradouro'] = $lista[0]->logradouro_empresa;
+    
+    //Dados da empresa
+    $data['cnpj'] = $empresa[0]->cnpj;
+    $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+    $data['estadoEmpresa'] = $empresa[0]->estado;
+    $data['municipioEmpresa'] = $empresa[0]->municipio;
+    $data['cedente'] = $empresa[0]->nome;
+    
+    //     echo "<pre>";
+    //   print_r($lista);
+    //   die;
+    $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+    $data['agencia'] = $empresa[0]->agenciasicoob;  
+    $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+    // NÃO ALTERAR!    
+    $this->load->View('ambulatorio/boletosicoob',$data); 
+
+    }
+
   function gerarboletosicoobAPP($paciente_id,$contrato_id,$paciente_contrato_parcelas_id){
     $this->load->plugin('mpdf');
     // $empresa_id = $this->session->userdata('empresa_id');
@@ -6963,9 +7015,11 @@ table tr:hover  #achadoERRO{
         $cidade = $empresa[0]->municipio;
         $codigoUF = $this->utilitario->codigo_uf($empresa[0]->codigo_ibge);
         $relatorio = $this->guia->gerarcnab(); 
-        // echo "<pre>";
-        // print_r($relatorio);
-        // die(); 
+        
+        //echo "<pre>";
+        //print_r($relatorio);
+        //die(); 
+
         $conveio = "0".$empresa[0]->codigobeneficiariosicoob;
         $A = array();
         $A[0] = '';     // Iniciando o indice zero do array;
@@ -6993,7 +7047,7 @@ table tr:hover  #achadoERRO{
         $A[22] = $this->utilitario->preencherDireita('',20,' ');
         $A[23] = $this->utilitario->preencherDireita('',20,' ');
         $A[24] = $this->utilitario->preencherDireita('',29,' ');
-
+        
        $header_A = implode($A);
 
         $i = 1;
@@ -7042,10 +7096,24 @@ table tr:hover  #achadoERRO{
         
         $valor_total= 0;
         foreach($relatorio as $item){
+
+            if($item->paciente_contrato_parcelas_iugu_id != '' || $item->data_cartao_iugu != ''){
+                continue;
+            }
+
         $titular = $item->titular;
         $data_emissao = date('dmY',strtotime($item->data_cadastro));
-        $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
         
+            if($item->empresa_cadastro_id == ''){
+                $lista = $this->guia->listarparcelaconfirmarpagamento($item->paciente_contrato_parcelas_id); 
+            }else{
+                $lista = $this->guia->listarparcelaconfirmarpagamentoempresa2($item->paciente_contrato_parcelas_id); 
+                $titular = $lista[0]->paciente;
+            }
+
+        // echo '<pre>';
+        // print_r($lista);
+        // die;
         $vencimento = $lista[0]->data;
         $paciente = $lista[0]->paciente;
         $municipio = $lista[0]->municipio;
@@ -7061,10 +7129,10 @@ table tr:hover  #achadoERRO{
             
         
         $cont_linha++;
-       
+            
        $NossoNumero = $this->utilitario->preencherEsquerda($this->calculonossonumerosicoob($item->paciente_contrato_parcelas_id),10,'0');          
        $formata_nosso_numero = $this->utilitario->preencherDireita($NossoNumero."01"."01"."4",20,' '); 
-        
+
         $P = array();
         $P[0] = '';
         $P[1] = '756';
@@ -7147,15 +7215,7 @@ table tr:hover  #achadoERRO{
         $body_con = implode($Q);
         $body_Q[] = $body_con;
         $body_P_con .= $body_con . "\r\n"; 
-        
-        //$t = 0 ;
-       // foreach($Q as $ie){
-       //   echo "<pre>";
-      //    $t += strlen($ie);   
-    //    }
-    //   echo $t;
-       
-    ///   die();
+
 
 
          //REGISTRO TRAILLER DO LOTE
@@ -7253,7 +7313,7 @@ table tr:hover  #achadoERRO{
     
     
     function gerarcarnesicoob($paciente_id,$contrato_id){
-      
+        
       //   $this->load->plugin('mpdf');
          $html ="";
          $empresa_id = $this->session->userdata('empresa_id');
@@ -7269,7 +7329,8 @@ table tr:hover  #achadoERRO{
         $data['agencia'] = $empresa[0]->agenciasicoob;       
         $dadosboleto["convenio"] = "0".$empresa[0]->codigobeneficiariosicoob; 
         $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
-        
+
+        $this->guia->geradocomocarne($contrato_id);
         
          //Dados da empresa
         $data['cnpj'] = $empresa[0]->cnpj;
@@ -7402,7 +7463,6 @@ else
        $data["codigo_banco_com_dv"] = $codigo_banco_com_dv;
        $data['paciente_contrato_id'] = $item->paciente_contrato_parcelas_id;   
        $data['code'] =  $this->fbarcode($linha); 
-      
        
   
        
@@ -7419,7 +7479,58 @@ else
     
   
     
-    
+    function gerarcarnesicoob2($paciente_id,$contrato_id){
+        $pagamento = $this->paciente->listarpagamentoscontratoparcelasicoob($contrato_id);
+        $empresa_id = $this->session->userdata('empresa_id');
+        $html = '';
+        $this->guia->geradocomocarne($contrato_id);
+        $this->load->plugin('mpdf');
+        $totalparaimprimir = count($pagamento);
+        $i = 0;
+        foreach($pagamento as $item){
+            $i++;
+            $paciente_contrato_parcelas_id = $item->paciente_contrato_parcelas_id;
+
+            $lista = $this->guia->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+            $empresa = $this->guia->listarempresaporid($empresa_id);
+            $valor  =   str_replace(".", ",",$lista[0]->valor);
+           // DADOS DO BOLETO PARA O SEU CLIENTE
+           $taxa_boleto = 0;
+           $valor_cobrado = str_replace(",", ".",$valor);      // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+           $data['valor_boleto']= number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+           $data['paciente_contrato_id'] = $paciente_contrato_parcelas_id;
+           $data['vencimento'] = $lista[0]->data;
+           $data['paciente'] = $lista[0]->paciente;
+           $data['municipio'] = $lista[0]->municipio;
+           $data['estado'] = $lista[0]->estado;
+           $data['cep'] = $lista[0]->cep;
+           $data['logradouro'] = $lista[0]->logradouro;
+           
+           //Dados da empresa
+           $data['cnpj'] = $empresa[0]->cnpj;
+           $data['logradouroEmpresa'] = $empresa[0]->logradouro;
+           $data['estadoEmpresa'] = $empresa[0]->estado;
+           $data['municipioEmpresa'] = $empresa[0]->municipio;
+           $data['cedente'] = $empresa[0]->nome;
+           
+
+           $data['conta_corrente'] =   $empresa[0]->contacorrentesicoob;   
+           $data['agencia'] = $empresa[0]->agenciasicoob;  
+           $data['convenio'] = $empresa[0]->codigobeneficiariosicoob;          
+   // NÃO ALTERAR!  
+
+            if($totalparaimprimir == $i){
+                $data['print'] = "true"; 
+            }else{
+                $data['print'] = "false"; 
+            }
+
+            
+            $this->load->View('ambulatorio/boletosicoob2',$data);
+
+        }
+         echo $html;
+    }
     
     
     
@@ -7467,7 +7578,7 @@ if(@!function_exists(formata_numdoc))
                 return $num;
                 
                 echo $num;
-                echo '<br>';
+                 echo '<br>';
 			}
     }
 
@@ -7524,7 +7635,8 @@ else
 		$Dv = 11 - $Resto;
     }
         
-       return $NossoNumero.$Dv;  
+    //    echo $NossoNumero.$Dv;  
+       return $NossoNumero.$Dv;
    //  include("./sicoob/funcoes_bancoob.php"); 
    }
     
@@ -7883,6 +7995,9 @@ function geraCodigoBanco($numero) {
             $destino = "./upload/retornoimportadoscnab/$chave_pasta";
             chmod($destino, 0777);
         }
+
+        // unlink("./upload/retornoimportadoscnab/$nome_arquivo.zip");
+        array_map('unlink', glob("./upload/retornoimportadoscnab/$chave_pasta/*"));
                             
         $configuracao = array(
             'upload_path' => './upload/retornoimportadoscnab/' . $chave_pasta . '',
@@ -7957,6 +8072,7 @@ function geraCodigoBanco($numero) {
               $nosso_numero =  substr($linha, 37, 15);
               $servico =  substr($linha, 15, 2); 
               if ($segmento == "T") { 
+                //$nome =  substr($linha, 105, 25); 
                 //   print_r($nosso_numero);
                 //   echo '<br>';
                 //   die;
@@ -7965,20 +8081,25 @@ function geraCodigoBanco($numero) {
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
-                    // echo $servico.' - '.$mensagem;
+                   if($mensagem == 'Liquidação'){
+                    // echo $servico.' - '.$mensagem.' - '.$nome;
                     // echo '<br>';
+                  }
+
 
                    if($paciente_contrato_parcelas_id != ""){
-                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
+
+                        $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
 
                      if($mensagem == 'Liquidação'){
                          $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
                      }
-                   }
 
+                   }
+// die;
                }
           }       
-        //   die;        
+          die;
        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
        } 
@@ -8170,10 +8291,12 @@ function geraCodigoBanco($numero) {
      $numero_contrato_parcela = substr($nossonumero, 2, 7);
      $parcelas =   $this->guia->listarparcelanossonumero($numero_contrato_parcela);
      
+
     //  echo '<pre>';
     //  print_r($parcelas);
     //  echo '<br>';
     //  print_r($numero_contrato_parcela);
+
     //  die;
 
      foreach($parcelas as $item){
@@ -8463,7 +8586,75 @@ function geraCodigoBanco($numero) {
 
   }
     
+  function assinarcontrato($paciente_id){
+    $verifica = $this->guia->assinarcontrato($paciente_id);
+      
+           if ($verifica == '-1') {                   
+              $mensagem =  'Erro, tente novamente.';
+           } else{
+              $mensagem =   'Assinado com sucesso';
+           } 
+                   
+           if($mensagem != ""){
+                    echo "<html>
+                    <meta charset='UTF-8'>
+            <script type='text/javascript'>
+                alert('$mensagem');
+            window.onunload = fechaEstaAtualizaAntiga;
+            function fechaEstaAtualizaAntiga() {
+                window.opener.location.reload();
+                }
+            window.close();
+                </script>
+                </html>";
+           }else{
+               redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+           }
+           
+  }
+  
+  function relatoriopesquisaverificar(){ 
+      $data['operadores'] = $this->guia->listaroperadores();
+      $this->loadView('ambulatorio/relatoriopesquisaverificar-form', $data);  
+      
+  }
     
+  
+    function gerarelatoriopesquisaverificar() {
+        $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['relatorio'] = $this->guia->relatoriopesquisaverificar();
+         
+        $this->load->View('ambulatorio/impressaorelatoriopesquisaverificar', $data);
+    }
+    
+  function carregarvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher_consulta_id){ 
+         
+       $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id,$voucher_consulta_id);
+       $data['consulta_avulsa_id'] = $consulta_avulsa_id;
+       $data['paciente_id'] = $paciente_id;
+       $data['contrato_id'] = $contrato_id;
+       $data['voucher_consulta_id'] = $voucher_consulta_id;
+       $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+       $this->load->View('ambulatorio/carregarvoucher',$data);
+      
+  }
+  
+  
+function gravarcarregarvoucher($paciente_id, $contrato_id, $consulta_avulsa_id) {
+   $ambulatorio_guia_id = $this->guia->gravarvoucherconsultaextra($paciente_id, $consulta_avulsa_id); 
+         
+   redirect(base_url()."ambulatorio/guia/voucherconsultaavulsa/".$paciente_id."/".$contrato_id."/".$consulta_avulsa_id."");
+
+}
+  
+function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher_consulta_id){ 
+       $this->guia->excluirvoucher($voucher_consulta_id);
+       redirect(base_url()."ambulatorio/guia/voucherconsultaavulsa/".$paciente_id."/".$contrato_id."/".$consulta_avulsa_id."");
+
+}
+  
+  
 }
 
 

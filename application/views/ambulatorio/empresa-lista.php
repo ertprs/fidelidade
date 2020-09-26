@@ -22,7 +22,7 @@
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">CNPJ</th>
                         <th class="tabela_header">Raz&atilde;o social</th>
-                        <th class="tabela_header" colspan="2"   style="text-align: center;">Detalhes</th>
+                        <th class="tabela_header" colspan="3"   style="text-align: center;">Detalhes</th>
                     </tr>
                 </thead>
                 <?php
@@ -54,6 +54,12 @@
                                     </div>
 
                                 </td>
+                                  
+                                    <td class="<?php echo $estilo_linha; ?>"  width="100px;">
+                                        <div class="bt_link">
+                                            <a   href="<?= base_url() ?>ambulatorio/empresa/configuraremail/<?= $item->empresa_id ?>">Serviço EMAIL</a>
+                                        </div>
+                                    </td>
                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                     <div class="bt_link">
                                         <a href="<?= base_url() ?>ambulatorio/empresa/carregarempresa/<?= $item->empresa_id ?>">Editar</a>

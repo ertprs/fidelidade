@@ -349,6 +349,7 @@ $data['permissao'] = $this->db->get()->result();
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/empresa/solicitacaoagendamento">Solicitação de Agendamento</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriotitularsemcontrato">Relatorio Titular Sem Contrato</a></span></li>
                                         <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatorioobscontrato">Relatorio Observação Contrato</a></span></li>
+                                        <li><span class="file"><a href="<?= base_url() ?>ambulatorio/guia/relatoriopesquisaverificar">Relatorio Pesquisa Verificar</a></span></li>
                                     <? } ?>
                                 </ul>
                             </li>
@@ -436,6 +437,7 @@ $data['permissao'] = $this->db->get()->result();
                             <ul>
                                 <li><span class="folder">Recep&ccedil;&atilde;o</span>
                                         <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/novo">Cadastrar Vendedores</a></span></ul>
+                                        <ul><span class="file"><a href="<?= base_url() ?>seguranca/operador/pesquisarvendedores">Lista de Vendedores</a></span></ul>
                                 </li>
                             </ul>
                         </li>

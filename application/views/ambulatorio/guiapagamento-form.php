@@ -146,22 +146,23 @@
                                         }
                                         ?>
                                         <?
-                                    } elseif($empresapermissao[0]->iugu_token != "" ){
-                                        ?>
-
+                                    } elseif($empresapermissao[0]->iugu_token != "" && $empresapermissao[0]->iugu_cartao != 't'){ 
+                                        ?>  
+                                            
                                         <th class="tabela_header" colspan="1">
                                                 <div class="bt_link" id="botaogerartodos">
                                                     <a href="<?= base_url() ?>ambulatorio/guia/gerartodosiugu/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Todos Iugu
                                                     </a>
                                                 </div> 
-                                        </th>
-
-                                        <?php
+                                        </th>  
+                                          <?php
+                                
+                                        
                                     }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
                                         ?>
                                          <th class="tabela_header" colspan="1">
                                               <div class="bt_link" >
-                                                    <a  target="_blank" href="<?= base_url() ?>ambulatorio/guia/gerarcarnesicoob/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Carnês sicoob
+                                                    <a  target="_blank" href="<?= base_url() ?>ambulatorio/guia/gerarcarnesicoob2/<?= $paciente_id ?>/<?= $contrato_id ?>">Gerar Carnês sicoob
                                                     </a>
                                                 </div>
                                          </th>
@@ -390,12 +391,11 @@
                                         </td>
                                                  
                                         <?
-                                    } elseif($empresapermissao[0]->iugu_token != "" ){
+                                    } elseif($empresapermissao[0]->iugu_token != "" && $empresapermissao[0]->iugu_cartao != 't'){
 
 
                                         if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') {
-                                            ?>
-
+                                            ?> 
                                                 <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 100px;" class="bt_link">
                                                         <a id="botaopagamento<?= $contador ?>" href="<?= base_url() ?>ambulatorio/guia/gerarpagamentoiugu/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Gerar Pag. Iugu
                                                         </a></div>
@@ -430,28 +430,20 @@
                                                     </a></div> 
 
                                             </td> 
-                                        <? } else { ?>
-
-
-
+                                        <? } else { ?>  
                                                 <td colspan="1" class="<?php echo $estilo_linha; ?>">
                                                     <div style="width: 100px;" class="bt_link">
                                                         <a target="_blank" href="<?= $item->url ?>">Pag. Iugu
                                                         </a>
                                                     </div>
-                                                </td>
-                                          
-
-                                           
-
+                                                </td>  
                                                 <td colspan="1" class="<?php echo $estilo_linha; ?>">
                                                     <div style="width: 100px;" class="bt_link">
                                                         <a  href="<?= base_url() ?>ambulatorio/guia/reenviaremail/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Re-enviar Email
                                                         </a>
                                                     </div>
                                                 </td>
-
-
+ 
                                             <?
                                         }
                                     }elseif($empresapermissao[0]->agenciasicoob != "" && $empresapermissao[0]->contacorrentesicoob != "" && $empresapermissao[0]->codigobeneficiariosicoob != ""){
@@ -462,17 +454,62 @@
                                         // echo '<br>';
                                         // print_r($empresapermissao[0]->codigobeneficiariosicoob);
                                         // die;
-                                     ?>
-                                        <td  class="<?php echo $estilo_linha; ?>">
-                                            
+                                     ?> 
+                                                
+                                    <?php 
+                                    if($empresapermissao[0]->iugu_cartao == "t"){
+                                    
+                                    if ($item->paciente_contrato_parcelas_iugu_id == '' && $empresa[0]->iugu_token != '' && $item->data_cartao_iugu == '') {?>          
+                                            <td  class="<?php echo $estilo_linha; ?>"   > </td>   
+                                    <?}elseif ($item->data_cartao_iugu != ''){?> 
+                                        <? if ($item->status != '') { ?>
+                                                <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #888001;font-weight: bold" > <?
+                                                        if ($item->status == 'pending') {
+                                                            echo 'Pendente';
+                                                        } else {
+                                                            echo $item->status . ". Código LR: " . $item->codigo_lr;
+                                                        }
+                                                        ?></span><a target="_blank" href="https://support.iugu.com/hc/pt-br/articles/206858953-Como-identificar-o-erro-da-tentativa-de-pagamento-com-cart%C3%A3o-de-cr%C3%A9dito-falha-">->></a> </td>
+                                        <? } else { ?>
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>" ><span style="color: #01882e;font-weight: bold" > Pagamento por Cartão Agendado</span> </td>      
+                                        <? } ?> 
+
+                                        <td  class="<?php echo $estilo_linha; ?>" ><div style="width: 120px;" class="bt_link">
+                                                <a id="" href="<?= base_url() ?>ambulatorio/guia/cancelaragendamentocartao/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Cancelar Agen.
+                                                </a></div> 
+
+                                        </td> 
+
+                                    <?} else { ?>
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>">
+                                                <div style="width: 100px;" class="bt_link">
+                                                    <a target="_blank" href="<?= $item->url ?>">Pag. Iugu
+                                                    </a>
+                                                </div>
+                                            </td>  
+                                            <td colspan="1" class="<?php echo $estilo_linha; ?>">
+                                                <div style="width: 100px;" class="bt_link">
+                                                    <a  href="<?= base_url() ?>ambulatorio/guia/reenviaremail/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Re-enviar Email
+                                                    </a>
+                                                </div>
+                                            </td>    
+                                                
+                                    <?}
+                                    }?>   
+                                      <?php if($item->data_cartao_iugu == ''){?>
+                                        <td  class="<?php echo $estilo_linha; ?>"  > 
                                            <?php if($item->taxa_adesao != 't'){?>
+                                                <?// if($geradocomocarne == 't'){?>
                                             <div style="width: 50px;" class="bt_link">
                                                 <a id="pagamentogerencianet" href="<?= base_url() ?>ambulatorio/guia/gerarboletosicoob/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank" >Boleto Sicoob
                                                 </a>
                                             </div>
+                                                <?// } ?>
                                             <?php }?>
                                         </td>
+                                  
                                    <?
+                                      }
                                     }
                                     ?>
                                  <?php }else{

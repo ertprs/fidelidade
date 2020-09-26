@@ -1543,7 +1543,17 @@ class app_model extends Model {
         
     }
     
+    function listarplanos(){ 
+        
+        $this->db->select('*
+                            ');
+        $this->db->from('tb_forma_pagamento');
+        $this->db->where('ativo', 'true');
                 
+        return $this->db->get()->result();
+        
+        
+    }            
     
     
     

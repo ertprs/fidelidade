@@ -99,6 +99,35 @@
                     <button type="submit" name="btnEnviar" >Enviar</button>
             </form>
             </fieldset>
+                <fieldset>
+                    <table border=1 cellspacing=0 cellpadding=2 >
+                        <tr>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Forma de pagamento</th>
+                            <th>Parceiro</th>
+                            <th>Gratuito?</th>
+                            <th colspan="3">Ações</th>
+                        </tr>
+                            <?php  
+                            foreach($voucher as $item){   ?>
+                             <tr>
+                                 <td><?= date('d/m/Y',strtotime($item->data)); ?></td>
+                                 <td><?= date('H:i:s',strtotime($item->horario)); ?></td>
+                                 <td><?=  $item->forma_pagamento; ?></td>
+                                 <td><?=  $item->parceiro; ?></td>
+                                 <td><?= ($item->gratuito == "t") ? "Sim" : "Não";?></td>
+                                 
+                                 <td><a href="<?= base_url(); ?>ambulatorio/guia/carregarvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Editar</a></td>
+                                 <td><a href="<?= base_url(); ?>ambulatorio/guia/impressaovoucherconsultaextra/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Imprimir</a></td>
+                                  <?php if($this->session->userdata('operador_id') == 1){?>
+                                       <td><a href="<?= base_url(); ?>ambulatorio/guia/excluirvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Excluir</a></td>
+                                  <?php }?>
+                             </tr>
+                           <?  } ?>
+                    </table>
+                  
+                </fieldset>
         </div>
     </div> <!-- Final da DIV content -->
 </body>
