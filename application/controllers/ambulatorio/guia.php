@@ -410,8 +410,9 @@ class Guia extends BaseController {
         $data['bairros'] = $this->paciente->listarbairros();
         
         $data['forma_rendimento'] = $this->paciente->listarformapagamento();
-        $data['planos'] = $this->guia->listarplanos();
-                            
+        $data['planos'] = $this->guia->listarplanos(); 
+        
+        $data['listargerentedevendas'] = $this->paciente->listargerentedevendas();               
 
         $this->loadView('ambulatorio/relatorioinadimplentes', $data);
     }
@@ -420,6 +421,31 @@ class Guia extends BaseController {
         $this->load->plugin('mpdf'); 
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
         $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        
+         if(isset($_POST['gerentedevendas']) && $_POST['gerentedevendas'] > 0){ 
+           if(isset($_POST['vendedor']) && $_POST['vendedor'] > 0){
+               $arrayvendedor = Array(); 
+                            
+            foreach($_POST['vendedor'] as $value){ 
+                   $arrayvendedor[] = $value;
+             }
+                    $_POST['vendedor'] = $arrayvendedor;
+            }else{  
+                $arraygerente = $this->guia->listarvendedoresgerente($_POST['gerentedevendas']);
+                if(count($arraygerente) > 0){ 
+                     foreach($arraygerente as $item){
+                       $arrayvendedor[] = $item->operador_id;
+                     } 
+                     $_POST['vendedor'] = $arrayvendedor; 
+               }else{
+                    $array= array(100000);
+                    $_POST['vendedor'] = $array;
+                }  
+          }
+        }
+        
+                            
+        
         $data['relatorio'] = $this->guia->relatorioinadimplentes();
 
         // echo '<pre>';
@@ -514,6 +540,9 @@ class Guia extends BaseController {
         $data['forma']  = $this->formapagamento->listarformaRendimentoPaciente();
         $data['empresacadastro'] = $this->guia->listarempresacadastro();
         $data['listarindicacao'] = $this->paciente->listarindicacao();
+        $data['listargerentedevendas'] = $this->paciente->listargerentedevendas();
+        
+                            
         $this->loadView('ambulatorio/relatoriocontratosinativos', $data);
     }
 
@@ -529,8 +558,45 @@ class Guia extends BaseController {
 
     function gerarelatoriocontratosinativos() {
         $data['txtdata_inicio'] = $_POST['txtdata_inicio'];
-        $data['txtdata_fim'] = $_POST['txtdata_fim'];
+        $data['txtdata_fim'] = $_POST['txtdata_fim']; 
+        
+        
+       
+         
+        
+        if(isset($_POST['gerentedevendas']) && $_POST['gerentedevendas'] > 0){
+            
+            
+           if(isset($_POST['vencedor']) && $_POST['vencedor'] > 0){
+               $arrayvendedor = Array(); 
+                            
+            foreach($_POST['vencedor'] as $value){ 
+                   $arrayvendedor[] = $value;
+             }
+                    $_POST['vencedor'] = $arrayvendedor;
+            }else{
+                
+            $arraygerente = $this->guia->listarvendedoresgerente($_POST['gerentedevendas']);
+            if(count($arraygerente) > 0){ 
+                 foreach($arraygerente as $item){
+                   $arrayvendedor[] = $item->operador_id;
+                 } 
+                 $_POST['vencedor'] = $arrayvendedor; 
+           }else{
+                $array= array(100000);
+                $_POST['vencedor'] = $array;
+            }  
+          }
+        }
+                            
+//         print_r($_POST['vencedor']);        
+//        die();
+//        print_r($_POST['vendedor']);
+//        die();
         $data['relatorio'] = $this->guia->relatoriocontratosinativos();
+                            
+                            
+        
         $this->load->View('ambulatorio/impressaorelatoriocontratosinativos', $data);
     }
 

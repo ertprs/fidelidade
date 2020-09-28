@@ -198,7 +198,12 @@ class guia_model extends Model {
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcp.ativo', 'true');
         $this->db->where('pcp.excluido', 'false');
-         
+        
+        if (isset($_POST['vendedor']) && count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {  
+            $this->db->where_in('p.vendedor', @$_POST['vendedor']);
+        }
+        
+            
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
@@ -444,9 +449,12 @@ if($_POST['tipopaciente'] == 'dependente'){
 //        }
 
        
-        if (count(@$_POST['vencedor']) > 0 && !in_array('0', @$_POST['vencedor'])) {
+        if (count(@$_POST['vencedor']) > 0 && !in_array('0', @$_POST['vencedor'])) {  
             $this->db->where_in('p.vendedor', @$_POST['vencedor']);
         }
+       
+        
+      
         if (count(@$_POST['indicacao']) > 0 && !in_array('0', @$_POST['indicacao'])) {
             $this->db->where_in('p.pessoaindicacao', @$_POST['indicacao']);
         }
