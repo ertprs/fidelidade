@@ -13346,7 +13346,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->where('cp.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])))." 00:00:00");
         $this->db->where('cp.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])))." 23:23:59");
         $this->db->where('cp.ativo','t');
-        // $this->db->where('cp.valor IN (650.00, 1577.50 )');
+        // $this->db->where('cp.valor IN (650.00)');
         $this->db->where("cp.excluido", 'f');
         $this->db->where("cp.taxa_adesao", 'f');
         $this->db->orderby("data");
