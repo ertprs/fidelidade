@@ -30,6 +30,23 @@
                         </select>
                     </dd>
                     <br><br><br>
+                      <dt>
+                        <label>Gerente</label>
+                    </dt>
+                    <dd> 
+                          <select name="gerentedevendas" id="gerentedevendas" class="size2">
+                            <option value="">Todos</option>
+                            <?php
+                            foreach ($listargerentedevendas as $item) {
+                                ?>
+                                <option   value =<?php echo $item->operador_id; ?>><?php echo $item->nome; ?></option>
+                                <?php
+                            }
+                            ?> 
+                        </select>
+
+                    </dd> 
+                    <br>
                      <dt>
                         <label>Vendedor</label>
                     </dt>
@@ -44,7 +61,7 @@
                             
                         </select>
                     </dd> <br><br><br>
-                     <dt>
+                    <dt>
                         <label>Indicação</label>
                     </dt>
                     <dd> 
@@ -57,6 +74,7 @@
                         </select>
                     </dd><br><br><br>
                     
+                      
                     <dt>
                         <label>BUSCAR POR</label>
                     </dt>

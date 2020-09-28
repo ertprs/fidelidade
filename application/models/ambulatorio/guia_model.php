@@ -198,7 +198,12 @@ class guia_model extends Model {
         $this->db->where('pc.ativo', 'true');
         $this->db->where('pcp.ativo', 'true');
         $this->db->where('pcp.excluido', 'false');
-         
+        
+        if (isset($_POST['vendedor']) && count(@$_POST['vendedor']) > 0 && !in_array('0', @$_POST['vendedor'])) {  
+            $this->db->where_in('p.vendedor', @$_POST['vendedor']);
+        }
+        
+            
         if (@$_POST['bairro'] != '') {
             $this->db->where('p.bairro', @$_POST['bairro']);
         }
@@ -444,9 +449,12 @@ if($_POST['tipopaciente'] == 'dependente'){
 //        }
 
        
-        if (count(@$_POST['vencedor']) > 0 && !in_array('0', @$_POST['vencedor'])) {
+        if (count(@$_POST['vencedor']) > 0 && !in_array('0', @$_POST['vencedor'])) {  
             $this->db->where_in('p.vendedor', @$_POST['vencedor']);
         }
+       
+        
+      
         if (count(@$_POST['indicacao']) > 0 && !in_array('0', @$_POST['indicacao'])) {
             $this->db->where_in('p.pessoaindicacao', @$_POST['indicacao']);
         }
@@ -13347,7 +13355,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->where('cp.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio'])))." 00:00:00");
         $this->db->where('cp.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim'])))." 23:23:59");
         $this->db->where('cp.ativo','t');
-        // $this->db->where('cp.valor IN (650.00, 1577.50 )');
+        // $this->db->where('cp.valor IN (650.00)');
         $this->db->where("cp.excluido", 'f');
         $this->db->where("cp.taxa_adesao", 'f');
         $this->db->orderby("data");
