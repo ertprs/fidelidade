@@ -8139,7 +8139,23 @@ function geraCodigoBanco($numero) {
         $data['paciente_titular']    =    $paciente_titular; 
         $data['contas'] = $this->guia->listarcontas();
         $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
-        $this->load->View('ambulatorio/formapagamentoimpressaocarteira',$data);   
+        
+        if($this->session->userdata('operador_id') == "" || $this->session->userdata('operador_id') <= 0 ){
+            echo "<html>
+                    <meta charset='UTF-8'>
+            <script type='text/javascript'>
+                alert('Erro, Favor, faça o login novamente');
+            window.onunload = fechaEstaAtualizaAntiga;
+            function fechaEstaAtualizaAntiga() {
+                window.opener.location.reload();
+                }
+            window.close();
+                </script>
+                </html>";
+        }else{  
+          $this->load->View('ambulatorio/formapagamentoimpressaocarteira',$data);  
+        }
+        
     } 
     
    function formapagementoconfirmarpagamento($paciente_id, $contrato_id, $paciente_contrato_parcelas_id, $depende_id = NULL){     

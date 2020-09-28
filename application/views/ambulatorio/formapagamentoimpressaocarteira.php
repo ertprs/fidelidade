@@ -29,7 +29,7 @@
                     </select>
                 </td>
             </tr>
-            <? if($permissao[0]->conta_pagamento_associado != 't'){?>
+            <? if(isset($permissao[0]->conta_pagamento_associado) && $permissao[0]->conta_pagamento_associado != 't'){?>
             <tr>
                 <td>Conta</td>
                  <td>
