@@ -1493,8 +1493,7 @@ class Guia extends BaseController {
         // echo '<pre>';
         // print_r($data);
         // die;
-
-
+                            
         $this->guia->auditoriacadastro($paciente_id, 'ALTEROU A OBSERVACAO DO CONTRATO '.$contrato_id.' DA PARCELA '.$data);
 
         $this->guia->gravaralterarobservacao($paciente_contrato_parcelas_id);
@@ -2271,6 +2270,7 @@ class Guia extends BaseController {
 
     function relatorioauditoria(){
         $data['operadores'] = $this->guia->listaroperadores();
+        $data['acoes'] = $this->guia->listaracaoauditoria();
         $this->loadView('ambulatorio/relatorioauditoria-form', $data);  
     }
 

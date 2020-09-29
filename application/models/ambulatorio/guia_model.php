@@ -592,7 +592,7 @@ if($_POST['tipopaciente'] == 'dependente'){
 
 
     function relatorioauditoria(){
-        $this->db->select('ad.acao, ad.paciente_id, ad.data_cadastro, o.nome as operador, p.nome as paciente');
+        $this->db->select('ad.acao, ad.paciente_id, ad.data_cadastro, o.nome as operador, p.nome as paciente,ad.json');
         $this->db->from('tb_auditoria_cadastro ad');
         $this->db->join('tb_operador o', 'ad.operador_cadastro = o.operador_id', 'left');
         $this->db->join('tb_paciente p', 'ad.paciente_id = p.paciente_id', 'left');
@@ -601,14 +601,16 @@ if($_POST['tipopaciente'] == 'dependente'){
         if($_POST['operador'] != 0){
             $this->db->where('operador_cadastro', $_POST['operador']);
         }
-
-        if($_POST['txtdata_inicio'] != ""){
+ 
+           if($_POST['txtdata_inicio'] != ""){
             $this->db->where('ad.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");   
            }
-        if( $_POST['txtdata_fim'] != ""){
+           if( $_POST['txtdata_fim'] != ""){
              $this->db->where('ad.data_cadastro <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))) . " 23:59:59");
            }
-        
+           if($_POST['acao'] != "" ){
+              $this->db->where('ad.acao ilike', "%" . $_POST['acao'] . "%");
+           }
            $this->db->orderby('ad.data_cadastro, o.nome, p.nome');
 
 
@@ -7570,11 +7572,15 @@ AND data <= '$data_fim'";
     }
 
     function auditoriacadastro($paciente, $acao){
+      
         $horario = date("Y-m-d H:i:s");
         $hora = date("H:i:s");
         $operador_id = $this->session->userdata('operador_id');
 
-        $this->db->set('acao', $acao);
+        $this->db->set('acao', $acao); 
+        if(isset($_POST)){
+          $this->db->set('json', json_encode($_POST));
+        }
         $this->db->set('paciente_id', $paciente);
         $this->db->set('operador_cadastro', $operador_id);
         $this->db->set('data_cadastro', $horario);
@@ -13679,7 +13685,13 @@ if($return[0]->financeiro_credor_devedor_id == ""){
           
     }
     
-    
+    function listaracaoauditoria(){
+        $this->db->select('');
+        $this->db->from('tb_acao_auditoria');
+        $this->db->where('ativo','t');
+        $this->db->orderby('nome');
+        return $this->db->get()->result(); 
+    }
     
     
 }

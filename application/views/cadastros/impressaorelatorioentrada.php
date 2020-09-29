@@ -59,9 +59,8 @@
                     <? if ($mostrar_form_pagamento == 'SIM'): ?>
                         <th class="tabela_header">Forma de Pagamento</th>
                     <? endif; ?>
-                    <? if ($operador != 0) { ?>
-                        <th class="tabela_header">Operador</th>
-                    <? } ?>
+                   
+                    <th class="tabela_header">Operador</th>                     
                     <th class="tabela_header">Observacao</th>
                 </tr>
             </thead>
@@ -96,10 +95,8 @@
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                         <td ><?= $item->tipo; ?>&nbsp;</td>
                         <td ><?= $item->classe; ?>&nbsp;</td>
-                        <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
-                        <? if ($operador != 0) { ?>
-                            <td ><?= $item->operador; ?></td>
-                        <? } ?>
+                        <td ><?= number_format($item->valor, 2, ",", "."); ?></td>                        
+                        <td ><?= $item->operador; ?></td>                     
                         <? if ($mostrar_form_pagamento == 'SIM'): ?>
                             <td ><?= ($item->forma_rendimento  != "" ) ? $item->forma_rendimento : $item->forma_rendimento2 ; ?>&nbsp;</td>
                         <? endif; ?>

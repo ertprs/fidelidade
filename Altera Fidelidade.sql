@@ -1151,3 +1151,88 @@ ALTER TABLE ponto.tb_empresa ALTER COLUMN iugu_cartao SET DEFAULT false;
 
 -- 11/09/2020
 ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN geradocarnesicoob boolean DEFAULT FALSE;
+
+--29/09/2020
+ 
+CREATE TABLE ponto.tb_acao_auditoria
+(
+  acao_auditoria_id serial NOT NULL,
+  nome character varying(200),
+  CONSTRAINT tb_acao_auditoria_pkey PRIMARY KEY (acao_auditoria_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_acao_auditoria
+  OWNER TO postgres;
+
+ALTER TABLE ponto.tb_acao_auditoria ADD COLUMN ativo boolean;
+ALTER TABLE ponto.tb_acao_auditoria ALTER COLUMN ativo SET DEFAULT true;
+
+
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (1, 'EXCLUIU O CLIENTE');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (2, 'IMPRIMIU A CARTEIRA');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (3, 'EXCLUIU A DEPENDENTE DO CONTRATO');
+    
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (4, 'CONFIRMOU O PAGAMENTO DO CONTRATO');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (5, 'CANCELOU O AGENDAMENTO');
+
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (6, 'ALTEROU A OBSERVACAO DO CONTRATO');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (7, 'EXCLUIU O CONTRATO');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (8, 'REATIVOU O CONTRATO');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (9, 'EXCLUIU A PARCELA');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (10, 'ADICIONOU O DEPENDENTE NO CONTRATO');
+ 
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (11, 'CANCELOU A PARCELA DO CONTRATO');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (12, 'ALTEROU O CADASTRO');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (13, 'CADASTROU O DEPENDENTE');
+    
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (14, 'CADASTROU O TITULAR');
+
+INSERT INTO ponto.tb_acao_auditoria(
+            acao_auditoria_id, nome)
+    VALUES (15, 'CONFIRMOU O PAGAMENTO DO CONTRATO VIA IMPORTAÇÃO SICOOB');
+
+
+ 
+ALTER TABLE ponto.tb_auditoria_cadastro ADD COLUMN json text;

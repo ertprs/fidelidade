@@ -27,6 +27,17 @@
                     <dd>
                         <input type="text" name="txtdata_fim" id="txtdata_fim" alt="date" required/>
                     </dd>
+                    <dt>
+                        <label>Ação</label>
+                    </dt>
+                    <dd>
+                        <select name="acao" id="acao" >
+                               <option value="">TODOS</option>
+                            <?php foreach($acoes as $item){?>
+                                <option value="<?= $item->nome; ?>"><?= $item->nome; ?></option>
+                            <?php }?>
+                        </select>
+                    </dd>
                     
                 </dl>
                 <button type="submit" >Pesquisar</button>

@@ -24,6 +24,7 @@
                     <th class="tabela_header">Hora</th>
                     <th class="tabela_header">Cliente</th>
                     <th class="tabela_header">Ação</th>
+                     <th class="tabela_header">Observação</th>
 
                 </tr>
             </thead>
@@ -32,7 +33,7 @@
                 // $total = 0;
                 // $qtd_pacientes = 0;
                 // $qtd_parcelas = 0;
-                foreach ($relatorio as $item) :
+                foreach ($relatorio as $item) : 
                             ?>
                             <tr>
                                 <td >  <?= @$item->paciente_id; ?></td>
@@ -41,6 +42,7 @@
                                 <td ><?= substr($item->data_cadastro, 10, 9)?></td>
                                 <td ><?= @$item->paciente ?></td>
                                 <td ><?= @$item->acao ?></td>
+                                <td><?= (isset(json_decode($item->json,true)['observacao'])) ? json_decode($item->json,true)['observacao'] : "";?></td>
 
 
                             </tr>
