@@ -7,7 +7,7 @@
 </style>
 <title>Relatório</title>
 <div class="content"> <!-- Inicio da DIV content -->
-    <h4>RELATORIO DE INADIMPLENTES</h4>
+    <h4>RELATORIO DE AUDITORIA</h4>
     <h4>PERIODO: <?= $txtdata_inicio; ?> ate <?= $txtdata_fim; ?></h4>
 
     <hr>
