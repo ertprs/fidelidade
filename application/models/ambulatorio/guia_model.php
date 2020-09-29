@@ -903,11 +903,13 @@ if($_POST['tipopaciente'] == 'dependente'){
                             vc.gratuito,
                             vc.forma_rendimento_id,
                             fr.nome as forma_pagamento,
-                            vc.voucher_consulta_id');
+                            vc.voucher_consulta_id,
+                            op.nome as op_cadastro');
         $this->db->from('tb_voucher_consulta vc');
         $this->db->join('tb_financeiro_parceiro fp', 'fp.financeiro_parceiro_id = vc.parceiro_id', 'left');
         $this->db->join('tb_municipio m', 'm.municipio_id = fp.municipio_id', 'left');
         $this->db->join('tb_forma_rendimento fr', 'fr.forma_rendimento_id = vc.forma_rendimento_id', 'left');
+        $this->db->join('tb_operador op','op.operador_id = vc.operador_cadastro','left');
         $this->db->where("vc.ativo", 't');
         if($voucher_consulta_id != ""){
             $this->db->where('voucher_consulta_id',$voucher_consulta_id);

@@ -99,7 +99,7 @@
                     <button type="submit" name="btnEnviar" >Enviar</button>
             </form>
             </fieldset>
-                <fieldset>
+                <fieldset>  
                     <table border=1 cellspacing=0 cellpadding=2 >
                         <tr>
                             <th>Data</th>
@@ -107,6 +107,7 @@
                             <th>Forma de pagamento</th>
                             <th>Parceiro</th>
                             <th>Gratuito?</th>
+                            <th>Operador Cadastro</th>
                             <th colspan="3">Ações</th>
                         </tr>
                             <?php  
@@ -117,16 +118,15 @@
                                  <td><?=  $item->forma_pagamento; ?></td>
                                  <td><?=  $item->parceiro; ?></td>
                                  <td><?= ($item->gratuito == "t") ? "Sim" : "Não";?></td>
-                                 
+                                 <td><?= $item->op_cadastro;?></td>
                                  <td><a href="<?= base_url(); ?>ambulatorio/guia/carregarvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Editar</a></td>
                                  <td><a href="<?= base_url(); ?>ambulatorio/guia/impressaovoucherconsultaextra/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Imprimir</a></td>
-                                  <?php if($this->session->userdata('operador_id') == 1){?>
-                                       <td><a href="<?= base_url(); ?>ambulatorio/guia/excluirvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Excluir</a></td>
-                                  <?php }?>
+                                 <?php if($this->session->userdata('operador_id') == 1 || $this->session->userdata('perfil_id') == 1){?>
+                                  <td><a href="<?= base_url(); ?>ambulatorio/guia/excluirvoucher/<?= $paciente_id; ?>/<?= $contrato_id; ?>/<?= $consulta_avulsa_id; ?>/<?= $item->voucher_consulta_id; ?>">Excluir</a></td>
+                                 <?php }?>
                              </tr>
                            <?  } ?>
-                    </table>
-                  
+                    </table> 
                 </fieldset>
         </div>
     </div> <!-- Final da DIV content -->

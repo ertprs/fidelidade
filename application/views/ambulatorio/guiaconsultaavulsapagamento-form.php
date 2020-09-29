@@ -257,7 +257,7 @@
                                     <? } ?>
                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
                                         <div class="bt_link">
-                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/voucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=800,height=600');">Voucher
+                                            <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/voucherconsultaavulsa/$paciente_id/$contrato_id/$item->consultas_avulsas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=900,height=600');">Voucher
                                             </a>
                                         </div>
                                     </td> 
