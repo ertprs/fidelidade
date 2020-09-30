@@ -598,9 +598,9 @@ if($_POST['tipopaciente'] == 'dependente'){
         $this->db->join('tb_paciente p', 'ad.paciente_id = p.paciente_id', 'left');
         $this->db->where('ad.ativo', 't');
 
-        if($_POST['operador'] != 0){
-            $this->db->where('operador_cadastro', $_POST['operador']);
-        }
+            if($_POST['operador'] != 0){
+                $this->db->where('o.operador_cadastro', $_POST['operador']);
+            }
  
            if($_POST['txtdata_inicio'] != ""){
             $this->db->where('ad.data_cadastro >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))) . " 00:00:00");   
