@@ -8669,7 +8669,45 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
        redirect(base_url()."ambulatorio/guia/voucherconsultaavulsa/".$paciente_id."/".$contrato_id."/".$consulta_avulsa_id."");
 
 }
-  
+
+  function faturarmodelo2($paciente_contrato_parcelas_id) {
+         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+         $data['forma_cadastrada'] = $this->guia->ParcelaFormasPagamento($paciente_contrato_parcelas_id);
+         $data['valor'] = 0.00;
+         
+         $this->load->View('ambulatorio/faturarmodelo2-form', $data);
+    }
+    
+    function gravarfaturadomodelo2(){
+        $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
+         
+        $ambulatorio_guia_id = $this->guia->gravarfaturamentomodelo2();
+        $soma =  $this->guia->somapagamentos($paciente_contrato_parcelas_id);
+        $valor_real =  $this->guia->listarparcela($paciente_contrato_parcelas_id);
+        @$valor1 = (float) $_POST['valor1'];
+        $valorFaturarVisivel = $_POST['valorFaturarVisivel'];
+         
+         if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma)  <= 0){
+              redirect(base_url() . "seguranca/operador/pesquisarrecepcao"); 
+         }else{
+              redirect(base_url() . "ambulatorio/guia/faturarmodelo2/$paciente_contrato_parcelas_id", $data); 
+         }
+         
+    }
+    
+  function apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id) {
+        $ambulatorio_guia_id = $this->guia->apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id);
+         
+        if ($ambulatorio_guia_id == "-1") {
+            $data['mensagem'] = 'Erro ao excluir pagamento.';
+        } else {
+            $data['mensagem'] = 'Sucesso ao excluir pagamento.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        redirect(base_url() . "ambulatorio/guia/faturarmodelo2/$paciente_contrato_parcelas_id", $data); 
+    }
   
 }
 

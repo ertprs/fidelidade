@@ -13694,6 +13694,230 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     }
     
     
+     function ParcelaFormasPagamento($paciente_contrato_parcelas_id) {
+
+//        var_dum
+        // Dentro do select tem um pequeno select interno que faz a contagem pra saber quanto ainda resta a pagar
+        // Desse procedimento
+        $this->db->select('fp.forma_rendimento_id as forma_pagamento_id,
+                            aef.paciente_contrato_parcelas_faturar_id,
+                            aef.paciente_contrato_parcelas_id,
+                            aef.valor_total,
+                            (aef.valor_total - (select sum(valor_bruto) + sum(desconto)  as valorTotPag from ponto.tb_paciente_contrato_parcelas_faturar aef2
+                            where aef2.paciente_contrato_parcelas_id = aef.paciente_contrato_parcelas_id and ativo = true)) as valor_restante,
+                            aef.valor,
+                            aef.valor_bruto,
+                            aef.data,
+                            aef.ajuste,
+                            aef.parcela,
+                            aef.financeiro,
+                            aef.desconto,
+                            aef.paciente_contrato_parcelas_faturar_id,
+                            fp.nome as forma_pagamento,
+                            pc.paciente_id,
+                            pcp.paciente_contrato_id', false);
+        $this->db->from('tb_paciente_contrato_parcelas_faturar aef');
+        $this->db->join('tb_forma_rendimento fp', 'fp.forma_rendimento_id = aef.forma_pagamento_id', 'left');
+        $this->db->join('tb_paciente_contrato_parcelas pcp','pcp.paciente_contrato_parcelas_id = aef.paciente_contrato_parcelas_id','left');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id','left');
+        $this->db->where('aef.paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+        $this->db->where('aef.ativo', 't');
+        $this->db->orderby('aef.data, fp.nome');
+        $return = $this->db->get();
+        $retorno = $return->result();
+        return $retorno;
+    }
+    
+    function gravarfaturamentomodelo2(){
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $empresa_id = $this->session->userdata('empresa_id');
+            @$desconto = (float) $_POST['desconto'];
+            @$valor1 = (float) $_POST['valor1'];
+            @$ajuste1 = (float) $_POST['ajuste1'];
+            $valor_bruto = (float) $_POST['valor1'];
+            @$valorajuste1 = (float) $_POST['valorajuste1'];
+            $valor_proc = (float) str_replace(',', '.', str_replace('.', '', $_POST['valor_proc']));
+            @$parcela1 = (int) $_POST['parcela1'];
+            $valorFaturarVisivel = $_POST['valorFaturarVisivel'];
+            $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
+            $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+            $valor = $parcela[0]->valor;
+
+            $credor = $parcela[0]->financeiro_credor_devedor_id; 
+            $data_vencimento = $parcela[0]->data;
+            if ($credor == NULL || $credor == '') {
+              $credor = $this->criarcredordevedorpaciente($paciente_id);
+            }    
+             
+                
+            $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id']; 
+            $forma_pagamento_id = $_POST['forma_pagamento_id']; 
+                 
+            $this->db->select('sum(valor_bruto) as soma');
+            $this->db->from('tb_paciente_contrato_parcelas_faturar');
+            $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $this->db->where('ativo','t');
+            $soma =  $this->db->get()->result();
+            
+            $this->db->select('');
+            $this->db->from('tb_paciente_contrato_parcelas');
+            $this->db->where('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+            $valor_real =$this->db->get()->result();
+            
+          
+          
+                if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma + $valor1)  <= 0){
+                    $this->db->set('manual', 't'); 
+                    $this->db->set('ativo', 'f'); 
+                    $this->db->set('data_atualizacao', $horario);
+                    $this->db->set('operador_atualizacao', $operador_id);
+                    $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+                    $this->db->update('tb_paciente_contrato_parcelas');    
+                } 
+     
+      
+                $this->db->select('ae.data');
+                $this->db->from('tb_paciente_contrato_parcelas ae');
+                $this->db->where('ae.paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+                $return = $this->db->get();
+                $retorno = $return->result();
+                $data = $retorno[0]->data;
+
+                $this->db->set('forma_pagamento_id', $forma_pagamento_id); 
+                $this->db->set('parcela', $parcela1); 
+                $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id); 
+                $this->db->set('desconto', $desconto);
+                $this->db->set('ajuste', $ajuste1);
+                $this->db->set('valor_total', $valor_proc); 
+                $this->db->set('valor', $valorajuste1); 
+                $this->db->set('valor_bruto', $valor_bruto);
+                $this->db->set('data', $data);
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->set('faturado', 't');
+                $this->db->set('observacao', $_POST['observacao']); 
+                $this->db->insert('tb_paciente_contrato_parcelas_faturar');
+                $paciente_contrato_parcelas_faturar_id = $this->db->insert_id();
+                
+                
+            
+                 
+                $this->db->select('conta_pagamento');
+                $this->db->from('tb_forma_rendimento');
+                $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+                $conta_pagamento = $this->db->get()->result(); 
+
+                $horario = date("Y-m-d H:i:s");
+                $data = date("Y-m-d");
+                $operador_id = $this->session->userdata('operador_id');
+                $this->db->set('valor', $valor1);
+
+
+                $this->db->set('data', $data_vencimento);
+                $this->db->set('tipo', $plano);
+                if($parcela[0]->taxa_adesao == 't'){
+                    $this->db->set('classe', 'ADESÃO');
+                }else{
+                    $this->db->set('classe', 'PARCELA'); 
+                }
+                // $this->db->set('classe', 'PARCELA');
+                $this->db->set('nome', $credor);
+                $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+                $this->db->set('paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id);
+                
+    //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
+
+                if( $conta_pagamento[0]->conta_pagamento != ""){
+                 $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+                }
+                if(isset($_POST['forma_pagamento_id']) && $_POST['forma_pagamento_id']){
+                  $this->db->set('forma_rendimento_id',$_POST['forma_pagamento_id']);
+                } 
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->set('empresa_id',$empresa_id);
+                $this->db->insert('tb_entradas');
+                $entradas_id = $this->db->insert_id(); 
+                $erro = $this->db->_error_message();
+                if (trim($erro) != "") // erro de banco
+                    return -1;
+                else
+                $this->db->set('valor', $valor1);
+                $this->db->set('entrada_id', $entradas_id);  
+                if($conta_pagamento[0]->conta_pagamento != ""){
+                 $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+                }
+                $this->db->set('nome', $credor);
+                $this->db->set('data_cadastro', $horario);
+                $this->db->set('data', $data_vencimento);
+                $this->db->set('operador_cadastro', $operador_id);
+                $this->db->set('empresa_id',$empresa_id);
+                $this->db->insert('tb_saldo');
+                
+           
+    }
+    
+    
+      function apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id) {
+        try { 
+            // Gravando backup das alterações 
+//            $this->gravarBackupFaturar($agenda_exames_faturar_id, 'EXCLUIR');
+
+            /* inicia o mapeamento no banco */
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+             $this->db->select('');
+            $this->db->from('tb_entradas');
+            $this->db->where('paciente_contrato_parcelas_faturar_id',$paciente_contrato_parcelas_faturar_id);
+            $res = $this->db->get()->result();
+            $entrada = $res[0]->entradas_id; 
+            
+            $horario = date("Y-m-d H:i:s");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('ativo', 'f');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('entrada_id', $entrada);
+            $this->db->update('tb_saldo');
+
+            $this->db->set('ativo', 'f');
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('entradas_id', $entrada);
+            $this->db->update('tb_entradas');
+   
+            $this->db->where('paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id);
+            $this->db->delete('tb_paciente_contrato_parcelas_faturar');
+   
+            // echo 'something'; die;
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+        } catch (Exception $exc) {
+            return -1;
+        }
+    }
+    
+    
+    function somapagamentos($paciente_contrato_parcelas_id){
+            $this->db->select('sum(valor_bruto) as soma');
+            $this->db->from('tb_paciente_contrato_parcelas_faturar');
+            $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $this->db->where('ativo','t');
+             return $this->db->get()->result();
+    }
+    
+    
+    function listarparcela($paciente_contrato_parcelas_id){ 
+        $this->db->select('*');
+        $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+      
+         return $this->db->get()->result();
+    }
+    
+    
 }
 
 ?>

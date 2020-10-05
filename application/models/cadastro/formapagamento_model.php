@@ -752,6 +752,19 @@ class formapagamento_model extends Model {
         $this->db->where('procedimentos_plano_id', $procedimentos_plano_id);
         $this->db->update('tb_procedimentos_plano');
     }
+    
+    
+    function buscarformaredimento($forma_pagamento_id) {
+        $this->db->select('forma_rendimento_id,
+                            nome,
+                            ajuste,
+                            parcelas');
+        $this->db->from('tb_forma_rendimento');
+        $this->db->where('ativo', 'true');
+        $this->db->where('forma_rendimento_id', "$forma_pagamento_id");
+        $return = $this->db->get();
+        return $return->result();
+    }
 
 }
 

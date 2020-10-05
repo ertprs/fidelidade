@@ -413,6 +413,12 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('assinar_contrato', 'f');
             }
+            
+            if (isset($_POST['faturamento_novo'])) {
+                $this->db->set('faturamento_novo', 't');
+            } else {
+                $this->db->set('faturamento_novo', 'f');
+            }
 
             $this->db->set('iugu_token', $_POST['iugu_token']);
             $this->db->set('usuario_epharma', $_POST['usuario_epharma']);
@@ -617,7 +623,8 @@ class empresa_model extends Model {
                                f.titular_carterinha,
                                f.nao_integrar_parceria,
                                f.assinar_contrato,
-                               f.iugu_cartao');
+                               f.iugu_cartao,
+                               f.faturamento_novo');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -683,6 +690,7 @@ class empresa_model extends Model {
             $this->_nao_integrar_parceria = $return[0]->nao_integrar_parceria; 
             $this->_assinar_contrato = $return[0]->assinar_contrato; 
             $this->_iugu_cartao = $return[0]->iugu_cartao; 
+            $this->_faturamento_novo = $return[0]->faturamento_novo; 
         } else {
             $this->_empresa_id = null;
         }

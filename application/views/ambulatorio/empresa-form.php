@@ -477,10 +477,15 @@
                             <label>Assinar Contrato</label>  
                         </td>
                     </tr>
+                    <tr>
+                       <td>
+                            <input type="checkbox" name="faturamento_novo"   <? if (@$obj->_faturamento_novo == 't') echo "checked"; ?>> 
+                            <label title="Ativando essa flag poderá faturar a parcela em diferentes formas de pagamentos">Faturamento novo</label>  
+                        </td> 
+                    </tr>
                 </table> 
-                <br>
-                
-                <a title="Ao clicar nesse link, irá abrir uma tela branca isso significa que todos os pacientes serão exportados para o sistema clinica,exceto os que já estão cadastrados lá.(Verifica pelo CPF e Prontuário)" href="<?= base_url() ?>cadastros/pacientes/gravartodospacientesexterno" target="_blank">Gravar todos parceiros</a>
+                <br>  
+                <!--<a title="Ao clicar nesse link, irá abrir uma tela branca isso significa que todos os pacientes serão exportados para o sistema clinica,exceto os que já estão cadastrados lá.(Verifica pelo CPF e Prontuário)" href="<?= base_url() ?>cadastros/pacientes/gravartodospacientesexterno" target="_blank">Gravar todos parceiros</a>-->
                 
                 <hr/>
 

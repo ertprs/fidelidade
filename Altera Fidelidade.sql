@@ -1236,3 +1236,50 @@ INSERT INTO ponto.tb_acao_auditoria(
 
  
 ALTER TABLE ponto.tb_auditoria_cadastro ADD COLUMN json text;
+
+--05/10/2020
+
+ALTER TABLE ponto.tb_empresa ADD COLUMN faturamento_novo boolean;
+ALTER TABLE ponto.tb_empresa ALTER COLUMN faturamento_novo SET DEFAULT false;
+
+
+CREATE TABLE ponto.tb_paciente_contrato_parcelas_faturar
+(
+  paciente_contrato_parcelas_faturar_id serial NOT NULL,
+  paciente_contrato_parcelas_id integer,  
+  forma_pagamento_id integer,
+  valor_total numeric(10,2) DEFAULT 0,
+  valor numeric(10,2) DEFAULT 0,
+  valor_bruto numeric(10,2) DEFAULT 0,
+  parcela integer DEFAULT 0,
+  desconto numeric(10,2) DEFAULT 0,
+  ajuste numeric(10,2) DEFAULT 0,
+  desconto_ajuste numeric(10,2) DEFAULT 0,
+  data date,
+  ativo boolean DEFAULT true,
+  faturado boolean DEFAULT false,
+  financeiro boolean DEFAULT false,
+  operador_faturamento integer,
+  operador_cadastro integer,
+  operador_atualizacao integer,
+  data_atualizacao timestamp without time zone,
+  data_cadastro timestamp without time zone,
+  faturado_guia boolean DEFAULT false,
+  operador_financeiro integer,
+  data_financeiro timestamp without time zone,
+  observacao text,
+  observacao_pg_outro_dia text,
+  CONSTRAINT tb_paciente_contrato_parcelas_faturar_pkey PRIMARY KEY (paciente_contrato_parcelas_faturar_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ponto.tb_agenda_exames_faturar
+  OWNER TO postgres;
+
+
+
+ALTER TABLE ponto.tb_forma_rendimento ADD COLUMN ajuste numeric(10,2);
+ALTER TABLE ponto.tb_forma_rendimento ADD COLUMN parcelas integer;
+
+ALTER TABLE ponto.tb_entradas ADD COLUMN paciente_contrato_parcelas_faturar_id integer;

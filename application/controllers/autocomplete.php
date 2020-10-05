@@ -3321,6 +3321,15 @@ class Autocomplete extends Controller {
         echo json_encode($mensagem);
     }
     
+     function formaredimento($forma) {
+
+        if (isset($forma)) {
+            $result = $this->formapagamento->buscarformaredimento($forma);
+        } else {
+            $result = $this->formapagamento->buscarformaredimento();
+        }
+        echo json_encode($result);
+    }
 
 }
 

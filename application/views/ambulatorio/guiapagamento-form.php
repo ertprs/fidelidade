@@ -295,7 +295,29 @@
                                            
                                         
                                         <?
-                                    } else {
+                                     } elseif($empresapermissao[0]->faturamento_novo == 't'){ ?>
+                                     <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                           
+                                            <div class="bt_link">
+                                                <?php
+                                                if ($item->paciente_dependente_id != "" && $item->paciente_dependente_id != 0 && $this->session->userdata('cadastro') == 2) {
+                                                    ?>
+                                                <a style="cursor: pointer; " onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/faturarmodelo2/<?= $item->paciente_contrato_parcelas_id ?>/<?= $item->paciente_dependente_id ?> ', '_blank', 'width=600,height=240');">Confirmar
+                                                    </a>
+                                                    <?
+                                                } else {
+                                                    ?>
+                                                <a  style="cursor: pointer; " onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/faturarmodelo2/<?= $item->paciente_contrato_parcelas_id ?>', '_blank', 'width=1000,height=640');">Confirmar
+                                                    </a>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
+
+                                        </td>
+                                    
+                                    
+                                 <?    } else {
                                         ?>
 
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;">
@@ -324,8 +346,7 @@
 
                                     <? if ($perfil_id == 1 || $perfil_id == 2) { ?>
                                             <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                                <div class="bt_link">
-
+                                                <div class="bt_link">  
                                                     <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterardatapagamento/$paciente_id/$contrato_id/$item->paciente_contrato_parcelas_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
                                                         Alterar Data
                                                     </a>
