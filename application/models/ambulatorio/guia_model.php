@@ -13752,13 +13752,18 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
             $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
             $valor = $parcela[0]->valor;
+            $conta_id = $parcela[0]->conta_id;
+            $plano = $parcela[0]->plano;
 
             $credor = $parcela[0]->financeiro_credor_devedor_id; 
             $data_vencimento = $parcela[0]->data;
             if ($credor == NULL || $credor == '') {
               $credor = $this->criarcredordevedorpaciente($paciente_id);
             }    
-             
+            $this->db->select('conta_pagamento_associado');
+            $this->db->from('tb_empresa');
+            $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+            $empresa_conta = $this->db->get()->result();
                 
             $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id']; 
             $forma_pagamento_id = $_POST['forma_pagamento_id']; 
@@ -13809,8 +13814,6 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->insert('tb_paciente_contrato_parcelas_faturar');
                 $paciente_contrato_parcelas_faturar_id = $this->db->insert_id();
                 
-                
-            
                  
                 $this->db->select('conta_pagamento');
                 $this->db->from('tb_forma_rendimento');
@@ -13840,10 +13843,20 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->set('paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id);
                 
     //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
-
+             if($empresa_conta[0]->conta_pagamento_associado == 't'){
                 if( $conta_pagamento[0]->conta_pagamento != ""){
                  $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
                 }
+              }elseif(isset($_POST['conta']) && @$_POST['conta'] != "") {
+                              $this->db->set('conta', @$_POST['conta']);
+              } else {
+                    $this->db->set('conta', $conta_id);
+              }
+                 
+                $this->db->set('tipo', $plano);
+                   
+              
+                
                 if(isset($_POST['forma_pagamento_id']) && $_POST['forma_pagamento_id']){
                   $this->db->set('forma_rendimento_id',$_POST['forma_pagamento_id']);
                 } 

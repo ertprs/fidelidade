@@ -73,6 +73,9 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                     <td>
                         <label>Forma de pagamento</label>
                     </td> 
+                    <td>
+                        <label>Conta</label>
+                    </td> 
                 </tr>
                 <tr>
                     <td>
@@ -93,11 +96,21 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                         </select>
 
                     </td>
-                   
-                   
-                    
+                    <td>
+                          <select  name="conta">
+                                <option value="" >Selecione</option>
+                                <?
+                                foreach($contas as $conta){ 
+                                    ?> 
+                         <option value=<?= $conta->forma_entradas_saida_id ?>  ><?= $conta->descricao; ?></option> 
+                                <?    
+                                }
+                                ?>
+                            </select>
+                    </td> 
 
                 </tr>
+                
                 <tr>
                     <td>
                         <label>Valor Pendente</label>

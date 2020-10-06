@@ -8675,6 +8675,7 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
          $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
          $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
          $data['forma_cadastrada'] = $this->guia->ParcelaFormasPagamento($paciente_contrato_parcelas_id);
+         $data['contas'] = $this->guia->listarcontas(); 
          $data['valor'] = 0.00;
          
          $this->load->View('ambulatorio/faturarmodelo2-form', $data);
