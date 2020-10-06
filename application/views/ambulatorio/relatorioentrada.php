@@ -58,6 +58,7 @@
                             <option value="ADESÃO">ADESÃO</option>
                             <option value="CARTEIRA">CARTEIRA</option>
                             <option value="VOUCHER">VOUCHER</option>
+                            <option value="PARCELA UNICA">PARCELA UNICA</option>
                         </select>
                     </dd>
                     <dt>

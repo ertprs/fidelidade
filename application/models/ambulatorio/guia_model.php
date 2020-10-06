@@ -1000,7 +1000,8 @@ if($_POST['tipopaciente'] == 'dependente'){
                             pcp.taxa_adesao,
                             m.estado,
                             p.cep,
-                            p.cpf');
+                            p.cpf,
+                            pc.parcelas');
         $this->db->from('tb_paciente_contrato_parcelas pcp');
         $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = pcp.financeiro_credor_devedor_id', 'left');
@@ -5735,7 +5736,7 @@ ORDER BY p.nome";
                 return 2;
             }else{
 
-                $this->db->select('financeiro_maior_zero');
+         $this->db->select('financeiro_maior_zero');
         $this->db->from('tb_empresa');
         $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
         $return = $this->db->get()->result();
@@ -5776,7 +5777,11 @@ ORDER BY p.nome";
             if($parcela[0]->taxa_adesao == 't'){
                 $this->db->set('classe', 'ADESÃO');
             }else{
-                $this->db->set('classe', 'PARCELA'); 
+                if(substr($parcela[0]->parcelas, 0,2) == 1){
+                    $this->db->set('classe', 'PARCELA UNICA'); 
+                 }else{
+                    $this->db->set('classe', 'PARCELA'); 
+                 }  
             }
             // $this->db->set('classe', 'PARCELA');
             $this->db->set('nome', $credor);
@@ -5896,7 +5901,11 @@ ORDER BY p.nome";
             if($parcela[0]->taxa_adesao == 't'){
                 $this->db->set('classe', 'ADESÃO');
             }else{
-                $this->db->set('classe', 'PARCELA'); 
+                if(substr($parcela[0]->parcelas, 0,2) == 1){
+                   $this->db->set('classe', 'PARCELA UNICA'); 
+                }else{
+                   $this->db->set('classe', 'PARCELA'); 
+                }   
             }
             // $this->db->set('classe', 'PARCELA');
             $this->db->set('nome', $credor);
@@ -13760,13 +13769,13 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             $this->db->where('ativo','t');
             $soma =  $this->db->get()->result();
             
-            $this->db->select('');
-            $this->db->from('tb_paciente_contrato_parcelas');
-            $this->db->where('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+            $this->db->select('pcp.*,pc.parcelas');
+            $this->db->from('tb_paciente_contrato_parcelas pcp');
+            $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id');
+            $this->db->where('pcp.paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
             $valor_real =$this->db->get()->result();
             
-          
-          
+              
                 if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma + $valor1)  <= 0){
                     $this->db->set('manual', 't'); 
                     $this->db->set('ativo', 'f'); 
@@ -13818,8 +13827,12 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->set('tipo', $plano);
                 if($parcela[0]->taxa_adesao == 't'){
                     $this->db->set('classe', 'ADESÃO');
-                }else{
-                    $this->db->set('classe', 'PARCELA'); 
+                }else{ 
+                    if(substr($valor_real[0]->parcelas, 0,2) == 1){
+                       $this->db->set('classe', 'PARCELA UNICA'); 
+                    }else{
+                       $this->db->set('classe', 'PARCELA'); 
+                    }  
                 }
                 // $this->db->set('classe', 'PARCELA');
                 $this->db->set('nome', $credor);
