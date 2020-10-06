@@ -624,7 +624,7 @@
 
                             </td>
                             <td   class="<?php echo $estilo_linha; ?>" colspan="1"><div style="width: 50px;" class="bt_link">
-                                    <a id="" onclick="javascript: return confirm('Deseja realmente Cancelar a parcela?');" href="<?= base_url() ?>ambulatorio/guia/cancelarparcela/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">Cancelar
+                                    <a id="" onclick="javascript:  if(confirm('Deseja realmente Cancelar a parcela?')){ window.open('<?= base_url() ?>ambulatorio/guia/cancelarparcela/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=240'); }else{ return; }" target="_blank">Cancelar
                                     </a></div> 
 
                             </td>
