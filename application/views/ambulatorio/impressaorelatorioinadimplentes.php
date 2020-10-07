@@ -57,7 +57,7 @@
                     <th class="tabela_header">Parcelas</th>
                     <th class="tabela_header">Ultima Parcela Paga </th>
                     <th class="tabela_header">Valor</th>
-
+                    <th class="tabela_header">Observação</th> 
                 </tr>
             </thead>
             <tbody>
@@ -138,6 +138,7 @@
                                 <td ><?= @$cont_parcelas{$item->paciente_id}{$item->valor}; ?></td> 
                                 <td ><?= "Parcela ".@$parcela[0]->parcela." <br> ".substr(@$parcela[0]->data, 8, 2) . '/' . substr(@$parcela[0]->data, 5, 2) . '/' . substr(@$parcela[0]->data, 0, 4) ?></td>
                                 <td ><?= number_format($item->valor, 2, ",", "."); ?></td>
+                                <td ><?=  $item->observacao; ?></td>
 
 
                             </tr>

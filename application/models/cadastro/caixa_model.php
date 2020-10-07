@@ -426,6 +426,9 @@ class caixa_model extends Model {
             $this->db->where("(s.empresa_cadastro_id = $empresa_id)");
         } 
         
+        if(isset($_POST['plano']) && $_POST['plano'] != ""){
+           $this->db->where('s.tipo ilike', $_POST['plano']);
+        }
         $this->db->where('s.data >=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_inicio']))));
         $this->db->where('s.data <=', date("Y-m-d", strtotime(str_replace('/', '-', $_POST['txtdata_fim']))));
         

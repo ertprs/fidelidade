@@ -108,6 +108,22 @@
                             ?>
                         </select> 
                     </dd>
+                    <dt>
+                        <label>Plano</label>
+                    </dt>
+                    <dd>
+                       <select name="plano" id="plano" class="size2"  >
+                            <option value="" >TODAS</option>
+                            <?php
+                            $planos = $this->formapagamento->listarforma();
+                            foreach ($planos as $item) {
+                                ?>
+                            <option  value ="<?php echo $item->nome; ?>"  ><?php echo $item->nome; ?></option>
+                                <?php
+                            }
+                            ?> 
+                        </select> 
+                    </dd>
  
                     <dt>
                         <label>Cliente</label>

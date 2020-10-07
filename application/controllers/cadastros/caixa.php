@@ -23,6 +23,7 @@ class Caixa extends BaseController {
         $this->load->model('seguranca/operador_model', 'operador');
         $this->load->model('ambulatorio/guia_model', 'guia');
         $this->load->model('ambulatorio/empresa_model', 'empresa');
+        $this->load->model('cadastro/formapagamento_model', 'formapagamento');
         $this->load->library('mensagem');
         $this->load->library('utilitario');
         $this->load->library('pagination');
@@ -530,6 +531,7 @@ class Caixa extends BaseController {
         $data['forma_rendimento'] = $this->caixa->listarformarendimento(); 
         $data['empresacadastro'] = $this->guia->listarempresacadastro();
         $data['empresa'] = $this->guia->listarempresas();
+        
 
         $this->loadView('ambulatorio/relatorioentrada', $data);
     }
