@@ -13817,7 +13817,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                  
                 $this->db->select('conta_pagamento');
                 $this->db->from('tb_forma_rendimento');
-                $this->db->where('forma_rendimento_id', $_POST['forma_rendimento_id']);
+                $this->db->where('forma_rendimento_id', $_POST['forma_pagamento_id']);
                 $conta_pagamento = $this->db->get()->result(); 
 
                 $horario = date("Y-m-d H:i:s");
@@ -13843,7 +13843,10 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->set('paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id);
                 
     //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
-             if($empresa_conta[0]->conta_pagamento_associado == 't'){
+           
+                
+               
+          if($empresa_conta[0]->conta_pagamento_associado == 't'){
                 if($conta_pagamento[0]->conta_pagamento != ""){
                  $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
                 }elseif(isset($_POST['conta']) && @$_POST['conta'] != "") {
