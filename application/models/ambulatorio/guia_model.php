@@ -11418,14 +11418,11 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->set('operador_atualizacao', $operador_id);
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_paciente_contrato_parcelas');
-
-
+ 
         $this->db->set('ativo', 'f');
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_entradas');
-
-
-
+ 
         $this->db->set('ativo', 'f');
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_entradas');
@@ -11434,6 +11431,10 @@ ORDER BY ae.agenda_exames_id)";
         $this->db->set('ativo', 'f');
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_saldo');
+        
+        $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+        $this->db->delete('tb_paciente_contrato_parcelas_faturar'); 
+        
     }
 
     function listarempresaporid($empresa_id = null) {
@@ -13756,7 +13757,10 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             $plano = $parcela[0]->plano;
 
             $credor = $parcela[0]->financeiro_credor_devedor_id; 
-            $data_vencimento = $parcela[0]->data;
+             
+            $data_vencimento =   date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
+            
+            
             if ($credor == NULL || $credor == '') {
               $credor = $this->criarcredordevedorpaciente($paciente_id);
             }    
@@ -13767,30 +13771,13 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 
             $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id']; 
             $forma_pagamento_id = $_POST['forma_pagamento_id']; 
-                 
-            $this->db->select('sum(valor_bruto) as soma');
-            $this->db->from('tb_paciente_contrato_parcelas_faturar');
-            $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-            $this->db->where('ativo','t');
-            $soma =  $this->db->get()->result();
+             
             
-            $this->db->select('pcp.*,pc.parcelas');
-            $this->db->from('tb_paciente_contrato_parcelas pcp');
-            $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id');
-            $this->db->where('pcp.paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
-            $valor_real =$this->db->get()->result();
-            
-              
-                if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma + $valor1)  <= 0){
-                    $this->db->set('manual', 't'); 
-                    $this->db->set('ativo', 'f'); 
-                    $this->db->set('data_atualizacao', $horario);
-                    $this->db->set('operador_atualizacao', $operador_id);
+                if($paciente_contrato_parcelas_id > 0){
+                    $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));   
                     $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-                    $this->db->update('tb_paciente_contrato_parcelas');    
-                } 
-     
-      
+                    $this->db->update('tb_paciente_contrato_parcelas');
+                }
                 $this->db->select('ae.data');
                 $this->db->from('tb_paciente_contrato_parcelas ae');
                 $this->db->where('ae.paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
@@ -13806,7 +13793,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->set('valor_total', $valor_proc); 
                 $this->db->set('valor', $valorajuste1); 
                 $this->db->set('valor_bruto', $valor_bruto);
-                $this->db->set('data', $data);
+                $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->set('faturado', 't');
@@ -13823,8 +13810,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $horario = date("Y-m-d H:i:s");
                 $data = date("Y-m-d");
                 $operador_id = $this->session->userdata('operador_id');
-                $this->db->set('valor', $valor1);
-
+                $this->db->set('valor', $valor1); 
 
                 $this->db->set('data', $data_vencimento);
                 $this->db->set('tipo', $plano);
@@ -13861,12 +13847,13 @@ if($return[0]->financeiro_credor_devedor_id == ""){
               }
                  
                 $this->db->set('tipo', $plano);
-                   
-              
-                
+                 
                 if(isset($_POST['forma_pagamento_id']) && $_POST['forma_pagamento_id']){
                   $this->db->set('forma_rendimento_id',$_POST['forma_pagamento_id']);
                 } 
+                if($_POST['observacao'] != ""){
+                 $this->db->set('observacao', $_POST['observacao']);
+                }
                 $this->db->set('data_cadastro', $horario);
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->set('empresa_id',$empresa_id);
@@ -13886,8 +13873,24 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->set('data', $data_vencimento);
                 $this->db->set('operador_cadastro', $operador_id);
                 $this->db->set('empresa_id',$empresa_id);
-                $this->db->insert('tb_saldo');
+                $this->db->insert('tb_saldo'); 
                 
+            $soma =  $this->somapagamentos($paciente_contrato_parcelas_id);  
+            
+            $this->db->select('pcp.*,pc.parcelas');
+            $this->db->from('tb_paciente_contrato_parcelas pcp');
+            $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id');
+            $this->db->where('pcp.paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+            $valor_real =$this->db->get()->result();
+              
+            if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma)  <= 0){
+                $this->db->set('manual', 't'); 
+                $this->db->set('ativo', 'f'); 
+                $this->db->set('data_atualizacao', $horario);
+                $this->db->set('operador_atualizacao', $operador_id);
+                $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+                $this->db->update('tb_paciente_contrato_parcelas');    
+            } 
            
     }
     
@@ -13934,7 +13937,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     
     
     function somapagamentos($paciente_contrato_parcelas_id){
-            $this->db->select('sum(valor_bruto) as soma');
+            $this->db->select('sum(valor_bruto + desconto) as soma');
             $this->db->from('tb_paciente_contrato_parcelas_faturar');
             $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
             $this->db->where('ativo','t');
@@ -13945,8 +13948,15 @@ if($return[0]->financeiro_credor_devedor_id == ""){
     function listarparcela($paciente_contrato_parcelas_id){ 
         $this->db->select('*');
         $this->db->from('tb_paciente_contrato_parcelas');
+        $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id); 
+        return $this->db->get()->result();
+    }
+    
+    function listarpagamentonovo($paciente_contrato_parcelas_id){
+        $this->db->select('sum(valor_bruto) as valor_pago,sum(desconto) as desconto_total ');
+        $this->db->from('tb_paciente_contrato_parcelas_faturar');
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-      
+        $this->db->where('ativo','t');
          return $this->db->get()->result();
     }
     

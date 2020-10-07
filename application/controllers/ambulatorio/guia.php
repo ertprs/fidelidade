@@ -4177,6 +4177,13 @@ class Guia extends BaseController {
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
+        
+        $pagamento_novo = $this->guia->listarpagamentonovo($paciente_contrato_parcelas_id);
+                            
+        if($pagamento_novo[0]->valor_pago > 0 ||  $pagamento_novo[0]->desconto_total  > 0 ){
+             $pagamento[0]->valor = $pagamento_novo[0]->valor_pago; 
+        }                  
+                            
         $data['pagamento'] = $pagamento;
         // echo '<pre>';
         //  print_r($pagamento); 
@@ -8685,7 +8692,9 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
         $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
          
         $ambulatorio_guia_id = $this->guia->gravarfaturamentomodelo2();
+        
         $soma =  $this->guia->somapagamentos($paciente_contrato_parcelas_id);
+        
         $valor_real =  $this->guia->listarparcela($paciente_contrato_parcelas_id);
         @$valor1 = (float) $_POST['valor1'];
         $valorFaturarVisivel = $_POST['valorFaturarVisivel'];

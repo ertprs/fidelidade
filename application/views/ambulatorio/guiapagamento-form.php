@@ -62,23 +62,17 @@
                     </div>
 
                     <div>
-                        <label>Nascimento</label>
-
-
+                        <label>Nascimento</label>  
                         <input type="text" name="nascimento" id="txtNascimento" class="texto02" alt="date" value="<?php echo substr($paciente['0']->nascimento, 8, 2) . '/' . substr($paciente['0']->nascimento, 5, 2) . '/' . substr($paciente['0']->nascimento, 0, 4); ?>" onblur="retornaIdade()" readonly/>
                     </div>
 
-                    <div>
-
+                    <div> 
                         <label>Idade</label>
                         <input type="text" name="idade" id="txtIdade" class="texto01" alt="numeromask" value="<?= $paciente['0']->idade; ?>" readonly />
-
                     </div>
 
                     <div>
-                        <label>Nome da M&atilde;e</label>
-
-
+                        <label>Nome da M&atilde;e</label>  
                         <input type="text" name="nome_mae" id="txtNomeMae" class="texto08" value="<?= $paciente['0']->nome_mae; ?>" readonly/>
                     </div>
                 </fieldset>
@@ -200,6 +194,10 @@
 
                         foreach ($listarpagamentoscontrato as $item) {
                          $situacaoparcelasicoob = $this->guia->listarsituacaoparcelasicoob($item->paciente_contrato_parcelas_id);
+                         $pagamento_novo = $this->guia->listarpagamentonovo($item->paciente_contrato_parcelas_id);
+                         if($pagamento_novo[0]->valor_pago > 0 ||  $pagamento_novo[0]->desconto_total  > 0 ){
+                              $item->valor = $pagamento_novo[0]->valor_pago; 
+                         }  
                           
                             $contador ++;
 //                            if ($empresa[0]->iugu_token != '' && $item->ativo == 't' && $item->invoice_id != '') {

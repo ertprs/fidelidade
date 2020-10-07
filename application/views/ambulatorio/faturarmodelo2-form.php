@@ -37,6 +37,9 @@ foreach ($forma_cadastrada as $value) {
  
 
 $total_desconto = $valor_restante * ($desconto_maximo / 100);
+$perfil_id = $this->session->userdata('perfil_id');
+$operador_id = $this->session->userdata('operador_id');
+
 ?>
 <div id="conteudo"> <!-- Inicio da DIV content -->
 
@@ -52,8 +55,10 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                     </tr>
                     <tr>
                         <td>
-                            <input type="text" name="valor_proc" id="valor_proc" class="input_pequeno" value="<?= number_format($pagamento[0]->valor, 2, ',', '.'); ?>" readonly />
-                            <input type="hidden" name="valorafaturar" id="valorafaturar" class="input_pequeno" value="<?= $valor_restante; ?>" readonly />
+                            <? if($perfil_id == 1 || $operador_id == 1){ ?>
+                               <input type="text" name="valor_proc"   id="valor_proc" alt="decimal" class="input_pequeno" value="<?= number_format($pagamento[0]->valor, 2, ',', '.'); ?>"  readonly />
+                               <input type="hidden" name="valorafaturar" id="valorafaturar" class="input_pequeno" value="<?= $valor_restante; ?>" readonly />
+                            <?} ?> 
                             <input type="hidden" name="paciente_contrato_parcelas_id" id="paciente_contrato_parcelas_id" class="texto01" value="<?= $paciente_contrato_parcelas_id; ?>"/>
                          </td>
                     </tr>  
@@ -65,7 +70,16 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
         <fieldset>        
             <legend>Adicionar Pagamento</legend>
             <table>   
-                
+                  <tr>
+                    <td>
+                        <label>Desconto</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input step="0.01" type="number" name="desconto" min="0" max="<?= $total_desconto ?>" value="0" id="desconto" class="input_pequeno" value="" />
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <label>Valor</label>
@@ -73,7 +87,9 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                     <td>
                         <label>Forma de pagamento</label>
                     </td> 
-                    
+                     <td>
+                        <label>Data</label>
+                    </td> 
                 </tr>
                 <tr>
                     <td>
@@ -94,6 +110,10 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                         </select>
 
                     </td> 
+                    <td>
+                           <input type="text" name="data" id="data" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
+                            <input type="hidden" name="data_antiga" id="data_antiga" alt="date" value='<?=date("d/m/Y",strtotime($pagamento[0]->data))?>' required/>
+                    </td>
 
                 </tr>
                 
@@ -127,8 +147,7 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                             </button>
                         <? } ?>
                     </td>
-                </tr>
-
+                </tr> 
             </table>
             <table>
                 <tr>
@@ -157,6 +176,7 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                             <th class="tabela_header">Valor</th>
                           
                             <th class="tabela_header">Forma de Pag.</th>
+                            <th class="tabela_header">Desconto</th>
                             
                             <!-- <th class="tabela_header">Data</th> -->
                             <th class="tabela_header" colspan="2">&nbsp;</th>
@@ -189,7 +209,7 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
                             <td class="<?php echo $estilo_linha; ?>" width="120px;"><center>R$ <?= number_format($item->valor_bruto, 2, ',', '.'); ?></center></td>
                          
                         <td class="<?php echo $estilo_linha; ?>" style="min-width: 300px;"><center><? echo $item->forma_pagamento; ?></center></td>
-                         
+                          <td class="<?php echo $estilo_linha; ?>" width="120px;"><center>R$ <?= number_format($item->desconto, 2, ',', '.'); ?></center></td>
                         <td class="<?php echo $estilo_linha; ?>" width="100px;">
                             <? $perfil_id = $this->session->userdata('perfil_id'); ?>
                             <? $operador_id = $this->session->userdata('operador_id'); ?>
@@ -238,6 +258,7 @@ $total_desconto = $valor_restante * ($desconto_maximo / 100);
 <script type="text/javascript" src="<?= base_url() ?>js/jquery-ui-1.10.4.js" ></script>
 <script type="text/javascript" src="<?= base_url() ?>js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>js/scripts_alerta.js" ></script>
+<script type="text/javascript" src="<?= base_url() ?>js/maskedmoney.js"></script>
 <?php
 $this->load->library('utilitario');
 // var_dump($this->session->flashdata('message'));die;
@@ -245,7 +266,20 @@ $utilitario = new Utilitario();
 $utilitario->pmf_mensagem($this->session->flashdata('message'));
 ?>
 <script type="text/javascript">
- 
+     
+    $("#valor_proc").maskMoney({prefix:'', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
+
+    $(function () {
+        $("#data").datepicker({
+            autosize: true,
+            changeYear: true,
+            changeMonth: true,
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            buttonImage: '<?= base_url() ?>img/form/date.png',
+            dateFormat: 'dd/mm/yy'
+        });
+    });
                         var formID = document.getElementById("form_faturar");
                         var send = $("#btnEnviar");
                         $(formID).submit(function (event) {
