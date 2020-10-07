@@ -13844,8 +13844,12 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 
     //        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
              if($empresa_conta[0]->conta_pagamento_associado == 't'){
-                if( $conta_pagamento[0]->conta_pagamento != ""){
+                if($conta_pagamento[0]->conta_pagamento != ""){
                  $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+                }elseif(isset($_POST['conta']) && @$_POST['conta'] != "") {
+                              $this->db->set('conta', @$_POST['conta']);
+                } else {
+                      $this->db->set('conta', $conta_id);
                 }
               }elseif(isset($_POST['conta']) && @$_POST['conta'] != "") {
                               $this->db->set('conta', @$_POST['conta']);
