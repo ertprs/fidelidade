@@ -68,8 +68,7 @@
             <fieldset>
                 <? if (count($listarpagamentoscontrato) > 0) { ?>
                     <table id="table_justa">
-                        <thead>
-
+                        <thead> 
                             <tr>
                                 <th width="70px;" class="tabela_header">Parcela</th>
                                 <th width="150px;" class="tabela_header">Paciente</th>
@@ -78,14 +77,17 @@
                                 <th width="70px;" class="tabela_header">Situacao</th>
                                 <th width="70px;" class="tabela_header">Observações</th>
                                 <th width="70px;" colspan="6" class="tabela_header"></th>
-        <!--                                <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
+        <!--                    <th class="tabela_header">Observa&ccedil;&otilde;es</th>-->
                             </tr>
                         </thead>
                         <?
                         $key = $empresa[0]->iugu_token;
                         Iugu::setApiKey($key);
                         $contador = 0; 
-                        foreach ($listarpagamentoscontrato as $item) {
+                        foreach ($listarpagamentoscontrato as $item) { 
+                             if($item->dependente_id == ""){
+                                $item->dependente_id = $paciente_id;
+                             }
                             // echo '<pre>';
                             // print_r($listarpagamentoscontrato);
                             // die;

@@ -668,6 +668,10 @@
             <?
             $contador = 0;
             foreach ($listarpagamentosconsultaextra as $item) {
+                if($item->dependente_id == ""){
+                    $item->dependente_id = $paciente_id;
+                }
+                                
                 $contador ++;
                 ?>
                 <?
