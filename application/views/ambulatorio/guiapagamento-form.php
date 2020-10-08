@@ -573,17 +573,20 @@
                                     }
                                     ?>)
                                 </td>
-                                <?// if ($item->manual == 't') { ?>
-
-                                    <td class="<?php echo $estilo_linha; ?>" width="60px;">
-                                        <div class="bt_link">
-                                            <a href="<?= base_url() ?>ambulatorio/guia/impressaorecibo/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo
-                                            </a>
-                                        </div>
-                                    </td>
-
-                            <? //} ?>
-
+                                
+                             <? if($pagamento_novo[0]->valor_pago > 0 ||  $pagamento_novo[0]->desconto_total  > 0 ){ ?> 
+                                <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                      <div class="bt_link">
+                                        <a style="cursor: pointer; " onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/recibomodelo2/<?= $item->paciente_contrato_parcelas_id ?>', '_blank', 'width=1000,height=640');">Recibo</a>
+                                     </div>
+                                </td> 
+                            <?  }else{ ?>
+                                 <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                    <div class="bt_link">
+                                        <a href="<?= base_url() ?>ambulatorio/guia/impressaorecibo/<?= $paciente_id ?>/<?= $contrato_id ?>/<?= $item->paciente_contrato_parcelas_id ?>">Recibo</a>
+                                    </div>
+                                 </td> 
+                            <?php }?>
                                     
 
                  <?

@@ -4849,9 +4849,9 @@ class Guia extends BaseController {
         $this->guia->auditoriacadastro($paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO '.$contrato_id.' DA PARCELA '.$data);
                             
         // chamando na propria tela  a função alterando a data 
-//        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
+        // $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
         // chamando uma função existente confirmando o pagamento;
-        //botei essa $paciente_id duas vezes para que quando for dependente pegar o credor devedor do dependente
+        // botei essa $paciente_id duas vezes para que quando for dependente pegar o credor devedor do dependente
 
         $codigo = $this->guia->confirmarpagamento($paciente_contrato_parcelas_id, $paciente_id, $paciente_id);
 
@@ -8682,8 +8682,7 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
          $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
          $data['forma_cadastrada'] = $this->guia->ParcelaFormasPagamento($paciente_contrato_parcelas_id);
          $data['contas'] = $this->guia->listarcontas(); 
-         $data['valor'] = 0.00;
-         
+         $data['valor'] = 0.00; 
          $this->load->View('ambulatorio/faturarmodelo2-form', $data);
     }
     
@@ -8718,6 +8717,57 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
         redirect(base_url() . "ambulatorio/guia/faturarmodelo2/$paciente_contrato_parcelas_id", $data); 
     }
   
+     function recibomodelo2($paciente_contrato_parcelas_id) {
+         $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+         $data['forma_cadastrada'] = $this->guia->ParcelaFormasPagamento($paciente_contrato_parcelas_id);
+         $data['contas'] = $this->guia->listarcontas(); 
+         $data['valor'] = 0.00; 
+         $this->load->View('ambulatorio/recibomodelo2-form', $data);
+    }
+    
+    
+     function impressaorecibo2($paciente_contrato_parcelas_faturar_id) {
+
+        $data['emissao'] = date("d-m-Y");
+        $empresa_id = $this->session->userdata('empresa_id');
+        $data['empresa'] = $this->guia->listarempresa($empresa_id);
+         
+        $pagamento = $this->guia->listarpagamentofaturar($paciente_contrato_parcelas_faturar_id);
+         
+        $data['pagamento'] = $pagamento;
+        $paciente_id =  $pagamento[0]->paciente_id;
+        // echo '<pre>';
+        //  print_r($pagamento); 
+        //  die;
+        $valor_total = 0;
+
+        $data['paciente'] = $this->paciente->listardados($paciente_id);
+        $valor = number_format($pagamento[0]->valor, 2, ',', '.');
+         
+//       echo "<pre>";
+//        
+//        print_r($pagamento);
+//        
+//        die(); 
+        $data['valor'] = $valor;
+
+        if ($valor == '0,00') {
+            $data['extenso'] = 'ZERO';
+        } else {
+            $valoreditado = str_replace(",", "", str_replace(".", "", $valor));
+            // if ($dinheiro == "t") {
+            $data['extenso'] = GExtenso::moeda($valoreditado);
+            // }
+        }
+
+        $dataFuturo = date("Y-m-d");
+
+//        $this->load->View('ambulatorio/impressaorecibomed', $data);
+        $this->load->View('ambulatorio/impressaorecibo', $data);
+    }
+
 }
 
 

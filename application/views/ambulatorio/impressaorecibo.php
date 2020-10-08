@@ -13,7 +13,7 @@ if($pagamento[0]->data_pagamento != ""){
     $data_pagamento = $pagamento[0]->data;
 }
 
-    $data_referencia = $pagamento[0]->data;
+ $data_referencia = $pagamento[0]->data;
     
 ?>
 </p><p><p><h2 align="Center"><FONT color="#333333" face="Engravers MT, Broadway BT">RECIBO</h2></FONT><br clear="all">

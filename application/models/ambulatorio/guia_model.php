@@ -13961,6 +13961,18 @@ if($return[0]->financeiro_credor_devedor_id == ""){
          return $this->db->get()->result();
     }
     
+    function listarpagamentofaturar($paciente_contrato_parcelas_faturar_id){
+        $this->db->select('pcpf.valor_bruto as valor,pc.paciente_id,pcpf.data_cadastro as data_pagamento,pcp.data,fp.nome as plano,p.nome');
+        $this->db->from('tb_paciente_contrato_parcelas_faturar pcpf');
+        $this->db->join('tb_paciente_contrato_parcelas pcp','pcp.paciente_contrato_parcelas_id = pcpf.paciente_contrato_parcelas_id','left');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id','left');
+        $this->db->join('tb_paciente p','p.paciente_id = pc.paciente_id','left');
+        $this->db->join('tb_forma_pagamento fp','fp.forma_pagamento_id = pc.plano_id','left');
+        $this->db->where('pcpf.paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id); 
+        $this->db->where('pcpf.ativo','t');
+        return $this->db->get()->result();
+    }
+    
     
 }
 
