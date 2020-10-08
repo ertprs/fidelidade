@@ -13775,9 +13775,9 @@ if($return[0]->financeiro_credor_devedor_id == ""){
              
             
                 if($paciente_contrato_parcelas_id > 0){
-                    $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));   
-                    $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
-                    $this->db->update('tb_paciente_contrato_parcelas');
+//                    $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));   
+//                    $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+//                    $this->db->update('tb_paciente_contrato_parcelas');
                 }
                 $this->db->select('ae.data');
                 $this->db->from('tb_paciente_contrato_parcelas ae');

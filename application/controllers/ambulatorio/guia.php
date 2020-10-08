@@ -4847,7 +4847,6 @@ class Guia extends BaseController {
         $data =  date("d/m/Y", strtotime(str_replace("-", "/", $parcela[0]->data)));
 
         $this->guia->auditoriacadastro($paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO '.$contrato_id.' DA PARCELA '.$data);
-        
                             
         // chamando na propria tela  a função alterando a data 
 //        $teste2 = $this->gravaralterarpagamentodata($paciente_contrato_parcelas_id, $paciente_id, $contrato_id);
