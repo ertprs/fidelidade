@@ -13755,9 +13755,14 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
             $valor = $parcela[0]->valor;
             $conta_id = $parcela[0]->conta_id;
-            $plano = $parcela[0]->plano;
-
+            $plano = $parcela[0]->plano;  
             $credor = $parcela[0]->financeiro_credor_devedor_id; 
+            
+            $this->db->select('pcp.*,pc.parcelas');
+            $this->db->from('tb_paciente_contrato_parcelas pcp');
+            $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id');
+            $this->db->where('pcp.paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+            $valor_real =$this->db->get()->result();
              
             $data_vencimento =   date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
             
@@ -13878,11 +13883,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 
             $soma =  $this->somapagamentos($paciente_contrato_parcelas_id);  
             
-            $this->db->select('pcp.*,pc.parcelas');
-            $this->db->from('tb_paciente_contrato_parcelas pcp');
-            $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id');
-            $this->db->where('pcp.paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
-            $valor_real =$this->db->get()->result();
+            
               
             if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma)  <= 0){
                 $this->db->set('manual', 't'); 
