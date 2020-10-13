@@ -8095,7 +8095,7 @@ function geraCodigoBanco($numero) {
                     // echo '<br>';
                   }  
                    if($paciente_contrato_parcelas_id != ""){
-                     print_r($paciente_contrato_parcelas_id);
+//                     print_r($paciente_contrato_parcelas_id);
                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem); 
 //                     if($mensagem == 'Liquidação'){
 //                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
