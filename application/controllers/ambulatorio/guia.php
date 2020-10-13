@@ -8071,6 +8071,9 @@ function geraCodigoBanco($numero) {
           $arquivo6 = fopen('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
           // Lê o conteúdo do arquivo  
           //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
+        $paciente_contrato_parcelas_id_antigo = 0;
+        $mensagem_antiga = "";
+        
           while (!feof($arquivo6)) {
               //Mostra uma linha do arquivo 
               $linha = fgets($arquivo6, 1024);
@@ -8090,22 +8093,37 @@ function geraCodigoBanco($numero) {
                    if($mensagem == 'Liquidação'){
                     // echo $servico.' - '.$mensagem.' - '.$nome;
                     // echo '<br>';
-                  }
-
-
+                  }  
                    if($paciente_contrato_parcelas_id != ""){
-
-                        $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem);
-
-                     if($mensagem == 'Liquidação'){
-                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
+                     print_r($paciente_contrato_parcelas_id);
+                     $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem); 
+//                     if($mensagem == 'Liquidação'){
+//                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
+//                     } 
+                   } 
+               }           
+               if ($segmento == "U") {  
+                    $data_pagamento =  substr($linha, 137, 8); 
+                    $dia_pagamento  = substr($data_pagamento, 0, 2); 
+                    $mes_pagamento  = substr($data_pagamento, 2,2); 
+                    $ano_pagamento  = substr($data_pagamento, 4,4);
+                    $data_pagamento_formatada = $ano_pagamento."-".$mes_pagamento."-".$dia_pagamento; 
+                     if($paciente_contrato_parcelas_id != "" && $paciente_contrato_parcelas_id > 0){ 
+//                       print_r(" --".$paciente_contrato_parcelas_id_antigo); 
+//                       print_r(" --".$mensagem_antiga); 
+//                       print_r(" --".$data_pagamento_formatada);  
+                        if($mensagem_antiga == 'Liquidação'){ 
+                           $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id_antigo,$data_pagamento_formatada);
+                        } 
                      }
-
-                   }
-// die;
-               }
+//                      echo "<br>";  
+               } 
+               if(isset($paciente_contrato_parcelas_id) && $paciente_contrato_parcelas_id != "" && $paciente_contrato_parcelas_id > 0){
+                   $paciente_contrato_parcelas_id_antigo = $paciente_contrato_parcelas_id;
+                   $mensagem_antiga = $mensagem;
+               } 
           }       
-          die;
+//          die;
        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
        } 

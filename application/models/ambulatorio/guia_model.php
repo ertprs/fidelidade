@@ -13565,7 +13565,7 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         
     }
 
-    function confirmarparcelasicoob($paciente_contrato_parcelas_id){
+    function confirmarparcelasicoob($paciente_contrato_parcelas_id,$data_pagamento_formatada){
         $horario = date('Y-m-d H:i:s');
         $operador  = $this->session->userdata('operador_id');
 
@@ -13583,19 +13583,17 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         // echo '<br>';
 
         $data =  date("d/m/Y", strtotime(str_replace("-", "/", $return[0]->data)));
-         $this->auditoriacadastro($return[0]->paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO VIA IMPORTAÇÃO SICOOB'.$return[0]->paciente_contrato_id.' DA PARCELA '.$data);
+        $this->auditoriacadastro($return[0]->paciente_id, 'CONFIRMOU O PAGAMENTO DO CONTRATO VIA IMPORTAÇÃO SICOOB'.$return[0]->paciente_contrato_id.' DA PARCELA '.$data);
         
         $_POST['valor'] = str_replace(".", ",", $return[0]->valor);
-        $_POST['data'] =  date('Y-m-d');
+        $_POST['data'] =  $data_pagamento_formatada;
         $_POST['conta'] = 20;
         $_POST['forma_rendimento_id'] = 7; 
 
         //  print_r($_POST);
-        //  echo '<br>';
-        
+        //  echo '<br>'; 
          $this->confirmarpagamento($return[0]->paciente_contrato_parcelas_id, $return[0]->paciente_id, $return[0]->paciente_id, 'NAO');
-
-
+ 
     }
     
     function listarsituacaoparcelasicoob($paciente_contrato_parcelas_id){
