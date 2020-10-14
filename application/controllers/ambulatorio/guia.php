@@ -8068,7 +8068,7 @@ function geraCodigoBanco($numero) {
         function lerarquivoretornoimportadocnab($nome_arquivo = NULL) {
             $chave_pasta = $this->session->userdata('empresa_id');    
             
-          $arquivo6 = fopen('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+         $arquivo6 = fopen('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
           // Lê o conteúdo do arquivo  
           //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
         $paciente_contrato_parcelas_id_antigo = 0;
