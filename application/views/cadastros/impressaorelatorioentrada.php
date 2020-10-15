@@ -81,8 +81,7 @@
                     $total += $item->valor;
                     ?>
                     <tr>
-                    <!-- <td ><?= @$item->entradas_id; ?></td> -->
-                        
+                    <!-- <td ><?= @$item->entradas_id; ?></td> --> 
                         <td ><? if($item->empresa_cadastro_id != ""){
                            echo @$item->empresa_cadastro_id;
                         }else{
@@ -95,11 +94,12 @@
                         <td ><?= substr($item->data, 8, 2) . "/" . substr($item->data, 5, 2) . "/" . substr($item->data, 0, 4); ?></td>
                         <td ><?= $item->tipo; ?>&nbsp;</td>
                         <td ><?= $item->classe; ?>&nbsp;</td>
-                        <td ><?= number_format($item->valor, 2, ",", "."); ?></td>                        
-                        <td ><?= $item->operador; ?></td>                     
-                        <? if ($mostrar_form_pagamento == 'SIM'): ?>
+                        <td ><?= number_format($item->valor, 2, ",", "."); ?></td>   
+                         <? if ($mostrar_form_pagamento == 'SIM'): ?>
                             <td ><?= ($item->forma_rendimento  != "" ) ? $item->forma_rendimento : $item->forma_rendimento2 ; ?>&nbsp;</td>
                         <? endif; ?>
+                        <td ><?= $item->operador; ?></td>                     
+                       
 
 
                         <td ><?= $item->observacao; ?>&nbsp;</td>

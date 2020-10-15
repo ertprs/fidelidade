@@ -374,7 +374,8 @@ class caixa_model extends Model {
                             p.situacao,
                             s.paciente_contrato_parcelas_id,
                             s.empresa_cadastro_id,
-                            s.forma_rendimento_id');
+                            s.forma_rendimento_id,
+                            s.conta as conta_id');
         $this->db->from('tb_entradas s');
         $this->db->join('tb_forma_entradas_saida fe', 'fe.forma_entradas_saida_id = s.conta', 'left');
         $this->db->join('tb_financeiro_credor_devedor fcd', 'fcd.financeiro_credor_devedor_id = s.nome', 'left');
