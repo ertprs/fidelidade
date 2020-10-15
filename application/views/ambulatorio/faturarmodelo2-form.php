@@ -302,11 +302,12 @@ $utilitario->pmf_mensagem($this->session->flashdata('message'));
                             restante_semPonto = document.form_faturar.valorafaturar.value;
                             restante = parseFloat(restante_semPonto);
                             valor_max = restante - desconto;
+                            valor_max =  parseFloat(valor_max.toFixed(2));
                             if (valor_max < 0) {
                                 valor_max = 0;
                             }
                             $('#valor1').prop("max", valor_max);
-                            $('#valorFaturarVisivel').val(valor_max);
+                            $('#valorFaturarVisivel').val(valor_max); 
                             return true;
                         }
                         descontoFuncao();
