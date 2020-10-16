@@ -1405,7 +1405,7 @@ class Guia extends BaseController {
         $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_avulsa_id);
         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
         // echo '<pre>';
-    //    var_dump($data['voucher']); die;
+        // var_dump($data['voucher']); die;
         $this->load->View('ambulatorio/voucherconsultaavulsa-form', $data);
     }
 
@@ -2369,7 +2369,18 @@ class Guia extends BaseController {
     }
 
     function excluirconsultaavulsa($paciente_id, $contrato_id, $consulta_id) {
-
+                            
+        $data['voucher'] = $this->guia->listarvoucherconsultaavulsa($consulta_id);
+        if(count($data['voucher']) > 0){ 
+            $data['mensagem'] = 'Erro, é preciso excluir os vouchers para excluir a parcela ';
+            $this->session->set_flashdata('message', $data['mensagem']);          
+            redirect(base_url() . "ambulatorio/guia/listarpagamentosconsultaavulsa/$paciente_id/$contrato_id");
+            return -1;
+        }
+//        echo "<pre>";
+//        print_r($data['voucher']);
+//        die();
+        
         $pagamento_gerencianet = $this->paciente->listarpagamentoscontratoconsultaavulsaGN($consulta_id);
         $empresa = $this->guia->listarempresa();
 
