@@ -9574,6 +9574,7 @@ ORDER BY ae.agenda_exames_id)";
                             e.producaomedicadinheiro,
                             e.celular,
                             e.iugu_token,
+                            e.iugu_token_conta_principal,
                             e.titular_flag,
                             e.modelo_carteira,
                             m.nome as municipio,

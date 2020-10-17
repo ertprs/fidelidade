@@ -104,6 +104,12 @@
                         <input type="text" id="iugu_token" class="texto07" name="iugu_token" value="<?= @$obj->_iugu_token; ?>" />
                     </dd> 
                     <dt>
+                        <label>ID Conta Principal IUGU</label>
+                    </dt>
+                    <dd>
+                        <input type="text" id="iugu_token_conta_principal" class="texto07" name="iugu_token_conta_principal" value="<?= @$obj->_iugu_token_conta_principal; ?>" />
+                    </dd>
+                    <dt>
                         <label>IUGU Somente Cartão</label>
                     </dt>
                     <dd>

@@ -421,6 +421,7 @@ class empresa_model extends Model {
             }
 
             $this->db->set('iugu_token', $_POST['iugu_token']);
+            $this->db->set('iugu_token_conta_principal', $_POST['iugu_token_conta_principal']);
             $this->db->set('usuario_epharma', $_POST['usuario_epharma']);
             $this->db->set('senha_epharma', $_POST['senha_epharma']);
             $this->db->set('url_epharma', $_POST['url_epharma']);
@@ -575,6 +576,7 @@ class empresa_model extends Model {
                                logradouro,
                                numero,
                                iugu_token,
+                               iugu_token_conta_principal,
                                email,
                                cadastro,
                                titular_flag,
@@ -635,6 +637,7 @@ class empresa_model extends Model {
             $this->_cnpj = $return[0]->cnpj;
             $this->_razao_social = $return[0]->razao_social;
             $this->_iugu_token = $return[0]->iugu_token;
+            $this->_iugu_token_conta_principal = $return[0]->iugu_token_conta_principal;
             $this->_celular = $return[0]->celular;
             $this->_codigo_convenio_banco = $return[0]->codigo_convenio_banco;
             $this->_tipo_carencia = $return[0]->tipo_carencia;

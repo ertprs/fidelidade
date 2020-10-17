@@ -373,7 +373,7 @@
 
                 <div>
                     <label>Email</label>
-                    <input type="text" id="txtCns" name="cns"  class="texto06" value="<?= @$obj->_cns; ?>" <?= (in_array('email', $campos_obrigatorios)) ? 'required' : '' ?>/>
+                    <input type="text" id="txtCns" name="cns"  onchange="validaremail2()" class="texto06" value="<?= @$obj->_cns; ?>" <?= (in_array('email', $campos_obrigatorios)) ? 'required' : '' ?>/>
                 </div>
                 <div>
                     <label>Telefone</label>
@@ -395,7 +395,7 @@
             <div>
                 <label>Email</label>
 
-                <input type="text" id="txtUsuario" name="txtUsuario"  class="texto04" value="<?= @$obj->_cns; ?>" />
+                <input type="text" id="txtUsuario" name="txtUsuario"  class="texto04" onchange="validaremail()" value="<?= @$obj->_cns; ?>" />
             </div>
             <div>
                 <label>Senha App</label>
@@ -543,6 +543,32 @@
                                 }
                             });
                         });
+
+                        function validaremail(){
+                            var email = $("#txtUsuario").val();
+                            if(email != ''){
+                                $.getJSON('<?= base_url() ?>autocomplete/verificaremailpaciente', {email: email,  ajax: true}, function (j) {
+                                    if(j != ''){
+                                        alert(j);
+                                        $("#txtUsuario").val('');
+                                        $("#txtCns").val('');
+                                    }
+                                });
+                            }
+                        }
+
+                        function validaremail2(){
+                            var email = $("#txtCns").val();
+                            if(email != ''){
+                                $.getJSON('<?= base_url() ?>autocomplete/verificaremailpaciente', {email: email,  ajax: true}, function (j) {
+                                    if(j != ''){
+                                        alert(j);
+                                        $("#txtUsuario").val('');
+                                        $("#txtCns").val('');
+                                    }
+                                });
+                            }
+                        }
 
                         function verificarCPF() {
                             // cpfcnpj

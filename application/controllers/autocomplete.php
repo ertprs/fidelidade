@@ -980,14 +980,27 @@ class Autocomplete extends Controller {
         }
     }
 
+    function verificaremailpaciente(){
+        $email = $_GET['email'];
+        $mensagem = '';
+
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $mensagem = '';
+        }else{
+            $mensagem = 'E-mail com Formato Invalido';
+        }
+
+        echo json_encode($mensagem);
+    }
+
     function pagamentoautomaticoiugu() { 
         
         $pagamento = $this->paciente_m->listarparcelaiugucartao();
-//         echo "<pre>";
-//        print_r($pagamento);
-//        die;
+    //     echo "<pre>";
+    //    print_r($pagamento);
+    //    die;
         foreach ($pagamento as $item) {           
-          $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
+           $this->guia->confirmarenviohoje($item->paciente_contrato_parcelas_id); 
         } 
  
         set_time_limit(7200); // Limite de tempo de execução: 2h. Deixe 0 (zero) para sem limite
@@ -996,6 +1009,7 @@ class Autocomplete extends Controller {
         $retorno = 'false';
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;
+        $account_id = $empresa[0]->iugu_token_conta_principal;
         Iugu::setApiKey($key); // Ache sua chave API no Painel e cadastre nas configurações da empresa
         foreach ($pagamento as $item) { 
              
@@ -1014,16 +1028,24 @@ class Autocomplete extends Controller {
             $payment_token = Iugu_PaymentToken::create(
                             Array(
                                 'method' => 'credit_card',
+                                'account_id' => $account_id,
                                 'data' => Array(
                                     'number' => $cartao_cliente[0]->card_number,
+                                    //  'number' => 4111111111111111, // Cartão Teste, IUGU agora so aceita teste com cartões deles
                                     'verification_value' => $cartao_cliente[0]->card_csv,
                                     'first_name' => $cartao_cliente[0]->first_name,
                                     'last_name' => $cartao_cliente[0]->last_name,
                                     'month' => $cartao_cliente[0]->mes,
                                     'year' => $cartao_cliente[0]->ano,
                                 ),
+                                'test' => false, // TRUE para mandar como teste
+
                             )
             );
+
+            // echo '<pre>';
+            // print_r($payment_token);
+            // die;
 //            echo '<pre>';
 //            var_dump($cartao_cliente);
 //            die;
@@ -1072,7 +1094,9 @@ class Autocomplete extends Controller {
             $retorno = 'true';
             $gravar = $this->guia->gravarintegracaoiuguautocomplete($gerar["url"], $gerar["invoice_id"], $paciente_contrato_parcelas_id, $gerar["message"], $gerar["LR"]);
         }
-      
+             echo '<pre>';
+             print_r($gerar);
+             die;
         echo json_encode($retorno);
     }
 
