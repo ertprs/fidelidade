@@ -8094,7 +8094,7 @@ function geraCodigoBanco($numero) {
               $nosso_numero =  substr($linha, 37, 15);
               $servico =  substr($linha, 15, 2); 
               if ($segmento == "T") { 
-                //$nome =  substr($linha, 105, 25); 
+                $nome =  substr($linha, 105, 25); 
                 //   print_r($nosso_numero);
                 //   echo '<br>';
                 //   die;
@@ -8103,17 +8103,20 @@ function geraCodigoBanco($numero) {
                    $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
                    $mensagem = $this->servicosicoob($servico);
 
-                   if($mensagem == 'Liquidação'){
-                    // echo $servico.' - '.$mensagem.' - '.$nome;
-                    // echo '<br>';
-                  }  
+                //    if($mensagem == 'Liquidação'){
+                //     echo $servico.' - '.$mensagem.' - '.$nome;
+                //     echo '<br>';
+                //   }  
                    if($paciente_contrato_parcelas_id != ""){
+                    //    echo ' - '.$paciente_contrato_parcelas_id;
 //                     print_r($paciente_contrato_parcelas_id);
                      $this->guia->registrarpagamentosicoob($paciente_contrato_parcelas_id,$servico,$nosso_numero,$mensagem); 
-//                     if($mensagem == 'Liquidação'){
-//                         $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
-//                     } 
+                        // if($mensagem == 'Liquidação'){
+                        //     $this->guia->confirmarparcelasicoob($paciente_contrato_parcelas_id);
+                        // } 
                    } 
+
+                //    echo '<br>';
                }           
                if ($segmento == "U") {  
                     $data_pagamento =  substr($linha, 137, 8); 
@@ -8136,7 +8139,7 @@ function geraCodigoBanco($numero) {
                    $mensagem_antiga = $mensagem;
                } 
           }       
-//          die;
+        //  die;
        if (!unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo)) {    
              unlink('./upload/retornoimportadoscnab/' . $chave_pasta . '/' . $nome_arquivo);           
        } 
