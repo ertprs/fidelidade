@@ -1805,12 +1805,14 @@ class Guia extends BaseController {
         $codigoUF = $this->utilitario->codigo_uf($cliente[0]->codigo_ibge);
 
         $empresa = $this->guia->listarempresa();
+        $account_id = $empresa[0]->iugu_token_conta_principal;
         $key = $empresa[0]->iugu_token;
 
         $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($paciente_contrato_parcelas_id);
         $valor = $pagamento[0]->valor * 100;
         $data = date('d/m/Y', strtotime($pagamento[0]->data));
+        $data2 = date('Y-m-d', strtotime($pagamento[0]->data));
 //        var_dump($prefixo); 
 //        var_dump($celular_s_prefixo); 
         $description = $empresa[0]->nome . " - " . $pagamento[0]->plano;
@@ -1853,9 +1855,9 @@ class Guia extends BaseController {
             ));
 
 
-//        echo '<pre>';
-//        var_dump($gerar);
-//        die;
+        // echo '<pre>';
+        // print_r($gerar);
+        // die;
             if (count($gerar["errors"]) > 0) {
                 $mensagem = 'Erro ao gerar pagamento: \n';
                 foreach ($gerar["errors"] as $key => $item) {

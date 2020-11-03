@@ -1209,7 +1209,6 @@ class Guia extends BaseController {
     }
 
     function gerarpagamentoiugu($paciente_id, $contrato_id, $paciente_contrato_parcelas_id) {
-
         $cliente = $this->paciente->listardados($paciente_id);
         $celular = preg_replace('/[^\d]+/', '', $cliente[0]->celular);
         $celular_s_prefixo = substr(preg_replace('/[^\d]+/', '', $cliente[0]->celular), 2, 50);
@@ -1265,9 +1264,9 @@ class Guia extends BaseController {
                         )
             ));
 
-//        echo '<pre>';
-//        var_dump($gerar);
-//        die;
+       echo '<pre>';
+       print_r($gerar);
+       die;
             if (count($gerar["errors"]) > 0) {
                 $mensagem = 'Erro ao gerar pagamento: \n';
                 foreach ($gerar["errors"] as $key => $item) {
