@@ -3161,14 +3161,16 @@ class Autocomplete extends Controller {
         if (count($data['pacientes']) > 0) {
             foreach ($data['pacientes'] as $item) {
 
-
+                
                 $data['exames'] = $this->guia->listarexames($item->paciente_id);
                 $contrato_ativo = $this->guia->listarcontratoativo($item->paciente_id); 
                 if (count($contrato_ativo) > 0) {
 
 
-
+                  
                     if ($contrato_ativo[count($contrato_ativo) - 1]->data != "") {
+
+                        
 
                         $paciente_contrato_id = $contrato_ativo[0]->paciente_contrato_id;
                         $data_contrato = $contrato_ativo[count($contrato_ativo) - 1]->data;

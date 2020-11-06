@@ -7334,7 +7334,7 @@ AND data <= '$data_fim'";
             $this->db->set('first_name', $_POST['first_name']);
             $this->db->set('last_name', $_POST['last_name']);
 
-            if ($_POST['cartao_id'] != '') {
+            if (@$_POST['cartao_id'] != '') {
                 $this->db->set('operador_atualizacao', $operador_id);
                 $this->db->set('data_atualizacao', $horario);
                 $this->db->where('paciente_id', $paciente_id);
@@ -10054,7 +10054,7 @@ ORDER BY ae.agenda_exames_id)";
             $return = $this->db->get()->result();
 
 
-            $this->db->select('qtd_dias,valor12');
+            $this->db->select('qtd_dias,valor1, valor6, valor12');
             $this->db->from('tb_forma_pagamento');
             $this->db->where('forma_pagamento_id', $return[0]->plano_id);
 
@@ -10081,6 +10081,27 @@ ORDER BY ae.agenda_exames_id)";
             $parcelas = substr($return[0]->parcelas, 0, 2);
             $parcelas = (int) $parcelas;
 
+
+            if($parcelas == 1){
+                $valor_ajustado_atualizado = $return_plano[0]->valor1;
+            }elseif($parcelas == 6){
+                $valor_ajustado_atualizado = $return_plano[0]->valor6;
+            }elseif($parcelas == 12){
+                $valor_ajustado_atualizado = $return_plano[0]->valor12;
+            }elseif($parcelas == 5){
+                $valor_ajustado_atualizado = $return_plano[0]->valor5;
+            }elseif($parcelas == 10){
+                $valor_ajustado_atualizado = $return_plano[0]->valor10;
+            }elseif($parcelas == 11){
+                $valor_ajustado_atualizado = $return_plano[0]->valor11;
+            }elseif($parcelas == 23){
+                $valor_ajustado_atualizado = $return_plano[0]->valor23;
+            }elseif($parcelas == 24){
+                $valor_ajustado_atualizado = $return_plano[0]->valor24;
+            }
+
+
+
             $this->db->select('pcp.*');
             $this->db->from('tb_paciente_contrato_parcelas pcp');
             $this->db->join('tb_paciente_contrato pc', 'pc.paciente_contrato_id = pcp.paciente_contrato_id');
@@ -10106,7 +10127,8 @@ ORDER BY ae.agenda_exames_id)";
             $this->db->set('plano_id', $return[0]->plano_id);
             $this->db->set('data_cadastro', $nova_data_contrato_atual);
             $this->db->set('operador_cadastro', $operador_id);
-            $this->db->set('parcelas', $return[0]->parcelas);
+            // $this->db->set('parcelas', $return[0]->parcelas);
+            $this->db->set('parcelas', $parcelas.' x '.$valor_ajustado_atualizado);
             $this->db->set('pago_todos_iugu', $return[0]->pago_todos_iugu);
             $this->db->insert('tb_paciente_contrato');
             $paciente_contrato_novo_id = $this->db->insert_id();
@@ -10151,7 +10173,8 @@ ORDER BY ae.agenda_exames_id)";
                 if ($ajuste == 0 || $ajuste == "") {
                     $this->db->set('valor', $return_plano[0]->valor12);
                 } else {
-                    $this->db->set('valor', $ajuste);
+                    // $this->db->set('valor', $ajuste);
+                    $this->db->set('valor', $valor_ajustado_atualizado);
                 }
                 $this->db->set('parcela', $i);
                 $this->db->set('paciente_contrato_id', $paciente_contrato_novo_id);
