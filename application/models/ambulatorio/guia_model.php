@@ -7250,6 +7250,7 @@ AND data <= '$data_fim'";
             $this->db->set('parcela', $parcela);
             $this->db->set('data_cadastro', $horario);
             $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('classe', $_POST['classe']);
             $this->db->insert('tb_paciente_contrato_parcelas');
             $paciente_contrato_parcelas_id = $this->db->insert_id();
             if ($valor == 0.00) {
@@ -13845,11 +13846,19 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 if($parcela[0]->taxa_adesao == 't'){
                     $this->db->set('classe', 'ADESÃO');
                 }else{ 
-                    if(substr($valor_real[0]->parcelas, 0,2) == 1){
-                       $this->db->set('classe', 'PARCELA UNICA'); 
+
+                    // print_r($valor_real[0]->classe);
+                    // die;
+                    if($valor_real[0]->classe != ''){
+                        $this->db->set('classe', $valor_real[0]->classe);
                     }else{
-                       $this->db->set('classe', 'PARCELA'); 
-                    }  
+                        if(substr($valor_real[0]->parcelas, 0,2) == 1){
+                            $this->db->set('classe', 'PARCELA UNICA'); 
+                         }else{
+                            $this->db->set('classe', 'PARCELA'); 
+                         } 
+                    }
+                     
                 }
                 // $this->db->set('classe', 'PARCELA');
                 $this->db->set('nome', $credor);

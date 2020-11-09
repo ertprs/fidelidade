@@ -73,7 +73,15 @@
                             <label>Data</label>                      
                             <input type="text" id="data" name="data"  class="texto02" value="" required/>
                         </div>
-
+                        <div>
+                            <label>Classe</label>  
+                            <select name="classe" id="classe" class="size2">
+                            <option value="PARCELA">PARCELA</option>
+                            <option value="CARTEIRA">CARTEIRA</option>
+                            <option value="VOUCHER">VOUCHER</option>
+                            <option value="PARCELA UNICA">PARCELA UNICA</option>
+                        </select>
+                        </div>
                     </fieldset>
                     <button type="submit">Enviar</button>
                 </form>
