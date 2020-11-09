@@ -5520,7 +5520,7 @@ table tr:hover  #achadoERRO{
         $this->load->View('ambulatorio/alterardatapagamento-form', $data);
     }
 
-    function excluirparcelacontratoempresacadastro($parcela_id, $empresa_cadastro_id) {                          
+    function excluirparcelacontratoempresacadastro($parcela_id, $empresa_cadastro_id,$contrato_id) {                          
         $pagamento_iugu = $this->paciente->listarpagamentoscontratoparcelaiugu($parcela_id);                           
         $empresa = $this->guia->listarempresa();
         $key = $empresa[0]->iugu_token;

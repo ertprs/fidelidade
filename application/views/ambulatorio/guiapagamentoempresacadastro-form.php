@@ -255,7 +255,7 @@
                                         <td class="<?php echo $estilo_linha; ?>" width="60px;" >
 
                                             <div class="bt_link">
-                                                <a href="<?= base_url() ?>ambulatorio/guia/confirmarpagamentoempresa/<?= @$item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>" target="_blank">Confirmar
+                                                <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/confirmarpagamentoempresa/<?= @$item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>', '_blank', 'width=500,height=200,left=510,top=300');"   >Confirmar
                                                 </a>
                                             </div>
 
@@ -459,7 +459,7 @@
                                     else:
                                         ?> 
                                         <td onclick="javascript: return confirm('Deseja realmente excluir a parcela?');"  class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
-                                                <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontratoempresacadastro/<?= @$item->paciente_contrato_parcelas_id ?>/<?= @$empresa_cadastro_id ?>">Excluir
+                                                <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontratoempresacadastro/<?= @$item->paciente_contrato_parcelas_id ?>/<?= @$empresa_cadastro_id ?>/<?= $contrato_id; ?>">Excluir
                                                 </a></div>  
                                         </td> 
                                     <?
@@ -587,13 +587,13 @@
                         ?>
 
                         <td   class="<?php echo $estilo_linha; ?>" ><div style="width: 50px;" class="bt_link">
-                                <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontratoempresacadastro/<?= @$item->paciente_contrato_parcelas_id ?>/<?= @$empresa_cadastro_id ?>">Excluir
+                                <a id="" href="<?= base_url() ?>ambulatorio/guia/excluirparcelacontratoempresacadastro/<?= @$item->paciente_contrato_parcelas_id ?>/<?= @$empresa_cadastro_id ?>/<?= $contrato_id; ?>">Excluir
                                 </a></div> 
 
                         </td>
 
                         <td   class="<?php echo $estilo_linha; ?>" colspan="2"><div style="width: 50px;" class="bt_link">
-                                <a id="" onclick="javascript: return confirm('Deseja realmente Cancelar a parcela?');" href="<?= base_url() ?>ambulatorio/guia/cancelarparcelaempresa/<?= $item->paciente_contrato_parcelas_id ?>" target="_blank">Cancelar
+                                <a id="" onclick="javascript:  if(confirm('Deseja realmente Cancelar a parcela?')){  window.open('<?= base_url() ?>ambulatorio/guia/cancelarparcelaempresa/<?= $item->paciente_contrato_parcelas_id ?>', '_blank', 'width=500,height=200,left=510,top=300'); }else{ return; };"  >Cancelar
                                 </a></div> 
 
                         </td>
