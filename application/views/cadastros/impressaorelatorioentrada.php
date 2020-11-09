@@ -72,10 +72,13 @@
                 $total = 0;
                 $total_parcelas = 0;
                 $relatorio_array = Array();
+                $relatorio_classe_array= Array();
                 foreach ($relatorioentrada as $item) :
                     @$tipoEntradaArray[$item->classe]++; 
+                    @$relatorio_classe_array[$item->classe] += $item->valor;
                     @$relatorio_array[$item->conta] += $item->valor + $valor;
-                     
+                    // @$relatorio_array[$item->conta] += $item->valor + $valor;
+                    
                     @$qtd_parcelas++;
                     @$qtd_parcelas_{$item->forma_entradas_saida_id}++;
                     $total += $item->valor;
@@ -126,17 +129,19 @@
 <br>
   
 <?
-//echo "<pre>";
-//print_r($tipoEntradaArray);
+// echo "<pre>";
+// print_r($tipoEntradaArray);
+// print_r($relatorio_classe_array);
+// die;
 ?>
 <table  border=1 cellspacing=0 cellpadding=2 bordercolor="666633">
                 <thead>
                     <tr>
-                        <th class="tabela_header" colspan="2">Resumo</th>
+                        <th class="tabela_header" colspan="3">Resumo</th>
                     </tr>
                     <tr>
                         <th class="tabela_header">Descrição</th>
-                        <th class="tabela_header">Valor</th>
+                        <th class="tabela_header" colspan="2">Valor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,7 +152,7 @@
                         ?>
                         <tr>
                             <td class="<?php echo $estilo_linha; ?>"> <?= $key;?> </td>
-                            <td class="<?php echo $estilo_linha; ?>">R$<?= number_format(@$val, 2, ",", "."); ?></td>
+                            <td colspan="2" class="<?php echo $estilo_linha; ?>">R$<?= number_format(@$val, 2, ",", "."); ?></td>
                         </tr>
                     <? } ?>
                 </tbody>
@@ -156,10 +161,12 @@
                       <tr>
                         <th class="tabela_footer"> <?= $key; ?> </th>
                          <th class="tabela_footer" > <?= $item; ?> </th>
+                         <td >R$<?=number_format($relatorio_classe_array[$key], 2, ",", ".");?> </td>
+                         <!-- relatorio_classe_array -->
                     </tr> 
                      <?}?>
                     <tr>
-                        <th class="tabela_footer" colspan="2">
+                        <th class="tabela_footer" colspan="3">
                             Total Parcelas: <?=  @$qtd_parcelas; ?>
                         </th>
                     </tr>
