@@ -14164,7 +14164,20 @@ if($return[0]->financeiro_credor_devedor_id == ""){
                 $this->db->where('ativo', 'f');
                 $this->db->orderby('data', 'desc');
                 $listar_contrato = $this->db->get()->result();
-                $data_receber = $listar_contrato[0]->data;
+
+                if(count($listar_contrato) > 0){
+                    $data_receber = $listar_contrato[0]->data;  
+                }else{
+                    $this->db->select('data, financeiro_credor_devedor_id');
+                    $this->db->from('tb_paciente_contrato_parcelas');
+                    $this->db->where('paciente_contrato_id', $_POST['contrato_id']);
+                    $this->db->where('excluido', 'f');
+                    $this->db->orderby('data');
+                    $listar_contrato = $this->db->get()->result();
+
+                    $data_receber = $listar_contrato[0]->data;  
+                }
+                
                 // print_r(count($listar_todas_parcelas));
                 // echo '<br>';
                 // print_r($listar_contrato);

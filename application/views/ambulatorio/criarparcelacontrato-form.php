@@ -81,6 +81,7 @@
                             <option value="VOUCHER">VOUCHER</option>
                             <option value="PARCELA UNICA">PARCELA UNICA</option>
                             <option value="MULTA">MULTA</option>
+                            <option value="ADESÃO">ADESÃO</option>
                         </select>
                         </div>
                     </fieldset>
