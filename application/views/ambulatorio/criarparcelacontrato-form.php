@@ -80,6 +80,7 @@
                             <option value="CARTEIRA">CARTEIRA</option>
                             <option value="VOUCHER">VOUCHER</option>
                             <option value="PARCELA UNICA">PARCELA UNICA</option>
+                            <option value="MULTA">MULTA</option>
                         </select>
                         </div>
                     </fieldset>

@@ -1287,3 +1287,11 @@ ALTER TABLE ponto.tb_entradas ADD COLUMN paciente_contrato_parcelas_faturar_id i
 ALTER TABLE ponto.tb_empresa ADD COLUMN iugu_token_conta_principal text;
 
 ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN classe VARCHAR(60);
+ 
+ALTER TABLE ponto.tb_paciente_contrato_parcelas ADD COLUMN plano_alterado BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN plano_antigo INTEGER;
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor_carteira_titular_2 numeric(10,2);
+
+ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor_carteira_2 numeric(10,2);

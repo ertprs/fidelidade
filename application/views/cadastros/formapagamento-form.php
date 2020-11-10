@@ -111,11 +111,24 @@
                         <input type="text" name="valor_carteira_titular" class="texto02" id="valor_carteira_titular" alt="decimal" value="<?= @$obj->_valor_carteira_titular; ?>" />
                     </dd>
                     <dt>
+                        <label>Valor Carteira Titular 2º em diante (R$)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor_carteira_titular_2" class="texto02" id="valor_carteira_titular_2" alt="decimal" value="<?= @$obj->_valor_carteira_titular_2; ?>" />
+                    </dd>
+                    <dt>
                         <label>Valor Carteira Dependente (R$)</label>
                     </dt>
                     <dd>
                         <input type="text" name="valor_carteira" class="texto02" id="valor_carteira" alt="decimal" value="<?= @$obj->_valor_carteira; ?>" />
                     </dd>
+                    <dt>
+                        <label>Valor Carteira Dependente 2º (R$)</label>
+                    </dt>
+                    <dd>
+                        <input type="text" name="valor_carteira_2" class="texto02" id="valor_carteira_2" alt="decimal" value="<?= @$obj->_valor_carteira_2; ?>" />
+                    </dd>
+                    
                     <dt>
                         <label>N° Maximo de Clientes</label>
                     </dt>

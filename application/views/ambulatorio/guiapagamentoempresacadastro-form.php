@@ -249,6 +249,18 @@
                                         ?>
                                         </td>
                                         <?
+                                    }elseif($empresapermissao[0]->faturamento_novo == 't'){
+                                    ?>
+                                    <td class="<?php echo $estilo_linha; ?>" width="60px;">
+                                           
+                                           <div class="bt_link">
+
+                                               <a  style="cursor: pointer; " onclick="javascript:window.open('<?= base_url() ?>ambulatorio/guia/faturarmodelo2empresa/<?= $item->paciente_contrato_parcelas_id ?>/<?= $empresa_cadastro_id; ?>', '_blank', 'width=1000,height=640');">Confirmar
+                                                   </a>
+
+                                           </div> 
+                                       </td> 
+                                    <?
                                     }else {
                                         ?>
 

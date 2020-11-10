@@ -19,7 +19,9 @@ class formapagamento_model extends Model {
     var $_valor10 = null;
     var $_valor12 = null;
     var $_valor_carteira = null;
+    var $_valor_carteira_2 = null;
     var $_valor_carteira_titular = null;
+    var $_valor_carteira_titular_2 = null;
     var $_valoradcional = null;
     var $_parcelas = null;
     var $_comissao = null;
@@ -456,7 +458,9 @@ class formapagamento_model extends Model {
             $this->db->set('multa_atraso', str_replace(",", ".", str_replace(".", "", $_POST['multa_atraso'])));
             $this->db->set('valor_adesao', str_replace(",", ".", str_replace(".", "", $_POST['valor_adesao'])));
             $this->db->set('valor_carteira', str_replace(",", ".", str_replace(".", "", $_POST['valor_carteira'])));
+            $this->db->set('valor_carteira_2', str_replace(",", ".", str_replace(".", "", $_POST['valor_carteira_2'])));
             $this->db->set('valor_carteira_titular', str_replace(",", ".", str_replace(".", "", $_POST['valor_carteira_titular'])));
+            $this->db->set('valor_carteira_titular_2', str_replace(",", ".", str_replace(".", "", $_POST['valor_carteira_titular_2'])));
 
             if (isset($_POST['taxa_adesao'])) {
                 $this->db->set('taxa_adesao', 't');
@@ -637,7 +641,9 @@ class formapagamento_model extends Model {
                                carencia_especialidade_mensal,
                                carencia_exame,
                                valor_carteira,
+                               valor_carteira_2,
                                valor_carteira_titular,
+                               valor_carteira_titular_2,
                                multa_atraso, 
                                valor_adesao, 
                                juros, 
@@ -688,7 +694,9 @@ class formapagamento_model extends Model {
             $this->_valor23 = $return[0]->valor23;
             $this->_valor24 = $return[0]->valor24;
             $this->_valor_carteira = $return[0]->valor_carteira;
+            $this->_valor_carteira_2 = $return[0]->valor_carteira_2;
             $this->_valor_carteira_titular = $return[0]->valor_carteira_titular;
+            $this->_valor_carteira_titular_2 = $return[0]->valor_carteira_titular_2;
             $this->_valoradcional = $return[0]->valoradcional;
             $this->_parcelas = $return[0]->parcelas;
             $this->_comissao = $return[0]->comissao;

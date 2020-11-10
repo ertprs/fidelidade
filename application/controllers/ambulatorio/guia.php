@@ -916,7 +916,7 @@ class Guia extends BaseController {
         // $this->load->View('ambulatorio/impressaoficharonaldo', $data);
     }
 
-    function impressaocarteira($paciente_id, $contrato_id, $paciente_contrato_dependente_id = NULL, $paciente_titular = NULL) {
+    function impressaocarteira($paciente_id, $contrato_id, $paciente_contrato_dependente_id = NULL, $paciente_titular = NULL, $qtd_impressa = 0) {
         $empresa_id = $this->session->userdata('empresa_id');
 
 
@@ -938,15 +938,15 @@ class Guia extends BaseController {
         $titular_id = $data['titular_id'];
         
         if($data['permissao'][0]->titular_carterinha == 't'){
-            $codigo = $this->guia->confirmarpagamentocarteira($titular_id, $paciente_id, $titular_id);
+            $codigo = $this->guia->confirmarpagamentocarteira($titular_id, $paciente_id, $titular_id, $qtd_impressa);
         }else{
             if (@$data['paciente'][0]->situacao == 'Titular') {
-                $codigo = $this->guia->confirmarpagamentocarteira($paciente_id, $paciente_id, $titular_id);
+                $codigo = $this->guia->confirmarpagamentocarteira($paciente_id, $paciente_id, $titular_id, $qtd_impressa);
             } else {
                 $retorno = $this->guia->listarparcelaspacientedependente($paciente_id);
                 $paciente_dependete_id = @$retorno[0]->paciente_id;
                 // $titular_id = @$retorno[0]->titular_id;
-                $codigo = $this->guia->confirmarpagamentocarteira($paciente_dependete_id, $paciente_id, $titular_id);
+                $codigo = $this->guia->confirmarpagamentocarteira($paciente_dependete_id, $paciente_id, $titular_id, $qtd_impressa);
             }
         }
         if($codigo == 1){
@@ -2849,6 +2849,32 @@ class Guia extends BaseController {
         $data['geradocomocarne'] = $carnesicoob[0]->geradocarnesicoob;
 
         $this->loadView('ambulatorio/guiapagamento-form', $data);
+    }
+
+    function alterarplanocontratotitular($paciente_id, $contrato_id){
+        $data['planos'] = $this->formapagamento->listarforma();
+        $data['plano_atual'] = $this->guia->listaplanoatual($contrato_id);
+        $data['contrato_id'] = $contrato_id;
+
+        $this->load->View('ambulatorio/alterarplanocontratotitular-form',$data);
+    }
+
+    function gravaralterarplanotitular(){
+        $verificar = $this->guia->gravaralterarplanotitular();
+        if($verificar == 1){
+            $data['mensagem'] = 'Plano ALterado com Sucesso.';
+        }else if($verificar == -2){
+            $data['mensagem'] = 'Não é possivel alterar o Plano.';
+        }else{
+            $data['mensagem'] = 'Falha ao realizar a alteração do Plano.';
+        }
+        $this->session->set_flashdata('message', $data['mensagem']);
+        
+        redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+
+
+        
+
     }
 
     function listarpagamentosconsultaavulsa($paciente_id, $contrato_id) {
@@ -8241,7 +8267,7 @@ function geraCodigoBanco($numero) {
       redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
     }
     
-    function formapagamentoimpressaocarteira($paciente_id,$contrato_id,$paciente_contrato_dependente_id,$paciente_titular){ 
+    function formapagamentoimpressaocarteira($paciente_id,$contrato_id,$paciente_contrato_dependente_id,$paciente_titular,$quantidade_impressa = 0){ 
         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
         $data['paciente_id']    =    $paciente_id;
         $data['contrato_id']    =    $contrato_id;
@@ -8249,7 +8275,7 @@ function geraCodigoBanco($numero) {
         $data['paciente_titular']    =    $paciente_titular; 
         $data['contas'] = $this->guia->listarcontas();
         $data['permissao'] = $this->formapagamento->listarpermissoesempresa();
-        
+        $data['qtd_impressa'] = $quantidade_impressa;
         if($this->session->userdata('operador_id') == "" || $this->session->userdata('operador_id') <= 0 ){
             echo "<html>
                     <meta charset='UTF-8'>
@@ -8719,6 +8745,17 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
          $data['valor'] = 0.00; 
          $this->load->View('ambulatorio/faturarmodelo2-form', $data);
     }
+
+    function faturarmodelo2empresa($paciente_contrato_parcelas_id, $empresa_cadastro_id){
+        $data['paciente_contrato_parcelas_id'] = $paciente_contrato_parcelas_id;
+         $data['forma_pagamentos'] = $this->formapagamento->listarformapagamentos();
+         $data['pagamento'] = $this->guia->listarparcelaalterardata($paciente_contrato_parcelas_id);
+         $data['forma_cadastrada'] = $this->guia->ParcelaFormasPagamento($paciente_contrato_parcelas_id);
+         $data['contas'] = $this->guia->listarcontas(); 
+         $data['valor'] = 0.00; 
+         $data['empresa_cadastro_id'] = $empresa_cadastro_id;
+         $this->load->View('ambulatorio/faturarmodelo2empresa-form', $data);
+    }
     
     function gravarfaturadomodelo2(){
         $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
@@ -8738,8 +8775,27 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
          }
          
     }
+
+    function gravarfaturadomodelo2empresa($empresa_cadastro_id){
+        $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
+         
+        $ambulatorio_guia_id = $this->guia->gravarfaturamentomodelo2empresa($empresa_cadastro_id);
+        
+        $soma =  $this->guia->somapagamentos($paciente_contrato_parcelas_id);
+        
+        $valor_real =  $this->guia->listarparcela($paciente_contrato_parcelas_id);
+        @$valor1 = (float) $_POST['valor1'];
+        $valorFaturarVisivel = $_POST['valorFaturarVisivel'];
+         
+         if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma)  <= 0){
+              redirect(base_url() . "seguranca/operador/pesquisarrecepcao"); 
+         }else{
+              redirect(base_url() . "ambulatorio/guia/faturarmodelo2/$paciente_contrato_parcelas_id", $data); 
+         }
+         
+    }
     
-  function apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id) {
+  function apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id, $empresa = 0) {
         $ambulatorio_guia_id = $this->guia->apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id);
          
         if ($ambulatorio_guia_id == "-1") {
@@ -8748,7 +8804,13 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
             $data['mensagem'] = 'Sucesso ao excluir pagamento.';
         }
         $this->session->set_flashdata('message', $data['mensagem']);
-        redirect(base_url() . "ambulatorio/guia/faturarmodelo2/$paciente_contrato_parcelas_id", $data); 
+
+        if($empresa > 0){
+            redirect(base_url() . "ambulatorio/guia/faturarmodelo2empresa/$paciente_contrato_parcelas_id/$empresa", $data); 
+        }else{
+            redirect(base_url() . "ambulatorio/guia/faturarmodelo2/$paciente_contrato_parcelas_id", $data); 
+        }
+        
     }
   
      function recibomodelo2($paciente_contrato_parcelas_id) {

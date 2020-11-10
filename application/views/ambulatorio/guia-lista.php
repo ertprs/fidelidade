@@ -55,6 +55,8 @@ if (count($exames) > 0) {
     $operador_id = $this->session->userdata('operador_id');
     $empresa = $this->session->userdata('empresa');
     $perfil_id = $this->session->userdata('perfil_id');
+
+    $paciente_id = $paciente['0']->paciente_id;
     ?>
     <div>
         <form name="form_guia" id="form_guia" action="<?= base_url() ?>ambulatorio/guia/gravarprocedimentos" method="post">
@@ -116,7 +118,7 @@ if (count($exames) > 0) {
                             <th class="tabela_header">Contrato</th>
                             <th class="tabela_header">Data</th>
                             <th class="tabela_header">Status</th>
-                            <th colspan="6" class="tabela_header"></th>
+                            <th colspan="7" class="tabela_header"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,6 +129,15 @@ if (count($exames) > 0) {
                             ?>
                             <tr>
                                 <td style="width: 150px;" class="<?php echo $estilo_linha; ?>" ><a href="<?= base_url() ?>ambulatorio/guia/listardependentes/<?= @$paciente['0']->paciente_id; ?>/<?= @$item->paciente_contrato_id ?>" target="_blank"><?= @$item->paciente_contrato_id . "-" . @$item->plano; ?></a></td>
+                                <?if($item->ativo == 't'){?>
+                                <td style="width: 150px;" class="<?php echo $estilo_linha; ?>">
+                                <a style="cursor: pointer;" onclick="javascript:window.open('<?= base_url() . "ambulatorio/guia/alterarplanocontratotitular/$paciente_id/$item->paciente_contrato_id"; ?> ', '_blank', 'toolbar=no,Location=no,menubar=no,width=600,height=600');">
+                                Alterar
+                                </a>
+                                </td>
+                                <?}else{?>
+                                    <td style="width: 150px;" class="<?php echo $estilo_linha; ?>"></td>
+                                <?}?>
                                 <td style="width: 150px;" class="<?php echo $estilo_linha; ?>" ><?= substr(@$item->data_cadastro, 8, 2) . "/" . substr(@$item->data_cadastro, 5, 2) . "/" . substr(@$item->data_cadastro, 0, 4); ?></td>
 
                                 <? if ($item->ativo == 't') { ?>

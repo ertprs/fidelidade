@@ -689,7 +689,9 @@ if($_POST['tipopaciente'] == 'dependente'){
                             pc.ativo,
                             fp.nome as plano,
                             fp.valor_carteira as valor,
+                            fp.valor_carteira as valor_2,
                             fp.valor_carteira_titular as valor_carteira_titular,
+                            fp.valor_carteira_titular_2 as valor_carteira_titular_2,
                             fp.conta_id,
                             pc.data_cadastro,
                             fp.forma_pagamento_id');
@@ -5977,7 +5979,7 @@ ORDER BY p.nome";
             return 1;
     }
 
-    function confirmarpagamentocarteira($contrato_id, $paciente_id, $titular_id = NULL) {
+    function confirmarpagamentocarteira($contrato_id, $paciente_id, $titular_id = NULL, $qtd_impressa) {
 
         // As variaveis tão com os valores invertidos...... 
         // Paciente é contrato e contrato é paciente...  
@@ -5990,9 +5992,28 @@ ORDER BY p.nome";
 
         $situacao = @$parcela[0]->situacao;
         if($paciente_id == $titular_id){
-            @$valor = $parcela[0]->valor_carteira_titular;
+                if($qtd_impressa > 0){
+                    if($parcela[0]->valor_carteira_titular_2 != 0.00 && $parcela[0]->valor_carteira_titular_2 != ''){
+                        @$valor = $parcela[0]->valor_carteira_titular_2;
+                    }else{
+                        @$valor = $parcela[0]->valor_carteira_titular;
+                    }
+                }else{
+                    @$valor = $parcela[0]->valor_carteira_titular;
+                }
+            
         }else{
-            @$valor = $parcela[0]->valor;
+            if($qtd_impressa > 0){
+                if($parcela[0]->valor_2 != 0.00 && $parcela[0]->valor_2 != ''){
+                    @$valor = $parcela[0]->valor_2;
+                }else{
+                    @$valor = $parcela[0]->valor;
+                }
+            }else{
+                @$valor = $parcela[0]->valor;
+            }
+
+            
         }
 
         $situacao = @$parcela[0]->situacao;
@@ -13270,6 +13291,8 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             $this->db->where("empresa_cadastro_id", $empresa_cadastro_id);
             $this->db->update('tb_empresa_cadastro');
             return $financeiro_credor_devedor_id;
+}else{
+    return $return[0]->financeiro_credor_devedor_id;
 }
     }
     
@@ -13926,8 +13949,300 @@ if($return[0]->financeiro_credor_devedor_id == ""){
             } 
            
     }
+
+    function gravarfaturamentomodelo2empresa($empresa_cadastro_id){
+        $horario = date("Y-m-d H:i:s");
+        $operador_id = $this->session->userdata('operador_id');
+        $empresa_id = $this->session->userdata('empresa_id');
+        @$desconto = (float) $_POST['desconto'];
+        @$valor1 = (float) $_POST['valor1'];
+        @$ajuste1 = (float) $_POST['ajuste1'];
+        $valor_bruto = (float) $_POST['valor1'];
+        @$valorajuste1 = (float) $_POST['valorajuste1'];
+        $valor_proc = (float) str_replace(',', '.', str_replace('.', '', $_POST['valor_proc']));
+        @$parcela1 = (int) $_POST['parcela1'];
+        $valorFaturarVisivel = $_POST['valorFaturarVisivel'];
+        $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id'];
+        $parcela = $this->listarparcelaconfirmarpagamento($paciente_contrato_parcelas_id); 
+        $valor = $parcela[0]->valor;
+        $conta_id = $parcela[0]->conta_id;
+        $plano = $parcela[0]->plano;  
+        $credor = $parcela[0]->financeiro_credor_devedor_id; 
+        
+        $this->db->select('pcp.*,pc.parcelas');
+        $this->db->from('tb_paciente_contrato_parcelas pcp');
+        $this->db->join('tb_paciente_contrato pc','pc.paciente_contrato_id = pcp.paciente_contrato_id');
+        $this->db->where('pcp.paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+        $valor_real =$this->db->get()->result();
+         
+        $data_vencimento =   date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data'])));
+        
+        
+        if ($credor == NULL || $credor == '') {
+        //   $credor = $this->criarcredordevedorpaciente($paciente_id);
+          $credor = $this->criarcredordevedorempresa($empresa_cadastro_id);
+        }    
+        $this->db->select('conta_pagamento_associado');
+        $this->db->from('tb_empresa');
+        $this->db->where('empresa_id', $this->session->userdata('empresa_id'));
+        $empresa_conta = $this->db->get()->result();
+            
+        $paciente_contrato_parcelas_id = $_POST['paciente_contrato_parcelas_id']; 
+        $forma_pagamento_id = $_POST['forma_pagamento_id']; 
+         
+        
+            if($paciente_contrato_parcelas_id > 0){
+//                    $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));   
+//                    $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+//                    $this->db->update('tb_paciente_contrato_parcelas');
+            }
+            $this->db->select('ae.data');
+            $this->db->from('tb_paciente_contrato_parcelas ae');
+            $this->db->where('ae.paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $return = $this->db->get();
+            $retorno = $return->result();
+            $data = $retorno[0]->data;
+
+            $this->db->set('forma_pagamento_id', $forma_pagamento_id); 
+            $this->db->set('parcela', $parcela1); 
+            $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id); 
+            $this->db->set('desconto', $desconto);
+            $this->db->set('ajuste', $ajuste1);
+            $this->db->set('valor_total', $valor_proc); 
+            $this->db->set('valor', $valorajuste1); 
+            $this->db->set('valor_bruto', $valor_bruto);
+            $this->db->set('data', date("Y-m-d", strtotime(str_replace("/", "-", $_POST['data']))));
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('faturado', 't');
+            $this->db->set('observacao', $_POST['observacao']); 
+            $this->db->insert('tb_paciente_contrato_parcelas_faturar');
+            $paciente_contrato_parcelas_faturar_id = $this->db->insert_id();
+            
+             
+            $this->db->select('conta_pagamento');
+            $this->db->from('tb_forma_rendimento');
+            $this->db->where('forma_rendimento_id', $_POST['forma_pagamento_id']);
+            $conta_pagamento = $this->db->get()->result(); 
+
+            $horario = date("Y-m-d H:i:s");
+            $data = date("Y-m-d");
+            $operador_id = $this->session->userdata('operador_id');
+            $this->db->set('valor', $valor1); 
+
+            $this->db->set('data', $data_vencimento);
+            $this->db->set('tipo', $plano);
+            if($parcela[0]->taxa_adesao == 't'){
+                $this->db->set('classe', 'ADESÃO');
+            }else{ 
+
+                // print_r($valor_real[0]->classe);
+                // die;
+                if($valor_real[0]->classe != ''){
+                    $this->db->set('classe', $valor_real[0]->classe);
+                }else{
+                    if(substr($valor_real[0]->parcelas, 0,2) == 1){
+                        $this->db->set('classe', 'PARCELA UNICA'); 
+                     }else{
+                        $this->db->set('classe', 'PARCELA'); 
+                     } 
+                }
+                 
+            }
+            // $this->db->set('classe', 'PARCELA');
+            $this->db->set('nome', $credor);
+            $this->db->set('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $this->db->set('paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id);
+            
+//        Verificando se o usuario escolheu alguma conta, caso ele não tenha escolhido ele vai usar a do sistema que é a padrão
+       
+            
+           
+      if($empresa_conta[0]->conta_pagamento_associado == 't'){
+            if($conta_pagamento[0]->conta_pagamento != ""){
+             $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }elseif(isset($_POST['conta']) && @$_POST['conta'] != "") {
+                          $this->db->set('conta', @$_POST['conta']);
+            } else {
+                  $this->db->set('conta', $conta_id);
+            }
+          }elseif(isset($_POST['conta']) && @$_POST['conta'] != "") {
+                          $this->db->set('conta', @$_POST['conta']);
+          } else {
+                $this->db->set('conta', $conta_id);
+          }
+             
+            $this->db->set('tipo', 'PAGA (Manual Empresa)');
+            $this->db->set('empresa_cadastro_id', $empresa_cadastro_id);
+             
+            if(isset($_POST['forma_pagamento_id']) && $_POST['forma_pagamento_id']){
+              $this->db->set('forma_rendimento_id',$_POST['forma_pagamento_id']);
+            } 
+            if($_POST['observacao'] != ""){
+             $this->db->set('observacao', $_POST['observacao']);
+            }
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$empresa_id);
+            $this->db->insert('tb_entradas');
+            $entradas_id = $this->db->insert_id(); 
+            $erro = $this->db->_error_message();
+            if (trim($erro) != "") // erro de banco
+                return -1;
+            else
+            $this->db->set('valor', $valor1);
+            $this->db->set('entrada_id', $entradas_id);  
+            if($conta_pagamento[0]->conta_pagamento != ""){
+             $this->db->set('conta', $conta_pagamento[0]->conta_pagamento);
+            }
+            $this->db->set('nome', $credor);
+            $this->db->set('data_cadastro', $horario);
+            $this->db->set('data', $data_vencimento);
+            $this->db->set('operador_cadastro', $operador_id);
+            $this->db->set('empresa_id',$empresa_id);
+            $this->db->insert('tb_saldo'); 
+            
+        $soma =  $this->somapagamentos($paciente_contrato_parcelas_id);  
+        
+        
+          
+        if(str_replace(",",".",$valor_real[0]->valor) - str_replace(",",".",$soma[0]->soma)  <= 0){
+            $this->db->set('manual', 't'); 
+            $this->db->set('ativo', 'f'); 
+            $this->db->set('data_atualizacao', $horario);
+            $this->db->set('operador_atualizacao', $operador_id);
+            $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
+            $this->db->update('tb_paciente_contrato_parcelas');    
+        } 
+       
+}
     
-    
+
+        function listaplanoatual($contrato_id){
+            $this->db->select('fp.nome, pc.plano_id');
+            $this->db->from('tb_paciente_contrato pc');
+            $this->db->join('tb_forma_pagamento fp', 'fp.forma_pagamento_id = pc.plano_id');
+            $this->db->where('pc.paciente_contrato_id', $contrato_id);
+
+            return $this->db->get()->result();
+        }
+
+        function gravaralterarplanotitular(){
+            try{
+                // echo '<pre>';
+                // print_r($_POST);
+                // die;
+
+                $qtd_parcela = substr($_POST['checkboxvalor1'], 0,2);
+                $valor_parcela = substr($_POST['checkboxvalor1'], 3,5);
+                $cancelar = false;
+
+                $horario = date("Y-m-d H:i:s");
+                $operador_id = $this->session->userdata('operador_id');
+                // print_r($valor_parcela);
+                // die;
+                $this->db->select('parcela');
+                $this->db->from('tb_paciente_contrato_parcelas');
+                $this->db->where('paciente_contrato_id', $_POST['contrato_id']);
+                $this->db->where('excluido', 'f');
+                $this->db->orderby('parcela', 'desc');
+                $listar_todas_parcelas = $this->db->get()->result();
+
+                // print_r($listar_todas_parcelas);
+                // die;
+                $this->db->select('paciente_contrato_parcelas_id');
+                $this->db->from('tb_paciente_contrato_parcelas');
+                $this->db->where('paciente_contrato_id', $_POST['contrato_id']);
+                $this->db->where('excluido', 'f');
+                $this->db->where('ativo', 'f');
+                $listar_parcelas_pagas = $this->db->get()->result();
+
+                $this->db->select('data, financeiro_credor_devedor_id');
+                $this->db->from('tb_paciente_contrato_parcelas');
+                $this->db->where('paciente_contrato_id', $_POST['contrato_id']);
+                $this->db->where('excluido', 'f');
+                $this->db->where('ativo', 'f');
+                $this->db->orderby('data', 'desc');
+                $listar_contrato = $this->db->get()->result();
+                $data_receber = $listar_contrato[0]->data;
+                // print_r(count($listar_todas_parcelas));
+                // echo '<br>';
+                // print_r($listar_contrato);
+                // die;
+
+                //if($qtd_parcela == 12){
+                   $totalpaga = count($listar_parcelas_pagas);
+
+                   if($totalpaga == $qtd_parcela || $totalpaga >= $qtd_parcela){
+
+                   }else{
+                    $this->db->set('plano_alterado', 't');
+                    $this->db->set('excluido', 't');
+                    $this->db->where('ativo', 't');
+                    $this->db->where('paciente_contrato_id', $_POST['contrato_id']);
+                    $this->db->update('tb_paciente_contrato_parcelas');
+                   }
+
+                    $parcela_num = $listar_todas_parcelas[0]->parcela;
+                   for($i = 1; $i <= $qtd_parcela; $i++){
+                       if($totalpaga == $qtd_parcela || $totalpaga > $qtd_parcela){
+                           $cancelar = true;
+                           continue;
+                       }else{
+                            if($i <= $totalpaga){
+                                $cancelar = true;
+                                continue;
+                            }
+                            $cancelar = false;
+                            if (date("m", strtotime($data_receber)) == '01' && date("d", strtotime($data_receber)) > 28 && $i < $parcelas){
+                                if (date("d", strtotime($data_receber)) == '30') { 
+                                    $data_receber = date("Y-m-d", strtotime("-2 days", strtotime($data_receber)));
+                                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                            
+                                }else{
+                                    $data_receber = date("Y-m-d", strtotime("-1 days", strtotime($data_receber)));
+                                    $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                                }
+                            
+                            }else{
+                                $data_receber = date("Y-m-d", strtotime("+1 month", strtotime($data_receber)));
+                            }
+
+
+                            $this->db->set('valor', $valor_parcela);
+                            $this->db->set('parcela', $parcela_num);
+                            $this->db->set('paciente_contrato_id', $_POST['contrato_id']);
+                            $this->db->set('financeiro_credor_devedor_id', $listar_contrato[0]->financeiro_credor_devedor_id);
+                            $this->db->set('data', $data_receber);
+                            $this->db->set('data_cadastro', $horario);
+                            $this->db->set('operador_cadastro', $operador_id);
+                            $this->db->insert('tb_paciente_contrato_parcelas');
+
+                            $parcela_num++;
+                       }
+                   }
+
+                   if($cancelar){
+                        return -2;
+                   }else{
+                        $this->db->set('parcelas', $qtd_parcela.' x '.$valor_parcela);
+                        $this->db->set('plano_id', $_POST['plano']);
+                        $this->db->set('plano_antigo', $_POST['plano_atual_id']);
+                        $this->db->where('paciente_contrato_id', $_POST['contrato_id']);
+                        $this->db->update('tb_paciente_contrato');
+                   }
+                //}
+
+                return 1;
+
+
+                
+            }catch (Exception $exc) {
+                return -1;
+            }
+        }
+
+
       function apagarfaturarmodelo2($paciente_contrato_parcelas_faturar_id,$paciente_contrato_parcelas_id) {
         try { 
             // Gravando backup das alterações 
