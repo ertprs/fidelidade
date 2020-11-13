@@ -1531,6 +1531,39 @@ if($nao_integrar_parceria != "t"){
 //        $this->anexarimagem($paciente_id);
     }
 
+
+    function importarlogoempresacheckout() {
+        $empresa_id = $_POST['empresa_id'];
+
+
+        if (!is_dir("./upload/empresalogocheckout")) {
+            mkdir("./upload/empresalogocheckout");
+            $destino = "./upload/empresalogocheckout";
+            chmod($destino, 0777);
+        }
+
+        $config['upload_path'] = "./upload/empresalogocheckout/";
+//        $config['upload_path'] = "/home/sisprod/projetos/clinica/upload/paciente/" . $paciente_id . "/";
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|pdf|doc|docx|xls|xlsx|ppt';
+        $config['max_size'] = '0';
+        $config['file_name'] = 'logo.jpg';
+        $config['overwrite'] = FALSE;
+        $config['encrypt_name'] = FALSE;
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload()) {
+            $error = array('error' => $this->upload->display_errors());
+        } else {
+            $error = null;
+            $data = array('upload_data' => $this->upload->data());
+        }
+        $data['empresa_id'] = $empresa_id;
+
+        redirect(base_url() . "ambulatorio/empresa/carregarlogoempresacheckout/$empresa_id");
+
+//        $this->anexarimagem($paciente_id);
+    }
+
     function excluirlogoempresa($empresa_id, $nome) {
 
 

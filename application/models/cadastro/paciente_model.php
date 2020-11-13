@@ -429,6 +429,17 @@ class paciente_model extends BaseModel {
         return $return->result();
     }
 
+    function listarCidadesibge($parametro = null) {
+        $this->db->select('municipio_id,
+                           nome,estado');
+        $this->db->where('codigo_ibge', $parametro);
+
+        $this->db->from('tb_municipio');
+        $return = $this->db->get();
+
+        return $return->result();
+    }
+
     function listarparcelaiugucartao() {
         $data = date("Y-m-d");
         $this->db->select('valor, cp.data, cp.ativo, cp.paciente_contrato_parcelas_id, pc.paciente_contrato_id, fp.nome as plano, pc.paciente_id, cp.data_cartao_iugu');

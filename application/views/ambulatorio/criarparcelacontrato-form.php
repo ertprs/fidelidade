@@ -81,6 +81,7 @@
                             <option value="VOUCHER">VOUCHER</option>
                             <option value="PARCELA UNICA">PARCELA UNICA</option>
                             <option value="MULTA">MULTA</option>
+                            <option value="PERDA E PREJUIZO">PERDA E PREJUIZO</option>
                             <option value="ADESÃO">ADESÃO</option>
                         </select>
                         </div>

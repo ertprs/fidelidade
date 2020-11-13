@@ -8024,7 +8024,9 @@ function geraCodigoBanco($numero) {
 
         $nome = $_FILES['arquivo']['name'];
         $nome_arq = $_FILES['arquivo'];
-         
+        
+        $horario = date('d-m-Y');
+        $nome = str_replace('.txt', '_'.$horario.'.txt', $nome);
         
         
         
@@ -8180,7 +8182,83 @@ function geraCodigoBanco($numero) {
         
          function verarquivoimportadocnab($nome_arquivo = NULL) {
              
-              redirect(base_url() . "seguranca/operador/pesquisarrecepcao");
+            $chave_pasta = $this->session->userdata('empresa_id');    
+            
+            $arquivo6 = fopen('./upload/retornoimportadoscnab/todos/' . $chave_pasta . '/' . $nome_arquivo . '', 'r');
+             // Lê o conteúdo do arquivo  
+             //criando a tabela onde vai mostrar as informações AQUI É PARA CONTAR QUANTAS PARCELAS TEM NO AQUIVO DE CADA PACIENTE
+            $data['relatorio'] = array();
+
+
+             while (!feof($arquivo6)) {
+                 //Mostra uma linha do arquivo 
+                 $linha = fgets($arquivo6, 1024);
+                 $segmento =  substr($linha, 13, 1);
+                 $nosso_numero =  substr($linha, 37, 15);
+                 $servico =  substr($linha, 15, 2);
+                 $relatorio = false; 
+
+                 if ($segmento == "T") { 
+                   $nome =  substr($linha, 105, 25); 
+
+                    // print_r($servico);
+                    // die;
+
+                      $paciente_contrato_parcelas_id = $this->listarparcelanossonumero($nosso_numero);
+                      $mensagem = $this->servicosicoob($servico);
+
+                    //    echo ' - '.$servico.' - '.$mensagem.' - '.$nome;
+                    //    echo '<br>';
+
+                    $relatorio = true; 
+
+                    if($mensagem == 'Liquidação'){
+                        $relatorio = false;
+
+                        $relatorioarray['nome'] = $nome;
+                        $relatorioarray['status'] = "$servico - $mensagem";
+
+                        // $texto_relatorio =  "<td>$nome</td><td>$servico - $mensagem</td>";
+                    }
+                  }           
+                  if ($segmento == "U") {  
+                      if($mensagem == 'Liquidação'){
+                       $data_pagamento =  substr($linha, 137, 8); 
+                       $dia_pagamento  = substr($data_pagamento, 0, 2); 
+                       $mes_pagamento  = substr($data_pagamento, 2,2); 
+                       $ano_pagamento  = substr($data_pagamento, 4,4);
+                       $data_pagamento_formatada = $dia_pagamento."/".$mes_pagamento."/".$ano_pagamento; 
+                        $relatorio = true;
+
+                        $relatorioarray['pagamento'] = $data_pagamento_formatada;
+                        $relatoriogeral[] = $relatorioarray;
+
+                        // $texto_relatorio .= "<td>$data_pagamento_formatada</td>";
+                      }
+                  } 
+
+
+                  if($relatorio){
+
+                    if($mensagem == 'Liquidação'){
+
+                    }else{
+                        $relatorioarray['nome'] = $nome;
+                        $relatorioarray['status'] = "$servico - $mensagem";
+                        $relatorioarray['pagamento'] = '';
+
+
+                        $relatoriogeral[] = $relatorioarray;
+                    }
+                  }
+
+                  $relatorio = false; 
+
+             }
+
+             $data['relatorio'] = $relatoriogeral;
+             $this->load->view('ambulatorio/relatoriosicoob', $data);
+
          }
         
         

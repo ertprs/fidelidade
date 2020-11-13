@@ -39,6 +39,7 @@ class Autocomplete extends Controller {
         $this->load->model('cadastro/formapagamento_model', 'formapagamento');
         $this->load->model('estoque/menu_model', 'menu');
         $this->load->model('ambulatorio/empresa_model', 'empresa_m');
+        $this->load->model('checkout/inicio_model', 'checkout');
         $this->load->library('utilitario');
     }
 
@@ -435,6 +436,13 @@ class Autocomplete extends Controller {
         }
 
 //        die;
+    }
+
+    function listardetalhesplano(){
+        $plano_id = $_GET['plano_id'];
+        $result = $this->checkout->listartodosplanos($plano_id);
+
+        echo json_encode($result);
     }
 
     function autorizaragendaweb() {
@@ -2959,6 +2967,20 @@ class Autocomplete extends Controller {
             $retorno['valor'] = substr($item->nascimento, 8, 2) . "/" . substr($item->nascimento, 5, 2) . "/" . substr($item->nascimento, 0, 4);
             $retorno['id'] = $item->paciente_id;
             $retorno['endereco'] = $item->logradouro . " - " . $item->numero;
+            $var[] = $retorno;
+        }
+        echo json_encode($var);
+    }
+
+    function cidadeibge() {
+
+        if (isset($_GET['ibge'])) {
+            $result = $this->paciente_m->listarCidadesibge($_GET['ibge']);
+        }
+        foreach ($result as $item) {
+            $retorno['value'] = $item->nome;
+            $retorno['estado'] = $item->estado;
+            $retorno['id'] = $item->municipio_id;
             $var[] = $retorno;
         }
         echo json_encode($var);

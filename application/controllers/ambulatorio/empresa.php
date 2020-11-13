@@ -255,6 +255,26 @@ class Empresa extends BaseController {
         $this->loadView('ambulatorio/empresacadastrologo-form',$data);
         
     }
+
+    function carregarlogoempresacheckout($empresa_id){
+        $this->load->helper('directory');
+         
+        if (!is_dir("./upload/empresalogocheckout")) {
+            mkdir("./upload/empresalogocheckout");
+            $destino = "./upload/empresalogocheckout";
+            chmod($destino, 0777);
+        }
+        
+
+        $data['arquivo_pasta'] = directory_map("./upload/empresalogocheckout/");
+        if ($data['arquivo_pasta'] != false) {
+            sort($data['arquivo_pasta']);
+        }
+        $data['empresa_id'] = $empresa_id;
+
+        $this->loadView('ambulatorio/empresacadastrologocheckout-form',$data);
+        
+    }
     function gravarempresacadastro() {
         $empresa_id = $this->empresa->gravarempresacadastro();
         if ($empresa_id == "-1") {

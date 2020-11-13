@@ -99,7 +99,7 @@
                                    }
                                    ?>   
                                    <td width="10px"> <img  onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/downloadTXTcnabimportado/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"      width="50px" height="50px"  src="<?= base_url(); ?>img/archive-zip-icon.png"><br><? echo $value ?>                                       
-                                     <!-- <a onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/verarquivoimportadocnab/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"  href="#" >Ver arquivo  </a>-->
+                                      <a onclick="javascript:window.open('<?= base_url() . "./ambulatorio/guia/verarquivoimportadocnab/" . $value; ?>', '_blank', 'toolbar=no,Location=no,menubar=no,width=1200,height=600');"  href="#" >Ver Relatorio  </a>
                                    </td>
                                    <?php if ($cont == 3) {
                                        ?>

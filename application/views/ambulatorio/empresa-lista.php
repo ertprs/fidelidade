@@ -1,10 +1,10 @@
 
 <div class="content"> <!-- Inicio da DIV content -->
-    <div class="bt_link_new">
+    <!-- <div class="bt_link_new">
         <a href="<?php echo base_url() ?>ambulatorio/empresa/carregarempresa/0">
             Nova Empresa
         </a>
-    </div>
+    </div> -->
     <div id="accordion">
         <h3 class="singular"><a href="#">Manter Empresa</a></h3>
         <div>
@@ -22,7 +22,7 @@
                         <th class="tabela_header">Nome</th>
                         <th class="tabela_header">CNPJ</th>
                         <th class="tabela_header">Raz&atilde;o social</th>
-                        <th class="tabela_header" colspan="3"   style="text-align: center;">Detalhes</th>
+                        <th class="tabela_header" colspan="4"   style="text-align: center;">Detalhes</th>
                     </tr>
                 </thead>
                 <?php
@@ -54,6 +54,13 @@
                                     </div>
 
                                 </td>
+                                <td class="<?php echo $estilo_linha; ?>" width="100px;">
+                                    <div class="bt_link">
+                                        <a href="<?= base_url() ?>ambulatorio/empresa/carregarlogoempresacheckout/<?= $item->empresa_id ?>">Logo Checkout</a>
+
+                                    </div>
+
+                                </td>
                                   
                                     <td class="<?php echo $estilo_linha; ?>"  width="100px;">
                                         <div class="bt_link">
@@ -78,7 +85,7 @@
                 ?>
                 <tfoot>
                     <tr>
-                        <th class="tabela_footer" colspan="6">
+                        <th class="tabela_footer" colspan="7">
                             <?php $this->utilitario->paginacao($url, $total, $pagina, $limit); ?>
                             Total de registros: <?php echo $total; ?>
                         </th>
