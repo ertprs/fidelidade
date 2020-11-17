@@ -19,6 +19,9 @@
             .letra_pequena{
                 font-size: 13px !important;
             }
+            .letra_grande{
+                font-size: 20px !important;
+            }
             .fundo_cinza{
                 background-color: #F2F2F2 !important;
             }
@@ -26,10 +29,22 @@
                 background-color: #ADD8E6 !important;
             }
             /* .espaco{
-                padding-bottom: 20px !important;
+                padding-bottom: 1px !important;
             } */
             li{
                 font-size: 13px !important;
+            }
+            .informacao_parcela {
+                display: none;
+                width: 100%;
+                margin-top: 0.25rem;
+                font-size: 80%;
+                color: #28a745;
+                display: block;
+            }
+            .img_pequena{
+                width: 100;
+                height: 100;
             }
             
         </style>
@@ -41,7 +56,7 @@
 
         <div style="width: 100%; min-height: 14px; background: 0 repeat-x url('data:image/svg+xml;utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20width%3D%2214px%22%20height%3D%2212px%22%20viewBox%3D%220%200%2018%2015%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cpolygon%20id%3D%22Combined-Shape%22%20fill%3D%22%23ebebeb%22%20points%3D%228.98762301%200%200%209.12771969%200%2014.519983%209%205.40479869%2018%2014.519983%2018%209.12771969%22%3E%3C%2Fpolygon%3E%3C%2Fsvg%3E');"></div>
 
-        <blockquote class="blockquote text-center"><h2><b>Informe os Dados do seu Endereço</b></h2></blockquote>
+        <blockquote class="blockquote text-center"><h2><b>Realize o Pagamento do seu Plano <?=$planos[0]->nome_impressao;?></b></h2></blockquote>
 
         <div class="row justify-content-center">
             <div class="col-auto">
@@ -52,9 +67,9 @@
                     <th>_______________________</th>
                     <th align="center" scope="col"><img class="rounded mx-auto d-block" src="<?=base_url()?>/css/bootstrap4/icons/check2-square.svg" alt="" width="45" height="45" title="Bootstrap"></th>
                     <th>_______________________</th>
-                    <th align="center" scope="col"><img class="rounded mx-auto d-block" src="<?=base_url()?>/css/bootstrap4/icons/app-indicator.svg" alt="" width="45" height="45" title="Bootstrap"></th>
+                    <th align="center" scope="col"><img class="rounded mx-auto d-block" src="<?=base_url()?>/css/bootstrap4/icons/check2-square.svg" alt="" width="45" height="45" title="Bootstrap"></th>
                     <th>_______________________</th>
-                    <th align="center" scope="col"><img class="rounded mx-auto d-block" src="<?=base_url()?>/css/bootstrap4/icons/app.svg" alt="" width="45" height="45" title="Bootstrap"></th>
+                    <th align="center" scope="col"><img class="rounded mx-auto d-block" src="<?=base_url()?>/css/bootstrap4/icons/app-indicator.svg" alt="" width="45" height="45" title="Bootstrap"></th>
                 </tr>
                 <tr>
                     <th scope="col">Plano</th>
@@ -106,157 +121,140 @@
         </div>
 
 
-                <form class="needs-validation" novalidate action="<?=base_url()?>checkout/inicio/pagamento" method="POST">
-        <div class="row fundo_cinza">
-                <input type="hidden" name="guardarsessaoendereco" value="ok" />
+                <form class="needs-validation" novalidate action="<?=base_url()?>checkout/inicio/finalizar" method="POST">
+
+        <div class="row fundo_cinza ">
+                <input type="hidden" name="guardarsessaocartao" value="ok" />
+
+                <div class="col-sm-2 espaco"></div>
+                <div class="col-sm-4 espaco form-group">
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <b class="letra_grande">Cartão de Cŕedito</b>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 espaco"></div>
+                <div class="col-sm-2 espaco"></div>
+
 
                 <div class="col-sm-2 espaco"></div>
 
-                <div class="col-sm-4 espaco form-group">
-                    <label for="cep">CEP</label>
-                    <input type="text" name="cep" value="<?=@$cep?>" id="cep" class="form-control" placeholder="CEP" required>
-                        <div class="invalid-feedback">
-                            Por favor, insira seu CEP!
-                        </div>
-                </div>
-
-                <div class="col-sm-4 espaco form-group">
-                    <label for="logradouro">Endereço</label>
-                    <input type="text" name="logradouro" value="<?=@$logradouro?>" id="logradouro" class="form-control" placeholder="ENDEREÇO" required>
-                        <div class="invalid-feedback">
-                            Por favor, insira seu Endereço!
-                        </div>
+                <div class="col-sm-4 espaco">
+                <label for="nome_cartao">Nome Completo</label>
+                    <input type="text" class="form-control" name="nome_cartao" id="nome_cartao" placeholder="NOME COMPLETO" required>
+                    <div class="invalid-feedback">
+                        Por favor, insira seu nome completo!
+                    </div>
                 </div>
                 
-                <div class="col-sm-2 espaco"></div>
-
-                <div class="col-sm-2 espaco"></div>
-
-                <div class="col-sm-2 espaco form-group">
-                    <label for="numero">Número</label>
-                    <input type="text" name="numero" value="<?=@$numero?>" id="numero" class="form-control" placeholder="NÚMERO" required>
-                        <div class="invalid-feedback">
-                            Por favor, insira o Número de sua Casa!
-                        </div>
-                </div>
-
-                <div class="col-sm-3 espaco form-group">
-                    <label for="complemento">Complemento</label>
-                    <input type="text" name="complemento" value="<?=@$complemento?>" id="complemento" class="form-control" placeholder="COMPLEMENTO">
-                        <div class="invalid-feedback">
-                            Por favor, insira um Complemento! (Opcional)
-                        </div>
-                </div>
-
-                <div class="col-sm-3 espaco form-group">
-                    <label for="bairro">Bairro</label>
-                    <input type="text" name="bairro" value="<?=@$bairro?>" id="bairro" class="form-control" placeholder="BAIRRO" required>
-                        <div class="invalid-feedback">
-                            Por favor, informe seu Bairro!
-                        </div>
+                <div class="col-sm-4 espaco">
+                <label for="numero_cartao">Numero Cartão</label>
+                    <input type="text" class="form-control" name="numero_cartao" id="numero_cartao" placeholder="NUMERO CARTÃO" required>
+                    <div class="invalid-feedback">
+                        Por favor, insira seu número de cartão valido!
+                    </div>
                 </div>
                 <div class="col-sm-2 espaco"></div>
 
                 <div class="col-sm-2 espaco"></div>
-                <input type="hidden" id="txtCidadeID" name="municipio_id" readonly="true" />
 
                 <div class="col-sm-4 espaco form-group">
-                    <label for="cidade">Cidade</label>
-                    <input type="text" name="cidade" value="<?=@$cidade?>" id="cidade" class="form-control" placeholder="CIDADE" required>
-                        <div class="invalid-feedback">
-                            Por favor, informe sua Cidade!
-                        </div>
+                <label for="validade">Validade Cartão</label>
+                    <input type="text" class="form-control" name="validade" id="validade" placeholder="VALIDADE CARTÃO" required>
+                    <div class="invalid-feedback">
+                        Por favor, insira uma data valida de Vencimento!
+                    </div>
                 </div>
-
+                
                 <div class="col-sm-4 espaco form-group">
-                    <label for="estado">Estado</label>
-                    <input type="text" name="estado" value="<?=@$estado?>" id="estado" class="form-control" placeholder="ESTADO" required>
-                        <div class="invalid-feedback">
-                            Por favor, informe seu Estado!
-                        </div>
+                <label for="cvv">CVV 
+                <a data-toggle="tooltip" data-html="true" title="<img src='<?=base_url()?>css/bootstrap4/cvv.png'/>"> <img src="<?=base_url()?>/css/bootstrap4/icons/info-square.svg"/>  </a>
+                 </label>
+                    <input type="password" class="form-control" name="cvv" id="cvv" placeholder="CVV" maxlength="4" required>
+                    <div class="invalid-feedback">
+                        Por favor, insira o CVV do seu cartão!
+                    </div>
                 </div>
-                <div class="col-sm-2 espaco"></div>
-            </div>
 
-            <div class="row fundo_cinza">
+                <div class="col-sm-2 espaco"></div>
+
+                <div class="col-sm-2 espaco"></div>
+                <div class="col-sm-4 espaco form-group">
+                <label for="vencimento">Vencimento da Parcela</label>
+                        <select name="vencimento" class="custom-select" id="vencimento" required>
+                            <option value='' >Vencimento da Parcela</option>
+                            <option value="5" >5</option>
+                            <option value="10" >10</option>
+                            <option value="15" >15</option>
+                            <option value="20" >20</option>
+                        </select>
+                        <div class="invalid-feedback">Escolha o Dia de Vencimento de sua Parcela!</div>
+                        <div id="aviso_parcela" class="informacao_parcela"><spam id="remover"></spam></div>
+                </div>
+                <div class="col-sm-8 espaco"></div>
+
+                
+        </div>
+
+        <div class="row fundo_cinza">
+            <div class="col-sm-2 espaco"></div>
+
+            <div class="col-sm-8 form-group form-check">
+                <input class="form-check-input" type="checkbox" value="aceito" name="termo" id="termo" required>
+                <label class="form-check-label" for="termo">
+                Declaro que li e estou de acordo com os <a href="<?=base_url()?>ambulatorio/guia/impressaodeclaracaopacientepdf/" target="_blank">Termos e Condições de Uso</a>
+                </label>
+                <div class="invalid-feedback">
+                    Você deve concordar com o Termo antes de enviar.
+                </div>
+            </div>           
+
+            <div class="col-sm-2 espaco"></div>
+        </div>
+        
+        <div class="row fundo_cinza">
             <div class="col-sm-4"></div>
-            <div class="col-sm-2"><a style="width: 100%;" href='<?=base_url()?>checkout/inicio/titular' class="btn btn-danger"><img src="<?=base_url()?>/css/bootstrap4/icons/arrow-left.svg" alt="" width="32" height="32" title="Bootstrap">Voltar </a></div>
-            <div class="col-sm-2"><button style="width: 100%;" type="submit" class="btn btn-success">Avançar <img src="<?=base_url()?>/css/bootstrap4/icons/arrow-right.svg" alt="" width="32" height="32" title="Bootstrap"></button></div>
+            <div class="col-sm-2"><a style="width: 100%;" href='<?=base_url()?>checkout/inicio/endereco' class="btn btn-danger"><img src="<?=base_url()?>/css/bootstrap4/icons/arrow-left.svg" alt="" width="32" height="32" title="Bootstrap">Voltar </a></div>
+            <div class="col-sm-2"><button  id="submit" style="width: 100%;" type="submit" class="btn btn-success">Finalizar <img src="<?=base_url()?>/css/bootstrap4/icons/arrow-right.svg" alt="" width="32" height="32" title="Bootstrap"></button></div>
             <div class="col-sm-4"></div>
-            </div>
+        </div>
 
             </form>
 
 </body>
-
 </html>
 
 
 <script type="text/javascript">
 
-$("#cep").mask("99999-999");
-
-    $(document).ready(function () {
-
-function limpa_formulário_cep() {
-
-}
-// $("#cep").mask("99999-999");
-
-$("#cep").blur(function () {
+$("#numero_cartao").mask("9999 9999 9999 9999");
+$("#validade").mask("99/9999");
 
 
-    var cep = $(this).val().replace(/\D/g, '');
-
-
-    if (cep != "") {
-
-        var validacep = /^[0-9]{8}$/;
-
-        if (validacep.test(cep)) {
-
-            $.getJSON("//viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
-
-                if (!("erro" in dados)) {
-                    //Atualiza os campos com os valores da consulta.
-                    $("#logradouro").val(dados.logradouro);
-                    $("#bairro").val(dados.bairro);
-                    $("#cidade").val(dados.localidade);
-                    $("#ibge").val(dados.ibge);
-                    $.getJSON('<?= base_url() ?>autocomplete/cidadeibge', {ibge: dados.ibge}, function (j) {
-                        $("#cidade").val(j[0].value);
-                        $("#estado").val(j[0].estado);
-                        $("#txtCidadeID").val(j[0].id);
-                    });
-
-                } 
-                else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Ops...',
-                        text: 'CEP não encontrado'
-                    });
-                }
-            });
-
-        }
-        else {
-            limpa_formulário_cep();
-            Swal.fire({
-                icon: 'error',
-                title: 'Ops...',
-                text: "Formato de CEP inválido."
-            });
-        }
+function check(div){
+    if(div.checked == true){
+      document.getElementById('submit').disabled = false;
     }
-    else {
-        limpa_formulário_cep();
+    else{
+      document.getElementById('submit').disabled = true;
     }
-});
+  }
+
+$("#vencimento").change(function() {
+    var data = new Date();
+    var dia = data.getDate();
+
+    console.log(dia);
+    console.log($("#vencimento").val());
+    if($("#vencimento").val() >= dia){
+        $("#remover").remove();
+        $("#aviso_parcela").append('<spam id="remover">Ao escolher um Dia superior ao de Hoje, a 1º parcela será cobrada ainda esse mês</spam>');
+    } 
 });
 
 
-(function() {
+  (function() {
   'use strict';
   window.addEventListener('load', function() {
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -273,4 +271,14 @@ $("#cep").blur(function () {
     });
   }, false);
 })();
+
+
+$(function() {
+ $('a[data-toggle="tooltip"]').tooltip({
+    animated: 'fade',
+    placement: 'right',
+    html: true
+ });
+});
+
 </script>

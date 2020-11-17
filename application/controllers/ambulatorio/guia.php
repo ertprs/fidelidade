@@ -473,7 +473,7 @@ class Guia extends BaseController {
         if ($_POST['gerar'] == "planilha") {
 
             $nome_arquivo = "relatorio";
-            $html = $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data, true);
+            $html = $this->load->View('ambulatorio/impressaorelatorioinadimplentes', $data);
 
             $filename = "Relatorio ";
             // Configurações header para forçar o download
@@ -6780,6 +6780,36 @@ if($empresa_id == ""){
         }else{
             $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
         }
+        // $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
+       
+    }
+
+
+    function impressaodeclaracaopacientepdf() {
+        $this->load->plugin('mpdf'); 
+        $this->load->helper('directory');
+                       
+        $data['empresa'] = $this->empresa->listardadosempresa();
+
+        // if($data['empresa'][0]->tipo_declaracao == 2){
+
+
+        //     $filename = "Termo de Contrato.pdf";
+        //     $cabecalho = "";
+        //     $rodape = ""; 
+        //     $html = $this->load->View('ambulatorio/impressaodeclaracaopacientemodelo2pdf', $data, true);
+        //     pdf($html, $filename, $cabecalho, $rodape);
+
+        // }else{
+
+            $filename = "Termo de Contrato.pdf";
+            $cabecalho = "";
+            $rodape = ""; 
+            $html = $this->load->View('ambulatorio/impressaodeclaracaopacientepdf', $data, true);
+            pdf($html, $filename, $cabecalho, $rodape);
+
+            $this->load->View('ambulatorio/impressaodeclaracaopacientepdf', $data);
+        // }
         // $this->load->View('ambulatorio/impressaodeclaracaopaciente', $data);
        
     }

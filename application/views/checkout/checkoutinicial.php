@@ -193,6 +193,7 @@
                             '<b>Valor Total: <font size="5">R$ '+totalgeral.toFixed(2).toString().replace(".", ",")+' </font></b>'+
                             '<input type="hidden" name="plano_id" value="'+plano_id+'"/>'+
                             '<input type="hidden" name="forma_mes" value="'+qtdmeses+'"/>'+
+                            '<input type="hidden" name="guardarsessao" value="ok" />'+
                             '<br> <br> <button type="submit" class="btn btn-success">Avançar <img src="<?=base_url()?>/css/bootstrap4/icons/arrow-right.svg" alt="" width="32" height="32" title="Bootstrap"></button>'
                 );
             });

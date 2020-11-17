@@ -25,9 +25,9 @@
             .fundo_personalizado{
                 background-color: #ADD8E6 !important;
             }
-            .espaco{
+            /* .espaco{
                 padding-bottom: 20px !important;
-            }
+            } */
             li{
                 font-size: 13px !important;
             }
@@ -98,7 +98,7 @@
                 <tr class="table-info">
                     <td scope="row">Resumo: </td>
                     <th><?=$planos[0]->nome_impressao;?></th>
-            <th><?=$planos[0]->parcelas - 1;?> Dependentes Gratuitos | <?=$_POST['forma_mes']?> Meses  <?if($planos[0]->valoradcional > 0.00){?> <div class="letra_pequena">+<?=number_format($planos[0]->valoradcional, 2, ',', '');?> Valor por Dependente adicional </div> <?}?></th>
+            <th><?=$planos[0]->parcelas - 1;?> Dependentes Gratuitos | <?=@$forma_mes?> Meses  <?if($planos[0]->valoradcional > 0.00){?> <div class="letra_pequena">+<?=number_format($planos[0]->valoradcional, 2, ',', '');?> Valor por Dependente adicional </div> <?}?></th>
                     <th>Valor: R$ <?=number_format($planos[0]->valortotal,2, ',','');?> (Valor 1° Mês) <div class="letra_pequena"> Demais mensalidades: R$ <?=number_format($valorpormes,2, ',','');?> </div></th>
                 </tr>
             </table>
@@ -106,36 +106,78 @@
         </div>
 
 
-        <form action="<?=base_url()?>checkout/inicio/endereco" method="POST">
+        <form class="needs-validation" novalidate action="<?=base_url()?>checkout/inicio/endereco" method="POST">
             <div class="row fundo_cinza">
-                    <input type="hidden" name="plano_id" value="<?=$_POST['plano_id']?>" />
-                    <input type="hidden" name="forma_mes" value="<?=$_POST['forma_mes']?>" />
+                    <input type="hidden" name="guardarsessaotitular" value="ok" />
+
                 <div class="col-sm-2 espaco"></div>
-                <div class="col-sm-4 espaco"><input type="text" name="cpf" id="cpf" onblur="verificarCPF()" class="form-control" placeholder="CPF" required></div>
-                <div class="col-sm-4 espaco"><input type="text" name="nome" class="form-control" placeholder="NOME COMPLETO" required></div>
+
+                <div class="col-sm-4 espaco form-group">
+                    <label for="cpf">CPF</label>
+                        <input type="text" class="form-control" value="<?=@$cpf?>" name="cpf" id="cpf"  onblur="verificarCPF()" placeholder="CPF" required>
+                        <div class="invalid-feedback">
+                            Por favor, insira seu CPF!
+                        </div>
+                </div>
+
+
+                <div class="col-sm-4 espaco form-group">
+                    <label for="nome">Nome Completo</label>
+                            <input type="text" class="form-control" value="<?=@$nome?>" name="nome" id="nome" placeholder="NOME COMPLETO" required>
+                            <div class="invalid-feedback">
+                                Por favor, insira seu Nome!
+                            </div>
+                </div>
+                
                 <div class="col-sm-2 espaco"></div>
                 <div class="col-sm-2 espaco"></div>
-                <div class="col-sm-4 espaco"><input type="text" name="email" id="email" onblur="validaremail()" class="form-control" placeholder="EMAIL" required></div>
-                <div class="col-sm-4 espaco"><input type="text" name="celular" id="celular" class="form-control" placeholder="CELULAR" required></div>
+
+                <div class="col-sm-4 espaco form-group">
+                    <label for="email">Email</label>
+                            <input type="text" class="form-control" value="<?=@$email?>" name="email" id="email" placeholder="EMAIL" onblur="validaremail()" required>
+                            <div class="invalid-feedback">
+                                Por favor, insira seu Email!
+                            </div>
+                </div>
+
+                <div class="col-sm-4 espaco form-group">
+                    <label for="celular">Telefone / Celular</label>
+                            <input type="text" class="form-control" value="<?=@$celular?>" name="celular" id="celular" placeholder="CELULAR" required>
+                            <div class="invalid-feedback">
+                                Por favor, insira seu Email!
+                            </div>
+                </div>
+
                 <div class="col-sm-2 espaco"></div>
                 <div class="col-sm-2 espaco"></div>
-                <div class="col-sm-4 espaco"><input type="text" name="nascimento" id="nascimento" class="form-control" placeholder="DATA DE NASCIMENTO" required></div>
-                <div class="col-sm-4 espaco">
-                        <select class="custom-select" id="inputGroupSelect01" required>
-                            <option selected>SEXO</option>
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                            <option value="O">Indefinido</option>
-                        </select>
+
+                <div class="col-sm-4 espaco form-group">
+                    <label for="nascimento">Data de Nascimento</label>
+                            <input type="text" class="form-control" value="<?=@$nascimento?>" name="nascimento" id="nascimento" placeholder="DATA DE NASCIMENTO" required>
+                            <div class="invalid-feedback">
+                                Por favor, insira seu Email!
+                            </div>
+                </div>
+
+                <div class="col-sm-4 espaco form-group">
+                <label for="sexo">Sexo</label>
+                    <select name="sexo" id="sexo" class="custom-select" required>
+                                <option value="" >SEXO</option>
+                                <option value="M" <?=(@$sexo == 'M')? 'selected' : ''; ?> >Masculino</option>
+                                <option value="F" <?=(@$sexo == 'F')? 'selected' : ''; ?> >Feminino</option>
+                                <option value="O" <?=(@$sexo == 'O')? 'selected' : ''; ?> >Indefinido</option>
+                            </select>
+                        <div class="invalid-feedback">Por favor, informe seu Gênero!</div>
+        
                 </div>
                 <div class="col-sm-2 espaco"></div>
             </div>
 
             <div class="row fundo_cinza">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-3"><a style="width: 100%;" href='<?=base_url()?>checkout/inicio/' class="btn btn-danger"><img src="<?=base_url()?>/css/bootstrap4/icons/arrow-left.svg" alt="" width="32" height="32" title="Bootstrap">Voltar </a></div>
-            <div class="col-sm-3"><button style="width: 100%;" type="submit" class="btn btn-success">Avançar <img src="<?=base_url()?>/css/bootstrap4/icons/arrow-right.svg" alt="" width="32" height="32" title="Bootstrap"></button></div>
-            <div class="col-sm-3"></div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-2"><a style="width: 100%;" href='<?=base_url()?>checkout/inicio/' class="btn btn-danger"><img src="<?=base_url()?>/css/bootstrap4/icons/arrow-left.svg" alt="" width="32" height="32" title="Bootstrap">Voltar </a></div>
+            <div class="col-sm-2"><button style="width: 100%;" type="submit" class="btn btn-success">Avançar <img src="<?=base_url()?>/css/bootstrap4/icons/arrow-right.svg" alt="" width="32" height="32" title="Bootstrap"></button></div>
+            <div class="col-sm-4"></div>
             </div>
                 
         </form>
@@ -188,4 +230,22 @@ function validaremail(){
     }
 }
 
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
 </script>

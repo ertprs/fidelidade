@@ -745,7 +745,12 @@ class empresa_model extends Model {
         $this->db->select('f.*, c.nome as municipio,c.municipio_id, c.estado');
         $this->db->from('tb_empresa f');
         $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
+        if($empresa_id == null){
+
+        }else{
         $this->db->where('empresa_id', $empresa_id);
+        }
+        
         return $this->db->get()->result();
     }
 
