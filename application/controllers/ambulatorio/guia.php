@@ -8225,6 +8225,8 @@ function geraCodigoBanco($numero) {
                  $linha = fgets($arquivo6, 1024);
                  $segmento =  substr($linha, 13, 1);
                  $nosso_numero =  substr($linha, 37, 15);
+                 $nosso_numero_2 =  substr($linha, 39, 8);
+                 $seu_numero =  substr($linha, 58, 15);
                  $servico =  substr($linha, 15, 2);
                  $relatorio = false; 
 
@@ -8247,6 +8249,8 @@ function geraCodigoBanco($numero) {
 
                         $relatorioarray['nome'] = $nome;
                         $relatorioarray['status'] = "$servico - $mensagem";
+                        $relatorioarray['nossonumero'] = $nosso_numero_2;
+                        $relatorioarray['seunumero'] = $seu_numero;
 
                         // $texto_relatorio =  "<td>$nome</td><td>$servico - $mensagem</td>";
                     }
@@ -8276,6 +8280,8 @@ function geraCodigoBanco($numero) {
                         $relatorioarray['nome'] = $nome;
                         $relatorioarray['status'] = "$servico - $mensagem";
                         $relatorioarray['pagamento'] = '';
+                        $relatorioarray['nossonumero'] = $nosso_numero_2;
+                        $relatorioarray['seunumero'] = $seu_numero;
 
 
                         $relatoriogeral[] = $relatorioarray;

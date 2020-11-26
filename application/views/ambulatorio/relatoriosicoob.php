@@ -131,7 +131,9 @@ usort($relatorio, 'cmp');
                 <tr>
                     <th>Titular</th>
                     <th>Status</th>
-                    <th>Data Pagamento</th>
+                    <th>Data Liquidação</th>
+                    <th>Nosso Número</th>
+                    <th>Seu Número</th>
                 </tr>
             </thead>
             <tbody id="tabelarelatorio">
@@ -144,6 +146,8 @@ usort($relatorio, 'cmp');
             <td><?=$item['nome']?></td>
             <td><?=$item['status']?></td>
             <td><?=$item['pagamento']?></td>
+            <td><?=$item['nossonumero']?></td>
+            <td><?=$item['seunumero']?></td>
             </tr>
 
         <?
@@ -192,6 +196,8 @@ function AlterarTabela(){
             table += '<td>'+array_parcelas[c].nome+'</td>';
             table += '<td>'+array_parcelas[c].status+'</td>';
             table += '<td>'+array_parcelas[c].pagamento+'</td>';
+            table += '<td>'+array_parcelas[c].nossonumero+'</td>';
+            table += '<td>'+array_parcelas[c].seunumero+'</td>';
             table += '</tr>';
 
         }
@@ -211,6 +217,8 @@ function AlterarTabela(){
             table += '<td>'+array_parcelas[c].nome+'</td>';
             table += '<td>'+array_parcelas[c].status+'</td>';
             table += '<td>'+array_parcelas[c].pagamento+'</td>';
+            table += '<td>'+array_parcelas[c].nossonumero+'</td>';
+            table += '<td>'+array_parcelas[c].seunumero+'</td>';
             table += '</tr>';
 
         }
