@@ -527,8 +527,8 @@
                                   
                                    <?
                                       }
-                                    }
-                                    ?>
+                                    }?>   
+                                 
                                  <?php }else{
                                    ?>
                                         <td  class="<?php echo $estilo_linha; ?>" colspan="3">

@@ -1448,7 +1448,7 @@ class Guia extends BaseController {
         $config['smtp_host'] = 'ssl://smtp.gmail.com';
         $config['smtp_port'] = '465';
         $config['smtp_user'] = 'stgsaude@gmail.com';
-        $config['smtp_pass'] = 'saude@2020';
+        $config['smtp_pass'] = 'saude@stg*1202'; //antiga: saude@2020
         $config['validate'] = TRUE;
         $config['mailtype'] = 'html';
         $config['charset'] = 'utf-8';
@@ -8977,6 +8977,8 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
 //        $this->load->View('ambulatorio/impressaorecibomed', $data);
         $this->load->View('ambulatorio/impressaorecibo', $data);
     }
+    
+         
 
 }
 

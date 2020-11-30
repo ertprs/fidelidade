@@ -197,13 +197,14 @@
                     </dt>
                     <dd>
                         <input type="text" name="api_google" class="texto10" value='<?= @$obj->_api_google; ?>' />
-                    </dd>
+                    </dd>  
                     <dt>
                         <label>Titular ao cadastrar na integração</label>
                     </dt>
                     <dd>
                         <input type="checkbox" id="titular_flag" name="titular_flag" <? if (@$obj->_titular_flag == 't') echo "checked"; ?>/>
                     </dd>
+                    
                     <?
                     $operador = $this->session->userdata('operador_id');
                     if ($operador == 1) {

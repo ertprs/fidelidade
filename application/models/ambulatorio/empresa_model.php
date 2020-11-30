@@ -298,18 +298,47 @@ class empresa_model extends Model {
         try {
             /* inicia o mapeamento no banco */
             $this->db->set('nome', $_POST['txtNome']);
+            if($_POST['txtrazaosocial'] != ""){
             $this->db->set('razao_social', $_POST['txtrazaosocial']);
-            $this->db->set('cep', $_POST['CEP']);
-            $this->db->set('banco', $_POST['banco']);
-            $this->db->set('api_google', $_POST['api_google']);
-            $this->db->set('cadastro', $_POST['cadastro']);
-            $this->db->set('cnes', $_POST['txtCNES']);
-            $this->db->set('codigo_convenio_banco', $_POST['codigo_convenio_banco']);
-            if (@$_POST['tipo_carencia']) {
-                $this->db->set('tipo_carencia', $_POST['tipo_carencia']);
+            }else{
+            $this->db->set('razao_social', null);  
             }
-            if (@$_POST['tipo_declaracao']) {
+            if($_POST['CEP'] != ""){
+            $this->db->set('cep', $_POST['CEP']);
+            }else{
+            $this->db->set('cep', null);   
+            }
+            if($_POST['banco'] != ""){
+            $this->db->set('banco', $_POST['banco']);
+            }else{
+            $this->db->set('banco', null);    
+            }
+            if($_POST['api_google'] != ""){
+             $this->db->set('api_google', $_POST['api_google']);
+            }else{
+             $this->db->set('api_google', null); 
+            }
+            $this->db->set('cadastro', $_POST['cadastro']);
+            if($_POST['txtCNES'] != ""){
+            $this->db->set('cnes', $_POST['txtCNES']);
+            }else{
+            $this->db->set('cnes', null);  
+            }
+            if($_POST['codigo_convenio_banco'] != ""){
+            $this->db->set('codigo_convenio_banco', $_POST['codigo_convenio_banco']);    
+            }else{
+            $this->db->set('codigo_convenio_banco', null);        
+            }
+          
+            if (isset($_POST['tipo_carencia']) && $_POST['tipo_carencia'] != "") {
+                $this->db->set('tipo_carencia', $_POST['tipo_carencia']);
+            }else{
+               $this->db->set('tipo_carencia', null); 
+            }
+            if (isset($_POST['tipo_declaracao']) && $_POST['tipo_declaracao'] != "") {
                 $this->db->set('tipo_declaracao', $_POST['tipo_declaracao']);
+            }else{
+                  $this->db->set('tipo_declaracao', null);
             }
 
             if (isset($_POST['titular_flag'])) {
@@ -319,15 +348,29 @@ class empresa_model extends Model {
             }
 
             if ($_POST['txtCNPJ'] != '') {
-                $this->db->set('cnpj', str_replace("-", "", str_replace("/", "", str_replace(".", "", $_POST['txtCNPJ']))));
+            $this->db->set('cnpj', str_replace("-", "", str_replace("/", "", str_replace(".", "", $_POST['txtCNPJ']))));
+            }else{
+            $this->db->set('cnpj', null);   
             }
+            if(str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))) != ""){
             $this->db->set('telefone', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['telefone']))));
+            }else{
+            $this->db->set('telefone', null);    
+            }
+            if(str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))) != ""){
             $this->db->set('celular', str_replace("(", "", str_replace(")", "", str_replace("-", "", $_POST['celular']))));
+            }else{
+            $this->db->set('celular', null);  
+            }
             if ($_POST['municipio_id'] != '') {
                 $this->db->set('municipio_id', $_POST['municipio_id']);
+            }else{
+                $this->db->set('municipio_id', null);  
             }
             if ($_POST['modelo_carteira'] != '') {
                 $this->db->set('modelo_carteira', $_POST['modelo_carteira']);
+            }else{
+                 $this->db->set('modelo_carteira', null);  
             }
 
 
@@ -347,15 +390,12 @@ class empresa_model extends Model {
                 $this->db->set('financeiro_maior_zero', 't');
             } else {
                 $this->db->set('financeiro_maior_zero', 'f');
-            }
-
+            } 
             if (isset($_POST['carteira_padao_1'])) {
                 $this->db->set('carteira_padao_1', 't');
             } else {
                 $this->db->set('carteira_padao_1', 'f');
-            }
-
-
+            }  
             if (isset($_POST['carteira_padao_2'])) {
                 $this->db->set('carteira_padao_2', 't');
             } else {
@@ -396,7 +436,7 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('client_secret', null);
             }
-	    if (count($_POST['botoes_app']) > 0) {
+	    if (isset($_POST['botoes_app']) && count($_POST['botoes_app']) > 0) {
                 $this->db->set('botoes_app', json_encode($_POST['botoes_app']));
             } else {
                 $this->db->set('botoes_app', '');
@@ -419,23 +459,63 @@ class empresa_model extends Model {
             } else {
                 $this->db->set('faturamento_novo', 'f');
             }
-
+            if($_POST['iugu_token'] != ""){
             $this->db->set('iugu_token', $_POST['iugu_token']);
+            }else{
+            $this->db->set('iugu_token', null);   
+            }
+            if($_POST['iugu_token_conta_principal'] != ""){
             $this->db->set('iugu_token_conta_principal', $_POST['iugu_token_conta_principal']);
+            }else{
+             $this->db->set('iugu_token_conta_principal', null);    
+            }
+            if($_POST['usuario_epharma'] != ""){
             $this->db->set('usuario_epharma', $_POST['usuario_epharma']);
-            $this->db->set('senha_epharma', $_POST['senha_epharma']);
+            }else{
+            $this->db->set('usuario_epharma', null); 
+            }
+            if($_POST['senha_epharma'] != ""){
+              $this->db->set('senha_epharma', $_POST['senha_epharma']);
+            }else{
+               $this->db->set('senha_epharma', null);
+            }
+            if($_POST['url_epharma'] != ""){
             $this->db->set('url_epharma', $_POST['url_epharma']);
+            }else{
+            $this->db->set('url_epharma', null);   
+            }
+            if($_POST['codigo_plano'] != ""){
             $this->db->set('codigo_plano', $_POST['codigo_plano']);
+            }else{
+             $this->db->set('codigo_plano', null);
+            }
+            if($_POST['email'] != ""){
             $this->db->set('email', $_POST['email']);
-
+            }else{
+            $this->db->set('email', null);    
+            }
+            if($_POST['endereco'] != ""){
             $this->db->set('logradouro', $_POST['endereco']);
+            }else{
+            $this->db->set('logradouro', null);   
+            }
+            if($_POST['numero'] != ""){
             $this->db->set('numero', $_POST['numero']);
+            }else{
+             $this->db->set('numero',null); 
+            }
+            if($_POST['complemento'] != ""){
             $this->db->set('complemento', $_POST['complemento']);
-
+            }else{
+            $this->db->set('complemento',null);   
+            }
             //echo $_POST['complemento'];
            // die;
-            $this->db->set('bairro', $_POST['bairro']);
-
+            if($_POST['bairro'] != ""){
+             $this->db->set('bairro', $_POST['bairro']);
+            }else{
+             $this->db->set('bairro',null);
+            }
             if (isset($_POST['modificar_verificar'])) {
                 $this->db->set('modificar_verificar', 't');
             } else {
@@ -522,7 +602,7 @@ class empresa_model extends Model {
                 $this->db->set('campos_cadastro', '');
             }
             
-            if (count($_POST['campos_obrigatorio_dependente']) > 0) {
+            if (isset($_POST['campos_obrigatorio_dependente']) && count($_POST['campos_obrigatorio_dependente']) > 0) {
                 $this->db->set('campos_cadastro_dependente', json_encode($_POST['campos_obrigatorio_dependente']));
             } else {
                 $this->db->set('campos_cadastro_dependente', '');
@@ -533,8 +613,8 @@ class empresa_model extends Model {
                 $this->db->set('iugu_cartao', 't');
             } else {
                 $this->db->set('iugu_cartao', 'f');
-            }
-            
+            } 
+             
 
             $horario = date("Y-m-d H:i:s");
             $operador_id = $this->session->userdata('operador_id');
@@ -626,7 +706,8 @@ class empresa_model extends Model {
                                f.nao_integrar_parceria,
                                f.assinar_contrato,
                                f.iugu_cartao,
-                               f.faturamento_novo');
+                               f.faturamento_novo 
+                               ');
             $this->db->from('tb_empresa f');
             $this->db->join('tb_municipio c', 'c.municipio_id = f.municipio_id', 'left');
             $this->db->where("empresa_id", $empresa_id);
@@ -694,6 +775,8 @@ class empresa_model extends Model {
             $this->_assinar_contrato = $return[0]->assinar_contrato; 
             $this->_iugu_cartao = $return[0]->iugu_cartao; 
             $this->_faturamento_novo = $return[0]->faturamento_novo; 
+           
+         
         } else {
             $this->_empresa_id = null;
         }

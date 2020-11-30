@@ -1295,3 +1295,8 @@ ALTER TABLE ponto.tb_paciente_contrato ADD COLUMN plano_antigo INTEGER;
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor_carteira_titular_2 numeric(10,2);
 
 ALTER TABLE ponto.tb_forma_pagamento ADD COLUMN valor_carteira_2 numeric(10,2);
+
+
+--26/11/2020
+ALTER TABLE ponto.tb_empresa ADD COLUMN merchantkey text;
+ALTER TABLE ponto.tb_empresa ADD COLUMN merchantid text;
