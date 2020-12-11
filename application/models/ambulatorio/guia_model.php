@@ -6264,6 +6264,7 @@ ORDER BY p.nome";
         $this->db->set('ativo', 'f');
         $this->db->set('data_atualizacao', $horario);
         $this->db->set('operador_atualizacao', $operador_id);
+        $this->db->set('data_pagamento',$data);
         $this->db->where('paciente_contrato_parcelas_id', $paciente_contrato_parcelas_id);
         $this->db->update('tb_paciente_contrato_parcelas');
         $erro = $this->db->_error_message();
@@ -14331,6 +14332,15 @@ if($return[0]->financeiro_credor_devedor_id == ""){
         $this->db->where('pcpf.paciente_contrato_parcelas_faturar_id', $paciente_contrato_parcelas_faturar_id); 
         $this->db->where('pcpf.ativo','t');
         return $this->db->get()->result();
+    }
+    
+    function listarparcelaentrada($paciente_contrato_parcelas_id){ 
+        $this->db->select('data,entradas_id');
+        $this->db->from('tb_entradas');
+        $this->db->where('paciente_contrato_parcelas_id',$paciente_contrato_parcelas_id);
+        $this->db->where('ativo','t');
+        return $this->db->get()->result();
+        
     }
     
     

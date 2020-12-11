@@ -7,10 +7,15 @@
 
     
 $data_pagamento = "";
-if($pagamento[0]->data_pagamento != ""){
-  $data_pagamento =   $pagamento[0]->data_pagamento;
-}else{
-    $data_pagamento = $pagamento[0]->data;
+
+if(isset($parcelaentrada) && count($parcelaentrada) > 0){
+     $data_pagamento = $parcelaentrada[0]->data;
+}else{ 
+    if($pagamento[0]->data_pagamento != ""){
+        $data_pagamento =   $pagamento[0]->data_pagamento;
+    }else{
+        $data_pagamento = $pagamento[0]->data;
+    } 
 }
 
  $data_referencia = $pagamento[0]->data;

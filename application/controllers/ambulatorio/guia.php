@@ -4216,7 +4216,7 @@ class Guia extends BaseController {
         $empresa_id = $this->session->userdata('empresa_id');
         $data['empresa'] = $this->guia->listarempresa($empresa_id);
         $pagamento = $this->paciente->listarpagamentoscontratoparcela($paciente_contrato_parcelas_id);
-        
+        $data['parcelaentrada'] = $this->guia->listarparcelaentrada($paciente_contrato_parcelas_id);
         $pagamento_novo = $this->guia->listarpagamentonovo($paciente_contrato_parcelas_id);
                             
         if($pagamento_novo[0]->valor_pago > 0 ||  $pagamento_novo[0]->desconto_total  > 0 ){
@@ -8942,8 +8942,7 @@ function excluirvoucher($paciente_id, $contrato_id, $consulta_avulsa_id,$voucher
 
         $data['emissao'] = date("d-m-Y");
         $empresa_id = $this->session->userdata('empresa_id');
-        $data['empresa'] = $this->guia->listarempresa($empresa_id);
-         
+        $data['empresa'] = $this->guia->listarempresa($empresa_id); 
         $pagamento = $this->guia->listarpagamentofaturar($paciente_contrato_parcelas_faturar_id);
          
         $data['pagamento'] = $pagamento;
